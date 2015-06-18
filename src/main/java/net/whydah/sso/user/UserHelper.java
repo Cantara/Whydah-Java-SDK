@@ -4,6 +4,8 @@ package net.whydah.sso.user;
  * Created by totto on 12/3/14.
  */
 public class UserHelper {
+
+
         public static  String getDummyToken(){
             return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
                     "<usertoken xmlns:ns2=\"http://www.w3.org/1999/xhtml\" id=\"759799fe-2e2f-4c8e-b096-d5796733d4d2\">\n" +

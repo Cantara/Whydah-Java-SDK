@@ -42,6 +42,9 @@ public class UserIdentityRepresentation implements Serializable {
         return email;
     }
     public String getCellPhone() {
+        if (cellPhone == null){
+            return "";
+        }
         return cellPhone;
     }
 
