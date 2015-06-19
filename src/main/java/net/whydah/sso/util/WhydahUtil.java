@@ -29,13 +29,17 @@ public class WhydahUtil {
     private static final Logger log = getLogger(WhydahUtil.class);
 
 
+    /**
+     * Logon your application to Whydah.
+     * @param stsURI URI to the Security Token Service, where you do logon
+     * @param applicationID The registered ID of your application.
+     * @param applicationSecret Current, updatet secret of your application.
+     * @return XML Representing the application. In this you will find the tokenId used for further operations.
+     */
     public static String logOnApplication(String stsURI, String applicationID,String applicationSecret){
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
         ApplicationCredential appCredential = new ApplicationCredential(applicationID,applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
-//        String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
-//        UserCredential userCredential = new UserCredential(username, password);
-//        String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, UUID.randomUUID().toString()).execute();
         return myAppTokenXml;
 
     }
