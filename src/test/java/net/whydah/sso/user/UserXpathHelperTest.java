@@ -31,6 +31,12 @@ public class UserXpathHelperTest {
 
     }
 
+    @Test
+    public void testFindOrgName() throws Exception {
+        String orgName = UserXpathHelper.getOrgName(roleXml);
+        assertEquals("testOrg", orgName);
+    }
+
     private static String userTokenXML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
             "<whydahuser>\n" +
             "    <identity>\n" +
@@ -45,4 +51,13 @@ public class UserXpathHelperTest {
             "    <applications>\n" +
             "    </applications>\n" +
             "</whydahuser>";
+
+    private static String roleXml = "<application>            <id>b6767d13-4ca7-432c-8356-2b7c15cebc9a</id>\n" +
+            "            <uid>_temp_username4Role_1434726891061</uid>\n" +
+            "            <appId>201</appId>\n" +
+            "            <applicationName></applicationName>\n" +
+            "            <orgName>testOrg</orgName>\n" +
+            "            <roleName>testRoleName</roleName>\n" +
+            "            <roleValue>true</roleValue>\n" +
+            "        </application>";
 }

@@ -107,6 +107,17 @@ public class UserXpathHelper {
         return null;
     }
 
+    public static String getOrgName(String roleXml) {
+        String orgName = "";
+        if (roleXml == null) {
+            logger.debug("roleXml was empty, so returning empty orgName.");
+        } else {
+            String expression = "/application/orgName";
+            orgName = findValue(roleXml, expression);
+        }
+        return orgName;
+    }
+
     public static String findValue(String xmlString,  String expression) {
         String value = "";
         try {
