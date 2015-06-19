@@ -56,12 +56,11 @@ public class WhydahUtil {
     }
 
     /**
-     * TODO use swich case for status code.
-     * @param uasUri
-     * @param applicationTokenId
-     * @param adminUserTokenId
-     * @param userIdentity
-     * @return
+     * @param uasUri URI to the User Admin Service
+     * @param applicationTokenId TokenId fetched from the XML in logOnApplication
+     * @param adminUserTokenId TokenId fetched from the XML returned in logOnApplicationAndUser
+     * @param userIdentity The user identity you want to create.
+     * @return TodO
      */
     public static String addUser(String uasUri, String applicationTokenId, String adminUserTokenId, UserIdentityRepresentation userIdentity) {
 //        URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
