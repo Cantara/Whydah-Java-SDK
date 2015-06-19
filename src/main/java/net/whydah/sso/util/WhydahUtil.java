@@ -63,7 +63,7 @@ public class WhydahUtil {
      * @param applicationTokenId TokenId fetched from the XML in logOnApplication
      * @param adminUserTokenId TokenId fetched from the XML returned in logOnApplicationAndUser
      * @param userIdentity The user identity you want to create.
-     * @return TodO
+     * @return UserIdentityXml
      */
     public static String addUser(String uasUri, String applicationTokenId, String adminUserTokenId, UserIdentityRepresentation userIdentity) {
         String userId = null;
