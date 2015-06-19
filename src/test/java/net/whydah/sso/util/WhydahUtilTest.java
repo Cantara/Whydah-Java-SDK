@@ -30,24 +30,47 @@ public class WhydahUtilTest {
     public static final String TEMPORARY_APPLICATION_SECRET = "bbbbbbbbbbbbbbbbbbbbbbbbb";
     private final String userAdminServiceUri = "http://localhost:9992/useradminservice";
     private final String userTokenServiceUri = "http://localhost:9998/tokenservice";
+    private String myApplicationTokenID = null;
+    private String myAppTokenXml = null;
+    private URI tokenServiceUri = null;
+    private UserCredential userCredential = null;
+    private String adminUserTokenId = null;
 
     @Before
     public void setUp() throws Exception {
+        URI tokenServiceUri = UriBuilder.fromUri(userTokenServiceUri).build();
+        ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID,TEMPORARY_APPLICATION_SECRET);
+        myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+        myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
+        userCredential = new UserCredential("altranadmin", "altranadmin");
+        log.debug("Logged in service {}", myApplicationTokenID);
+        String adminUserTokenXml = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, UUID.randomUUID().toString()).execute();
+        adminUserTokenId = UserXpathHelper.getUserTokenId(adminUserTokenXml);
+        log.debug("Logged in admin {}", adminUserTokenId);
 
     }
 
     @Test
     public void testLogOnApplicationAndUser() throws Exception {
+        assertNotNull(adminUserTokenId);
 
+    }
+
+    @Test
+    public void testAddUser() throws Exception {
+        //Use token for add user
+        String username = "_temp_username_" + System.currentTimeMillis();
+        UserIdentityRepresentation userIdentity = new UserIdentityRepresentation(username,"first","last","ref",username +"@example.com","+4712345678");
+        String userId = WhydahUtil.addUser(userAdminServiceUri,myApplicationTokenID,adminUserTokenId,userIdentity);
+        assertNotNull(userId);
+        log.debug("Added User {}", userId);
+        assertFalse(userId.contains("7583278592730985723"));
     }
 
     @Ignore
     @Test
-    public void testAddUser() throws Exception {
-        URI tokenServiceUri = UriBuilder.fromUri(userTokenServiceUri).build();
-        ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID,TEMPORARY_APPLICATION_SECRET);
-        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
-        String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
+    public void testAddRoleToUser() throws Exception {
+
         log.debug("Logged in service {}", myApplicationTokenID);
         UserCredential userCredential = new UserCredential("altranadmin", "altranadmin");
         String adminUserTokenXml = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, UUID.randomUUID().toString()).execute();
