@@ -22,27 +22,35 @@ public class UserXpathHelper {
     private static final Logger logger = LoggerFactory.getLogger(UserXpathHelper.class);
 
     public static String getUserTokenId(String userTokenXml) {
+        String userTokenId = "";
         if (userTokenXml == null) {
             logger.debug("userTokenXml was empty, so returning empty userTokenId.");
-            return "";
-        }
-
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(userTokenXml)));
-            XPath xPath = XPathFactory.newInstance().newXPath();
-
+        } else {
             String expression = "/usertoken/@id";
-            XPathExpression xPathExpression = xPath.compile(expression);
-            return (xPathExpression.evaluate(doc));
-        } catch (Exception e) {
-            logger.error("getUserTokenId parsing error", e);
+            userTokenId = findValue(userTokenXml,expression);
         }
-        return "";
+        return userTokenId;
     }
-
-
+    public static String getUserId(String userTokenXml) {
+        String userId = "";
+        if (userTokenXml == null) {
+            logger.debug("userTokenXml was empty, so returning empty userId.");
+        } else {
+            String expression = "/whydahuser/identity/UID";
+            userId = findValue(userTokenXml, expression);
+        }
+        return userId;
+    }
+    public static String getUserName(String userTokenXml) {
+        String userName = "";
+        if (userTokenXml == null) {
+            logger.debug("userTokenXml was empty, so returning empty userName.");
+        } else {
+            String expression = "/whydahuser/identity/username";
+            userName = findValue(userTokenXml, expression);
+        }
+        return userName;
+    }
 
     public static String getRealName(String userTokenXml){
         if (userTokenXml==null){
@@ -108,4 +116,34 @@ public class UserXpathHelper {
         }
         return null;
     }
+
+    public static String getOrgName(String roleXml) {
+        String orgName = "";
+        if (roleXml == null) {
+            logger.debug("roleXml was empty, so returning empty orgName.");
+        } else {
+            String expression = "/application/orgName";
+            orgName = findValue(roleXml, expression);
+        }
+        return orgName;
+    }
+
+    public static String findValue(String xmlString,  String expression) {
+        String value = "";
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(new InputSource(new StringReader(xmlString)));
+            XPath xPath = XPathFactory.newInstance().newXPath();
+
+
+            XPathExpression xPathExpression = xPath.compile(expression);
+            value = xPathExpression.evaluate(doc);
+        } catch (Exception e) {
+            logger.warn("Failed to parse xml. Expression {}, xml {}, ", expression, xmlString, e);
+        }
+        return value;
+    }
+
+
 }
