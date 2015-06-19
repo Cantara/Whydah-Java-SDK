@@ -29,6 +29,16 @@ public class WhydahUtil {
     private static final Logger log = getLogger(WhydahUtil.class);
 
 
+    public static String logOnApplication(String stsURI, String applicationID,String applicationSecret){
+        URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
+        ApplicationCredential appCredential = new ApplicationCredential(applicationID,applicationSecret);
+        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+//        String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
+//        UserCredential userCredential = new UserCredential(username, password);
+//        String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, UUID.randomUUID().toString()).execute();
+        return myAppTokenXml;
+
+    }
 
     public static String logOnApplicationAndUser(String stsURI, String applicationID,String applicationSecret, String username,String password){
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
