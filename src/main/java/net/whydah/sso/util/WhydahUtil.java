@@ -63,13 +63,10 @@ public class WhydahUtil {
      * @return TodO
      */
     public static String addUser(String uasUri, String applicationTokenId, String adminUserTokenId, UserIdentityRepresentation userIdentity) {
-//        URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
-        //String userId = new CommandAddUserIdentity(tokenServiceUri, adminUserTokenId, adminUserTokenId,userIdentity.toXML()).execute();
         String userId = null;
         Client tokenServiceClient = ClientBuilder.newClient();
 
         WebTarget addUser = tokenServiceClient.target(uasUri).path(applicationTokenId + "/" + adminUserTokenId + "/user");
-//        ClientResponse response = addUser.post(Entity.entity(userIdentityXml,MediaType.APPLICATION_XML_TYPE),ClientResponse.class);
         String userIdentityXml = userIdentity.toXML();
         Response response = addUser.request().accept(MediaType.APPLICATION_XML).post(Entity.entity(userIdentityXml,MediaType.APPLICATION_XML));
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
@@ -83,7 +80,5 @@ public class WhydahUtil {
             return responseXML;
         }
         throw new IllegalArgumentException("Not found");
-//        log.debug("Received userId");
-//        return userId;
     }
 }
