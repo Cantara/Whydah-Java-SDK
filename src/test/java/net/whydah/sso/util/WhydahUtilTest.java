@@ -6,6 +6,7 @@ import net.whydah.sso.commands.CommandLogonApplication;
 import net.whydah.sso.commands.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserIdentityRepresentation;
+import net.whydah.sso.user.UserRole;
 import net.whydah.sso.user.UserXpathHelper;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -14,15 +15,17 @@ import org.slf4j.Logger;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by baardl on 18.06.15.
  */
+@Ignore
 public class WhydahUtilTest {
     private static final Logger log = getLogger(WhydahUtilTest.class);
 
@@ -61,28 +64,37 @@ public class WhydahUtilTest {
         //Use token for add user
         String username = "_temp_username_" + System.currentTimeMillis();
         UserIdentityRepresentation userIdentity = new UserIdentityRepresentation(username,"first","last","ref",username +"@example.com","+4712345678");
-        String userId = WhydahUtil.addUser(userAdminServiceUri,myApplicationTokenID,adminUserTokenId,userIdentity);
-        assertNotNull(userId);
-        log.debug("Added User {}", userId);
-        assertFalse(userId.contains("7583278592730985723"));
+        String userTokenXml = WhydahUtil.addUser(userAdminServiceUri,myApplicationTokenID,adminUserTokenId,userIdentity);
+        assertNotNull(userTokenXml);
+        String createdUserName = UserXpathHelper.getUserId(userTokenXml);
+        assertFalse(createdUserName.contains("7583278592730985723"));
+        assertEquals(username,createdUserName);
     }
 
-    @Ignore
+
     @Test
     public void testAddRoleToUser() throws Exception {
 
-        log.debug("Logged in service {}", myApplicationTokenID);
-        UserCredential userCredential = new UserCredential("altranadmin", "altranadmin");
-        String adminUserTokenXml = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, UUID.randomUUID().toString()).execute();
-        String adminUserTokenId = UserXpathHelper.getUserTokenId(adminUserTokenXml);
-        log.debug("Logged in admin {}", adminUserTokenId);
-        //WhydahUtil.logOnApplicationAndUser(userTokenServiceUri,TEMPORARY_APPLICATION_ID,TEMPORARY_APPLICATION_SECRET,"altranadmin","altranadmin");
         //Use token for add user
-        String username = "_temp_username_" + System.currentTimeMillis();
+        String username = "_temp_username4Role_" + System.currentTimeMillis();
         UserIdentityRepresentation userIdentity = new UserIdentityRepresentation(username,"first","last","ref",username +"@example.com","+4712345678");
-        String userId = WhydahUtil.addUser(userAdminServiceUri,myApplicationTokenID,adminUserTokenId,userIdentity);
-        assertNotNull(userId);
-        log.debug("Added User {}", userId);
-        assertFalse(userId.contains("7583278592730985723"));
+        String userTokenXml = WhydahUtil.addUser(userAdminServiceUri,myApplicationTokenID,adminUserTokenId,userIdentity);
+        assertNotNull(userTokenXml);
+        String createdUser = UserXpathHelper.getUserId(userTokenXml);
+        assertFalse(createdUser.contains("7583278592730985723"));
+        //User is created, now add role
+        String orgName = "testOrg";
+        String roleName = "testRoleName";
+        String roleValue = "true";
+        UserRole role = new UserRole(username,TEMPORARY_APPLICATION_ID,orgName, roleName, roleValue);
+        List<UserRole> roles = new ArrayList<>();
+        roles.add(role);
+        List<String> result = WhydahUtil.addRolesToUser(userAdminServiceUri, myApplicationTokenID,adminUserTokenId, roles);
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        String expression = "application/id";
+        String roleId = UserXpathHelper.findValue(result.get(0),expression);
+        assertTrue(roleId.length() > 0);
+
     }
 }
