@@ -8,6 +8,7 @@ import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserIdentityRepresentation;
 import net.whydah.sso.user.UserXpathHelper;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 
@@ -40,6 +41,7 @@ public class WhydahUtilTest {
 
     }
 
+    @Ignore
     @Test
     public void testAddUser() throws Exception {
         URI tokenServiceUri = UriBuilder.fromUri(userTokenServiceUri).build();
