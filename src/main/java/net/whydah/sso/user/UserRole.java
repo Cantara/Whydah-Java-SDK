@@ -5,6 +5,8 @@ package net.whydah.sso.user;
  */
 public class UserRole {
 
+    private String id = null;
+    private String userId = null;
     private final String userName;
     private final String applicationId;
     private final String orgName;
@@ -50,6 +52,22 @@ public class UserRole {
         return applicationId;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public String toXML() {
         return "<application>" +
                 "            <uid>" + getUserName() + "</uid>\n" +
@@ -59,5 +77,20 @@ public class UserRole {
                 "            <roleName>" + getRoleName() + "</roleName>\n" +
                 "            <roleValue>" + getRoleValue() + "</roleValue>\n" +
                 "        </application>";
+    }
+
+    public static UserRole fromXml(String roleXml) {
+
+        String id = UserXpathHelper.findValue(roleXml,"/application/id");
+        String userId = UserXpathHelper.findValue(roleXml,"/application/uid");
+        String appId = UserXpathHelper.findValue(roleXml,"/application/appId");
+        String appName = UserXpathHelper.findValue(roleXml,"/application/applicationName");
+        String orgName = UserXpathHelper.findValue(roleXml,"/application/orgName");
+        String roleName = UserXpathHelper.findValue(roleXml,"/application/roleName");
+        String roleValue = UserXpathHelper.findValue(roleXml,"/application/roleValue");
+        UserRole userRole = new UserRole(null, appId,orgName,roleName,roleValue);
+        userRole.setId(id);
+        userRole.setUserId(userId);
+        return userRole;
     }
 }
