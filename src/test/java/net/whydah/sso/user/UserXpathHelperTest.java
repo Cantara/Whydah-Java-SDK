@@ -16,9 +16,9 @@ public class UserXpathHelperTest {
     }
 
     @Test
-    public void testGetUserId() throws Exception {
-        String userId = UserXpathHelper.getUserId(userTokenXML);
-        assertEquals("test_name", userId);
+    public void testGetUserName() throws Exception {
+        String userName = UserXpathHelper.getUserName(userTokenXML);
+        assertEquals("test_name", userName);
 
     }
 

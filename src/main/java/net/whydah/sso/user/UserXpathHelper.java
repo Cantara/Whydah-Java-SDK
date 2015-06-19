@@ -36,10 +36,20 @@ public class UserXpathHelper {
         if (userTokenXml == null) {
             logger.debug("userTokenXml was empty, so returning empty userId.");
         } else {
-            String expression = "/whydahuser/identity/username";
+            String expression = "/whydahuser/identity/UID";
             userId = findValue(userTokenXml, expression);
         }
         return userId;
+    }
+    public static String getUserName(String userTokenXml) {
+        String userName = "";
+        if (userTokenXml == null) {
+            logger.debug("userTokenXml was empty, so returning empty userName.");
+        } else {
+            String expression = "/whydahuser/identity/username";
+            userName = findValue(userTokenXml, expression);
+        }
+        return userName;
     }
 
     public static String getRealName(String userTokenXml){
