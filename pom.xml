@@ -44,6 +44,16 @@
             <roles>
                 <role>Developer</role>
             </roles>
+            <organization>Capra Consulting AS</organization>
+            <organizationUrl>http://www.capraconsulting.no/</organizationUrl>
+        </developer>
+        <developer>
+            <id>baardl</id>
+            <name>Bard Lind</name>
+            <email>bard.lind@gmail.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
             <organization>Altran Norge AS</organization>
             <organizationUrl>http://www.altran.no/</organizationUrl>
         </developer>
