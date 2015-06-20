@@ -37,7 +37,8 @@ public class WhydahUtil {
      * @param stsURI URI to the Security Token Service, where you do logon
      * @param applicationID The registered ID of your application.
      * @param applicationSecret Current, updatet secret of your application.
-     * @return XML Representing the application. In this you will find the tokenId used for further operations.
+     * @return XML Representing the application. In this you will find the applicationtokenId used as application session
+     * for further operations.
      */
     public static String logOnApplication(String stsURI, String applicationID,String applicationSecret){
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
