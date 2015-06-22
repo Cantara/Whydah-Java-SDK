@@ -47,13 +47,6 @@ public class UserRoleMapperTest {
             "        <application>\n" +
             "            <appId>19</appId>\n" +
             "            <applicationName>UserAdminWebApplication</applicationName>\n" +
-            "            <orgName>Support</orgName>\n" +
-            "            <roleName>Manager</roleName>\n" +
-            "            <roleValue>true</roleValue>\n" +
-            "        </application>\n" +
-            "        <application>\n" +
-            "            <appId>19</appId>\n" +
-            "            <applicationName>UserAdminWebApplication</applicationName>\n" +
             "            <orgName>Company</orgName>\n" +
             "            <roleName>WhydahUserAdmin</roleName>\n" +
             "            <roleValue>1</roleValue>\n" +
