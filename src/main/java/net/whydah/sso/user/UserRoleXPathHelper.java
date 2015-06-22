@@ -28,8 +28,33 @@ public class UserRoleXPathHelper {
         if (userTokenXml == null) {
             logger.debug("userTokenXml was empty, so returning empty userTokenId.");
         } else {
-            String expression = "/usertoken/application";
-            System.out.println("Result"+findXpathValue(userTokenXml,expression));
+            String appid;
+            String orgName;
+            String rolename;
+            String roleValue;
+            String userName=findXpathValue(userTokenXml, "/usertoken/username");
+            String expression = "count(/usertoken/application)";
+            int noOfApps= Integer.valueOf(findXpathValue(userTokenXml,expression));
+            int noOfRoles =  Integer.valueOf(findXpathValue(userTokenXml, "count(//role)"));
+            UserRole[] result = new UserRole[noOfRoles];
+            int roleindex=0;
+            for (int n=1;n<=noOfApps;n++) {
+                    appid = findXpathValue(userTokenXml, "//usertoken/application["+n+"]/@ID");
+                    int noSubRoles=Integer.valueOf(findXpathValue(userTokenXml,"count(//application["+n+"]/organizationName)"));
+                    for (int m=1;m<=noSubRoles;m++){
+                        try {
+                        orgName = findXpathValue(userTokenXml, "//application["+n+"]/organizationName["+m+"]");
+                        rolename = findXpathValue(userTokenXml, "//application["+n+"]/role["+m+"]/@name");
+                        roleValue = findXpathValue(userTokenXml, "//application["+n+"]/role["+m+"]/@value");
+                        UserRole ur = new UserRole(userName, appid, orgName, rolename, roleValue);
+                        result[roleindex++] = ur;
+                        } catch (PathNotFoundException pnpe) {
+                            return null;
+                        }
+
+                    }
+            }
+            return result;
         }
         return null;
     }
@@ -51,9 +76,8 @@ public class UserRoleXPathHelper {
                     appid = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/appId");
                     orgName = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/orgName");
                     rolename = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/roleName");
-                    roleValue = findXpathValue(userAggregateXML, "/whydahuser/applications/application["+n+"]/roleValue");
+                    roleValue = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/roleValue");
                     UserRole ur = new UserRole(userName, appid, orgName, rolename, roleValue);
-                    System.out.println("Result: " + ur);
                     result[n-1] = ur;
                 } catch (PathNotFoundException pnpe) {
                     return null;
@@ -82,7 +106,6 @@ public class UserRoleXPathHelper {
                     rolename = findJsonpathValue(userAggregateJson, "$.roles[" + n + "].applicationRoleName");
                     roleValue = findJsonpathValue(userAggregateJson, "$.roles[" + n + "].applicationRoleValue");
                     UserRole ur = new UserRole(userName,appid, orgName, rolename, roleValue);
-                    System.out.println("Result: " + ur);
                     result[n]=ur;
                 } catch (PathNotFoundException pnpe){
                     return null;
