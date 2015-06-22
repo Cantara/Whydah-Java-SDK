@@ -13,6 +13,7 @@ public class UserRole {
     private final String roleName;
     private String roleValue;
 
+
     public UserRole(String userName, String applicationId, String orgName, String roleName) {
         this.userName = userName;
         this.applicationId = applicationId;
