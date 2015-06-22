@@ -3,6 +3,7 @@ package net.whydah.sso.user;
 import org.junit.Test;
 import org.slf4j.Logger;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -17,29 +18,46 @@ public class UserRoleMapperTest {
 
     @Test
     public void testRolesFromXml() throws Exception {
-        log.debug("Try to parse xml {}", rolesXml);
-        List<UserRole> roles = UserRoleMapper.rolesFromXml(rolesXml);
+        log.debug("Try to parse xml {}", userAggregateXML);
+        List<UserRole> roles = Arrays.asList(UserRoleXPathHelper.getUserRoleFromUserAggregateXML(userAggregateXML));
         assertNotNull(roles);
         assertEquals(2,roles.size());
 
     }
 
-    private String rolesXml = "<roles><application>\n" +
-            "    <id>1</id>\n" +
-            "    <uid>1b9f8738-e13b-47f2-895a-915a158f6b75</uid>\n" +
-            "    <appId>201</appId>\n" +
-            "    <applicationName>DomainConfig</applicationName>\n" +
-            "    <orgName>testOrg</orgName>\n" +
-            "    <roleName>testRoleName</roleName>\n" +
-            "    <roleValue>true</roleValue>\n" +
-            "</application>\n" +
-            "<application>\n" +
-            "    <id>2</id>\n" +
-            "    <uid>1b9f8738-e13b-47f2-895a-915a158f6b75</uid>\n" +
-            "    <appId>201</appId>\n" +
-            "    <applicationName>DomainConfig</applicationName>\n" +
-            "    <orgName>testOrg</orgName>\n" +
-            "    <roleName>testRoleName</roleName>\n" +
-            "    <roleValue>true</roleValue>\n" +
-            "</application></roles>";
+    String userAggregateXML = "\n" +
+            "<whydahuser>\n" +
+            "    <identity>\n" +
+            "        <username>admin</username>\n" +
+            "        <cellPhone>+1555406789</cellPhone>\n" +
+            "        <email>useradmin@getwhydah.com</email>\n" +
+            "        <firstname>User</firstname>\n" +
+            "        <lastname>Admin</lastname>\n" +
+            "        <personRef>0</personRef>\n" +
+            "        <UID>useradmin</UID>\n" +
+            "    </identity>\n" +
+            "    <applications>\n" +
+            "        <application>\n" +
+            "            <appId>19</appId>\n" +
+            "            <applicationName>UserAdminWebApplication</applicationName>\n" +
+            "            <orgName>Support</orgName>\n" +
+            "            <roleName>WhydahUserAdmin</roleName>\n" +
+            "            <roleValue>1</roleValue>\n" +
+            "        </application>\n" +
+            "        <application>\n" +
+            "            <appId>19</appId>\n" +
+            "            <applicationName>UserAdminWebApplication</applicationName>\n" +
+            "            <orgName>Support</orgName>\n" +
+            "            <roleName>Manager</roleName>\n" +
+            "            <roleValue>true</roleValue>\n" +
+            "        </application>\n" +
+            "        <application>\n" +
+            "            <appId>19</appId>\n" +
+            "            <applicationName>UserAdminWebApplication</applicationName>\n" +
+            "            <orgName>Company</orgName>\n" +
+            "            <roleName>WhydahUserAdmin</roleName>\n" +
+            "            <roleValue>1</roleValue>\n" +
+            "        </application>\n" +
+            "    </applications>\n" +
+            "</whydahuser>";
 }
