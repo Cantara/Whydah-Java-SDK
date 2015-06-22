@@ -29,7 +29,7 @@ public class UserRoleXPathHelper {
             logger.debug("userTokenXml was empty, so returning empty userTokenId.");
         } else {
             String expression = "/usertoken/application";
-            System.out.println("Result"+expression);
+            System.out.println("Result"+findXpathValue(userTokenXml,expression));
         }
         return null;
     }
