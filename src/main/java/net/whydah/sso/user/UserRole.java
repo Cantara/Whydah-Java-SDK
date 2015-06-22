@@ -94,4 +94,5 @@ public class UserRole {
         userRole.setUserId(userId);
         return userRole;
     }
+
 }
