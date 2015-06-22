@@ -53,6 +53,7 @@ public class UserRoleXPathHelper {
             String rolename;
             String roleValue;
             List<String> roles=findJsonpathList(userAggregateJson,"$.roles[*]");
+            UserRole[] result = new UserRole[roles.size()];
             for (int n=0;n<roles.size();n++){
                 try {
                     appid = findJsonpathValue(userAggregateJson, "$.roles[" + n + "].applicationId");
@@ -61,11 +62,13 @@ public class UserRoleXPathHelper {
                     roleValue = findJsonpathValue(userAggregateJson, "$.roles[" + n + "].applicationRoleValue");
                     UserRole ur = new UserRole(appid, orgName, rolename, roleValue);
                     System.out.println("Result: " + ur);
+                    result[n]=ur;
                 } catch (PathNotFoundException pnpe){
                     return null;
                 }
 
             }
+            return result;
         }
         return null;
     }
