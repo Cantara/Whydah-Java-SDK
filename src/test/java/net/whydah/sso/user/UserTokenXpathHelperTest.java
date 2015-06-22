@@ -4,15 +4,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by totto on 22.06.15.
  */
 public class UserTokenXpathHelperTest {
 
-    String userTokenXML = "\n" +
-            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-            "<usertoken xmlns:ns2=\"http://www.w3.org/1999/xhtml\" id=\"a96a517f-cef3-4be7-92f5-f059b65e4071\">\n" +
+    String userTokenXML = "<usertoken xmlns:ns2=\"http://www.w3.org/1999/xhtml\" id=\"a96a517f-cef3-4be7-92f5-f059b65e4071\">\n" +
             "    <uid></uid>\n" +
             "    <timestamp></timestamp>\n" +
             "    <lifespan>3600000</lifespan>\n" +
@@ -42,7 +41,7 @@ public class UserTokenXpathHelperTest {
             "    <hash type=\"MD5\">8a37ef9624ed93db4873035b0de3d1ca</hash>\n" +
             "</usertoken>";
 
-    String userAggregateXML="\n" +
+    String userAggregateXML = "\n" +
             "<whydahuser>\n" +
             "    <identity>\n" +
             "        <username>admin</username>\n" +
@@ -78,7 +77,7 @@ public class UserTokenXpathHelperTest {
             "    </applications>\n" +
             "</whydahuser>";
 
-    String userAggregateJson="{\n" +
+    String userAggregateJson = "{\n" +
             "  \"uid\": \"uid\",\n" +
             "  \"username\": \"usernameABC\",\n" +
             "  \"firstName\": \"firstName\",\n" +
@@ -118,14 +117,18 @@ public class UserTokenXpathHelperTest {
         UserRole roles[] = UserRoleXPathHelper.getUserRoleFromUserToken(userTokenXML);
 
     }
+
     @Test
     public void testGetUserRoleFromUserAggregateXML() throws Exception {
         UserRole roles[] = UserRoleXPathHelper.getUserRoleFromUserAggregateXML(userAggregateXML);
 
     }
+
     @Test
     public void testGetUserRoleFromUserAggregateJSON() throws Exception {
         UserRole roles[] = UserRoleXPathHelper.getUserRoleFromUserAggregateJSON(userAggregateJson);
+        assertTrue("applicationId".equals(roles[0].getApplicationId()));
+        assertTrue("applicationId123".equals(roles[1].getApplicationId()));
 
     }
 

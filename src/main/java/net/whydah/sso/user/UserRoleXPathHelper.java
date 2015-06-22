@@ -2,6 +2,7 @@ package net.whydah.sso.user;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -24,7 +25,6 @@ public class UserRoleXPathHelper {
 
 
     public static UserRole[] getUserRoleFromUserToken(String userTokenXml) {
-        String userTokenId = "";
         if (userTokenXml == null) {
             logger.debug("userTokenXml was empty, so returning empty userTokenId.");
         } else {
@@ -35,7 +35,6 @@ public class UserRoleXPathHelper {
     }
 
     public static UserRole[] getUserRoleFromUserAggregateXML(String userAggregateXML) {
-        String userTokenId = "";
         if (userAggregateXML == null) {
             logger.debug("userAggregateXML was empty, so returning null.");
         } else {
@@ -46,12 +45,31 @@ public class UserRoleXPathHelper {
     }
 
     public static UserRole[] getUserRoleFromUserAggregateJSON(String userAggregateJson) {
-        String userTokenId = "";
         if (userAggregateJson == null) {
             logger.debug("userAggregateJson was empty, so returning null.");
         } else {
-            String expression = "$.roles[*]";
-            System.out.println("Result"+findJsonpathValue(userAggregateJson, expression));
+            String appid;
+            String orgName;
+            String rolename;
+            String roleValue;
+            List<String> roles=findJsonpathList(userAggregateJson,"$.roles[*]");
+            String userName=findJsonpathValue(userAggregateJson, "$.username");
+            UserRole[] result = new UserRole[roles.size()];
+            for (int n=0;n<roles.size();n++){
+                try {
+                    appid = findJsonpathValue(userAggregateJson, "$.roles[" + n + "].applicationId");
+                    orgName = findJsonpathValue(userAggregateJson, "$.roles[" + n + "].applicationName");
+                    rolename = findJsonpathValue(userAggregateJson, "$.roles[" + n + "].applicationRoleName");
+                    roleValue = findJsonpathValue(userAggregateJson, "$.roles[" + n + "].applicationRoleValue");
+                    UserRole ur = new UserRole(userName,appid, orgName, rolename, roleValue);
+                    System.out.println("Result: " + ur);
+                    result[n]=ur;
+                } catch (PathNotFoundException pnpe){
+                    return null;
+                }
+
+            }
+            return result;
         }
         return null;
     }
@@ -75,15 +93,24 @@ public class UserRoleXPathHelper {
         return value;
     }
 
-    public static String findJsonpathValue(String jsonString,  String expression) {
-        String value = "";
+    public static List<String> findJsonpathList(String jsonString,  String expression) throws PathNotFoundException {
+        List<String> result=null;
         try {
             Object document = Configuration.defaultConfiguration().jsonProvider().parse(jsonString);
-            List<String> result= JsonPath.read(document, expression);
-            value=result.toString();
+            result= JsonPath.read(document, expression);
+
         } catch (Exception e) {
             logger.warn("Failed to parse JSON. Expression {}, JSON {}, ", expression, jsonString, e);
         }
+        return result;
+    }
+
+    public static String findJsonpathValue(String jsonString,  String expression) throws PathNotFoundException {
+        String value = "";
+            Object document = Configuration.defaultConfiguration().jsonProvider().parse(jsonString);
+            String result= JsonPath.read(document, expression);
+            value=result.toString();
+
         return value;
     }
 
