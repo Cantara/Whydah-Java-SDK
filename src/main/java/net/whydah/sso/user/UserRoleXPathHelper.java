@@ -38,8 +38,28 @@ public class UserRoleXPathHelper {
         if (userAggregateXML == null) {
             logger.debug("userAggregateXML was empty, so returning null.");
         } else {
-            String expression = "/whydahuser/applications/*";
-            System.out.println("Result"+findXpathValue(userAggregateXML,expression));
+            String appid;
+            String orgName;
+            String rolename;
+            String roleValue;
+            String userName=findXpathValue(userAggregateXML, "/whydahuser/identity/username");
+            String expression = "count(/whydahuser/applications/application)";
+            int noOfRoles= Integer.valueOf(findXpathValue(userAggregateXML,expression));
+            UserRole[] result = new UserRole[noOfRoles];
+            for (int n=1;n<=noOfRoles;n++) {
+                try {
+                    appid = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/appId");
+                    orgName = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/orgName");
+                    rolename = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/roleName");
+                    roleValue = findXpathValue(userAggregateXML, "/whydahuser/applications/application["+n+"]/roleValue");
+                    UserRole ur = new UserRole(userName, appid, orgName, rolename, roleValue);
+                    System.out.println("Result: " + ur);
+                    result[n-1] = ur;
+                } catch (PathNotFoundException pnpe) {
+                    return null;
+                }
+            }
+            return result;
         }
         return null;
     }
