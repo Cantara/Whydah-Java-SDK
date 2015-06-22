@@ -17,7 +17,7 @@ public class UserTokenXpathHelperTest {
             "    <lifespan>3600000</lifespan>\n" +
             "    <issuer>/token/issuer/tokenverifier</issuer>\n" +
             "    <securitylevel>0</securitylevel>\n" +
-            "    <username></username>\n" +
+            "    <username>test</username>\n" +
             "    <firstname>Olav</firstname>\n" +
             "    <lastname>Nordmann</lastname>\n" +
             "    <email></email>\n" +
@@ -115,14 +115,16 @@ public class UserTokenXpathHelperTest {
     @Test
     public void testGetUserRoleFromUserToken() throws Exception {
         UserRole roles[] = UserRoleXPathHelper.getUserRoleFromUserToken(userTokenXML);
+        assertTrue("2349785543".equals(roles[0].getApplicationId()));
+        assertTrue("appa".equals(roles[2].getApplicationId()));
 
     }
 
     @Test
     public void testGetUserRoleFromUserAggregateXML() throws Exception {
         UserRole roles[] = UserRoleXPathHelper.getUserRoleFromUserAggregateXML(userAggregateXML);
-            assertTrue("19".equals(roles[0].getApplicationId()));
-            assertTrue("19".equals(roles[1].getApplicationId()));
+        assertTrue("19".equals(roles[0].getApplicationId()));
+        assertTrue("19".equals(roles[1].getApplicationId()));
 
     }
 
