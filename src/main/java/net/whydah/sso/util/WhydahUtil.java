@@ -105,17 +105,36 @@ public class WhydahUtil {
             String roleXml = role.toXML();
             log.trace("Try to add role {}", roleXml);
             userName = role.getUserName();
-            response = userTarget.path(userName).path("/role").request().accept(MediaType.APPLICATION_XML).post(Entity.entity(roleXml,MediaType.APPLICATION_XML));
+            response = userTarget.path(userName).path("/role").request().accept(MediaType.APPLICATION_XML).post(Entity.entity(roleXml, MediaType.APPLICATION_XML));
             if (response.getStatus() == OK.getStatusCode()) {
                 String responseXML = response.readEntity(String.class);
                 log.debug("CommandAddRole - addRoles - Created role ok {}", responseXML);
                 createdRoles.add(responseXML);
             } else {
-                createdRoles.add("Failed to add role " + role.getRoleName() +", reason: " + response.toString());
+                createdRoles.add("Failed to add role " + role.getRoleName() + ", reason: " + response.toString());
                 log.trace("Failed to add role {}, response status {}", role.toString(), response.getStatus());
             }
         }
         return createdRoles;
+    }
+
+    public static List<UserRole> listUserRoles(String uasUri, String adminAppTokenId, String adminUserTokenId, String applicationId, String userId ) {
+
+        List<UserRole> userRoles = new ArrayList<>();
+        WebTarget userTarget = buildBaseTarget(uasUri, adminAppTokenId, adminUserTokenId).path("/user");
+        Response response;
+        response = userTarget.path(userId).path("roles").request().accept(MediaType.APPLICATION_XML).get();
+        if (response.getStatus() == OK.getStatusCode()) {
+            String rolesXml = response.readEntity(String.class);
+            log.debug("CommandListRoles - listUserRoles - Created role ok {}", rolesXml);
+            UserRole userRole = UserRole.fromXml(rolesXml);
+            userRoles.add(userRole);
+           // UserRole userRole = UserRoleHelper.fromJson(rolesJson);
+//                    userRoles.add(responseXML);
+        } else {
+            log.trace("Failed to find roles for user {}, response status {}", userId, response.getStatus());
+        }
+        return userRoles;
     }
 
     static WebTarget buildBaseTarget(String baseUri, String applicationTokenId, String adminUserTokenId) {

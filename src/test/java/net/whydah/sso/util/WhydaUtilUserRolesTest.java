@@ -9,7 +9,6 @@ import net.whydah.sso.user.UserIdentityRepresentation;
 import net.whydah.sso.user.UserRole;
 import net.whydah.sso.user.UserXpathHelper;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 
@@ -23,11 +22,10 @@ import static org.junit.Assert.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Created by baardl on 18.06.15.
+ * Created by baardl on 22.06.15.
  */
-@Ignore
-public class WhydahUtilTest {
-    private static final Logger log = getLogger(WhydahUtilTest.class);
+public class WhydaUtilUserRolesTest {
+    private static final Logger log = getLogger(WhydaUtilUserRolesTest.class);
 
     public static final String TEMPORARY_APPLICATION_ID = "201";//"11";
     public static final String TEMPORARY_APPLICATION_SECRET = "bbbbbbbbbbbbbbbbbbbbbbbbb";
@@ -38,6 +36,10 @@ public class WhydahUtilTest {
     private URI tokenServiceUri = null;
     private UserCredential userCredential = null;
     private String adminUserTokenId = null;
+    private final String orgName = "testOrg";
+    private final String roleName = "testRoleName";
+    private final String roleValue = "true";
+    private String addedUser = null;
 
     @Before
     public void setUp() throws Exception {
@@ -50,30 +52,11 @@ public class WhydahUtilTest {
         String adminUserTokenXml = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, UUID.randomUUID().toString()).execute();
         adminUserTokenId = UserXpathHelper.getUserTokenId(adminUserTokenXml);
         log.debug("Logged in admin {}", adminUserTokenId);
+        addedUser = addUserAndRole();
 
     }
 
-    @Test
-    public void testLogOnApplicationAndUser() throws Exception {
-        assertNotNull(adminUserTokenId);
-
-    }
-
-    @Test
-    public void testAddUser() throws Exception {
-        //Use token for add user
-        String username = "_temp_username_" + System.currentTimeMillis();
-        UserIdentityRepresentation userIdentity = new UserIdentityRepresentation(username,"first","last","ref",username +"@example.com","+4712345678");
-        String userTokenXml = WhydahUtil.addUser(userAdminServiceUri,myApplicationTokenID,adminUserTokenId,userIdentity);
-        assertNotNull(userTokenXml);
-        String createdUserName = UserXpathHelper.getUserId(userTokenXml);
-        assertFalse(createdUserName.contains("7583278592730985723"));
-        assertEquals(username,createdUserName);
-    }
-
-
-    @Test
-    public void testAddRoleToUser() throws Exception {
+    String addUserAndRole(){
 
         //Use token for add user
         String username = "_temp_username4Role_" + System.currentTimeMillis();
@@ -81,11 +64,10 @@ public class WhydahUtilTest {
         String userTokenXml = WhydahUtil.addUser(userAdminServiceUri,myApplicationTokenID,adminUserTokenId,userIdentity);
         assertNotNull(userTokenXml);
         String createdUserId = UserXpathHelper.getUserId(userTokenXml);
+        log.debug("Created userId {}", createdUserId);
         assertFalse(createdUserId.contains("7583278592730985723"));
         //User is created, now add role
-        String orgName = "testOrg";
-        String roleName = "testRoleName";
-        String roleValue = "true";
+
         UserRole role = new UserRole(createdUserId,TEMPORARY_APPLICATION_ID,orgName, roleName, roleValue);
         List<UserRole> roles = new ArrayList<>();
         roles.add(role);
@@ -96,12 +78,21 @@ public class WhydahUtilTest {
         String roleId = UserXpathHelper.findValue(result.get(0),expression);
         assertTrue(roleId.length() > 0);
 
+        return createdUserId;
+
     }
 
     @Test
-    public void testListRolesForUserAndApplication() throws Exception {
-        String username = "_temp_username4Role_" + System.currentTimeMillis();
-        UserIdentityRepresentation userIdentity = new UserIdentityRepresentation(username,"first","last","ref",username +"@example.com","+4712345678");
-        String userTokenXml = WhydahUtil.addUser(userAdminServiceUri,myApplicationTokenID,adminUserTokenId,userIdentity);
+    public void listRolesForUserAndApplication() throws Exception {
+        log.trace("List roles for user {} in application {}", addedUser,TEMPORARY_APPLICATION_ID);
+        List<UserRole> roles = WhydahUtil.listUserRoles(userAdminServiceUri,myApplicationTokenID, adminUserTokenId,TEMPORARY_APPLICATION_ID,addedUser);
+        assertNotNull(roles);
+        assertTrue("Size of roles should be > 0",roles.size() > 0);
+        for (UserRole role : roles) {
+            log.debug("Role found {}", role);
+            assertEquals(TEMPORARY_APPLICATION_ID, role.getApplicationId());
+        }
     }
+
+
 }
