@@ -121,6 +121,8 @@ public class UserTokenXpathHelperTest {
     @Test
     public void testGetUserRoleFromUserAggregateXML() throws Exception {
         UserRole roles[] = UserRoleXPathHelper.getUserRoleFromUserAggregateXML(userAggregateXML);
+            assertTrue("19".equals(roles[0].getApplicationId()));
+            assertTrue("19".equals(roles[1].getApplicationId()));
 
     }
 
