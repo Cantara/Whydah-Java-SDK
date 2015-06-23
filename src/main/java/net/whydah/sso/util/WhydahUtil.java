@@ -92,12 +92,13 @@ public class WhydahUtil {
      * @param uasUri URI to the User Admin Service
      * @param applicationTokenId TokenId fetched from the XML in logOnApplication
      * @param adminUserTokenId TokenId fetched from the XML returned in logOnApplicationAndUser
-     * @param roles
-     * @return
+     * @param roles List of roles to be created.
+     * @return List of the roles that has been creatd. Empty list if no roles were created.
      */
-    public static List<String> addRolesToUser(String uasUri, String applicationTokenId, String adminUserTokenId, List<UserRole> roles ) {
+    public static List<UserRole> addRolesToUser(String uasUri, String applicationTokenId, String adminUserTokenId, List<UserRole> roles) {
 
-        List<String> createdRoles = new ArrayList<>();
+        List<String> createdRolesXml = new ArrayList<>();
+        List<UserRole> createdRoles = new ArrayList<>();
         WebTarget userTarget = buildBaseTarget(uasUri, applicationTokenId, adminUserTokenId).path("/user");
         Response response;
         String userName = "";
@@ -109,11 +110,15 @@ public class WhydahUtil {
             if (response.getStatus() == OK.getStatusCode()) {
                 String responseXML = response.readEntity(String.class);
                 log.debug("CommandAddRole - addRoles - Created role ok {}", responseXML);
-                createdRoles.add(responseXML);
+                createdRolesXml.add(responseXML);
             } else {
-                createdRoles.add("Failed to add role " + role.getRoleName() + ", reason: " + response.toString());
+                createdRolesXml.add("Failed to add role " + role.getRoleName() + ", reason: " + response.toString());
                 log.trace("Failed to add role {}, response status {}", role.toString(), response.getStatus());
             }
+        }
+        for (String createdRoleXml : createdRolesXml) {
+            UserRole createdUserRole = UserRole.fromXml(createdRoleXml);
+            createdRoles.add(createdUserRole);
         }
         return createdRoles;
     }

@@ -72,19 +72,20 @@ public class WhydaUtilUserRolesJacksonHelperTest {
         UserRole role = new UserRole(createdUserId,TEMPORARY_APPLICATION_ID,orgName, roleName, roleValue);
         List<UserRole> roles = new ArrayList<>();
         roles.add(role);
-        List<String> result = WhydahUtil.addRolesToUser(userAdminServiceUri, myApplicationTokenID,adminUserTokenId, roles);
+        List<UserRole> result = WhydahUtil.addRolesToUser(userAdminServiceUri, myApplicationTokenID,adminUserTokenId, roles);
         assertNotNull(result);
         assertEquals(1, result.size());
-        String expression = "application/id";
-        String roleId = UserXpathHelper.findValue(result.get(0),expression);
+        String roleId = result.get(0).getId();
         assertTrue(roleId.length() > 0);
 
         return createdUserId;
 
     }
 
+
+     // TODO Baard - should this work on jenkins?
+    @Ignore
     @Test
-    @Ignore // TODO Baard - should this work on jenkins?
     public void listRolesForUserAndApplication() throws Exception {
         log.trace("List roles for user {} in application {}", addedUser,TEMPORARY_APPLICATION_ID);
         List<UserRole> roles = WhydahUtil.listUserRoles(userAdminServiceUri,myApplicationTokenID, adminUserTokenId,TEMPORARY_APPLICATION_ID,addedUser);
