@@ -54,21 +54,13 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-
         logger.trace("CommandLogonUserByUserCredential - myAppTokenId={}",myAppTokenId);
 
         Client tokenServiceClient = ClientBuilder.newClient();
-
         WebTarget getUserToken = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/" + userticket + "/usertoken");
-//        MultivaluedMap<String,String> formData = new MultivaluedMapImpl();
-//        formData.add("apptoken", myAppTokenXml);
-//        formData.add("usercredential", userCredential.toXML());
         Form formData = new Form();
         formData.param("apptoken", myAppTokenXml);
         formData.param("usercredential", userCredential.toXML());
-
-//        WebTarget logonResource = tokenServiceClient.target(tokenServiceUri).path("logon");
-//        ClientResponse response = getUserToken.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(ClientResponse.class, formData);
         Response response = postForm(formData,getUserToken);
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
             logger.warn("CommandLogonUserByUserCredential - getUserToken - User authentication failed with status code " + response.getStatus());
@@ -102,6 +94,7 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
+        logger.warn("CommandLogonUserByUserCredential - getFallback - User authentication override with fallback ");
         return UserHelper.getDummyToken();
     }
 
