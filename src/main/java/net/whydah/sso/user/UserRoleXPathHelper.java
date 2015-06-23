@@ -1,5 +1,6 @@
 package net.whydah.sso.user;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
@@ -13,6 +14,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -158,6 +160,18 @@ public class UserRoleXPathHelper {
             value=result.toString();
 
         return value;
+    }
+
+    public static List<UserRole> rolesViaJackson(String rolesXml) {
+        XmlMapper mapper = new XmlMapper();
+        UserRolesJacksonHelper openCredentials = null;
+        try {
+            openCredentials = mapper.readValue(rolesXml, UserRolesJacksonHelper.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(openCredentials);
+        return openCredentials.getUserRoles();
     }
 
 }

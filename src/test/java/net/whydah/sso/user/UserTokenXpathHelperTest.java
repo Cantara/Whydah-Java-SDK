@@ -174,7 +174,7 @@ public class UserTokenXpathHelperTest {
     @Test
     public void testJacksonMapper() throws Exception{
         log.debug("Try to parse xml {}", rolesXml);
-        List<UserRole> roles = UserRoleMapper.rolesViaJackson(rolesXml);
+        List<UserRole> roles = UserRoleXPathHelper.rolesViaJackson(rolesXml);
         assertNotNull(roles);
         assertEquals(2,roles.size());
     }
