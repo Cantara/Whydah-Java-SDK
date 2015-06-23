@@ -53,7 +53,7 @@ public class WhydahUtil {
     }
 
     /**
-     * Logon your application to Whydah.
+     * Extend the application's logon expiry period.
      * @param stsURI URI to the Security Token Service, where you do logon
      * @param applicationID The registered ID of your application.
      * @param applicationSecret Current, updatet secret of your application.
@@ -79,6 +79,23 @@ public class WhydahUtil {
         String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
         UserCredential userCredential = new UserCredential(username, password);
         String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, UUID.randomUUID().toString()).execute();
+        return userToken;
+
+    }
+
+
+
+    public static String logOnUser(WhydahApplicationSession was, UserCredential userCredential){
+        URI tokenServiceUri = UriBuilder.fromUri(was.getSTS()).build();
+        String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, was.getActiveApplicationTokenId(), was.getActiveApplicationToken(), userCredential, UUID.randomUUID().toString()).execute();
+        return userToken;
+
+    }
+
+
+    public static String extendUserSession(WhydahApplicationSession was, UserCredential userCredential){
+        URI tokenServiceUri = UriBuilder.fromUri(was.getSTS()).build();
+        String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, was.getActiveApplicationTokenId(), was.getActiveApplicationToken(), userCredential, UUID.randomUUID().toString()).execute();
         return userToken;
 
     }

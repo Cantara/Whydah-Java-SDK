@@ -20,6 +20,9 @@ public class WhydahApplicationSession {
     private String appId;
     private String appSecret;
 
+    private String applicationTokenId;
+    private String applicationTokenXML;
+
     public WhydahApplicationSession(){
         this("https://whydahdev.altrancloud.com/tokenservice/","15","33779936R6Jr47D4Hj5R6p9qT");
 
@@ -41,19 +44,33 @@ public class WhydahApplicationSession {
     }
 
 
+    public String getActiveApplicationTokenId(){
+        return applicationTokenId;
+    }
+
+    public String getActiveApplicationToken(){
+        return applicationTokenXML;
+    }
+
+    public String getSTS(){
+        return sts;
+    }
+
+
     private void releaseWhydahConnection(){
-        String appTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
-        String expires = ApplicationXpathHelper.getExpiresFromAppToken(appTokenXML);
+        applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
+        Long expires = Long.parseLong(ApplicationXpathHelper.getExpiresFromAppToken(applicationTokenXML));
         if (expiresBeforeNextSchedule(expires)){
-            WhydahUtil.extendApplicationSession(sts, appId, appSecret);
+            applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
+            applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppToken(applicationTokenXML);
         }
 
     }
 
-    public  static boolean expiresBeforeNextSchedule(String timestamp){
+    public  static boolean expiresBeforeNextSchedule(Long timestamp){
 
         long i = System.currentTimeMillis();
-        long j = Long.parseLong(timestamp);
+        long j = (timestamp);
         long diffSeconds  = j-i;
         if (diffSeconds<60){
             return true;
