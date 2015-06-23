@@ -53,7 +53,7 @@ public class WhydahUtil {
     }
 
     /**
-     * Logon your application to Whydah.
+     * Extend the application's logon expiry period.
      * @param stsURI URI to the Security Token Service, where you do logon
      * @param applicationID The registered ID of your application.
      * @param applicationSecret Current, updatet secret of your application.

@@ -1,7 +1,6 @@
 package net.whydah.sso.util;
 
-import net.whydah.sso.user.UserRole;
-import net.whydah.sso.user.UserRoleXPathHelper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 
@@ -22,5 +21,15 @@ public class WhydahApplicationSessionTest {
          i = System.currentTimeMillis()+30;
         assertTrue(WhydahApplicationSession.expiresBeforeNextSchedule(Long.toString(i)));
 
+    }
+
+    @Ignore
+    @Test
+    public void testTimeoutOnLocahost() throws Exception{
+        WhydahApplicationSession applicationSession = new WhydahApplicationSession("http://localhost:9998/tokenservice","15","33779936R6Jr47D4Hj5R6p9qT");
+        long i = System.currentTimeMillis()+200;
+        assertTrue(!applicationSession.expiresBeforeNextSchedule(Long.toString(i)));
+        i = System.currentTimeMillis()+30;
+        assertTrue(applicationSession.expiresBeforeNextSchedule(Long.toString(i)));
     }
 }
