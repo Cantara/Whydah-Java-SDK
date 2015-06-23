@@ -17,9 +17,9 @@ public class WhydahApplicationSessionTest {
     @Test
     public void testTimecalculations() throws Exception {
         long i = System.currentTimeMillis()+200;
-        assertTrue(!WhydahApplicationSession.expiresBeforeNextSchedule(Long.toString(i)));
+        assertTrue(!WhydahApplicationSession.expiresBeforeNextSchedule(i));
          i = System.currentTimeMillis()+30;
-        assertTrue(WhydahApplicationSession.expiresBeforeNextSchedule(Long.toString(i)));
+        assertTrue(WhydahApplicationSession.expiresBeforeNextSchedule(i));
 
     }
 
@@ -28,8 +28,8 @@ public class WhydahApplicationSessionTest {
     public void testTimeoutOnLocahost() throws Exception{
         WhydahApplicationSession applicationSession = new WhydahApplicationSession("http://localhost:9998/tokenservice","15","33779936R6Jr47D4Hj5R6p9qT");
         long i = System.currentTimeMillis()+200;
-        assertTrue(!applicationSession.expiresBeforeNextSchedule(Long.toString(i)));
+        assertTrue(!applicationSession.expiresBeforeNextSchedule(i));
         i = System.currentTimeMillis()+30;
-        assertTrue(applicationSession.expiresBeforeNextSchedule(Long.toString(i)));
+        assertTrue(applicationSession.expiresBeforeNextSchedule(i));
     }
 }
