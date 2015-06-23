@@ -28,6 +28,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by totto on 06.05.15.
+ *
+ * TODO  add init to embedd sts/uas and renewal of application and user sessions
+ *
  */
 public class WhydahUtil {
     private static final Logger log = getLogger(WhydahUtil.class);
@@ -48,6 +51,26 @@ public class WhydahUtil {
         return myAppTokenXml;
 
     }
+
+    /**
+     * Logon your application to Whydah.
+     * @param stsURI URI to the Security Token Service, where you do logon
+     * @param applicationID The registered ID of your application.
+     * @param applicationSecret Current, updatet secret of your application.
+     * @return XML Representing the application. In this you will find the applicationtokenId used as application session
+     * for further operations.
+     *
+     * TODO   Use extend session not new logon...
+     *
+     */
+    public static String extendApplicationSession(String stsURI, String applicationID,String applicationSecret){
+        URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
+        ApplicationCredential appCredential = new ApplicationCredential(applicationID,applicationSecret);
+        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+        return myAppTokenXml;
+
+    }
+
 
     public static String logOnApplicationAndUser(String stsURI, String applicationID,String applicationSecret, String username,String password){
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();

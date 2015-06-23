@@ -84,7 +84,7 @@ public class WhydaUtilUserRolesJacksonHelperTest {
 
 
      // TODO Baard - should this work on jenkins? -BLI: YES. Though an dependency on environment, or mock.
-    @Ignore
+    //@Ignore
     @Test
     public void listRolesForUserAndApplication() throws Exception {
         log.trace("List roles for user {} in application {}", addedUser,TEMPORARY_APPLICATION_ID);
