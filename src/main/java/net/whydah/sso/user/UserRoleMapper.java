@@ -20,6 +20,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by baardl on 22.06.15.
+ *
+ * @deprecated Use UserRoleXpathHelper instead
  */
 public class UserRoleMapper {
     private static final Logger log = getLogger(UserRoleMapper.class);
