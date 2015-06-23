@@ -38,4 +38,33 @@ public class ApplicationXpathHelper {
         return "";
     }
 
+    public static  String getExpiresFromAppToken(String appTokenXML) {
+        String expires = "";
+        if (appTokenXML == null) {
+            logger.debug("roleXml was empty, so returning empty orgName.");
+        } else {
+            String expression = "/aexpires";
+            expires = findValue(appTokenXML, expression);
+        }
+        return expires;
+    }
+
+
+    public static String findValue(String xmlString,  String expression) {
+        String value = "";
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(new InputSource(new StringReader(xmlString)));
+            XPath xPath = XPathFactory.newInstance().newXPath();
+
+
+            XPathExpression xPathExpression = xPath.compile(expression);
+            value = xPathExpression.evaluate(doc);
+        } catch (Exception e) {
+            logger.warn("Failed to parse xml. Expression {}, xml {}, ", expression, xmlString, e);
+        }
+        return value;
+    }
+
 }

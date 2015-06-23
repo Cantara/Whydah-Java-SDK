@@ -52,6 +52,26 @@ public class WhydahUtil {
 
     }
 
+    /**
+     * Logon your application to Whydah.
+     * @param stsURI URI to the Security Token Service, where you do logon
+     * @param applicationID The registered ID of your application.
+     * @param applicationSecret Current, updatet secret of your application.
+     * @return XML Representing the application. In this you will find the applicationtokenId used as application session
+     * for further operations.
+     *
+     * TODO   Use extend session not new logon...
+     *
+     */
+    public static String extendApplicationSession(String stsURI, String applicationID,String applicationSecret){
+        URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
+        ApplicationCredential appCredential = new ApplicationCredential(applicationID,applicationSecret);
+        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+        return myAppTokenXml;
+
+    }
+
+
     public static String logOnApplicationAndUser(String stsURI, String applicationID,String applicationSecret, String username,String password){
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
         ApplicationCredential appCredential = new ApplicationCredential(applicationID,applicationSecret);
