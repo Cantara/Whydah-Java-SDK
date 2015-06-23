@@ -94,7 +94,7 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        logger.warn("CommandLogonUserByUserCredential - getFallback - User authentication override with fallback ";
+        logger.warn("CommandLogonUserByUserCredential - getFallback - User authentication override with fallback ");
         return UserHelper.getDummyToken();
     }
 
