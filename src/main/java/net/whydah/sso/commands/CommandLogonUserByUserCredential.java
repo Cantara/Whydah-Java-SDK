@@ -5,7 +5,6 @@ import com.netflix.hystrix.HystrixCommandGroupKey;
 import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserHelper;
 import net.whydah.sso.util.ExceptionUtil;
-import org.glassfish.jersey.client.ClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +14,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.UUID;
@@ -38,6 +36,9 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
     public CommandLogonUserByUserCredential(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml ,UserCredential userCredential) {
         super(HystrixCommandGroupKey.Factory.asKey("SSOAUserAuthGroup"));
+        if (tokenServiceUri == null||myAppTokenId.isEmpty() ||myAppTokenXml.isEmpty() ||userCredential == null) {
+            throw new IllegalArgumentException("Missing parameters for tokenServiceUri, myAppTokenId, myAppTokenXml or userCredential");
+        }
         this.tokenServiceUri = tokenServiceUri;
         this.myAppTokenId=myAppTokenId;
         this.myAppTokenXml=myAppTokenXml;
@@ -47,11 +48,7 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
 
     public CommandLogonUserByUserCredential(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml ,UserCredential userCredential,String userticket) {
-        super(HystrixCommandGroupKey.Factory.asKey("SSOAUserAuthGroup"));
-        this.tokenServiceUri = tokenServiceUri;
-        this.myAppTokenId=myAppTokenId;
-        this.myAppTokenXml=myAppTokenXml;
-        this.userCredential=userCredential;
+        this(tokenServiceUri,myAppTokenId,myAppTokenXml,userCredential);
         this.userticket=userticket;
     }
 
