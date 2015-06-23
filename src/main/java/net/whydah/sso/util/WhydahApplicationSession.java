@@ -20,6 +20,9 @@ public class WhydahApplicationSession {
     private String appId;
     private String appSecret;
 
+    private String applicationTokenId;
+    private String applicationToken;
+
     public WhydahApplicationSession(){
         this("https://whydahdev.altrancloud.com/tokenservice/","15","33779936R6Jr47D4Hj5R6p9qT");
 
@@ -41,11 +44,20 @@ public class WhydahApplicationSession {
     }
 
 
+    public String getActiveApplicationTokenId(){
+        return applicationTokenId;
+    }
+
+    public String getActiveApplicationToken(){
+        return applicationToken;
+    }
+
     private void releaseWhydahConnection(){
         String appTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
         String expires = ApplicationXpathHelper.getExpiresFromAppToken(appTokenXML);
         if (expiresBeforeNextSchedule(expires)){
-            WhydahUtil.extendApplicationSession(sts, appId, appSecret);
+            applicationToken = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
+            applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppToken(applicationToken);
         }
 
     }
