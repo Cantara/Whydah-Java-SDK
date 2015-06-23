@@ -7,6 +7,7 @@ import net.whydah.sso.commands.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserIdentityRepresentation;
 import net.whydah.sso.user.UserRole;
+import net.whydah.sso.user.UserRoleXPathHelper;
 import org.slf4j.Logger;
 
 import javax.ws.rs.client.Client;
@@ -92,12 +93,13 @@ public class WhydahUtil {
      * @param uasUri URI to the User Admin Service
      * @param applicationTokenId TokenId fetched from the XML in logOnApplication
      * @param adminUserTokenId TokenId fetched from the XML returned in logOnApplicationAndUser
-     * @param roles
-     * @return
+     * @param roles List of roles to be created.
+     * @return List of the roles that has been creatd. Empty list if no roles were created.
      */
-    public static List<String> addRolesToUser(String uasUri, String applicationTokenId, String adminUserTokenId, List<UserRole> roles ) {
+    public static List<UserRole> addRolesToUser(String uasUri, String applicationTokenId, String adminUserTokenId, List<UserRole> roles) {
 
-        List<String> createdRoles = new ArrayList<>();
+        List<String> createdRolesXml = new ArrayList<>();
+        List<UserRole> createdRoles = new ArrayList<>();
         WebTarget userTarget = buildBaseTarget(uasUri, applicationTokenId, adminUserTokenId).path("/user");
         Response response;
         String userName = "";
@@ -109,11 +111,15 @@ public class WhydahUtil {
             if (response.getStatus() == OK.getStatusCode()) {
                 String responseXML = response.readEntity(String.class);
                 log.debug("CommandAddRole - addRoles - Created role ok {}", responseXML);
-                createdRoles.add(responseXML);
+                createdRolesXml.add(responseXML);
             } else {
-                createdRoles.add("Failed to add role " + role.getRoleName() + ", reason: " + response.toString());
+                createdRolesXml.add("Failed to add role " + role.getRoleName() + ", reason: " + response.toString());
                 log.trace("Failed to add role {}, response status {}", role.toString(), response.getStatus());
             }
+        }
+        for (String createdRoleXml : createdRolesXml) {
+            UserRole createdUserRole = UserRole.fromXml(createdRoleXml);
+            createdRoles.add(createdUserRole);
         }
         return createdRoles;
     }
@@ -127,10 +133,7 @@ public class WhydahUtil {
         if (response.getStatus() == OK.getStatusCode()) {
             String rolesXml = response.readEntity(String.class);
             log.debug("CommandListRoles - listUserRoles - Created role ok {}", rolesXml);
-            UserRole userRole = UserRole.fromXml(rolesXml);
-            userRoles.add(userRole);
-           // UserRole userRole = UserRoleHelper.fromJson(rolesJson);
-//                    userRoles.add(responseXML);
+           userRoles = UserRoleXPathHelper.rolesViaJackson(rolesXml);
         } else {
             log.trace("Failed to find roles for user {}, response status {}", userId, response.getStatus());
         }

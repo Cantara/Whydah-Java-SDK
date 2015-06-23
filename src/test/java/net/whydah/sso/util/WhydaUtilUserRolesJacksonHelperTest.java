@@ -25,8 +25,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * Created by baardl on 22.06.15.
  */
-public class WhydaUtilUserRolesTest {
-    private static final Logger log = getLogger(WhydaUtilUserRolesTest.class);
+public class WhydaUtilUserRolesJacksonHelperTest {
+    private static final Logger log = getLogger(WhydaUtilUserRolesJacksonHelperTest.class);
 
     public static final String TEMPORARY_APPLICATION_ID = "201";//"11";
     public static final String TEMPORARY_APPLICATION_SECRET = "bbbbbbbbbbbbbbbbbbbbbbbbb";
@@ -72,19 +72,20 @@ public class WhydaUtilUserRolesTest {
         UserRole role = new UserRole(createdUserId,TEMPORARY_APPLICATION_ID,orgName, roleName, roleValue);
         List<UserRole> roles = new ArrayList<>();
         roles.add(role);
-        List<String> result = WhydahUtil.addRolesToUser(userAdminServiceUri, myApplicationTokenID,adminUserTokenId, roles);
+        List<UserRole> result = WhydahUtil.addRolesToUser(userAdminServiceUri, myApplicationTokenID,adminUserTokenId, roles);
         assertNotNull(result);
         assertEquals(1, result.size());
-        String expression = "application/id";
-        String roleId = UserXpathHelper.findValue(result.get(0),expression);
+        String roleId = result.get(0).getId();
         assertTrue(roleId.length() > 0);
 
         return createdUserId;
 
     }
 
+
+     // TODO Baard - should this work on jenkins? -BLI: YES. Though an dependency on environment, or mock.
+    @Ignore
     @Test
-    @Ignore // TODO Baard - should this work on jenkins?
     public void listRolesForUserAndApplication() throws Exception {
         log.trace("List roles for user {} in application {}", addedUser,TEMPORARY_APPLICATION_ID);
         List<UserRole> roles = WhydahUtil.listUserRoles(userAdminServiceUri,myApplicationTokenID, adminUserTokenId,TEMPORARY_APPLICATION_ID,addedUser);

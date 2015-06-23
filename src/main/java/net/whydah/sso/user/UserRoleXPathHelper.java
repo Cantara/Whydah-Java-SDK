@@ -1,5 +1,6 @@
 package net.whydah.sso.user;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
@@ -13,7 +14,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
+import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,7 +62,8 @@ public class UserRoleXPathHelper {
         return null;
     }
 
-    public static UserRole[] getUserRoleFromUserAggregateXML(String userAggregateXML) {
+    public static List<UserRole> getUserRoleFromUserAggregateXML(String userAggregateXML) {
+        List<UserRole> userRoles = new ArrayList<>();
         if (userAggregateXML == null) {
             logger.debug("userAggregateXML was empty, so returning null.");
         } else {
@@ -70,22 +74,23 @@ public class UserRoleXPathHelper {
             String userName=findXpathValue(userAggregateXML, "/whydahuser/identity/username");
             String expression = "count(/whydahuser/applications/application)";
             int noOfRoles= Integer.valueOf(findXpathValue(userAggregateXML,expression));
-            UserRole[] result = new UserRole[noOfRoles];
+
             for (int n=1;n<=noOfRoles;n++) {
                 try {
                     appid = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/appId");
                     orgName = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/orgName");
                     rolename = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/roleName");
                     roleValue = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/roleValue");
-                    UserRole ur = new UserRole(userName, appid, orgName, rolename, roleValue);
-                    result[n-1] = ur;
+                    UserRole userRole = new UserRole(userName, appid, orgName, rolename, roleValue);
+                    userRoles.add(userRole);
                 } catch (PathNotFoundException pnpe) {
-                    return null;
+                    logger.warn("Could not parse userAggregateXml {}, reason {}", userAggregateXML,pnpe.getMessage());
+//                    return null;
                 }
             }
-            return result;
+
         }
-        return null;
+        return userRoles;
     }
 
     public static UserRole[] getUserRoleFromUserAggregateJSON(String userAggregateJson) {
@@ -155,6 +160,18 @@ public class UserRoleXPathHelper {
             value=result.toString();
 
         return value;
+    }
+
+    public static List<UserRole> rolesViaJackson(String rolesXml) {
+        XmlMapper mapper = new XmlMapper();
+        UserRolesJacksonHelper openCredentials = null;
+        try {
+            openCredentials = mapper.readValue(rolesXml, UserRolesJacksonHelper.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(openCredentials);
+        return openCredentials.getUserRoles();
     }
 
 }
