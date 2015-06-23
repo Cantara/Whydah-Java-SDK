@@ -7,6 +7,7 @@ import net.whydah.sso.commands.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserIdentityRepresentation;
 import net.whydah.sso.user.UserRole;
+import net.whydah.sso.user.UserRoleXPathHelper;
 import org.slf4j.Logger;
 
 import javax.ws.rs.client.Client;
@@ -132,10 +133,7 @@ public class WhydahUtil {
         if (response.getStatus() == OK.getStatusCode()) {
             String rolesXml = response.readEntity(String.class);
             log.debug("CommandListRoles - listUserRoles - Created role ok {}", rolesXml);
-            UserRole userRole = UserRole.fromXml(rolesXml);
-            userRoles.add(userRole);
-           // UserRole userRole = UserRoleHelper.fromJson(rolesJson);
-//                    userRoles.add(responseXML);
+           userRoles = UserRoleXPathHelper.rolesViaJackson(rolesXml);
         } else {
             log.trace("Failed to find roles for user {}, response status {}", userId, response.getStatus());
         }

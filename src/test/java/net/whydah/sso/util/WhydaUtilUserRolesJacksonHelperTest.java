@@ -83,7 +83,7 @@ public class WhydaUtilUserRolesJacksonHelperTest {
     }
 
 
-     // TODO Baard - should this work on jenkins?
+     // TODO Baard - should this work on jenkins? -BLI: YES. Though an dependency on environment, or mock.
     @Ignore
     @Test
     public void listRolesForUserAndApplication() throws Exception {
