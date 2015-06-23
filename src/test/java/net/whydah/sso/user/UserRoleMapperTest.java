@@ -3,7 +3,6 @@ package net.whydah.sso.user;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -16,10 +15,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class UserRoleMapperTest {
     private static final Logger log = getLogger(UserRoleMapperTest.class);
 
+
+
     @Test
     public void testRolesFromXml() throws Exception {
         log.debug("Try to parse xml {}", userAggregateXML);
-        List<UserRole> roles = Arrays.asList(UserRoleXPathHelper.getUserRoleFromUserAggregateXML(userAggregateXML));
+        List<UserRole> roles = UserRoleXPathHelper.getUserRoleFromUserAggregateXML(userAggregateXML);
         assertNotNull(roles);
         assertEquals(2,roles.size());
 
@@ -53,4 +54,20 @@ public class UserRoleMapperTest {
             "        </application>\n" +
             "    </applications>\n" +
             "</whydahuser>";
+    String rolesXml = "<applications>\n" +
+            "        <application>\n" +
+            "            <appId>19</appId>\n" +
+            "            <applicationName>UserAdminWebApplication</applicationName>\n" +
+            "            <orgName>Support</orgName>\n" +
+            "            <roleName>WhydahUserAdmin</roleName>\n" +
+            "            <roleValue>1</roleValue>\n" +
+            "        </application>\n" +
+            "        <application>\n" +
+            "            <appId>19</appId>\n" +
+            "            <applicationName>UserAdminWebApplication</applicationName>\n" +
+            "            <orgName>Company</orgName>\n" +
+            "            <roleName>WhydahUserAdmin</roleName>\n" +
+            "            <roleValue>1</roleValue>\n" +
+            "        </application>\n" +
+            "    </applications>";
 }

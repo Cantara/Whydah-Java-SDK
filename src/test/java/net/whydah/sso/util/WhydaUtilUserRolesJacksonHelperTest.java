@@ -25,8 +25,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * Created by baardl on 22.06.15.
  */
-public class WhydaUtilUserRolesTest {
-    private static final Logger log = getLogger(WhydaUtilUserRolesTest.class);
+public class WhydaUtilUserRolesJacksonHelperTest {
+    private static final Logger log = getLogger(WhydaUtilUserRolesJacksonHelperTest.class);
 
     public static final String TEMPORARY_APPLICATION_ID = "201";//"11";
     public static final String TEMPORARY_APPLICATION_SECRET = "bbbbbbbbbbbbbbbbbbbbbbbbb";

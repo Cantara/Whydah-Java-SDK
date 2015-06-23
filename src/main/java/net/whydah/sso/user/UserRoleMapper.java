@@ -1,5 +1,6 @@
 package net.whydah.sso.user;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.slf4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -13,6 +14,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 
@@ -25,6 +27,18 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class UserRoleMapper {
     private static final Logger log = getLogger(UserRoleMapper.class);
+
+    public static List<UserRole> rolesViaJackson(String rolesXml) {
+        XmlMapper mapper = new XmlMapper();
+        UserRolesJacksonHelper openCredentials = null;
+        try {
+            openCredentials = mapper.readValue(rolesXml, UserRolesJacksonHelper.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(openCredentials);
+        return openCredentials.getUserRoles();
+    }
 
 
     public static List<UserRole> rolesFromXml(String rolesXml){

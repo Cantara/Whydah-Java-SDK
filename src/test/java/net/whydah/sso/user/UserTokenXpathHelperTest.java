@@ -2,14 +2,18 @@ package net.whydah.sso.user;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.List;
+
+import static org.junit.Assert.*;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by totto on 22.06.15.
  */
 public class UserTokenXpathHelperTest {
+    private static final Logger log = getLogger(UserTokenXpathHelperTest.class);
 
     String userTokenXML = "<usertoken xmlns:ns2=\"http://www.w3.org/1999/xhtml\" id=\"a96a517f-cef3-4be7-92f5-f059b65e4071\">\n" +
             "    <uid></uid>\n" +
@@ -106,6 +110,23 @@ public class UserTokenXpathHelperTest {
             "  ]\n" +
             "}";
 
+    String rolesXml = "<applications>\n" +
+            "        <application>\n" +
+            "            <appId>19</appId>\n" +
+            "            <applicationName>UserAdminWebApplication</applicationName>\n" +
+            "            <orgName>Support</orgName>\n" +
+            "            <roleName>WhydahUserAdmin</roleName>\n" +
+            "            <roleValue>1</roleValue>\n" +
+            "        </application>\n" +
+            "        <application>\n" +
+            "            <appId>19</appId>\n" +
+            "            <applicationName>UserAdminWebApplication</applicationName>\n" +
+            "            <orgName>Company</orgName>\n" +
+            "            <roleName>WhydahUserAdmin</roleName>\n" +
+            "            <roleValue>1</roleValue>\n" +
+            "        </application>\n" +
+            "    </applications>";
+
 
     @Before
     public void setUp() throws Exception {
@@ -122,9 +143,14 @@ public class UserTokenXpathHelperTest {
 
     @Test
     public void testGetUserRoleFromUserAggregateXML() throws Exception {
-        UserRole roles[] = UserRoleXPathHelper.getUserRoleFromUserAggregateXML(userAggregateXML);
-        assertTrue("19".equals(roles[0].getApplicationId()));
-        assertTrue("19".equals(roles[1].getApplicationId()));
+        List<UserRole> roles = UserRoleXPathHelper.getUserRoleFromUserAggregateXML(userAggregateXML);
+        assertNotNull(roles);
+        assertEquals(3, roles.size());
+        assertTrue("19".equals(roles.get(0).getApplicationId()));
+        assertEquals("WhydahUserAdmin", roles.get(0).getRoleName());
+        assertEquals("Manager", roles.get(1).getRoleName());
+        assertEquals("WhydahUserAdmin", roles.get(2).getRoleName());
+        assertTrue("Company".equals(roles.get(2).getOrgName()));
 
     }
 
@@ -135,5 +161,23 @@ public class UserTokenXpathHelperTest {
         assertTrue("applicationId123".equals(roles[1].getApplicationId()));
 
     }
+
+    @Test
+    public void testRolesFromXml() throws Exception {
+        log.debug("Try to parse xml {}", userAggregateXML);
+        List<UserRole> roles = UserRoleXPathHelper.getUserRoleFromUserAggregateXML(userAggregateXML);
+        assertNotNull(roles);
+        assertEquals(3,roles.size());
+
+    }
+
+    @Test
+    public void testJacksonMapper() throws Exception{
+        log.debug("Try to parse xml {}", rolesXml);
+        List<UserRole> roles = UserRoleMapper.rolesViaJackson(rolesXml);
+        assertNotNull(roles);
+        assertEquals(2,roles.size());
+    }
+
 
 }
