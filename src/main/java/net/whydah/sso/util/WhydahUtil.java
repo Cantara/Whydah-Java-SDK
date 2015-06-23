@@ -28,6 +28,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by totto on 06.05.15.
+ *
+ * TODO  add init to embedd sts/uas and renewal of application and user sessions
+ *
  */
 public class WhydahUtil {
     private static final Logger log = getLogger(WhydahUtil.class);
