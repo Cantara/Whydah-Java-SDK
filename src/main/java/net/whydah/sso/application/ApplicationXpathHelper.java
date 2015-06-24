@@ -19,23 +19,16 @@ public class ApplicationXpathHelper {
     private static final Logger logger = LoggerFactory.getLogger(ApplicationXpathHelper.class);
 
 
-    public static  String getAppTokenIdFromAppToken(String appTokenXML) {
-        //logger.trace("appTokenXML: {}", appTokenXML);
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(appTokenXML)));
-            XPath xPath = XPathFactory.newInstance().newXPath();
 
+    public static  String getAppTokenIdFromAppToken(String appTokenXML) {
+        String appTokenId = "";
+        if (appTokenXML == null) {
+            logger.debug("roleXml was empty, so returning empty orgName.");
+        } else {
             String expression = "/applicationtoken/params/applicationtokenID[1]";
-            XPathExpression xPathExpression = xPath.compile(expression);
-            String appId = xPathExpression.evaluate(doc);
-            logger.debug("getAppTokenIdFromAppToken: applicationTokenId={}, appTokenXML={}", appId, appTokenXML);
-            return appId;
-        } catch (Exception e) {
-            logger.error("getAppTokenIdFromAppToken - appTokenXML - Could not get applicationID from XML: " + appTokenXML, e);
+            appTokenId = findValue(appTokenXML, expression);
         }
-        return "";
+        return appTokenId;
     }
 
     public static  String getExpiresFromAppToken(String appTokenXML) {
@@ -43,7 +36,7 @@ public class ApplicationXpathHelper {
         if (appTokenXML == null) {
             logger.debug("roleXml was empty, so returning empty orgName.");
         } else {
-            String expression = "/aexpires";
+            String expression = "/expires";
             expires = findValue(appTokenXML, expression);
         }
         return expires;
