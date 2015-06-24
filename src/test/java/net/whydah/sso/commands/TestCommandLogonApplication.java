@@ -40,11 +40,11 @@ public class TestCommandLogonApplication {
         // System.out.println("ApplicationTokenID=" + myApplicationTokenID);
         assertEquals(ApplicationHelper.getDummyApplicationToken(), myAppTokenXml);
 
-        Future<String> fmyAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).queue();
+        Future<String> fmyAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).queue();
         assertEquals(ApplicationHelper.getDummyApplicationToken(), fmyAppTokenXml.get());
 
 
-        Observable<String> omyAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).observe();
+        Observable<String> omyAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).observe();
         // blocking
         assertEquals(ApplicationHelper.getDummyApplicationToken(), omyAppTokenXml.toBlocking().single());
     }
@@ -52,14 +52,14 @@ public class TestCommandLogonApplication {
     @Test
     public void testApplicationLoginCommand() throws Exception {
 
-        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+        String myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
         // System.out.println("ApplicationTokenID=" + myApplicationTokenID);
         assertTrue(myAppTokenXml.length() > 6);
 
-        Future<String> fmyAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).queue();
+        Future<String> fmyAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).queue();
         assertTrue(fmyAppTokenXml.get().length() > 6);
 
-        Observable<String> omyAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).observe();
+        Observable<String> omyAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).observe();
         // blocking
         assertTrue(omyAppTokenXml.toBlocking().single().length() > 6);
     }
