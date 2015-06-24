@@ -37,6 +37,10 @@ public class CommandLogonApplication extends HystrixCommand<String> {
         super(HystrixCommandGroupKey.Factory.asKey("SSOApplicationAuthGroup"));
         this.tokenServiceUri = tokenServiceUri;
         this.appCredential=appCredential;
+        if (tokenServiceUri==null || appCredential==null ){
+            logger.error("CommandLogonApplication initialized with null-values - will fail");
+        }
+
     }
 
     @Override

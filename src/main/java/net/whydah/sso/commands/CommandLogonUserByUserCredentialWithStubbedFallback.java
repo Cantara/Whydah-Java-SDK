@@ -27,43 +27,47 @@ import static javax.ws.rs.core.Response.Status.OK;
  */
 public class CommandLogonUserByUserCredentialWithStubbedFallback extends HystrixCommand<String> {
 
-        private static final Logger logger = LoggerFactory.getLogger(CommandLogonUserByUserCredential.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommandLogonUserByUserCredential.class);
 
-        private URI tokenServiceUri;
-        private String myAppTokenId;
-        private String myAppTokenXml;
-        private UserCredential userCredential;
-        private String userticket;
+    private URI tokenServiceUri;
+    private String myAppTokenId;
+    private String myAppTokenXml;
+    private UserCredential userCredential;
+    private String userticket;
 
 
-        public CommandLogonUserByUserCredentialWithStubbedFallback(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml ,UserCredential userCredential) {
+    public CommandLogonUserByUserCredentialWithStubbedFallback(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, UserCredential userCredential) {
         super(HystrixCommandGroupKey.Factory.asKey("SSOAUserAuthGroup"));
-        if (tokenServiceUri == null||myAppTokenId.isEmpty() ||myAppTokenXml.isEmpty() ||userCredential == null) {
+        if (tokenServiceUri == null || myAppTokenId.isEmpty() || myAppTokenXml.isEmpty() || userCredential == null) {
             throw new IllegalArgumentException("Missing parameters for tokenServiceUri, myAppTokenId, myAppTokenXml or userCredential");
         }
         this.tokenServiceUri = tokenServiceUri;
-        this.myAppTokenId=myAppTokenId;
-        this.myAppTokenXml=myAppTokenXml;
-        this.userCredential=userCredential;
-        this.userticket= UUID.randomUUID().toString();  // Create new UUID ticket if not provided
+        this.myAppTokenId = myAppTokenId;
+        this.myAppTokenXml = myAppTokenXml;
+        this.userCredential = userCredential;
+        this.userticket = UUID.randomUUID().toString();  // Create new UUID ticket if not provided
+        if (tokenServiceUri == null || myAppTokenId == null || myAppTokenXml == null || userCredential == null || userCredential == null) {
+            logger.error("CommandLogonUserByUserCredential initialized with null-values - will fail");
+        }
+
     }
 
 
-        public CommandLogonUserByUserCredentialWithStubbedFallback(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml ,UserCredential userCredential,String userticket) {
-        this(tokenServiceUri,myAppTokenId,myAppTokenXml,userCredential);
-        this.userticket=userticket;
+    public CommandLogonUserByUserCredentialWithStubbedFallback(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, UserCredential userCredential, String userticket) {
+        this(tokenServiceUri, myAppTokenId, myAppTokenXml, userCredential);
+        this.userticket = userticket;
     }
 
-        @Override
-        protected String run() {
-        logger.trace("CommandLogonUserByUserCredential - myAppTokenId={}",myAppTokenId);
+    @Override
+    protected String run() {
+        logger.trace("CommandLogonUserByUserCredential - myAppTokenId={}", myAppTokenId);
 
         Client tokenServiceClient = ClientBuilder.newClient();
         WebTarget getUserToken = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/" + userticket + "/usertoken");
         Form formData = new Form();
         formData.param("apptoken", myAppTokenXml);
         formData.param("usercredential", userCredential.toXML());
-        Response response = postForm(formData,getUserToken);
+        Response response = postForm(formData, getUserToken);
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
             logger.warn("CommandLogonUserByUserCredential - getUserToken - User authentication failed with status code " + response.getStatus());
             return null;
@@ -76,7 +80,7 @@ public class CommandLogonUserByUserCredentialWithStubbedFallback extends Hystrix
 
         //retry once for other statuses
         logger.info("CommandLogonUserByUserCredential - getUserToken - retry once for other statuses");
-        response = postForm(formData,getUserToken);
+        response = postForm(formData, getUserToken);
         if (response.getStatus() == OK.getStatusCode()) {
             String responseXML = response.readEntity(String.class);
             logger.trace("CommandLogonUserByUserCredential - getUserToken - Log on OK with response {}", responseXML);
@@ -91,7 +95,7 @@ public class CommandLogonUserByUserCredentialWithStubbedFallback extends Hystrix
     }
 
     private Response postForm(Form formData, WebTarget logonResource) {
-        return logonResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE),Response.class);
+        return logonResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
     }
 
     @Override
@@ -99,7 +103,6 @@ public class CommandLogonUserByUserCredentialWithStubbedFallback extends Hystrix
         logger.warn("CommandLogonUserByUserCredential - getFallback - User authentication override with fallback ");
         return UserHelper.getDummyToken();
     }
-
 
 
 }
