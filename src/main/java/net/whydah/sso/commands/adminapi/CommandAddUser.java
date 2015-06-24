@@ -20,8 +20,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * Created by baardl on 15.06.15.
  */
-public class CommandAddUserIdentity extends HystrixCommand<String> {
-    private static final Logger log = getLogger(CommandAddUserIdentity.class);
+public class CommandAddUser extends HystrixCommand<String> {
+    private static final Logger log = getLogger(CommandAddUser.class);
     private URI userAdminServiceUri;
     private String myAppTokenId;
     private String adminUserTokenId;
@@ -30,14 +30,14 @@ public class CommandAddUserIdentity extends HystrixCommand<String> {
 
 
 
-    public CommandAddUserIdentity(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String userIdentityXml) {
+    public CommandAddUser(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String userIdentityXml) {
         super(HystrixCommandGroupKey.Factory.asKey("UASUserGroup"));
         this.userAdminServiceUri = userAdminServiceUri;
         this.myAppTokenId=myAppTokenId;
         this.adminUserTokenId=adminUserTokenId;
         this.userIdentityXml=userIdentityXml;
         if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userIdentityXml==null ) {
-            log.error("CommandAddUserIdentity initialized with null-values - will fail");
+            log.error("CommandAddUser initialized with null-values - will fail");
         }
 
     }

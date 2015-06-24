@@ -33,7 +33,7 @@ public class TestCommandLogonUserByUserCredential {
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
-    private static boolean integrationMode = true;
+    private static boolean integrationMode = false;
 
 
     @BeforeClass
