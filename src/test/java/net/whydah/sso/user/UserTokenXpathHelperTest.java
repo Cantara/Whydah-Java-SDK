@@ -135,7 +135,7 @@ public class UserTokenXpathHelperTest {
 
     @Test
     public void testGetUserRoleFromUserToken() throws Exception {
-        UserRole roles[] = UserRoleXPathHelper.getUserRoleFromUserTokenXml(userTokenXML);
+        UserRole roles[] = UserRoleXpathHelper.getUserRoleFromUserTokenXml(userTokenXML);
         assertTrue("2349785543".equals(roles[0].getApplicationId()));
         assertTrue("appa".equals(roles[2].getApplicationId()));
 
@@ -143,7 +143,7 @@ public class UserTokenXpathHelperTest {
 
     @Test
     public void testGetUserRoleFromUserAggregateXML() throws Exception {
-        List<UserRole> roles = UserRoleXPathHelper.getUserRoleFromUserAggregateXml(userAggregateXML);
+        List<UserRole> roles = UserRoleXpathHelper.getUserRoleFromUserAggregateXml(userAggregateXML);
         assertNotNull(roles);
         assertEquals(3, roles.size());
         assertTrue("19".equals(roles.get(0).getApplicationId()));
@@ -156,7 +156,7 @@ public class UserTokenXpathHelperTest {
 
     @Test
     public void testGetUserRoleFromUserAggregateJSON() throws Exception {
-        UserRole roles[] = UserRoleXPathHelper.getUserRoleFromUserAggregateJson(userAggregateJson);
+        UserRole roles[] = UserRoleXpathHelper.getUserRoleFromUserAggregateJson(userAggregateJson);
         assertTrue("applicationId".equals(roles[0].getApplicationId()));
         assertTrue("applicationId123".equals(roles[1].getApplicationId()));
 
@@ -165,16 +165,26 @@ public class UserTokenXpathHelperTest {
     @Test
     public void testRolesFromXml() throws Exception {
         log.debug("Try to parse xml {}", userAggregateXML);
-        List<UserRole> roles = UserRoleXPathHelper.getUserRoleFromUserAggregateXml(userAggregateXML);
+        List<UserRole> roles = UserRoleXpathHelper.getUserRoleFromUserAggregateXml(userAggregateXML);
         assertNotNull(roles);
         assertEquals(3, roles.size());
 
     }
 
     @Test
+    public void testNnotJacksonMapper() throws Exception{
+        log.debug("Try to parse xml {}", rolesXml);
+        List<UserRole> roles = UserRoleXpathHelper.rolesViaJackson(rolesXml);
+        assertNotNull(roles);
+        assertEquals(2, roles.size());
+    }
+
+
+// TODO BLI:  why jackson parsing when we already have parsing?  testNnotJacksonMapper
+    @Test
     public void testJacksonMapper() throws Exception{
         log.debug("Try to parse xml {}", rolesXml);
-        List<UserRole> roles = UserRoleXPathHelper.rolesViaJackson(rolesXml);
+        List<UserRole> roles = UserRoleXpathHelper.rolesViaJackson(rolesXml);
         assertNotNull(roles);
         assertEquals(2, roles.size());
     }

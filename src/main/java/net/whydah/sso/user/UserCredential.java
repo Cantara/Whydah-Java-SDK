@@ -7,13 +7,7 @@ public class UserCredential {
     private String userName;
     private String password;
 
-    String templateToken = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?> \n " +
-            "    <usercredential>\n" +
-            "        <params>\n" +
-            "            <username>" + getUserName() + "</username>\n" +
-            "            <password>" + getPassword() + "</password>\n" +
-            "        </params> \n" +
-            "    </usercredential>\n";
+
 
     public UserCredential(String userName, String password) {
         this.userName = userName;
@@ -37,9 +31,7 @@ public class UserCredential {
     }
 
     public String toXML() {
-        if (userName == null) {
-            return templateToken;
-        } else {
+
             return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?> \n " +
                     "<usercredential>\n" +
                     "    <params>\n" +
@@ -47,7 +39,7 @@ public class UserCredential {
                     "        <password>" + getPassword() + "</password>\n" +
                     "    </params> \n" +
                     "</usercredential>\n";
-        }
+
     }
 
 
