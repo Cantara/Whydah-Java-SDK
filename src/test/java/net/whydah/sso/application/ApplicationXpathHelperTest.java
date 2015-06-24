@@ -25,7 +25,9 @@ public class ApplicationXpathHelperTest {
     public void testGetUserRoleFromUserToken() throws Exception {
         String applications[] = ApplicationXpathHelper.getApplicationNamesFromApplicationsJson(ApplicationHelper.getDummyAppllicationListJson());
         System.out.println("Found applications "+applications.length);
-        assertTrue(7==applications.length);
+        assertTrue(7 == applications.length);
+        assertTrue("SecurityTokenService".equalsIgnoreCase(applications[0]));
+        assertTrue("m2Circle".equalsIgnoreCase(applications[6]));
         for(String s : applications)
             System.out.println("ApplicationName: "+s);
 
