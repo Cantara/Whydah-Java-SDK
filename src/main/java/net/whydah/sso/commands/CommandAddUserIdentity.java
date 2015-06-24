@@ -38,6 +38,10 @@ public class CommandAddUserIdentity extends HystrixCommand<String> {
         this.myAppTokenId=myAppTokenId;
         this.adminUserTokenId=adminUserTokenId;
         this.userIdentityXml=userIdentityXml;
+        if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userIdentityXml==null ) {
+            log.error("CommandAddUserIdentity initialized with null-values - will fail");
+        }
+
     }
 
     @Override
