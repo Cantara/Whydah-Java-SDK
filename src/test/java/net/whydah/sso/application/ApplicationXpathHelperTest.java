@@ -33,4 +33,12 @@ public class ApplicationXpathHelperTest {
 
     }
 
+    @Test
+    public void testFindApplicationNameFromApplicationId() throws Exception {
+        String applicationName = ApplicationXpathHelper.findApplicationNameFromApplicationId(ApplicationHelper.getDummyAppllicationListJson());
+            System.out.println("ApplicationName: " + applicationName);
+
+    }
+
+
 }
