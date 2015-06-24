@@ -48,6 +48,11 @@ public class CommandLogonUserByUserCredentialWithStubbedFallback extends Hystrix
         this.userticket = UUID.randomUUID().toString();  // Create new UUID ticket if not provided
         if (tokenServiceUri == null || myAppTokenId == null || myAppTokenXml == null || userCredential == null || userCredential == null) {
             logger.error("CommandLogonUserByUserCredential initialized with null-values - will fail");
+            throw new IllegalArgumentException("Missing parameters for \n" +
+                    "\ttokenServiceUri ["+ tokenServiceUri + "], \n" +
+                    "\tmyAppTokenId ["+ myAppTokenId + "], \n" +
+                    "\tmyAppTokenXml["+myAppTokenXml + "] or \n\tuserCredential["+userCredential + "]");
+
         }
 
     }

@@ -35,12 +35,6 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
     public CommandLogonUserByUserCredential(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml ,UserCredential userCredential) {
         super(HystrixCommandGroupKey.Factory.asKey("SSOAUserAuthGroup"));
-        if (tokenServiceUri == null||myAppTokenId.isEmpty() ||myAppTokenXml.isEmpty() ||userCredential == null) {
-            throw new IllegalArgumentException("Missing parameters for \n" +
-                    "\ttokenServiceUri ["+ tokenServiceUri + "], \n" +
-                    "\tmyAppTokenId ["+ myAppTokenId + "], \n" +
-                    "\tmyAppTokenXml["+myAppTokenXml + "] or \n\tuserCredential["+userCredential + "]");
-        }
         this.tokenServiceUri = tokenServiceUri;
         this.myAppTokenId=myAppTokenId;
         this.myAppTokenXml=myAppTokenXml;
@@ -48,6 +42,10 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
         this.userticket= UUID.randomUUID().toString();  // Create new UUID ticket if not provided
         if (tokenServiceUri==null || myAppTokenId==null || myAppTokenXml==null || userCredential==null || userCredential==null){
             logger.error("CommandLogonUserByUserCredential initialized with null-values - will fail");
+            throw new IllegalArgumentException("Missing parameters for \n" +
+                    "\ttokenServiceUri ["+ tokenServiceUri + "], \n" +
+                    "\tmyAppTokenId ["+ myAppTokenId + "], \n" +
+                    "\tmyAppTokenXml["+myAppTokenXml + "] or \n\tuserCredential["+userCredential + "]");
         }
     }
 
