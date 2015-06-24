@@ -1,5 +1,8 @@
 package net.whydah.sso.application;
 
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -11,6 +14,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 import java.io.StringReader;
+import java.util.List;
 
 /**
  * Created by totto on 12/3/14.
@@ -42,6 +46,20 @@ public class ApplicationXpathHelper {
         return expires;
     }
 
+    public static  String[] getApplicationNamesFromApplicationsJson(String applicationsJson) {
+        if (applicationsJson == null) {
+            logger.debug("    public static  String[] getApplicationNamesFromApplicationsJson(String applicationsJson) {\n was empty, so returning null.");
+        } else {
+            List<String>  applications = findJsonpathList(applicationsJson, "$..name");
+            if (applications==null){
+                logger.debug("Xpath returned zero hits");
+                return null;
+            }
+            String[] result = new String[applications.size()];
+            return applications.toArray(result);
+        }
+        return null;
+    }
 
     private static String findValue(String xmlString,  String expression) {
         String value = "";
@@ -57,6 +75,27 @@ public class ApplicationXpathHelper {
         } catch (Exception e) {
             logger.warn("Failed to parse xml. Expression {}, xml {}, ", expression, xmlString, e);
         }
+        return value;
+    }
+
+    private static List<String> findJsonpathList(String jsonString,  String expression) throws PathNotFoundException {
+        List<String> result=null;
+        try {
+            Object document = Configuration.defaultConfiguration().jsonProvider().parse(jsonString);
+            result= JsonPath.read(document, expression);
+
+        } catch (Exception e) {
+            logger.warn("Failed to parse JSON. Expression {}, JSON {}, ", expression, jsonString, e);
+        }
+        return result;
+    }
+
+    private static String findJsonpathValue(String jsonString,  String expression) throws PathNotFoundException {
+        String value = "";
+        Object document = Configuration.defaultConfiguration().jsonProvider().parse(jsonString);
+        String result= JsonPath.read(document, expression);
+        value=result.toString();
+
         return value;
     }
 
