@@ -1,7 +1,5 @@
 package net.whydah.sso.application;
 
-import net.whydah.sso.user.UserRole;
-import net.whydah.sso.user.UserRoleXpathHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -29,7 +27,7 @@ public class ApplicationXpathHelperTest {
         System.out.println("Found applications "+applications.length);
         assertTrue(7==applications.length);
         for(String s : applications)
-            System.out.println("Application: "+s);
+            System.out.println("ApplicationName: "+s);
 
     }
 
