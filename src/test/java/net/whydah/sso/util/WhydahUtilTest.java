@@ -44,7 +44,7 @@ public class WhydahUtilTest {
         URI tokenServiceUri = UriBuilder.fromUri(userTokenServiceUri).build();
         ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID,TEMPORARY_APPLICATION_SECRET);
         myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
-        myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
+        myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         userCredential = new UserCredential("altranadmin", "altranadmin");
         log.debug("Logged in service {}", myApplicationTokenID);
         String adminUserTokenXml = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, UUID.randomUUID().toString()).execute();

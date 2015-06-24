@@ -143,7 +143,7 @@ public class UserTokenXpathHelperTest {
 
     @Test
     public void testGetUserRoleFromUserAggregateXML() throws Exception {
-        List<UserRole> roles = UserRoleXPathHelper.getUserRoleFromUserAggregateXML(userAggregateXML);
+        List<UserRole> roles = UserRoleXPathHelper.getUserRoleFromUserAggregateXml(userAggregateXML);
         assertNotNull(roles);
         assertEquals(3, roles.size());
         assertTrue("19".equals(roles.get(0).getApplicationId()));
@@ -156,7 +156,7 @@ public class UserTokenXpathHelperTest {
 
     @Test
     public void testGetUserRoleFromUserAggregateJSON() throws Exception {
-        UserRole roles[] = UserRoleXPathHelper.getUserRoleFromUserAggregateJSON(userAggregateJson);
+        UserRole roles[] = UserRoleXPathHelper.getUserRoleFromUserAggregateJson(userAggregateJson);
         assertTrue("applicationId".equals(roles[0].getApplicationId()));
         assertTrue("applicationId123".equals(roles[1].getApplicationId()));
 
@@ -165,7 +165,7 @@ public class UserTokenXpathHelperTest {
     @Test
     public void testRolesFromXml() throws Exception {
         log.debug("Try to parse xml {}", userAggregateXML);
-        List<UserRole> roles = UserRoleXPathHelper.getUserRoleFromUserAggregateXML(userAggregateXML);
+        List<UserRole> roles = UserRoleXPathHelper.getUserRoleFromUserAggregateXml(userAggregateXML);
         assertNotNull(roles);
         assertEquals(3, roles.size());
 
