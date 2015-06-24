@@ -6,9 +6,13 @@ import org.slf4j.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 import java.net.URI;
 
+import static javax.ws.rs.core.Response.Status.FORBIDDEN;
+import static javax.ws.rs.core.Response.Status.OK;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -29,7 +33,7 @@ public class CommandListUsers extends HystrixCommand<String> {
         this.adminUserTokenId = adminUserTokenId;
         this.userQuery = userQuery;
         if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userQuery == null) {
-            log.error("CommandListApplications initialized with null-values - will fail");
+            log.error("CommandListUsers initialized with null-values - will fail");
         }
 
     }
@@ -37,15 +41,28 @@ public class CommandListUsers extends HystrixCommand<String> {
     @Override
     protected String run() {
 
-        log.trace("CommandListApplications - myAppTokenId={}", myAppTokenId);
+        log.trace("CommandListUsers - myAppTokenId={}", myAppTokenId);
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
-        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/xxx");
-        // Response response = addUser.request().post(Entity.xml(userIdentityXml));
-        return null;
+        WebTarget userDirectory = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/adminapplication/users");
 
+        // Works against UIB, still misisng in UAS...
+        Response response = userDirectory.request().get();
+        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
+            log.info("CommandListUsers -  userDirectory failed with status code " + response.getStatus());
+            return null;
+            //throw new IllegalArgumentException("Log on failed. " + ClientResponse.Status.FORBIDDEN);
+        }
+        if (response.getStatus() == OK.getStatusCode()) {
+            String responseJson = response.readEntity(String.class);
+            log.debug("CommandListUsers - Listing users {}", responseJson);
+            return responseJson;
+        }
+
+        return null;
     }
+
 
     @Override
     protected String getFallback() {
