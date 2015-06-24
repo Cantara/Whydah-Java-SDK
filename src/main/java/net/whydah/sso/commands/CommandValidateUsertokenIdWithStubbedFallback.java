@@ -11,12 +11,13 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-import static javax.ws.rs.core.Response.Status.*;
+import static javax.ws.rs.core.Response.Status.CONFLICT;
+import static javax.ws.rs.core.Response.Status.OK;
 
 /**
- * Created by totto on 12/2/14.
+ * Created by totto on 24.06.15.
  */
-public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
+public class CommandValidateUsertokenIdWithStubbedFallback extends HystrixCommand<Boolean> {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandValidateUsertokenId.class);
 
@@ -26,13 +27,13 @@ public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
 
 
 
-    public CommandValidateUsertokenId(URI tokenServiceUri, String myAppTokenId, String usertokenid) {
+    public CommandValidateUsertokenIdWithStubbedFallback(URI tokenServiceUri, String myAppTokenId, String usertokenid) {
         super(HystrixCommandGroupKey.Factory.asKey("SSOUserAuthGroup"));
         this.tokenServiceUri = tokenServiceUri;
         this.myAppTokenId=myAppTokenId;
         this.usertokenid=usertokenid;
         if (tokenServiceUri == null || myAppTokenId == null || usertokenid == null  ) {
-            logger.error("CommandValidateUsertokenId initialized with null-values - will fail");
+            logger.error("CommandValidateUsertokenIdWithStubbedFallback initialized with null-values - will fail");
         }
     }
 
@@ -74,7 +75,7 @@ public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
 
     @Override
     protected Boolean getFallback() {
-        return false;
+        return true;
     }
 
 
