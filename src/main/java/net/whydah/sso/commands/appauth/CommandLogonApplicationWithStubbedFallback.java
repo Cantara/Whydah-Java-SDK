@@ -1,4 +1,4 @@
-package net.whydah.sso.commands;
+package net.whydah.sso.commands.appauth;
 
 import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationHelper;

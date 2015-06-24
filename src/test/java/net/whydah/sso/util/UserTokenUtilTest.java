@@ -2,8 +2,8 @@ package net.whydah.sso.util;
 
 import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationXpathHelper;
-import net.whydah.sso.commands.CommandLogonApplication;
-import net.whydah.sso.commands.CommandLogonUserByUserCredential;
+import net.whydah.sso.commands.appauth.CommandLogonApplication;
+import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.*;
 import org.junit.After;
 import org.junit.Before;

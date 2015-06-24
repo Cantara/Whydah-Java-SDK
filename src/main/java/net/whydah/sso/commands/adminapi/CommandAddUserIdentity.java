@@ -1,17 +1,15 @@
-package net.whydah.sso.commands;
+package net.whydah.sso.commands.adminapi;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserHelper;
-import org.glassfish.jersey.client.ClientResponse;
 import org.slf4j.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
