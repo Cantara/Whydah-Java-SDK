@@ -3,12 +3,16 @@ package net.whydah.sso.commands.adminapi;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import org.slf4j.Logger;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 import java.net.URI;
 
+import static javax.ws.rs.core.Response.Status.FORBIDDEN;
+import static javax.ws.rs.core.Response.Status.OK;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -34,6 +38,7 @@ public class CommandListApplications extends HystrixCommand<String> {
 
     }
 
+
     @Override
     protected String run() {
 
@@ -41,8 +46,21 @@ public class CommandListApplications extends HystrixCommand<String> {
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
-        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/xxx");
-        // Response response = addUser.request().post(Entity.xml(userIdentityXml));
+        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/adminapplication/applications");
+
+        // Works against UIB, still misisng in UAS...
+        Response response = addUser.request().get();
+        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
+            log.info("CommandListApplications -  User authentication failed with status code " + response.getStatus());
+            return null;
+            //throw new IllegalArgumentException("Log on failed. " + ClientResponse.Status.FORBIDDEN);
+        }
+        if (response.getStatus() == OK.getStatusCode()) {
+            String responseJson = response.readEntity(String.class);
+            log.debug("CommandListApplications - Listing aplications {}", responseJson);
+            return responseJson;
+        }
+
         return null;
 
     }
