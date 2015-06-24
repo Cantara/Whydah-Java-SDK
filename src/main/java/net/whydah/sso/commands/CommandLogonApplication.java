@@ -2,6 +2,7 @@ package net.whydah.sso.commands;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import org.slf4j.Logger;
@@ -41,6 +42,7 @@ public class CommandLogonApplication extends HystrixCommand<String> {
                     "\ttokenServiceUri ["+ tokenServiceUri + "], \n" +
                     "\tappCredential ["+ appCredential + "]");
         }
+        HystrixRequestContext.initializeContext();
 
     }
 
