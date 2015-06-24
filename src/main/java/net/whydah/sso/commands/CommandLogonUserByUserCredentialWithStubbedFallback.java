@@ -18,23 +18,25 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.UUID;
 
-import static javax.ws.rs.core.Response.Status.*;
+import static javax.ws.rs.core.Response.Status.FORBIDDEN;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.OK;
 
 /**
- * Created by totto on 12/2/14.
+ * Created by totto on 24.06.15.
  */
-public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
+public class CommandLogonUserByUserCredentialWithStubbedFallback extends HystrixCommand<String> {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommandLogonUserByUserCredential.class);
+        private static final Logger logger = LoggerFactory.getLogger(CommandLogonUserByUserCredential.class);
 
-    private URI tokenServiceUri;
-    private String myAppTokenId;
-    private String myAppTokenXml;
-    private UserCredential userCredential;
-    private String userticket;
+        private URI tokenServiceUri;
+        private String myAppTokenId;
+        private String myAppTokenXml;
+        private UserCredential userCredential;
+        private String userticket;
 
 
-    public CommandLogonUserByUserCredential(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml ,UserCredential userCredential) {
+        public CommandLogonUserByUserCredentialWithStubbedFallback(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml ,UserCredential userCredential) {
         super(HystrixCommandGroupKey.Factory.asKey("SSOAUserAuthGroup"));
         if (tokenServiceUri == null||myAppTokenId.isEmpty() ||myAppTokenXml.isEmpty() ||userCredential == null) {
             throw new IllegalArgumentException("Missing parameters for tokenServiceUri, myAppTokenId, myAppTokenXml or userCredential");
@@ -47,13 +49,13 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
     }
 
 
-    public CommandLogonUserByUserCredential(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml ,UserCredential userCredential,String userticket) {
+        public CommandLogonUserByUserCredentialWithStubbedFallback(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml ,UserCredential userCredential,String userticket) {
         this(tokenServiceUri,myAppTokenId,myAppTokenXml,userCredential);
         this.userticket=userticket;
     }
 
-    @Override
-    protected String run() {
+        @Override
+        protected String run() {
         logger.trace("CommandLogonUserByUserCredential - myAppTokenId={}",myAppTokenId);
 
         Client tokenServiceClient = ClientBuilder.newClient();
@@ -94,8 +96,8 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        logger.warn("CommandLogonUserByUserCredential - getFallback - retiurning null  ");
-        return null;
+        logger.warn("CommandLogonUserByUserCredential - getFallback - User authentication override with fallback ");
+        return UserHelper.getDummyToken();
     }
 
 
