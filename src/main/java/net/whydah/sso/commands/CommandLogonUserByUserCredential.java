@@ -3,7 +3,6 @@ package net.whydah.sso.commands;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import net.whydah.sso.user.UserCredential;
-import net.whydah.sso.user.UserHelper;
 import net.whydah.sso.util.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,10 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
     public CommandLogonUserByUserCredential(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml ,UserCredential userCredential) {
         super(HystrixCommandGroupKey.Factory.asKey("SSOAUserAuthGroup"));
         if (tokenServiceUri == null||myAppTokenId.isEmpty() ||myAppTokenXml.isEmpty() ||userCredential == null) {
-            throw new IllegalArgumentException("Missing parameters for tokenServiceUri, myAppTokenId, myAppTokenXml or userCredential");
+            throw new IllegalArgumentException("Missing parameters for \n" +
+                    "\ttokenServiceUri ["+ tokenServiceUri + "], \n" +
+                    "\tmyAppTokenId ["+ myAppTokenId + "], \n" +
+                    "\tmyAppTokenXml["+myAppTokenXml + "] or \n\tuserCredential["+userCredential + "]");
         }
         this.tokenServiceUri = tokenServiceUri;
         this.myAppTokenId=myAppTokenId;
