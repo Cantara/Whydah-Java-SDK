@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by totto on 12/2/14.
  */
-public class TestCommandLogonApplication {
+public class CommandLogonApplicationTest {
 
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
