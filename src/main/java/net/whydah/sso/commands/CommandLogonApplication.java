@@ -39,6 +39,9 @@ public class CommandLogonApplication extends HystrixCommand<String> {
         this.appCredential=appCredential;
         if (tokenServiceUri==null || appCredential==null ){
             logger.error("CommandLogonApplication initialized with null-values - will fail");
+            throw new IllegalArgumentException("Missing parameters for \n" +
+                    "\ttokenServiceUri ["+ tokenServiceUri + "], \n" +
+                    "\tappCredential ["+ appCredential + "]");
         }
 
     }
