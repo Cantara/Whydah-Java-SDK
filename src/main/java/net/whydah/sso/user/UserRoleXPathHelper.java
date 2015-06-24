@@ -27,7 +27,7 @@ public class UserRoleXPathHelper {
     private static final Logger logger = LoggerFactory.getLogger(UserRoleXPathHelper.class);
 
 
-    public static UserRole[] getUserRoleFromUserToken(String userTokenXml) {
+    public static UserRole[] getUserRoleFromUserTokenXml(String userTokenXml) {
         if (userTokenXml == null) {
             logger.debug("userTokenXml was empty, so returning empty userTokenId.");
         } else {
