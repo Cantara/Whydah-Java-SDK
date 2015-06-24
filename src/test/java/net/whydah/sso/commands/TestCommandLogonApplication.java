@@ -36,7 +36,7 @@ public class TestCommandLogonApplication {
         String applicationsecret = "false secret";
         appCredential.setApplicationSecret(applicationsecret);
 
-        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+        String myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
         // System.out.println("ApplicationTokenID=" + myApplicationTokenID);
         assertEquals(ApplicationHelper.getDummyApplicationToken(), myAppTokenXml);
 
