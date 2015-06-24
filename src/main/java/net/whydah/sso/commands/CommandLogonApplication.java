@@ -46,7 +46,7 @@ public class CommandLogonApplication extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-        logger.trace("CommandLogonApplication - appCredential={}",appCredential.toXML());
+        logger.trace("CommandLogonApplication - appCredential={}", appCredential.toXML());
 
         Client tokenServiceClient = ClientBuilder.newClient();
         Form formData = new Form();
@@ -85,6 +85,18 @@ public class CommandLogonApplication extends HystrixCommand<String> {
     private Response postForm(Form formData, WebTarget logonResource) {
         return logonResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE),Response.class);
     }
+
+    /**
+     * Let us use cache instead of duplicate calls to STS
+     *
+     * @return
+     */
+    @Override
+    protected String getCacheKey() {
+        return String.valueOf(appCredential);
+    }
+
+
 
     @Override
     protected String getFallback() {
