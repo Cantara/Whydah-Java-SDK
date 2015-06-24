@@ -1,107 +1,28 @@
 package net.whydah.sso.commands;
 
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
 import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserHelper;
-import net.whydah.sso.util.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.UUID;
-
-import static javax.ws.rs.core.Response.Status.FORBIDDEN;
-import static javax.ws.rs.core.Response.Status.NOT_FOUND;
-import static javax.ws.rs.core.Response.Status.OK;
 
 /**
  * Created by totto on 24.06.15.
  */
-public class CommandLogonUserByUserCredentialWithStubbedFallback extends HystrixCommand<String> {
+public class CommandLogonUserByUserCredentialWithStubbedFallback extends CommandLogonUserByUserCredential {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommandLogonUserByUserCredential.class);
-
-    private URI tokenServiceUri;
-    private String myAppTokenId;
-    private String myAppTokenXml;
-    private UserCredential userCredential;
-    private String userticket;
+    private static final Logger logger = LoggerFactory.getLogger(CommandLogonUserByUserCredentialWithStubbedFallback.class);
 
 
     public CommandLogonUserByUserCredentialWithStubbedFallback(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, UserCredential userCredential) {
-        super(HystrixCommandGroupKey.Factory.asKey("SSOAUserAuthGroup"));
-        if (tokenServiceUri == null || myAppTokenId.isEmpty() || myAppTokenXml.isEmpty() || userCredential == null) {
-            throw new IllegalArgumentException("Missing parameters for tokenServiceUri, myAppTokenId, myAppTokenXml or userCredential");
-        }
-        this.tokenServiceUri = tokenServiceUri;
-        this.myAppTokenId = myAppTokenId;
-        this.myAppTokenXml = myAppTokenXml;
-        this.userCredential = userCredential;
-        this.userticket = UUID.randomUUID().toString();  // Create new UUID ticket if not provided
-        if (tokenServiceUri == null || myAppTokenId == null || myAppTokenXml == null || userCredential == null || userCredential == null) {
-            logger.error("CommandLogonUserByUserCredential initialized with null-values - will fail");
-            throw new IllegalArgumentException("Missing parameters for \n" +
-                    "\ttokenServiceUri ["+ tokenServiceUri + "], \n" +
-                    "\tmyAppTokenId ["+ myAppTokenId + "], \n" +
-                    "\tmyAppTokenXml["+myAppTokenXml + "] or \n\tuserCredential["+userCredential + "]");
-
-        }
-
+        super(tokenServiceUri, myAppTokenId, myAppTokenXml, userCredential);
     }
 
-
-    public CommandLogonUserByUserCredentialWithStubbedFallback(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, UserCredential userCredential, String userticket) {
-        this(tokenServiceUri, myAppTokenId, myAppTokenXml, userCredential);
-        this.userticket = userticket;
+    public CommandLogonUserByUserCredentialWithStubbedFallback(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, UserCredential userCredential,String userticket) {
+        super(tokenServiceUri, myAppTokenId, myAppTokenXml, userCredential,userticket);
     }
 
-    @Override
-    protected String run() {
-        logger.trace("CommandLogonUserByUserCredential - myAppTokenId={}", myAppTokenId);
-
-        Client tokenServiceClient = ClientBuilder.newClient();
-        WebTarget getUserToken = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/" + userticket + "/usertoken");
-        Form formData = new Form();
-        formData.param("apptoken", myAppTokenXml);
-        formData.param("usercredential", userCredential.toXML());
-        Response response = postForm(formData, getUserToken);
-        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
-            logger.warn("CommandLogonUserByUserCredential - getUserToken - User authentication failed with status code " + response.getStatus());
-            return null;
-        }
-        if (response.getStatus() == OK.getStatusCode()) {
-            String responseXML = response.readEntity(String.class);
-            logger.trace("CommandLogonUserByUserCredential - getUserToken - Log on OK with response {}", responseXML);
-            return responseXML;
-        }
-
-        //retry once for other statuses
-        logger.info("CommandLogonUserByUserCredential - getUserToken - retry once for other statuses");
-        response = postForm(formData, getUserToken);
-        if (response.getStatus() == OK.getStatusCode()) {
-            String responseXML = response.readEntity(String.class);
-            logger.trace("CommandLogonUserByUserCredential - getUserToken - Log on OK with response {}", responseXML);
-            return responseXML;
-        } else if (response.getStatus() == NOT_FOUND.getStatusCode()) {
-            logger.error(ExceptionUtil.printableUrlErrorMessage("CommandLogonUserByUserCredential - getUserToken - Auth failed - Problems connecting with TokenService", getUserToken, response));
-        } else {
-            logger.info(ExceptionUtil.printableUrlErrorMessage("CommandLogonUserByUserCredential - getUserToken - User authentication failed", getUserToken, response));
-        }
-        return null;
-
-    }
-
-    private Response postForm(Form formData, WebTarget logonResource) {
-        return logonResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
-    }
 
     @Override
     protected String getFallback() {
