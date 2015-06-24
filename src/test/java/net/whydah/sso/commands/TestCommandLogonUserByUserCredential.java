@@ -51,7 +51,7 @@ public class TestCommandLogonUserByUserCredential {
     @Test
     public void testApplicationLoginCommand() throws Exception {
 
-        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+        String myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
         System.out.println(myAppTokenXml);
         String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
         System.out.println(myApplicationTokenID);
@@ -60,15 +60,15 @@ public class TestCommandLogonUserByUserCredential {
 
         String userticket = UUID.randomUUID().toString();
 
-        myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+        myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
         myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
-        String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
+        String userToken = new CommandLogonUserByUserCredentialWithStubbedFallback(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
         if (integrationMode) {
             assertTrue(new CommandValidateUsertokenId(tokenServiceUri, myApplicationTokenID, userTokenId).execute());
         }
 
-        myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+        myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
         myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
         String userToken2 = new CommandGetUsertokenByUserticket(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userticket).execute();
 
