@@ -4,10 +4,7 @@ import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.commands.CommandLogonApplication;
 import net.whydah.sso.commands.CommandLogonUserByUserCredential;
-import net.whydah.sso.user.UserCredential;
-import net.whydah.sso.user.UserIdentityRepresentation;
-import net.whydah.sso.user.UserRole;
-import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.user.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -29,8 +26,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class UserTokenUtilTest {
     private static final Logger log = getLogger(UserTokenUtilTest.class);
 
-    public static final String TEMPORARY_APPLICATION_ID = "15";//"11";
-    public static final String TEMPORARY_APPLICATION_SECRET = "33779936R6Jr47D4Hj5R6p9qT";
+    public static final String TEMPORARY_APPLICATION_ID = "201";//"11";
+    public static final String TEMPORARY_APPLICATION_SECRET = "bbbbbbbbbbbbbbbbbbbbbbbbb";
     private final String userAdminServiceUri = "http://localhost:9992/useradminservice";
     private final String userTokenServiceUri = "http://localhost:9998/tokenservice";
     private String myApplicationTokenID = null;
@@ -46,10 +43,10 @@ public class UserTokenUtilTest {
 
     @Before
     public void setUp() throws Exception {
+        tokenServiceUri = UriBuilder.fromUri(userTokenServiceUri).build();
         ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID,TEMPORARY_APPLICATION_SECRET);
         myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
-        tokenServiceUri = UriBuilder.fromUri(userTokenServiceUri).build();
         userCredential = new UserCredential("altranadmin", "altranadmin");
         String adminUserTokenXml = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, UUID.randomUUID().toString()).execute();
         adminUserTokenId = UserXpathHelper.getUserTokenId(adminUserTokenXml);
@@ -82,6 +79,8 @@ public class UserTokenUtilTest {
         String expression = "/usertoken/uid";
         String userId = UserXpathHelper.findValue(userTokenXml, expression);
         assertEquals("altranadmin", userId);
+        UserRole[] userRoles = UserRoleXPathHelper.getUserRoleFromUserToken(userTokenXml);
+        assertEquals("testRoleName", userRoles[1].getRoleName());
 
     }
 
