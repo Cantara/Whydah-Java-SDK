@@ -79,7 +79,7 @@ public class UserTokenUtilTest {
         String expression = "/usertoken/uid";
         String userId = UserXpathHelper.findValue(userTokenXml, expression);
         assertEquals("altranadmin", userId);
-        UserRole[] userRoles = UserRoleXPathHelper.getUserRoleFromUserToken(userTokenXml);
+        UserRole[] userRoles = UserRoleXPathHelper.getUserRoleFromUserTokenXml(userTokenXml);
         assertEquals("testRoleName", userRoles[1].getRoleName());
 
     }
