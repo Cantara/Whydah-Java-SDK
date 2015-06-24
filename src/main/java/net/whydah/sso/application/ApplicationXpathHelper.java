@@ -48,7 +48,7 @@ public class ApplicationXpathHelper {
 
     public static  String[] getApplicationNamesFromApplicationsJson(String applicationsJson) {
         if (applicationsJson == null) {
-            logger.debug("    public static  String[] getApplicationNamesFromApplicationsJson(String applicationsJson) {\n was empty, so returning null.");
+            logger.debug("getApplicationNamesFromApplicationsJson was empty, so returning null.");
         } else {
             List<String>  applications = findJsonpathList(applicationsJson, "$..name");
             if (applications==null){
@@ -60,6 +60,16 @@ public class ApplicationXpathHelper {
         }
         return null;
     }
+
+    public static  String findApplicationNameFromApplicationId(String applicationsJson) {
+        if (applicationsJson == null) {
+            logger.debug("findApplicationNameFromApplicationId was empty, so returning null.");
+        } else {
+            return  findJsonpathValue(applicationsJson,"$.applications[?(@.id=11)].name");
+        }
+        return null;
+    }
+
 
     private static String findValue(String xmlString,  String expression) {
         String value = "";
@@ -80,10 +90,9 @@ public class ApplicationXpathHelper {
 
     private static List<String> findJsonpathList(String jsonString,  String expression) throws PathNotFoundException {
         List<String> result=null;
+        Configuration conf = Configuration.defaultConfiguration();
         try {
-            Object document = Configuration.defaultConfiguration().jsonProvider().parse(jsonString);
-            result= JsonPath.read(document, expression);
-
+            result= JsonPath.using(conf).parse(jsonString).read(expression);
         } catch (Exception e) {
             logger.warn("Failed to parse JSON. Expression {}, JSON {}, ", expression, jsonString, e);
         }
@@ -91,12 +100,8 @@ public class ApplicationXpathHelper {
     }
 
     private static String findJsonpathValue(String jsonString,  String expression) throws PathNotFoundException {
-        String value = "";
-        Object document = Configuration.defaultConfiguration().jsonProvider().parse(jsonString);
-        String result= JsonPath.read(document, expression);
-        value=result.toString();
-
-        return value;
+        String o = JsonPath.parse(jsonString).read(expression);
+        return null;
     }
 
 }
