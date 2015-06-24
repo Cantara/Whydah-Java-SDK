@@ -172,6 +172,16 @@ public class UserTokenXpathHelperTest {
     }
 
     @Test
+    public void testNnotJacksonMapper() throws Exception{
+        log.debug("Try to parse xml {}", rolesXml);
+        List<UserRole> roles = UserRoleXpathHelper.rolesViaJackson(rolesXml);
+        assertNotNull(roles);
+        assertEquals(2, roles.size());
+    }
+
+
+// TODO BLI:  why jackson parsing when we already have parsing?  testNnotJacksonMapper
+    @Test
     public void testJacksonMapper() throws Exception{
         log.debug("Try to parse xml {}", rolesXml);
         List<UserRole> roles = UserRoleXpathHelper.rolesViaJackson(rolesXml);
