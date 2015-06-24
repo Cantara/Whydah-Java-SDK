@@ -83,6 +83,6 @@ public class CommandLogonApplication extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        return  ApplicationHelper.getDummyApplicationToken();
+        return  null;
     }
 }
