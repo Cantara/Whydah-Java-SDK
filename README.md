@@ -1,6 +1,9 @@
 Whydah-Java-SDK
 ===============
 
+![Build Status](http://jenkins.capraconsulting.no/buildStatus/icon?job=Whydah-Java-SDK)
+
+
 A client library which aimed to make Whydah integration more easy and more resilient
 
 ![Build Status](http://jenkins.capraconsulting.no/buildStatus/icon?job=Whydah-Java-SDK)
