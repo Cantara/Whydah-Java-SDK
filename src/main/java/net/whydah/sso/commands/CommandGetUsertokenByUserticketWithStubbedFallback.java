@@ -4,7 +4,6 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import net.whydah.sso.user.UserHelper;
 import net.whydah.sso.util.ExceptionUtil;
-import org.glassfish.jersey.client.ClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,16 +13,16 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-import static javax.ws.rs.core.Response.Status.*;
+import static javax.ws.rs.core.Response.Status.FORBIDDEN;
+import static javax.ws.rs.core.Response.Status.OK;
 
 /**
- * Created by totto on 12/2/14.
+ * Created by totto on 24.06.15.
  */
-public class CommandGetUsertokenByUserticket extends HystrixCommand<String> {
+public class CommandGetUsertokenByUserticketWithStubbedFallback extends HystrixCommand<String> {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandGetUsertokenByUserticket.class);
 
@@ -34,14 +33,14 @@ public class CommandGetUsertokenByUserticket extends HystrixCommand<String> {
 
 
 
-    public CommandGetUsertokenByUserticket(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml,String userticket) {
+    public CommandGetUsertokenByUserticketWithStubbedFallback(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml,String userticket) {
         super(HystrixCommandGroupKey.Factory.asKey("SSOAUserAuthGroup"));
         this.tokenServiceUri = tokenServiceUri;
         this.myAppTokenId=myAppTokenId;
         this.userticket=userticket;
         this.myAppTokenXml=myAppTokenXml;
         if (tokenServiceUri == null || myAppTokenId == null || myAppTokenXml == null || userticket == null ) {
-            logger.error("CommandGetUsertokenByUserticket initialized with null-values - will fail");
+            logger.error("CommandGetUsertokenByUserticketWithStubbedFallback initialized with null-values - will fail");
         }
 
     }
@@ -90,8 +89,9 @@ public class CommandGetUsertokenByUserticket extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        return null;
+        return UserHelper.getDummyToken();
     }
+
 
 
 
