@@ -35,16 +35,15 @@ public class TestCommandListApplications {
     @BeforeClass
     public static void setup() throws Exception {
         appCredential = new ApplicationCredential("15","33779936R6Jr47D4Hj5R6p9qT");
-        if (integrationMode) {
-            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
-
-        } else {
-            tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
-        }
-
-        userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
+        tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
         userCredential = new UserCredential("useradmin", "useradmin42");
 
+        userAdminServiceUri = UriBuilder.fromUri("https://no_host").build();
+
+        if (integrationMode) {
+            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
+            userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
+        }
     }
 
 
@@ -60,7 +59,7 @@ public class TestCommandListApplications {
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
 
         String applicationsJsonl = new CommandListApplicationsWithStubbedFallback(userAdminServiceUri, myApplicationTokenID,userTokenId,"").execute();
-        System.out.println("applicationsJsonl=" + applicationsJsonl);
+        System.out.println("applicationsJson=" + applicationsJsonl);
 
     }
 

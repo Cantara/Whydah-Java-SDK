@@ -26,23 +26,29 @@ public class UserIdentityRepresentation implements Serializable {
     public String getPersonName() {
         return firstName + ' ' + lastName;
     }
+
     public String getPersonRef() {
         return personRef;
     }
+
     public String getUsername() {
         return username;
     }
+
     public String getFirstName() {
         return firstName;
     }
+
     public String getLastName() {
         return lastName;
     }
+
     public String getEmail() {
         return email;
     }
+
     public String getCellPhone() {
-        if (cellPhone == null){
+        if (cellPhone == null) {
             return "";
         }
         return cellPhone;
@@ -52,18 +58,23 @@ public class UserIdentityRepresentation implements Serializable {
     public void setPersonRef(String personRef) {
         this.personRef = personRef;
     }
+
     public void setUsername(String username) {
         this.username = username;
     }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
+
     public void setCellPhone(String cellPhone) {
         this.cellPhone = cellPhone;
     }
@@ -83,7 +94,7 @@ public class UserIdentityRepresentation implements Serializable {
         strb.append(headAndIdentity);
 
         strb.append(
-                        "</whydahuser>"
+                "</whydahuser>"
         );
         return strb.toString();
     }
