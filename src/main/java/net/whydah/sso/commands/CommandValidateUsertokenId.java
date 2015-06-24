@@ -31,6 +31,9 @@ public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
         this.tokenServiceUri = tokenServiceUri;
         this.myAppTokenId=myAppTokenId;
         this.usertokenid=usertokenid;
+        if (tokenServiceUri == null || myAppTokenId == null || usertokenid == null  ) {
+            logger.error("CommandValidateUsertokenId initialized with null-values - will fail");
+        }
     }
 
     @Override

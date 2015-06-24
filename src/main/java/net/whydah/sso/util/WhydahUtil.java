@@ -153,7 +153,7 @@ public class WhydahUtil {
                 log.debug("CommandAddRole - addRoles - Created role ok {}", responseXML);
                 createdRolesXml.add(responseXML);
             } else {
-                createdRolesXml.add("Failed to add role " + role.getRoleName() + ", reason: " + response.toString());
+                //createdRolesXml.add("Failed to add role " + role.getRoleName() + ", reason: " + response.toString());
                 log.trace("Failed to add role {}, response status {}", role.toString(), response.getStatus());
             }
         }
