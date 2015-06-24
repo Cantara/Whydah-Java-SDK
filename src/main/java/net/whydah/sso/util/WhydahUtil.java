@@ -115,13 +115,13 @@ public class WhydahUtil {
         String userIdentityXml = userIdentity.toXML();
         Response response = addUser.request().accept(MediaType.APPLICATION_XML).post(Entity.entity(userIdentityXml,MediaType.APPLICATION_XML));
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
-            log.info("CommandAddUserIdentity - addUser - User authentication failed with status code " + response.getStatus());
+            log.info("CommandAddUser - addUser - User authentication failed with status code " + response.getStatus());
             return null;
             //throw new IllegalArgumentException("Log on failed. " + ClientResponse.Status.FORBIDDEN);
         }
         if (response.getStatus() == OK.getStatusCode()) {
             String responseXML = response.readEntity(String.class);
-            log.debug("CommandAddUserIdentity - addUser - Log on OK with response {}", responseXML);
+            log.debug("CommandAddUser - addUser - Log on OK with response {}", responseXML);
             return responseXML;
         }
         throw new IllegalArgumentException("Not found");
