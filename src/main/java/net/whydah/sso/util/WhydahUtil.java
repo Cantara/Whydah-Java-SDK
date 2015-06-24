@@ -76,7 +76,7 @@ public class WhydahUtil {
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
         ApplicationCredential appCredential = new ApplicationCredential(applicationID,applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
-        String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
+        String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         UserCredential userCredential = new UserCredential(username, password);
         String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, UUID.randomUUID().toString()).execute();
         return userToken;

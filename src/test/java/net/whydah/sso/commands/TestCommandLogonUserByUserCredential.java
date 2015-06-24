@@ -1,8 +1,6 @@
 package net.whydah.sso.commands;
 
-import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import junit.framework.Assert;
 import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.user.UserCredential;
@@ -53,7 +51,7 @@ public class TestCommandLogonUserByUserCredential {
 
         String myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
         System.out.println(myAppTokenXml);
-        String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
+        String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         System.out.println(myApplicationTokenID);
 
         assertTrue(myApplicationTokenID.length() > 6);
@@ -61,7 +59,7 @@ public class TestCommandLogonUserByUserCredential {
         String userticket = UUID.randomUUID().toString();
 
         myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
-        myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
+        myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         String userToken = new CommandLogonUserByUserCredentialWithStubbedFallback(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
         if (integrationMode) {
@@ -69,7 +67,7 @@ public class TestCommandLogonUserByUserCredential {
         }
 
         myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
-        myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
+        myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         String userToken2 = new CommandGetUsertokenByUserticket(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userticket).execute();
 
 
@@ -90,7 +88,7 @@ public class TestCommandLogonUserByUserCredential {
             HystrixRequestContext context = HystrixRequestContext.initializeContext();
             try {
                 String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
-                String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
+                String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
                 String userticket = UUID.randomUUID().toString();
                 String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
                 String userTokenId = UserXpathHelper.getUserTokenId(userToken);
@@ -109,7 +107,7 @@ public class TestCommandLogonUserByUserCredential {
             HystrixRequestContext context = HystrixRequestContext.initializeContext();
             try {
                 String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
-                String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
+                String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
                 String userticket = UUID.randomUUID().toString();
                 String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
                 String userTokenId = UserXpathHelper.getUserTokenId(userToken);

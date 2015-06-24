@@ -3,7 +3,6 @@ package net.whydah.sso.commands;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import net.whydah.sso.application.ApplicationCredential;
-import net.whydah.sso.application.ApplicationHelper;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
@@ -79,7 +77,7 @@ public class CommandLogonApplication extends HystrixCommand<String> {
         }
         String myAppTokenXml = response.readEntity(String.class);
         logger.debug("CommandLogonApplication - Applogon ok: apptokenxml: {}", myAppTokenXml);
-        String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
+        String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         logger.trace("CommandLogonApplication - myAppTokenId: {}", myApplicationTokenID);
         return myAppTokenXml;
     }

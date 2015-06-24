@@ -41,7 +41,7 @@ public class CommandLogonApplicationIntegrationTest {
     public void testLogonApplication() throws Exception{
         ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID,TEMPORARY_APPLICATION_SECRET);
         myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
-        myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
+        myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
 
     }
 }

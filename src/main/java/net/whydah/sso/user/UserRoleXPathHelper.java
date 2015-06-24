@@ -62,7 +62,7 @@ public class UserRoleXPathHelper {
         return null;
     }
 
-    public static List<UserRole> getUserRoleFromUserAggregateXML(String userAggregateXML) {
+    public static List<UserRole> getUserRoleFromUserAggregateXml(String userAggregateXML) {
         List<UserRole> userRoles = new ArrayList<>();
         if (userAggregateXML == null) {
             logger.debug("userAggregateXML was empty, so returning null.");
@@ -93,7 +93,7 @@ public class UserRoleXPathHelper {
         return userRoles;
     }
 
-    public static UserRole[] getUserRoleFromUserAggregateJSON(String userAggregateJson) {
+    public static UserRole[] getUserRoleFromUserAggregateJson(String userAggregateJson) {
         if (userAggregateJson == null) {
             logger.debug("userAggregateJson was empty, so returning null.");
         } else {
@@ -124,7 +124,7 @@ public class UserRoleXPathHelper {
 
 
 
-    public static String findXpathValue(String xmlString,  String expression) {
+    private static String findXpathValue(String xmlString,  String expression) {
         String value = "";
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -141,7 +141,7 @@ public class UserRoleXPathHelper {
         return value;
     }
 
-    public static List<String> findJsonpathList(String jsonString,  String expression) throws PathNotFoundException {
+    private static List<String> findJsonpathList(String jsonString,  String expression) throws PathNotFoundException {
         List<String> result=null;
         try {
             Object document = Configuration.defaultConfiguration().jsonProvider().parse(jsonString);
@@ -153,7 +153,7 @@ public class UserRoleXPathHelper {
         return result;
     }
 
-    public static String findJsonpathValue(String jsonString,  String expression) throws PathNotFoundException {
+    private static String findJsonpathValue(String jsonString,  String expression) throws PathNotFoundException {
         String value = "";
             Object document = Configuration.defaultConfiguration().jsonProvider().parse(jsonString);
             String result= JsonPath.read(document, expression);

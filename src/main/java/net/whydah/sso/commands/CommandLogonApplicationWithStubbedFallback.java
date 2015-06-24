@@ -75,7 +75,7 @@ public class CommandLogonApplicationWithStubbedFallback extends HystrixCommand<S
             }
             String myAppTokenXml = response.readEntity(String.class);
             logger.debug("CommandLogonApplication - Applogon ok: apptokenxml: {}", myAppTokenXml);
-            String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppToken(myAppTokenXml);
+            String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             logger.trace("CommandLogonApplication - myAppTokenId: {}", myApplicationTokenID);
             return myAppTokenXml;
         }

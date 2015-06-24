@@ -20,7 +20,7 @@ public class ApplicationXpathHelper {
 
 
 
-    public static  String getAppTokenIdFromAppToken(String appTokenXML) {
+    public static  String getAppTokenIdFromAppTokenXml(String appTokenXML) {
         String appTokenId = "";
         if (appTokenXML == null) {
             logger.debug("roleXml was empty, so returning empty orgName.");
@@ -31,7 +31,7 @@ public class ApplicationXpathHelper {
         return appTokenId;
     }
 
-    public static  String getExpiresFromAppToken(String appTokenXML) {
+    public static  String getExpiresFromAppTokenXml(String appTokenXML) {
         String expires = "";
         if (appTokenXML == null) {
             logger.debug("roleXml was empty, so returning empty orgName.");
@@ -43,7 +43,7 @@ public class ApplicationXpathHelper {
     }
 
 
-    public static String findValue(String xmlString,  String expression) {
+    private static String findValue(String xmlString,  String expression) {
         String value = "";
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
