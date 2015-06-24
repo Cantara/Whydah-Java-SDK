@@ -22,9 +22,9 @@ import java.util.List;
 /**
  * Created by totto on 22.06.15.
  */
-public class UserRoleXPathHelper {
+public class UserRoleXpathHelper {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserRoleXPathHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserRoleXpathHelper.class);
 
 
     public static UserRole[] getUserRoleFromUserTokenXml(String userTokenXml) {
