@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by totto on 24.06.15.
  */
-public class TestCommandListApplications {
+public class CommandListApplicationsTest {
 
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;

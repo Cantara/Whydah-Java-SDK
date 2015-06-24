@@ -1,7 +1,5 @@
 package net.whydah.sso.application;
 
-import net.whydah.sso.user.UserRole;
-import net.whydah.sso.user.UserRoleXpathHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -27,9 +25,11 @@ public class ApplicationXpathHelperTest {
     public void testGetUserRoleFromUserToken() throws Exception {
         String applications[] = ApplicationXpathHelper.getApplicationNamesFromApplicationsJson(ApplicationHelper.getDummyAppllicationListJson());
         System.out.println("Found applications "+applications.length);
-        assertTrue(7==applications.length);
+        assertTrue(7 == applications.length);
+        assertTrue("SecurityTokenService".equalsIgnoreCase(applications[0]));
+        assertTrue("m2Circle".equalsIgnoreCase(applications[6]));
         for(String s : applications)
-            System.out.println("Application: "+s);
+            System.out.println("ApplicationName: "+s);
 
     }
 
