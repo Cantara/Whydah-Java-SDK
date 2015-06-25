@@ -24,7 +24,7 @@ public class CommandAddUserRole extends HystrixCommand<String> {
 
 
     public CommandAddUserRole(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson) {
-        super(HystrixCommandGroupKey.Factory.asKey("UASUserGroup"));
+        super(HystrixCommandGroupKey.Factory.asKey("UASUserAdminGroup"));
         this.userAdminServiceUri = userAdminServiceUri;
         this.myAppTokenId = myAppTokenId;
         this.adminUserTokenId = adminUserTokenId;

@@ -24,7 +24,7 @@ public class CommandUpdateApplication extends HystrixCommand<String> {
 
 
     public CommandUpdateApplication(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String applicationJson) {
-        super(HystrixCommandGroupKey.Factory.asKey("UASUserGroup"));
+        super(HystrixCommandGroupKey.Factory.asKey("UASUserAdminGroup"));
         this.userAdminServiceUri = userAdminServiceUri;
         this.myAppTokenId = myAppTokenId;
         this.adminUserTokenId = adminUserTokenId;
