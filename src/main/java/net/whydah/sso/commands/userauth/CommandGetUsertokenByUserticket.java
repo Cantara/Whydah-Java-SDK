@@ -22,7 +22,7 @@ import static javax.ws.rs.core.Response.Status.*;
  */
 public class CommandGetUsertokenByUserticket extends HystrixCommand<String> {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommandGetUsertokenByUserticket.class);
+    private static final Logger log = LoggerFactory.getLogger(CommandGetUsertokenByUserticket.class);
 
     private URI tokenServiceUri ;
     private String myAppTokenId ;
@@ -38,7 +38,7 @@ public class CommandGetUsertokenByUserticket extends HystrixCommand<String> {
         this.userticket=userticket;
         this.myAppTokenXml=myAppTokenXml;
         if (tokenServiceUri == null || myAppTokenId == null || myAppTokenXml == null || userticket == null ) {
-            logger.error("CommandGetUsertokenByUserticket initialized with null-values - will fail");
+            log.error("CommandGetUsertokenByUserticket initialized with null-values - will fail");
         }
 
     }
@@ -47,36 +47,36 @@ public class CommandGetUsertokenByUserticket extends HystrixCommand<String> {
     protected String run() {
 
         String responseXML = null;
-        logger.trace("CommandValidateUsertokenId - myAppTokenId={}",myAppTokenId);
+        log.trace("CommandValidateUsertokenId - myAppTokenId={}",myAppTokenId);
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
         WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/get_usertoken_by_userticket");
-        logger.trace("CommandGetUsertokenByUserticket - getUserTokenByUserTicket - ticket: {} apptoken: {}",userticket,myAppTokenXml);
+        log.trace("CommandGetUsertokenByUserticket - getUserTokenByUserTicket - ticket: {} apptoken: {}",userticket,myAppTokenXml);
         Form formData = new Form();
         formData.param("apptoken", myAppTokenXml);
         formData.param("userticket", userticket);
 
         Response response = userTokenResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE),Response.class);
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
-            logger.warn("CommandGetUsertokenByUserticket - getUserTokenByUserTicket failed");
+            log.warn("CommandGetUsertokenByUserticket - getUserTokenByUserTicket failed");
             throw new IllegalArgumentException("CommandGetUsertokenByUserticket - getUserTokenByUserTicket failed.");
         }
         if (response.getStatus() == OK.getStatusCode()) {
             responseXML = response.readEntity(String.class);
-            logger.debug("CommandGetUsertokenByUserticket - Response OK with XML: {}", responseXML);
+            log.debug("CommandGetUsertokenByUserticket - Response OK with XML: {}", responseXML);
         } else {
             //retry
             response =userTokenResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE),Response.class);
             if (response.getStatus() == OK.getStatusCode()) {
                 responseXML = response.readEntity(String.class);
-                logger.debug("CommandGetUsertokenByUserticket - Response OK with XML: {}", responseXML);
+                log.debug("CommandGetUsertokenByUserticket - Response OK with XML: {}", responseXML);
             }
         }
 
         if (responseXML == null) {
             String authenticationFailedMessage = ExceptionUtil.printableUrlErrorMessage("User authentication failed", userTokenResource, response);
-            logger.warn(authenticationFailedMessage);
+            log.warn(authenticationFailedMessage);
             throw new RuntimeException(authenticationFailedMessage);
         }
 

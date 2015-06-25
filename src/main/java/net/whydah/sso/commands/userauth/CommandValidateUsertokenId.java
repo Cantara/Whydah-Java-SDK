@@ -18,7 +18,7 @@ import static javax.ws.rs.core.Response.Status.*;
  */
 public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommandValidateUsertokenId.class);
+    private static final Logger log = LoggerFactory.getLogger(CommandValidateUsertokenId.class);
 
     private URI tokenServiceUri ;
     private String myAppTokenId ;
@@ -32,39 +32,39 @@ public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
         this.myAppTokenId=myAppTokenId;
         this.usertokenid=usertokenid;
         if (tokenServiceUri == null || myAppTokenId == null || usertokenid == null  ) {
-            logger.error("CommandValidateUsertokenId initialized with null-values - will fail");
+            log.error("CommandValidateUsertokenId initialized with null-values - will fail");
         }
     }
 
     @Override
     protected Boolean run() {
 
-        logger.trace("CommandValidateUsertokenId - myAppTokenId={}, userTokenID{}",myAppTokenId,usertokenid);
+        log.trace("CommandValidateUsertokenId - myAppTokenId={}, userTokenID{}",myAppTokenId,usertokenid);
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
 // If we get strange values...  return false
         if (usertokenid == null || usertokenid.length() < 4) {
-            logger.warn("CommandValidateUsertokenId - verifyUserTokenId - Called with bogus usertokenid={}. return false", usertokenid);
+            log.warn("CommandValidateUsertokenId - verifyUserTokenId - Called with bogus usertokenid={}. return false", usertokenid);
             return false;
         }
         // logonApplication();
         WebTarget verifyResource = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/validate_usertokenid/" + usertokenid);
         Response response = get(verifyResource);
         if (response.getStatus() == OK.getStatusCode()) {
-            logger.info("CommandValidateUsertokenId - verifyUserTokenId - validate_usertokenid {}  result {}", "user/" + myAppTokenId + "/validate_usertokenid/" + usertokenid, response);
+            log.info("CommandValidateUsertokenId - verifyUserTokenId - validate_usertokenid {}  result {}", "user/" + myAppTokenId + "/validate_usertokenid/" + usertokenid, response);
             return true;
         }
         if (response.getStatus() == CONFLICT.getStatusCode()) {
-            logger.warn("CommandValidateUsertokenId - verifyUserTokenId - usertokenid not ok: {}", response);
+            log.warn("CommandValidateUsertokenId - verifyUserTokenId - usertokenid not ok: {}", response);
             return false;
         }
         //retry
-        logger.info("CommandValidateUsertokenId - verifyUserTokenId - retrying usertokenid ");
+        log.info("CommandValidateUsertokenId - verifyUserTokenId - retrying usertokenid ");
         //logonApplication();
         response = get(verifyResource);
         boolean bolRes = response.getStatus() == OK.getStatusCode();
-        logger.info("CommandValidateUsertokenId - verifyUserTokenId - validate_usertokenid {}  result {}", "user/" + myAppTokenId + "/validate_usertokenid/" + usertokenid, response);
+        log.info("CommandValidateUsertokenId - verifyUserTokenId - validate_usertokenid {}  result {}", "user/" + myAppTokenId + "/validate_usertokenid/" + usertokenid, response);
         return bolRes;
     }
 
