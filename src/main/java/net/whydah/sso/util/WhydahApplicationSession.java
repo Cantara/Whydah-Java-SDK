@@ -20,7 +20,6 @@ public class WhydahApplicationSession {
 
     private String applicationTokenId;
     private String applicationTokenXML;
-    private static boolean integrationMode = false;
 
 
     public WhydahApplicationSession() {
@@ -58,13 +57,11 @@ public class WhydahApplicationSession {
 
 
     private void releaseWhydahConnection() {
-        if (integrationMode) {
-            applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
-            Long expires = Long.parseLong(ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML));
-            if (expiresBeforeNextSchedule(expires)) {
-                applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
-                applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
-            }
+        applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
+        Long expires = Long.parseLong(ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML));
+        if (expiresBeforeNextSchedule(expires)) {
+            applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
+            applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
         }
 
 
