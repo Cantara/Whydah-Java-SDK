@@ -65,6 +65,17 @@ public class CommandListApplications extends HystrixCommand<String> {
 
     }
 
+    /**
+     * Let us use cache instead as applications is mostly static :)
+     *
+     * @return
+     */
+    @Override
+    protected String getCacheKey() {
+        return String.valueOf(myAppTokenId);
+    }
+
+
     @Override
     protected String getFallback() {
         return null;
