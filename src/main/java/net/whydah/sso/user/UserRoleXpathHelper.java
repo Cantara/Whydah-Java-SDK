@@ -36,19 +36,19 @@ public class UserRoleXpathHelper {
             String rolename;
             String roleValue;
             String userName=findXpathValue(userTokenXml, "/usertoken/username");
-            String expression = "count(/usertoken/application)";
+            String expression = "count(/usertoken/appauth)";
             int noOfApps= Integer.valueOf(findXpathValue(userTokenXml,expression));
             int noOfRoles =  Integer.valueOf(findXpathValue(userTokenXml, "count(//role)"));
             UserRole[] result = new UserRole[noOfRoles];
             int roleindex=0;
             for (int n=1;n<=noOfApps;n++) {
-                    appid = findXpathValue(userTokenXml, "//usertoken/application["+n+"]/@ID");
-                    int noSubRoles=Integer.valueOf(findXpathValue(userTokenXml,"count(//application["+n+"]/organizationName)"));
+                    appid = findXpathValue(userTokenXml, "//usertoken/appauth["+n+"]/@ID");
+                    int noSubRoles=Integer.valueOf(findXpathValue(userTokenXml,"count(//appauth["+n+"]/organizationName)"));
                     for (int m=1;m<=noSubRoles;m++){
                         try {
-                        orgName = findXpathValue(userTokenXml, "//application["+n+"]/organizationName["+m+"]");
-                        rolename = findXpathValue(userTokenXml, "//application["+n+"]/role["+m+"]/@name");
-                        roleValue = findXpathValue(userTokenXml, "//application["+n+"]/role["+m+"]/@value");
+                        orgName = findXpathValue(userTokenXml, "//appauth["+n+"]/organizationName["+m+"]");
+                        rolename = findXpathValue(userTokenXml, "//appauth["+n+"]/role["+m+"]/@name");
+                        roleValue = findXpathValue(userTokenXml, "//appauth["+n+"]/role["+m+"]/@value");
                         UserRole ur = new UserRole(userName, appid, orgName, rolename, roleValue);
                         result[roleindex++] = ur;
                         } catch (PathNotFoundException pnpe) {
@@ -72,15 +72,15 @@ public class UserRoleXpathHelper {
             String rolename;
             String roleValue;
             String userName=findXpathValue(userAggregateXML, "/whydahuser/identity/username");
-            String expression = "count(/whydahuser/applications/application)";
+            String expression = "count(/whydahuser/applications/appauth)";
             int noOfRoles= Integer.valueOf(findXpathValue(userAggregateXML,expression));
 
             for (int n=1;n<=noOfRoles;n++) {
                 try {
-                    appid = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/appId");
-                    orgName = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/orgName");
-                    rolename = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/roleName");
-                    roleValue = findXpathValue(userAggregateXML, "/whydahuser/applications/application[" + n + "]/roleValue");
+                    appid = findXpathValue(userAggregateXML, "/whydahuser/applications/appauth[" + n + "]/appId");
+                    orgName = findXpathValue(userAggregateXML, "/whydahuser/applications/appauth[" + n + "]/orgName");
+                    rolename = findXpathValue(userAggregateXML, "/whydahuser/applications/appauth[" + n + "]/roleName");
+                    roleValue = findXpathValue(userAggregateXML, "/whydahuser/applications/appauth[" + n + "]/roleValue");
                     UserRole userRole = new UserRole(userName, appid, orgName, rolename, roleValue);
                     userRoles.add(userRole);
                 } catch (PathNotFoundException pnpe) {
@@ -129,7 +129,7 @@ public class UserRoleXpathHelper {
         if (roleXml == null) {
             log.debug("roleXml was empty, so returning empty orgName.");
         } else {
-            String expression = "/application/orgName";
+            String expression = "/appauth/orgName";
             orgName = findXpathValue(roleXml, expression);
         }
         return orgName;

@@ -65,7 +65,7 @@ public class ApplicationXpathHelperTest {
             "         <applicationname></applicationname>\n" +
             "         <expires>1435242569010</expires>\n" +
             "     </params> \n" +
-            "     <Url type=\"application/xml\" method=\"POST\"                 template=\"http://localhost:9998/tokenservice/user/757b505cfd34c64c85ca5b5690ee5293/get_usertoken_by_usertokenid\"/> \n" +
+            "     <Url type=\"appauth/xml\" method=\"POST\"                 template=\"http://localhost:9998/tokenservice/userauth/757b505cfd34c64c85ca5b5690ee5293/get_usertoken_by_usertokenid\"/> \n" +
             " </applicationtoken>";
 
 

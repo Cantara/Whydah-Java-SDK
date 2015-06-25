@@ -51,7 +51,7 @@ public class CommandGetUsertokenByUserticket extends HystrixCommand<String> {
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
-        WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/get_usertoken_by_userticket");
+        WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("userauth/" + myAppTokenId + "/get_usertoken_by_userticket");
         log.trace("CommandGetUsertokenByUserticket - getUserTokenByUserTicket - ticket: {} apptoken: {}",userticket,myAppTokenXml);
         Form formData = new Form();
         formData.param("apptoken", myAppTokenXml);

@@ -70,25 +70,25 @@ public class UserRole {
     }
 
     public String toXML() {
-        return "<application>" +
+        return "<appauth>" +
                 "            <uid>" + getUserName() + "</uid>\n" +
                 "            <appId>" + getApplicationId() + "</appId>\n" +
 //                "            <applicationName>" + getApplicationName() + "</applicationName>\n" +
                 "            <orgName>" + getOrgName() + "</orgName>\n" +
                 "            <roleName>" + getRoleName() + "</roleName>\n" +
                 "            <roleValue>" + getRoleValue() + "</roleValue>\n" +
-                "        </application>";
+                "        </appauth>";
     }
 
     public static UserRole fromXml(String roleXml) {
 
-        String id = UserXpathHelper.findValue(roleXml,"/application/id");
-        String userId = UserXpathHelper.findValue(roleXml,"/application/uid");
-        String appId = UserXpathHelper.findValue(roleXml,"/application/appId");
-        String appName = UserXpathHelper.findValue(roleXml,"/application/applicationName");
-        String orgName = UserXpathHelper.findValue(roleXml,"/application/orgName");
-        String roleName = UserXpathHelper.findValue(roleXml,"/application/roleName");
-        String roleValue = UserXpathHelper.findValue(roleXml,"/application/roleValue");
+        String id = UserXpathHelper.findValue(roleXml,"/appauth/id");
+        String userId = UserXpathHelper.findValue(roleXml,"/appauth/uid");
+        String appId = UserXpathHelper.findValue(roleXml,"/appauth/appId");
+        String appName = UserXpathHelper.findValue(roleXml,"/appauth/applicationName");
+        String orgName = UserXpathHelper.findValue(roleXml,"/appauth/orgName");
+        String roleName = UserXpathHelper.findValue(roleXml,"/appauth/roleName");
+        String roleValue = UserXpathHelper.findValue(roleXml,"/appauth/roleValue");
         UserRole userRole = new UserRole(null, appId,orgName,roleName,roleValue);
         userRole.setId(id);
         userRole.setUserId(userId);

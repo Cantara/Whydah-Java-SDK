@@ -49,10 +49,10 @@ public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
             return false;
         }
         // logonApplication();
-        WebTarget verifyResource = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/validate_usertokenid/" + usertokenid);
+        WebTarget verifyResource = tokenServiceClient.target(tokenServiceUri).path("userauth/" + myAppTokenId + "/validate_usertokenid/" + usertokenid);
         Response response = get(verifyResource);
         if (response.getStatus() == OK.getStatusCode()) {
-            log.info("CommandValidateUsertokenId - verifyUserTokenId - validate_usertokenid {}  result {}", "user/" + myAppTokenId + "/validate_usertokenid/" + usertokenid, response);
+            log.info("CommandValidateUsertokenId - verifyUserTokenId - validate_usertokenid {}  result {}", "userauth/" + myAppTokenId + "/validate_usertokenid/" + usertokenid, response);
             return true;
         }
         if (response.getStatus() == CONFLICT.getStatusCode()) {
@@ -64,7 +64,7 @@ public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
         //logonApplication();
         response = get(verifyResource);
         boolean bolRes = response.getStatus() == OK.getStatusCode();
-        log.info("CommandValidateUsertokenId - verifyUserTokenId - validate_usertokenid {}  result {}", "user/" + myAppTokenId + "/validate_usertokenid/" + usertokenid, response);
+        log.info("CommandValidateUsertokenId - verifyUserTokenId - validate_usertokenid {}  result {}", "userauth/" + myAppTokenId + "/validate_usertokenid/" + usertokenid, response);
         return bolRes;
     }
 

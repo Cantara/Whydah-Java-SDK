@@ -60,7 +60,7 @@ public class WhydaUtilUserRolesJacksonHelperTest {
 
     String addUserAndRole(){
 
-        //Use token for add user
+        //Use token for add userauth
         String username = "_temp_username4Role_" + System.currentTimeMillis();
         UserIdentityRepresentation userIdentity = new UserIdentityRepresentation(username,"first","last","ref",username +"@example.com","+4712345678");
         String userTokenXml = WhydahUtil.addUser(userAdminServiceUri, myApplicationTokenID, adminUserTokenId, userIdentity);
@@ -88,7 +88,7 @@ public class WhydaUtilUserRolesJacksonHelperTest {
     @Ignore
     @Test
     public void listRolesForUserAndApplication() throws Exception {
-        log.trace("List roles for user {} in application {}", addedUser,TEMPORARY_APPLICATION_ID);
+        log.trace("List roles for userauth {} in appauth {}", addedUser,TEMPORARY_APPLICATION_ID);
         List<UserRole> roles = WhydahUtil.listUserRoles(userAdminServiceUri,myApplicationTokenID, adminUserTokenId,TEMPORARY_APPLICATION_ID,addedUser);
         assertNotNull(roles);
         assertTrue("Size of roles should be > 0",roles.size() > 0);

@@ -29,7 +29,7 @@ public class WhydahAdminUtil {
      * List registered whydah applications
      *
      * @param tokenServiceUri URI to the Security Token Service, where you do logon
-     * @param userAdminServiceUri URI to the User Admin  Service, for user directory access
+     * @param userAdminServiceUri URI to the User Admin  Service, for userauth directory access
      * @param appCredential Application access credentials.
      * @param userCredential User access credentials
      * @return Json Representing the applications.
