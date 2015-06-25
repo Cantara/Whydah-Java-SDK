@@ -37,7 +37,10 @@ public class CommandLogonUserByUserCredentialTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
+        tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
+        if (integrationMode) {
+            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
+        }
         appCredential = new ApplicationCredential();
         appCredential.setApplicationID("15");
         String applicationsecret = "33779936R6Jr47D4Hj5R6p9qT";

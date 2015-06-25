@@ -21,12 +21,18 @@ public class CommandLogonApplicationTest {
 
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
+    private static boolean integrationMode = false;
+
 
 
     @BeforeClass
     public static void setup() throws Exception {
-        tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
         appCredential = new ApplicationCredential("15","33779936R6Jr47D4Hj5R6p9qT");
+        tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
+        if (integrationMode) {
+            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
+        }
+
     }
 
 
