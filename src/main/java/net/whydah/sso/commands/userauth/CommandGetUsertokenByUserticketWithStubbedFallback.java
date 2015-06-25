@@ -16,7 +16,7 @@ public class CommandGetUsertokenByUserticketWithStubbedFallback extends CommandG
 
     @Override
     protected String getFallback() {
-        return UserHelper.getDummyToken();
+        return UserHelper.getDummyUserToken();
     }
 
 

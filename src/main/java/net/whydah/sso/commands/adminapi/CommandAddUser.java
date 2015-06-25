@@ -83,7 +83,7 @@ public class CommandAddUser extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        return UserHelper.getDummyToken();
+        return UserHelper.getDummyUserToken();
     }
 
 }

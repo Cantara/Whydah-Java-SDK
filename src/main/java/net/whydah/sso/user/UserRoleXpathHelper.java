@@ -101,15 +101,15 @@ public class UserRoleXpathHelper {
             String orgName;
             String rolename;
             String roleValue;
-            List<String> roles=findJsonpathList(userAggregateJson,"$.roles[*]");
-            String userName=findJsonpathValue(userAggregateJson, "$.username");
+            List<String> roles=findJsonpathList(userAggregateJson, "$.roles[*]");
+            String userName= findJsonPathValue(userAggregateJson, "$.username");
             UserRole[] result = new UserRole[roles.size()];
             for (int n=0;n<roles.size();n++){
                 try {
-                    appid = findJsonpathValue(userAggregateJson, "$.roles[" + n + "].applicationId");
-                    orgName = findJsonpathValue(userAggregateJson, "$.roles[" + n + "].applicationName");
-                    rolename = findJsonpathValue(userAggregateJson, "$.roles[" + n + "].applicationRoleName");
-                    roleValue = findJsonpathValue(userAggregateJson, "$.roles[" + n + "].applicationRoleValue");
+                    appid = findJsonPathValue(userAggregateJson, "$.roles[" + n + "].applicationId");
+                    orgName = findJsonPathValue(userAggregateJson, "$.roles[" + n + "].applicationName");
+                    rolename = findJsonPathValue(userAggregateJson, "$.roles[" + n + "].applicationRoleName");
+                    roleValue = findJsonPathValue(userAggregateJson, "$.roles[" + n + "].applicationRoleValue");
                     UserRole ur = new UserRole(userName,appid, orgName, rolename, roleValue);
                     result[n]=ur;
                 } catch (PathNotFoundException pnpe){
@@ -122,6 +122,18 @@ public class UserRoleXpathHelper {
         return null;
     }
 
+
+
+    public static String getOrgNameFromRoleXml(String roleXml) {
+        String orgName = "";
+        if (roleXml == null) {
+            log.debug("roleXml was empty, so returning empty orgName.");
+        } else {
+            String expression = "/application/orgName";
+            orgName = findXpathValue(roleXml, expression);
+        }
+        return orgName;
+    }
 
 
     private static String findXpathValue(String xmlString,  String expression) {
@@ -153,7 +165,7 @@ public class UserRoleXpathHelper {
         return result;
     }
 
-    private static String findJsonpathValue(String jsonString,  String expression) throws PathNotFoundException {
+    private static String findJsonPathValue(String jsonString, String expression) throws PathNotFoundException {
         String value = "";
             Object document = Configuration.defaultConfiguration().jsonProvider().parse(jsonString);
             String result= JsonPath.read(document, expression);

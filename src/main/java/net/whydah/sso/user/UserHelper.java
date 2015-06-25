@@ -6,40 +6,36 @@ package net.whydah.sso.user;
 public class UserHelper {
 
 
-        public static  String getDummyToken(){
+        public static  String getDummyUserToken(){
             return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-                    "<usertoken xmlns:ns2=\"http://www.w3.org/1999/xhtml\" id=\"759799fe-2e2f-4c8e-b096-d5796733d4d2\">\n" +
-                    "    <uid>7583278592730985723</uid>\n" +
+                    "<usertoken xmlns:ns2=\"http://www.w3.org/1999/xhtml\" id=\"a96a517f-cef3-4be7-92f5-f059b65e4071\">\n" +
+                    "    <uid></uid>\n" +
+                    "    <timestamp></timestamp>\n" +
+                    "    <lifespan>3600000</lifespan>\n" +
+                    "    <issuer>/token/issuer/tokenverifier</issuer>\n" +
                     "    <securitylevel>0</securitylevel>\n" +
-                    "    <personRef></personRef>\n" +
+                    "    <username>test_name</username>\n" +
                     "    <firstname>Olav</firstname>\n" +
                     "    <lastname>Nordmann</lastname>\n" +
                     "    <email></email>\n" +
-                    "    <timestamp>7982374982374</timestamp>\n" +
-                    "    <lifespan>3600000</lifespan>\n" +
-                    "    <issuer>/iam/issuer/tokenverifier</issuer>\n" +
+                    "    <personRef></personRef>\n" +
+                    "    <lastSeen></lastSeen>  <!-- Whydah 2.1 date and time of last registered user session -->\n" +
                     "    <application ID=\"2349785543\">\n" +
-                    "        <applicationName>MyApp</applicationName>\n" +
-                    "        <organization ID=\"2349785543\">\n" +
-                    "            <organizationName>myCompany</organizationName>\n" +
-                    "            <role name=\"janitor\" value=\"Employed\"/>\n" +
-                    "            <role name=\"board\" value=\"President\"/>\n" +
-                    "        </organization>\n" +
-                    "        <organization ID=\"0078\">\n" +
-                    "            <organizationName>myDayJobCompany</organizationName>\n" +
-                    "            <role name=\"board\" value=\"\"/>\n" +
-                    "        </organization>\n" +
+                    "        <applicationName>Whydah.net</applicationName>\n" +
+                    "           <organizationName>Kunde 3</organizationName>\n" +
+                    "              <role name=\"styremedlem\" value=\"\"/>\n" +
+                    "              <role name=\"president\" value=\"\"/>\n" +
+                    "           <organizationName>Kunde 4</organizationName>\n" +
+                    "              <role name=\"styremedlem\" value=\"\"/>\n" +
                     "    </application>\n" +
                     "    <application ID=\"appa\">\n" +
-                    "        <applicationName>App A</applicationName>\n" +
-                    "        <organization ID=\"1078\">\n" +
-                    "            <organizationName>myFotballClub</organizationName>\n" +
-                    "            <role name=\"janitor\" value=\"Employed\"/>\n" +
-                    "        </organization>\n" +
+                    "        <applicationName>whydag.org</applicationName>\n" +
+                    "        <organizationName>Kunde 1</organizationName>\n" +
+                    "        <role name=\"styremedlem\" value=\"Valla\"/>\n" +
                     "    </application>\n" +
-                    "\n" +
+                    " \n" +
                     "    <ns2:link type=\"application/xml\" href=\"/\" rel=\"self\"/>\n" +
-                    "    <hash type=\"MD5\">7671ec2d5bac82d1e70b33c59b5c96a3</hash>\n" +
+                    "    <hash type=\"MD5\">8a37ef9624ed93db4873035b0de3d1ca</hash>\n" +
                     "</usertoken>";
 
         }
@@ -81,4 +77,16 @@ public class UserHelper {
                         "   ]\n" +
                         "}";
         };
+
+        public static String userIdentityXML(){
+                return "<identity>\n" +
+                        "        <username>test_name</username>\n" +
+                        "        <cellPhone>+1555406789</cellPhone>\n" +
+                        "        <email>useradmin@getwhydah.com</email>\n" +
+                        "        <firstname>User</firstname>\n" +
+                        "        <lastname>Admin</lastname>\n" +
+                        "        <personRef>0</personRef>\n" +
+                        "        <UID>useradmin</UID>\n" +
+                        "</identity>";
+        }
 }

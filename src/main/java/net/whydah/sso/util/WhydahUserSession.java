@@ -49,7 +49,7 @@ public class WhydahUserSession {
 
         private void renewWhydahUserConnection(){
             userTokenXML = WhydahUtil.logOnUser(was,userCredential) ;
-            Long expires = UserXpathHelper.getTimestamp(userTokenXML)+UserXpathHelper.getLifespan(userTokenXML);
+            Long expires = UserXpathHelper.getTimestampFromUserTokenXml(userTokenXML)+UserXpathHelper.getLifespanFromUserTokenXml(userTokenXML);
             if (expiresBeforeNextSchedule(expires)){
                 this.userTokenXML = WhydahUtil.extendUserSession(was,userCredential);
                 userTokenId = UserXpathHelper.getUserTokenId(this.userTokenXML);
