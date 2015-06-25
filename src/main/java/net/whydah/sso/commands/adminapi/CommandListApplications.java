@@ -27,7 +27,7 @@ public class CommandListApplications extends HystrixCommand<String> {
 
 
     public CommandListApplications(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String applicationQuery) {
-        super(HystrixCommandGroupKey.Factory.asKey("UASUserGroup"));
+        super(HystrixCommandGroupKey.Factory.asKey("UASUserAdminGroup"));
         this.userAdminServiceUri = userAdminServiceUri;
         this.myAppTokenId = myAppTokenId;
         this.adminUserTokenId = adminUserTokenId;
