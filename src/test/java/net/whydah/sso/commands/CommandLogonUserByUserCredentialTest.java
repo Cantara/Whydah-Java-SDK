@@ -82,14 +82,26 @@ public class CommandLogonUserByUserCredentialTest {
     }
 
     @Test
+<<<<<<< HEAD
     public void tesLlogOnApplicationAndUser() throws Exception {
 
         String userToken = WhydahUtil.logOnApplicationAndUser(tokenServiceUri.toString(), appCredential.getApplicationID(), appCredential.getApplicationSecret(), userCredential.getUserName(), userCredential.getPassword());
+=======
+    public void tesLogOnApplicationAndUser() throws Exception {
+
+        if (integrationMode) {
+            String userToken = WhydahUtil.logOnApplicationAndUser(tokenServiceUri.toString(), appCredential.getApplicationID(), appCredential.getApplicationSecret(), userCredential.getUserName(), userCredential.getPassword());
+            assertNotNull(userToken);
+            assertTrue(userToken.contains("usertoken"));
+        }
+>>>>>>> upstream/master
 
     }
 
     @Test
     public void testFullCircleWithContextTest() {
+        if (integrationMode) {
+
             HystrixRequestContext context = HystrixRequestContext.initializeContext();
             try {
                 String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
@@ -104,7 +116,7 @@ public class CommandLogonUserByUserCredentialTest {
                 context.shutdown();
             }
 
-
+        }
     }
 
     private void testFullCircleWithContext() throws Exception {
