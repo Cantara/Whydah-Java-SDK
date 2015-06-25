@@ -1,5 +1,6 @@
 package net.whydah.sso.util;
 
+import net.whydah.sso.WhydahUtil;
 import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
@@ -64,7 +65,7 @@ public class WhydahUtilTest {
         //Use token for add user
         String username = "_temp_username_" + System.currentTimeMillis();
         UserIdentityRepresentation userIdentity = new UserIdentityRepresentation(username,"first","last","ref",username +"@example.com","+4712345678");
-        String userTokenXml = WhydahUtil.addUser(userAdminServiceUri,myApplicationTokenID,adminUserTokenId,userIdentity);
+        String userTokenXml = WhydahUtil.addUser(userAdminServiceUri, myApplicationTokenID, adminUserTokenId, userIdentity);
         assertNotNull(userTokenXml);
         String createdUserName = UserXpathHelper.getUserIdFromUserTokenXml(userTokenXml);
         assertFalse(createdUserName.contains("7583278592730985723"));
