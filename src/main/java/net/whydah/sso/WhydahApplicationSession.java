@@ -32,7 +32,7 @@ public class WhydahApplicationSession {
         this.sts = sts;
         this.appId = appId;
         this.appSecret = appSecret;
-        renewWhydahConnection();
+        initializeWhydahConnection();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
                 new Runnable() {
@@ -66,6 +66,11 @@ public class WhydahApplicationSession {
         }
 
 
+    }
+    private void initializeWhydahConnection() {
+        applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
+//        applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
+        applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
     }
 
     public static boolean expiresBeforeNextSchedule(Long timestamp) {
