@@ -43,4 +43,42 @@ public class UserHelper {
                     "</usertoken>";
 
         }
+
+        public static String getDummyUserListJson(){
+                return "{\n" +
+                        "   \"rows\": \"3\",\n" +
+                        "   \"result\": [\n" +
+                        "      {\n" +
+                        "         \"personRef\": \"42\",\n" +
+                        "         \"uid\": \"useradmin\",\n" +
+                        "         \"username\": \"useradmin\",\n" +
+                        "         \"firstName\": \"UserAdmin\",\n" +
+                        "         \"lastName\": \"UserAdminWebApp\",\n" +
+                        "         \"email\": \"whydahadmin@getwhydah.com\",\n" +
+                        "         \"cellPhone\": \"87654321\",\n" +
+                        "         \"uri\": \"http://ip-172-31-33-110.ec2.internal:9995/uib/useradmin/users/useradmin/\"\n" +
+                        "      },\n" +
+                        "      {\n" +
+                        "         \"personRef\": \"001\",\n" +
+                        "         \"uid\": \"acsemployee\",\n" +
+                        "         \"username\": \"acsemployee\",\n" +
+                        "         \"firstName\": \"Karl\",\n" +
+                        "         \"lastName\": \"Employee\",\n" +
+                        "         \"email\": \"leon.ho@altran.com\",\n" +
+                        "         \"cellPhone\": \"0\",\n" +
+                        "         \"uri\": \"http://ip-172-31-33-110.ec2.internal:9995/uib/useradmin/users/acsemployee/\"\n" +
+                        "      },\n" +
+                        "      {\n" +
+                        "         \"personRef\": \"002\",\n" +
+                        "         \"uid\": \"acsmanager\",\n" +
+                        "         \"username\": \"acsmanager\",\n" +
+                        "         \"firstName\": \"Karl\",\n" +
+                        "         \"lastName\": \"Manager\",\n" +
+                        "         \"email\": \"leon.ho@altran.com\",\n" +
+                        "         \"cellPhone\": \"98765432\",\n" +
+                        "         \"uri\": \"http://ip-172-31-33-110.ec2.internal:9995/uib/useradmin/users/acsmanager/\"\n" +
+                        "      }\n" +
+                        "   ]\n" +
+                        "}";
+        };
 }

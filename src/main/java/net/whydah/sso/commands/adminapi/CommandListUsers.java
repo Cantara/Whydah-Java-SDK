@@ -42,10 +42,9 @@ public class CommandListUsers extends HystrixCommand<String> {
     protected String run() {
 
         log.trace("CommandListUsers - myAppTokenId={}", myAppTokenId);
-
         Client tokenServiceClient = ClientBuilder.newClient();
 
-        WebTarget userDirectory = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/adminapplication/users");
+        WebTarget userDirectory = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/adminapplication/users/find");
 
         // Works against UIB, still misisng in UAS...
         Response response = userDirectory.request().get();

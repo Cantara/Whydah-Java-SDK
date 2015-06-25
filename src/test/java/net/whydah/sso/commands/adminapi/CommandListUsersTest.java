@@ -1,28 +1,25 @@
 package net.whydah.sso.commands.adminapi;
 
 import net.whydah.sso.application.ApplicationCredential;
-import net.whydah.sso.application.ApplicationHelper;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredentialWithStubbedFallback;
 import net.whydah.sso.user.UserCredential;
+import net.whydah.sso.user.UserHelper;
 import net.whydah.sso.user.UserXpathHelper;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import rx.Observable;
+
+import static org.junit.Assert.assertTrue;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.UUID;
-import java.util.concurrent.Future;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
- * Created by totto on 24.06.15.
+ * Created by totto on 25.06.15.
  */
-public class CommandListApplicationsTest {
+public class CommandListUsersTest  {
 
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
@@ -58,9 +55,9 @@ public class CommandListApplicationsTest {
         String userToken = new CommandLogonUserByUserCredentialWithStubbedFallback(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
 
-        String applicationsJsonl = new CommandListApplicationsWithStubbedFallback(userAdminServiceUri, myApplicationTokenID,userTokenId,"").execute();
-        System.out.println("applicationsJson=" + applicationsJsonl);
-        assertTrue(applicationsJsonl.equalsIgnoreCase(ApplicationHelper.getDummyAppllicationListJson()));
+        String usersListJson = new CommandListUsersWithStubbedFallback(userAdminServiceUri, myApplicationTokenID,userTokenId,"").execute();
+        System.out.println("usersListJson=" + usersListJson);
+        assertTrue(usersListJson.equalsIgnoreCase(UserHelper.getDummyUserListJson()));
 
     }
 
