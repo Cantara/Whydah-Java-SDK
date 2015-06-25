@@ -20,7 +20,6 @@ public class WhydahApplicationSession {
 
     private String applicationTokenId;
     private String applicationTokenXML;
-    private static boolean integrationMode = false;
 
 
     public WhydahApplicationSession() {
@@ -33,11 +32,12 @@ public class WhydahApplicationSession {
         this.sts = sts;
         this.appId = appId;
         this.appSecret = appSecret;
+        renewWhydahConnection();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
                 new Runnable() {
                     public void run() {
-                        releaseWhydahConnection();
+                        renewWhydahConnection();
                     }
                 },
                 1, 60, TimeUnit.SECONDS);
@@ -57,14 +57,12 @@ public class WhydahApplicationSession {
     }
 
 
-    private void releaseWhydahConnection() {
-        if (integrationMode) {
-            applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
-            Long expires = Long.parseLong(ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML));
-            if (expiresBeforeNextSchedule(expires)) {
-                applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
-                applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
-            }
+    private void renewWhydahConnection() {
+        applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
+        Long expires = Long.parseLong(ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML));
+        if (expiresBeforeNextSchedule(expires)) {
+            applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
+            applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
         }
 
 

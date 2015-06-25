@@ -64,7 +64,7 @@ public class WhydaUtilUserRolesJacksonHelperTest {
         UserIdentityRepresentation userIdentity = new UserIdentityRepresentation(username,"first","last","ref",username +"@example.com","+4712345678");
         String userTokenXml = WhydahUtil.addUser(userAdminServiceUri,myApplicationTokenID,adminUserTokenId,userIdentity);
         assertNotNull(userTokenXml);
-        String createdUserId = UserXpathHelper.getUserId(userTokenXml);
+        String createdUserId = UserXpathHelper.getUserIdFromUserTokenXml(userTokenXml);
         log.debug("Created userId {}", createdUserId);
         assertFalse(createdUserId.contains("7583278592730985723"));
         //User is created, now add role

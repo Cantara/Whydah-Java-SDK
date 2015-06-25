@@ -21,6 +21,11 @@ import java.io.StringReader;
 public class UserXpathHelper {
     private static final Logger log = LoggerFactory.getLogger(UserXpathHelper.class);
 
+
+    /**
+     * UserTokenXml parsers
+     *
+     */
     public static String getUserTokenId(String userTokenXml) {
         String userTokenId = "";
         if (userTokenXml == null) {
@@ -31,7 +36,7 @@ public class UserXpathHelper {
         }
         return userTokenId;
     }
-    public static String getUserId(String userTokenXml) {
+    public static String getUserIdFromUserTokenXml(String userTokenXml) {
         String userId = "";
         if (userTokenXml == null) {
             log.debug("userTokenXml was empty, so returning empty userId.");
@@ -41,18 +46,8 @@ public class UserXpathHelper {
         }
         return userId;
     }
-    public static String getUserName(String userTokenXml) {
-        String userName = "";
-        if (userTokenXml == null) {
-            log.debug("userTokenXml was empty, so returning empty userName.");
-        } else {
-            String expression = "/whydahuser/identity/username";
-            userName = findValue(userTokenXml, expression);
-        }
-        return userName;
-    }
 
-    public static String getRealName(String userTokenXml){
+    public static String getRealNameFromUserTokenXml(String userTokenXml){
         if (userTokenXml==null){
             log.debug("userTokenXml was empty, so returning empty realName.");
             return "";
@@ -67,66 +62,60 @@ public class UserXpathHelper {
             XPathExpression xPathExpression = xPath.compile(expression);
             String expression2 = "/usertoken/lastname";
             XPathExpression xPathExpression2 = xPath.compile(expression2);
-            log.debug("getRealName - usertoken" + userTokenXml + "\nvalue:" + xPathExpression.evaluate(doc) + " " + xPathExpression2.evaluate(doc));
+            log.debug("getRealNameFromUserTokenXml - usertoken" + userTokenXml + "\nvalue:" + xPathExpression.evaluate(doc) + " " + xPathExpression2.evaluate(doc));
             return (xPathExpression.evaluate(doc)+" "+xPathExpression2.evaluate(doc));
         } catch (Exception e) {
-            log.error("getRealName - userTokenXml - getTimestamp parsing error", e);
+            log.error("getRealNameFromUserTokenXml - userTokenXml - getTimestampFromUserTokenXml parsing error", e);
         }
         return "";
     }
 
 
-    public static Integer getLifespan(String userTokenXml) {
+    public static Long getLifespanFromUserTokenXml(String userTokenXml) {
         if (userTokenXml == null){
             log.debug("userTokenXml was empty, so returning empty lifespan.");
             return null;
         }
         try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(userTokenXml)));
-            XPath xPath = XPathFactory.newInstance().newXPath();
-
-            String expression = "/usertoken/lifespan";
-            XPathExpression xPathExpression = xPath.compile(expression);
-            return Integer.parseInt(xPathExpression.evaluate(doc));
+            String value = findValue(userTokenXml,"/usertoken/lifespan");
+            return Long.parseLong(value);
         } catch (Exception e) {
-            log.error("getLifespan - userTokenXml lifespan parsing error", e);
+            log.error("getLifespanFromUserTokenXml - userTokenXml lifespan parsing error", e);
         }
-        return null;
+        return 0L;
     }
 
-    public static Long getTimestamp(String userTokenXml) {
+    public static Long getTimestampFromUserTokenXml(String userTokenXml) {
         if (userTokenXml==null){
             log.debug("userTokenXml was empty, so returning empty timestamp.");
             return null;
         }
         try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(userTokenXml)));
-            XPath xPath = XPathFactory.newInstance().newXPath();
-
-            String expression = "/usertoken/timestamp";
-            XPathExpression xPathExpression = xPath.compile(expression);
-            log.debug("token" + userTokenXml + "\nvalue:" + xPathExpression.evaluate(doc));
-            return Long.parseLong(xPathExpression.evaluate(doc));
+            String value = findValue(userTokenXml, "/usertoken/timestamp");
+            return Long.parseLong(value);
         } catch (Exception e) {
-            log.error("getTimestamp - userTokenXml timestamp parsing error", e);
+            log.error("getTimestampFromUserTokenXml - userTokenXml timestamp parsing error", e);
         }
-        return null;
+        return 0L;
     }
 
-    public static String getOrgName(String roleXml) {
-        String orgName = "";
-        if (roleXml == null) {
-            log.debug("roleXml was empty, so returning empty orgName.");
+
+    /**
+     * UserIdentityXml parsers
+     *
+     */
+    public static String getUserNameFromUserIdentityXml(String userIdentityXml) {
+        String userName = "";
+        if (userIdentityXml == null) {
+            log.debug("userTokenXml was empty, so returning empty userName.");
         } else {
-            String expression = "/application/orgName";
-            orgName = findValue(roleXml, expression);
+            String expression = "/identity/username";
+            userName = findValue(userIdentityXml, expression);
         }
-        return orgName;
+        return userName;
     }
+
+
 
     public static String findValue(String xmlString,  String expression) {
         String value = "";

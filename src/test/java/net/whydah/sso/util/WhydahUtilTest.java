@@ -66,7 +66,7 @@ public class WhydahUtilTest {
         UserIdentityRepresentation userIdentity = new UserIdentityRepresentation(username,"first","last","ref",username +"@example.com","+4712345678");
         String userTokenXml = WhydahUtil.addUser(userAdminServiceUri,myApplicationTokenID,adminUserTokenId,userIdentity);
         assertNotNull(userTokenXml);
-        String createdUserName = UserXpathHelper.getUserId(userTokenXml);
+        String createdUserName = UserXpathHelper.getUserIdFromUserTokenXml(userTokenXml);
         assertFalse(createdUserName.contains("7583278592730985723"));
         assertEquals(username,createdUserName);
     }
@@ -80,7 +80,7 @@ public class WhydahUtilTest {
         UserIdentityRepresentation userIdentity = new UserIdentityRepresentation(username,"first","last","ref",username +"@example.com","+4712345678");
         String userTokenXml = WhydahUtil.addUser(userAdminServiceUri,myApplicationTokenID,adminUserTokenId,userIdentity);
         assertNotNull(userTokenXml);
-        String createdUserId = UserXpathHelper.getUserId(userTokenXml);
+        String createdUserId = UserXpathHelper.getUserIdFromUserTokenXml(userTokenXml);
         assertFalse(createdUserId.contains("7583278592730985723"));
         //User is created, now add role
         String orgName = "testOrg";

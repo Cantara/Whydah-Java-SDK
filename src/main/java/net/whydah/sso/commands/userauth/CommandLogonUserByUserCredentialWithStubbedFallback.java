@@ -27,7 +27,7 @@ public class CommandLogonUserByUserCredentialWithStubbedFallback extends Command
     @Override
     protected String getFallback() {
         log.warn("CommandLogonUserByUserCredential - getFallback - User authentication override with fallback ");
-        return UserHelper.getDummyToken();
+        return UserHelper.getDummyUserToken();
     }
 
 
