@@ -35,13 +35,19 @@ public class ApplicationXpathHelper {
         return appTokenId;
     }
 
-    public static  String getExpiresFromAppTokenXml(String appTokenXML) {
-        String expires = "";
+    public static  Long getExpiresFromAppTokenXml(String appTokenXML) {
+        String expiresValue = "";
+        Long expires = -1L;
         if (appTokenXML == null) {
-            log.debug("roleXml was empty, so returning empty orgName.");
+            log.debug("appTokenXml was empty, so returning empty expires.");
         } else {
-            String expression = "/expires";
-            expires = findValue(appTokenXML, expression);
+            String expression = "/applicationtoken/params/expires";
+            expiresValue = findValue(appTokenXML, expression);
+            try {
+               expires = new Long(expiresValue);
+            } catch (NumberFormatException nfe) {
+                log.warn("Failed to parse Long value from expires {}, in AppToken {}", expiresValue, appTokenXML);
+            }
         }
         return expires;
     }
