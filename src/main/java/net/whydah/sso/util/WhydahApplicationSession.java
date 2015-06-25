@@ -36,7 +36,7 @@ public class WhydahApplicationSession {
         ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
                 new Runnable() {
                     public void run() {
-                        releaseWhydahConnection();
+                        renewWhydahConnection();
                     }
                 },
                 1, 60, TimeUnit.SECONDS);
@@ -56,7 +56,7 @@ public class WhydahApplicationSession {
     }
 
 
-    private void releaseWhydahConnection() {
+    private void renewWhydahConnection() {
         applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
         Long expires = Long.parseLong(ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML));
         if (expiresBeforeNextSchedule(expires)) {
