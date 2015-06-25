@@ -62,7 +62,7 @@ public class WhydahUtilTest {
 
     @Test
     public void testAddUser() throws Exception {
-        //Use token for add user
+        //Use token for add userauth
         String username = "_temp_username_" + System.currentTimeMillis();
         UserIdentityRepresentation userIdentity = new UserIdentityRepresentation(username,"first","last","ref",username +"@example.com","+4712345678");
         String userTokenXml = WhydahUtil.addUser(userAdminServiceUri, myApplicationTokenID, adminUserTokenId, userIdentity);
@@ -76,7 +76,7 @@ public class WhydahUtilTest {
     @Test
     public void testAddRoleToUser() throws Exception {
 
-        //Use token for add user
+        //Use token for add userauth
         String username = "_temp_username4Role_" + System.currentTimeMillis();
         UserIdentityRepresentation userIdentity = new UserIdentityRepresentation(username,"first","last","ref",username +"@example.com","+4712345678");
         String userTokenXml = WhydahUtil.addUser(userAdminServiceUri,myApplicationTokenID,adminUserTokenId,userIdentity);

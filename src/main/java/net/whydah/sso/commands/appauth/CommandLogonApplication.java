@@ -22,8 +22,8 @@ import static javax.ws.rs.core.Response.Status.*;
 /**
  * Created by totto on 12/1/14.
  *
- * Log on an application given supplied application credentials and return an applicationTokenID which is
- * an application session key.
+ * Log on an appauth given supplied appauth credentials and return an applicationTokenID which is
+ * an appauth session key.
  *
  */
 public class CommandLogonApplication extends HystrixCommand<String> {

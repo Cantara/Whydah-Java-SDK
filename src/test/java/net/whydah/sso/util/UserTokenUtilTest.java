@@ -87,7 +87,7 @@ public class UserTokenUtilTest {
 
     String addUserAndRole(){
 
-        //Use token for add user
+        //Use token for add userauth
         String username = "_temp_username4Role_" + System.currentTimeMillis();
         UserIdentityRepresentation userIdentity = new UserIdentityRepresentation(username,"first","last","ref",username +"@example.com","+4712345678");
         String userTokenXml = WhydahUtil.addUser(userAdminServiceUri,myApplicationTokenID,adminUserTokenId,userIdentity);

@@ -14,8 +14,8 @@ public class ApplicationHelper {
                     "            <applicationname>dummyapp</applicationname>\n" +
                     "            <expires>3453453</expires>\n" +
                     "        </params> \n" +
-                    "           <Url type=\"application/xml\"" +
-                    "                template=\"http://example.com/user/47289347982137421/get_usertoken_by_usertokenid\"/>" +
+                    "           <Url type=\"appauth/xml\"" +
+                    "                template=\"http://example.com/userauth/47289347982137421/get_usertoken_by_usertokenid\"/>" +
                     "    </applicationtoken>\n";
         }
 

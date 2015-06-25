@@ -1,4 +1,4 @@
-package net.whydah.sso.commands;
+package net.whydah.sso.commands.userauth;
 
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import net.whydah.sso.application.ApplicationCredential;
