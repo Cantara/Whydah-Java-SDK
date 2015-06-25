@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -113,6 +114,7 @@ public class CommandLogonUserByUserCredentialTest {
         }
     }
 
+
     private void testFullCircleWithContext() throws Exception {
             HystrixRequestContext context = HystrixRequestContext.initializeContext();
             try {
@@ -133,7 +135,7 @@ public class CommandLogonUserByUserCredentialTest {
 
     }
 
-    @Test
+    @Ignore
     public void testRegressionFullCircleWithContext() {
         int successFull=0;
         int nonSuccessFull=0;
