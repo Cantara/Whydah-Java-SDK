@@ -59,7 +59,7 @@ public class WhydahApplicationSession {
 
     private void renewWhydahConnection() {
         applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
-        Long expires = Long.parseLong(ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML));
+        Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML);
         if (expiresBeforeNextSchedule(expires)) {
             applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
             applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
