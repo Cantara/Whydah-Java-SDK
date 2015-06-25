@@ -109,7 +109,7 @@ public class UserXpathHelper {
         if (userIdentityXml == null) {
             log.debug("userTokenXml was empty, so returning empty userName.");
         } else {
-            String expression = "/identity/username";
+            String expression = "/whydahuser/identity/username";
             userName = findValue(userIdentityXml, expression);
         }
         return userName;

@@ -78,15 +78,32 @@ public class UserHelper {
                         "}";
         };
 
-        public static String userIdentityXML(){
-                return "<identity>\n" +
-                        "        <username>test_name</username>\n" +
-                        "        <cellPhone>+1555406789</cellPhone>\n" +
-                        "        <email>useradmin@getwhydah.com</email>\n" +
-                        "        <firstname>User</firstname>\n" +
-                        "        <lastname>Admin</lastname>\n" +
-                        "        <personRef>0</personRef>\n" +
-                        "        <UID>useradmin</UID>\n" +
-                        "</identity>";
+        public static String userDummyIdentityXML(){
+                return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                        "<whydahuser>\n" +
+                        "   <identity>\n" +
+                        "      <username>test_name</username>\n" +
+                        "      <cellPhone>87654321</cellPhone>\n" +
+                        "      <email>whydahadmin@getwhydah.com</email>\n" +
+                        "      <firstname>UserAdmin</firstname>\n" +
+                        "      <lastname>UserAdminWebApp</lastname>\n" +
+                        "      <personRef>42</personRef>\n" +
+                        "      <UID>useradmin</UID>\n" +
+                        "   </identity>\n" +
+                        "</whydahuser>";
+        }
+
+        public static String userDummyIdentityJson(){
+                return "{  \n" +
+                        "   \"username\":\"test_name\",\n" +
+                        "   \"firstName\":\"Karl\",\n" +
+                        "   \"lastName\":\"Manager\",\n" +
+                        "   \"personRef\":\"002\",\n" +
+                        "   \"email\":\"leon.ho@altran.com\",\n" +
+                        "   \"cellPhone\":\"98765432\",\n" +
+                        "   \"uid\":\"acsmanager\",\n" +
+                        "   \"password\":null,\n" +
+                        "   \"personName\":\"Karl Manager\"\n" +
+                        "}";
         }
 }
