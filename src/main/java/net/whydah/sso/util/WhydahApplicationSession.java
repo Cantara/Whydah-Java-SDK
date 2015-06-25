@@ -32,6 +32,7 @@ public class WhydahApplicationSession {
         this.sts = sts;
         this.appId = appId;
         this.appSecret = appSecret;
+        renewWhydahConnection();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
                 new Runnable() {
