@@ -24,7 +24,7 @@ import static javax.ws.rs.core.Response.Status.*;
  */
 public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommandLogonUserByUserCredential.class);
+    private static final Logger log = LoggerFactory.getLogger(CommandLogonUserByUserCredential.class);
 
     private URI tokenServiceUri;
     private String myAppTokenId;
@@ -41,7 +41,7 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
         this.userCredential=userCredential;
         this.userticket= UUID.randomUUID().toString();  // Create new UUID ticket if not provided
         if (tokenServiceUri==null || myAppTokenId==null || myAppTokenXml==null || userCredential==null || userCredential==null){
-            logger.error("CommandLogonUserByUserCredential initialized with null-values - will fail");
+            log.error("CommandLogonUserByUserCredential initialized with null-values - will fail");
             throw new IllegalArgumentException("Missing parameters for \n" +
                     "\ttokenServiceUri ["+ tokenServiceUri + "], \n" +
                     "\tmyAppTokenId ["+ myAppTokenId + "], \n" +
@@ -57,7 +57,7 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-        logger.trace("CommandLogonUserByUserCredential - myAppTokenId={}",myAppTokenId);
+        log.trace("CommandLogonUserByUserCredential - myAppTokenId={}",myAppTokenId);
 
         Client tokenServiceClient = ClientBuilder.newClient();
         WebTarget getUserToken = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/" + userticket + "/usertoken");
@@ -66,26 +66,26 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
         formData.param("usercredential", userCredential.toXML());
         Response response = postForm(formData,getUserToken);
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
-            logger.warn("CommandLogonUserByUserCredential - getUserToken - User authentication failed with status code " + response.getStatus());
+            log.warn("CommandLogonUserByUserCredential - getUserToken - User authentication failed with status code " + response.getStatus());
             return null;
         }
         if (response.getStatus() == OK.getStatusCode()) {
             String responseXML = response.readEntity(String.class);
-            logger.trace("CommandLogonUserByUserCredential - getUserToken - Log on OK with response {}", responseXML);
+            log.trace("CommandLogonUserByUserCredential - getUserToken - Log on OK with response {}", responseXML);
             return responseXML;
         }
 
         //retry once for other statuses
-        logger.info("CommandLogonUserByUserCredential - getUserToken - retry once for other statuses");
+        log.info("CommandLogonUserByUserCredential - getUserToken - retry once for other statuses");
         response = postForm(formData,getUserToken);
         if (response.getStatus() == OK.getStatusCode()) {
             String responseXML = response.readEntity(String.class);
-            logger.trace("CommandLogonUserByUserCredential - getUserToken - Log on OK with response {}", responseXML);
+            log.trace("CommandLogonUserByUserCredential - getUserToken - Log on OK with response {}", responseXML);
             return responseXML;
         } else if (response.getStatus() == NOT_FOUND.getStatusCode()) {
-            logger.error(ExceptionUtil.printableUrlErrorMessage("CommandLogonUserByUserCredential - getUserToken - Auth failed - Problems connecting with TokenService", getUserToken, response));
+            log.error(ExceptionUtil.printableUrlErrorMessage("CommandLogonUserByUserCredential - getUserToken - Auth failed - Problems connecting with TokenService", getUserToken, response));
         } else {
-            logger.info(ExceptionUtil.printableUrlErrorMessage("CommandLogonUserByUserCredential - getUserToken - User authentication failed", getUserToken, response));
+            log.info(ExceptionUtil.printableUrlErrorMessage("CommandLogonUserByUserCredential - getUserToken - User authentication failed", getUserToken, response));
         }
         return null;
 
@@ -97,7 +97,7 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        logger.warn("CommandLogonUserByUserCredential - getFallback - retiurning null  ");
+        log.warn("CommandLogonUserByUserCredential - getFallback - retiurning null  ");
         return null;
     }
 

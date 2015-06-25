@@ -20,14 +20,14 @@ import java.util.List;
  * Created by totto on 12/3/14.
  */
 public class ApplicationXpathHelper {
-    private static final Logger logger = LoggerFactory.getLogger(ApplicationXpathHelper.class);
+    private static final Logger log = LoggerFactory.getLogger(ApplicationXpathHelper.class);
 
 
 
     public static  String getAppTokenIdFromAppTokenXml(String appTokenXML) {
         String appTokenId = "";
         if (appTokenXML == null) {
-            logger.debug("roleXml was empty, so returning empty orgName.");
+            log.debug("roleXml was empty, so returning empty orgName.");
         } else {
             String expression = "/applicationtoken/params/applicationtokenID[1]";
             appTokenId = findValue(appTokenXML, expression);
@@ -38,7 +38,7 @@ public class ApplicationXpathHelper {
     public static  String getExpiresFromAppTokenXml(String appTokenXML) {
         String expires = "";
         if (appTokenXML == null) {
-            logger.debug("roleXml was empty, so returning empty orgName.");
+            log.debug("roleXml was empty, so returning empty orgName.");
         } else {
             String expression = "/expires";
             expires = findValue(appTokenXML, expression);
@@ -48,11 +48,11 @@ public class ApplicationXpathHelper {
 
     public static  String[] getApplicationNamesFromApplicationsJson(String applicationsJson) {
         if (applicationsJson == null) {
-            logger.debug("getApplicationNamesFromApplicationsJson was empty, so returning null.");
+            log.debug("getApplicationNamesFromApplicationsJson was empty, so returning null.");
         } else {
             List<String>  applications = findJsonpathList(applicationsJson, "$..name");
             if (applications==null){
-                logger.debug("Xpath returned zero hits");
+                log.debug("Xpath returned zero hits");
                 return null;
             }
             String[] result = new String[applications.size()];
@@ -63,7 +63,7 @@ public class ApplicationXpathHelper {
 
     public static  String findApplicationNameFromApplicationId(String applicationsJson) {
         if (applicationsJson == null) {
-            logger.debug("findApplicationNameFromApplicationId was empty, so returning null.");
+            log.debug("findApplicationNameFromApplicationId was empty, so returning null.");
         } else {
             return  findJsonpathValue(applicationsJson,"$.applications[?(@.id=11)].name");
         }
@@ -83,7 +83,7 @@ public class ApplicationXpathHelper {
             XPathExpression xPathExpression = xPath.compile(expression);
             value = xPathExpression.evaluate(doc);
         } catch (Exception e) {
-            logger.warn("Failed to parse xml. Expression {}, xml {}, ", expression, xmlString, e);
+            log.warn("Failed to parse xml. Expression {}, xml {}, ", expression, xmlString, e);
         }
         return value;
     }
@@ -94,7 +94,7 @@ public class ApplicationXpathHelper {
         try {
             result= JsonPath.using(conf).parse(jsonString).read(expression);
         } catch (Exception e) {
-            logger.warn("Failed to parse JSON. Expression {}, JSON {}, ", expression, jsonString, e);
+            log.warn("Failed to parse JSON. Expression {}, JSON {}, ", expression, jsonString, e);
         }
         return result;
     }

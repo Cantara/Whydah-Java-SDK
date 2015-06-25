@@ -28,7 +28,7 @@ import static javax.ws.rs.core.Response.Status.*;
  */
 public class CommandLogonApplication extends HystrixCommand<String> {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommandLogonApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(CommandLogonApplication.class);
     private URI tokenServiceUri ;
     private ApplicationCredential appCredential ;
 
@@ -37,7 +37,7 @@ public class CommandLogonApplication extends HystrixCommand<String> {
         this.tokenServiceUri = tokenServiceUri;
         this.appCredential=appCredential;
         if (tokenServiceUri==null || appCredential==null ){
-            logger.error("CommandLogonApplication initialized with null-values - will fail");
+            log.error("CommandLogonApplication initialized with null-values - will fail");
             throw new IllegalArgumentException("Missing parameters for \n" +
                     "\ttokenServiceUri ["+ tokenServiceUri + "], \n" +
                     "\tappCredential ["+ appCredential + "]");
@@ -48,7 +48,7 @@ public class CommandLogonApplication extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-        logger.trace("CommandLogonApplication - appCredential={}", appCredential.toXML());
+        log.trace("CommandLogonApplication - appCredential={}", appCredential.toXML());
 
         Client tokenServiceClient = ClientBuilder.newClient();
         Form formData = new Form();
@@ -60,27 +60,27 @@ public class CommandLogonApplication extends HystrixCommand<String> {
 //            response = logonResource.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(ClientResponse.class, formData);
             response = postForm(formData, logonResource);
         } catch (RuntimeException e) {
-            logger.error("CommandLogonApplication - logonApplication - Problem connecting to {}", logonResource.toString());
+            log.error("CommandLogonApplication - logonApplication - Problem connecting to {}", logonResource.toString());
             throw(e);
         }
         if (response.getStatus() != OK.getStatusCode()) {
-            logger.warn("CommandLogonApplication - Application authentication failed with statuscode {} - retrying ", response.getStatus());
+            log.warn("CommandLogonApplication - Application authentication failed with statuscode {} - retrying ", response.getStatus());
             try {
 //                WebResource logonResource = tokenServiceClient.resource(tokenServiceUri).path("logon");
                 response = postForm(formData,logonResource);
             } catch (RuntimeException e) {
-                logger.error("CommandLogonApplication - logonApplication - Problem connecting to {}", logonResource.toString());
+                log.error("CommandLogonApplication - logonApplication - Problem connecting to {}", logonResource.toString());
                 throw(e);
             }
             if (response.getStatus() != 200) {
-                logger.error("CommandLogonApplication - Application authentication failed with statuscode {}", response.getStatus());
+                log.error("CommandLogonApplication - Application authentication failed with statuscode {}", response.getStatus());
                 throw new RuntimeException("CommandLogonApplication - Application authentication failed");
             }
         }
         String myAppTokenXml = response.readEntity(String.class);
-        logger.debug("CommandLogonApplication - Applogon ok: apptokenxml: {}", myAppTokenXml);
+        log.debug("CommandLogonApplication - Applogon ok: apptokenxml: {}", myAppTokenXml);
         String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-        logger.trace("CommandLogonApplication - myAppTokenId: {}", myApplicationTokenID);
+        log.trace("CommandLogonApplication - myAppTokenId: {}", myApplicationTokenID);
         return myAppTokenXml;
     }
 

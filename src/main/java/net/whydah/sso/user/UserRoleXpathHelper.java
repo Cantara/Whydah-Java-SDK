@@ -24,12 +24,12 @@ import java.util.List;
  */
 public class UserRoleXpathHelper {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserRoleXpathHelper.class);
+    private static final Logger log = LoggerFactory.getLogger(UserRoleXpathHelper.class);
 
 
     public static UserRole[] getUserRoleFromUserTokenXml(String userTokenXml) {
         if (userTokenXml == null) {
-            logger.debug("userTokenXml was empty, so returning empty userTokenId.");
+            log.debug("userTokenXml was empty, so returning empty userTokenId.");
         } else {
             String appid;
             String orgName;
@@ -65,7 +65,7 @@ public class UserRoleXpathHelper {
     public static List<UserRole> getUserRoleFromUserAggregateXml(String userAggregateXML) {
         List<UserRole> userRoles = new ArrayList<>();
         if (userAggregateXML == null) {
-            logger.debug("userAggregateXML was empty, so returning null.");
+            log.debug("userAggregateXML was empty, so returning null.");
         } else {
             String appid;
             String orgName;
@@ -84,7 +84,7 @@ public class UserRoleXpathHelper {
                     UserRole userRole = new UserRole(userName, appid, orgName, rolename, roleValue);
                     userRoles.add(userRole);
                 } catch (PathNotFoundException pnpe) {
-                    logger.warn("Could not parse userAggregateXml {}, reason {}", userAggregateXML,pnpe.getMessage());
+                    log.warn("Could not parse userAggregateXml {}, reason {}", userAggregateXML,pnpe.getMessage());
 //                    return null;
                 }
             }
@@ -95,7 +95,7 @@ public class UserRoleXpathHelper {
 
     public static UserRole[] getUserRoleFromUserAggregateJson(String userAggregateJson) {
         if (userAggregateJson == null) {
-            logger.debug("userAggregateJson was empty, so returning null.");
+            log.debug("userAggregateJson was empty, so returning null.");
         } else {
             String appid;
             String orgName;
@@ -136,7 +136,7 @@ public class UserRoleXpathHelper {
             XPathExpression xPathExpression = xPath.compile(expression);
             value = xPathExpression.evaluate(doc);
         } catch (Exception e) {
-            logger.warn("Failed to parse xml. Expression {}, xml {}, ", expression, xmlString, e);
+            log.warn("Failed to parse xml. Expression {}, xml {}, ", expression, xmlString, e);
         }
         return value;
     }
@@ -148,7 +148,7 @@ public class UserRoleXpathHelper {
             result= JsonPath.read(document, expression);
 
         } catch (Exception e) {
-            logger.warn("Failed to parse JSON. Expression {}, JSON {}, ", expression, jsonString, e);
+            log.warn("Failed to parse JSON. Expression {}, JSON {}, ", expression, jsonString, e);
         }
         return result;
     }

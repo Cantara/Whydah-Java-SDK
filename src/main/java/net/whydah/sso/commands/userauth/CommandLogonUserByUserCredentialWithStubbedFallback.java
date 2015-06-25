@@ -12,7 +12,7 @@ import java.net.URI;
  */
 public class CommandLogonUserByUserCredentialWithStubbedFallback extends CommandLogonUserByUserCredential {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommandLogonUserByUserCredentialWithStubbedFallback.class);
+    private static final Logger log = LoggerFactory.getLogger(CommandLogonUserByUserCredentialWithStubbedFallback.class);
 
 
     public CommandLogonUserByUserCredentialWithStubbedFallback(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, UserCredential userCredential) {
@@ -26,7 +26,7 @@ public class CommandLogonUserByUserCredentialWithStubbedFallback extends Command
 
     @Override
     protected String getFallback() {
-        logger.warn("CommandLogonUserByUserCredential - getFallback - User authentication override with fallback ");
+        log.warn("CommandLogonUserByUserCredential - getFallback - User authentication override with fallback ");
         return UserHelper.getDummyToken();
     }
 
