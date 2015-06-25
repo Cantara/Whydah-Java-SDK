@@ -30,6 +30,12 @@ public class ApplicationXpathHelperTest {
     }
 
     @Test
+    public void testFindAppTokenId() throws Exception  {
+        String appTokenId = "757b505cfd34c64c85ca5b5690ee5293";
+        assertEquals(appTokenId,ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXml));
+    }
+
+    @Test
     public void testGetUserRoleFromUserToken() throws Exception {
         String applications[] = ApplicationXpathHelper.getApplicationNamesFromApplicationsJson(ApplicationHelper.getDummyAppllicationListJson());
         System.out.println("Found applications "+applications.length);
