@@ -7,7 +7,7 @@ import java.net.URI;
 /**
  * Created by totto on 25.06.15.
  */
-public class CommandGetUsertokenByUsertokenIdWithStubbedFallback extends CommandGetUsertokenByUserticket {
+public class CommandGetUsertokenByUsertokenIdWithStubbedFallback extends CommandGetUsertokenByUsertokenId {
 
 
     public CommandGetUsertokenByUsertokenIdWithStubbedFallback(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, String userticket) {
