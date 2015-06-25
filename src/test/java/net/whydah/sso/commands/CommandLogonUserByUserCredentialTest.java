@@ -11,7 +11,7 @@ import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredentialWithStub
 import net.whydah.sso.commands.userauth.CommandValidateUsertokenId;
 import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserXpathHelper;
-import net.whydah.sso.util.WhydahUtil;
+import net.whydah.sso.WhydahUtil;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;

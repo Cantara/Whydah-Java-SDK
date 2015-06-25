@@ -1,5 +1,6 @@
 package net.whydah.sso.util;
 
+import net.whydah.sso.WhydahUtil;
 import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
@@ -68,7 +69,7 @@ public class UserTokenUtilTest {
         UserRole role = new UserRole("altranadmin",TEMPORARY_APPLICATION_ID,orgName, roleName, roleValue);
         List<UserRole> roles = new ArrayList<>();
         roles.add(role);
-        List<UserRole> result = WhydahUtil.addRolesToUser(userAdminServiceUri, myApplicationTokenID,adminUserTokenId, roles);
+        List<UserRole> result = WhydahUtil.addRolesToUser(userAdminServiceUri, myApplicationTokenID, adminUserTokenId, roles);
         //Re-login after add roles
         String adminUserTokenXml = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, UUID.randomUUID().toString()).execute();
         adminUserTokenId = UserXpathHelper.getUserTokenId(adminUserTokenXml);

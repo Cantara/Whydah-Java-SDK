@@ -1,4 +1,4 @@
-package net.whydah.sso.util;
+package net.whydah.sso;
 
 import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserXpathHelper;
