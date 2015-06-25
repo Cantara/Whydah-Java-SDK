@@ -82,11 +82,6 @@ public class CommandLogonUserByUserCredentialTest {
     }
 
     @Test
-<<<<<<< HEAD
-    public void tesLlogOnApplicationAndUser() throws Exception {
-
-        String userToken = WhydahUtil.logOnApplicationAndUser(tokenServiceUri.toString(), appCredential.getApplicationID(), appCredential.getApplicationSecret(), userCredential.getUserName(), userCredential.getPassword());
-=======
     public void tesLogOnApplicationAndUser() throws Exception {
 
         if (integrationMode) {
@@ -94,7 +89,6 @@ public class CommandLogonUserByUserCredentialTest {
             assertNotNull(userToken);
             assertTrue(userToken.contains("usertoken"));
         }
->>>>>>> upstream/master
 
     }
 
