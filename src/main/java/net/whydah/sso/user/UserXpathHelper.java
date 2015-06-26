@@ -77,7 +77,7 @@ public class UserXpathHelper {
             return null;
         }
         try {
-            String value = findValue(userTokenXml,"/usertoken/lifespan");
+            String value = findValue(userTokenXml, "/usertoken/lifespan");
             return Long.parseLong(value);
         } catch (Exception e) {
             log.error("getLifespanFromUserTokenXml - userTokenXml lifespan parsing error", e);
@@ -113,6 +113,16 @@ public class UserXpathHelper {
             userName = findValue(userIdentityXml, expression);
         }
         return userName;
+    }
+    public static String getUserIdFromUserIdentityXml(String userIdentityXml) {
+        String userId = "";
+        if (userIdentityXml == null) {
+            log.debug("userTokenXml was empty, so returning empty userId.");
+        } else {
+            String expression = "/whydahuser/identity/UID";
+            userId = findValue(userIdentityXml, expression);
+        }
+        return userId;
     }
 
 
