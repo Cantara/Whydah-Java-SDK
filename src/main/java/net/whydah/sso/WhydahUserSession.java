@@ -30,6 +30,11 @@ public class WhydahUserSession {
 
 
         public WhydahUserSession(WhydahApplicationSession was,UserCredential userCredential){
+            if (was==null || was.getActiveApplicationTokenId()==null || was.getActiveApplicationTokenId().length() < 4) {
+                log.error("Error, unable to initialize new user session, application session invalid:"+was.getActiveApplicationTokenId());
+
+            }
+
             this.was=was;
             this.userCredential=userCredential;
             initializeUserSession();
@@ -53,7 +58,7 @@ public class WhydahUserSession {
         }
 
         private void renewWhydahUserConnection(){
-            log.info("Rener user session");
+            log.info("Renew user session");
             userTokenXML = WhydahUtil.logOnUser(was,userCredential) ;
             if (userTokenXML==null || userTokenXML.length() < 4) {
                 log.error("Error, unable to initialize new user session, userTokenXML:"+userTokenXML);
