@@ -30,8 +30,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class WhydahUtilTest {
     private static final Logger log = getLogger(WhydahUtilTest.class);
 
-    public static final String TEMPORARY_APPLICATION_ID = "201";//"11";
-    public static final String TEMPORARY_APPLICATION_SECRET = "bbbbbbbbbbbbbbbbbbbbbbbbb";
+    public static final String TEMPORARY_APPLICATION_ID = "99";//"11";
+    public static final String TEMPORARY_APPLICATION_SECRET = "33879936R6Jr47D4Hj5R6p9qT";
     private final String userAdminServiceUri = "http://localhost:9992/useradminservice";
     private final String userTokenServiceUri = "http://localhost:9998/tokenservice";
     private String myApplicationTokenID = null;
