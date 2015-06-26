@@ -2,6 +2,7 @@ package net.whydah.sso.usecases;
 
 
 import net.whydah.sso.WhydahApplicationSession;
+import net.whydah.sso.WhydahTemporaryBliUtil;
 import net.whydah.sso.WhydahUtil;
 import net.whydah.sso.user.UserCredential;
 import org.junit.Before;
@@ -20,8 +21,8 @@ public class ValidateUserRoleUseCaseTest {
 
     public static final String TEMPORARY_APPLICATION_ID = "99";//"11";
     public static final String TEMPORARY_APPLICATION_SECRET = "33879936R6Jr47D4Hj5R6p9qT";
-    public static final String userName = "admin";
-    public static final String password = "amdin";
+    public static final String userName = "dcadmin";
+    public static final String password = "dcadmin";
 
 //    private final WebTarget userAdminService;
     private final String userAdminServiceUri = "http://localhost:9992/useradminservice";
@@ -47,5 +48,13 @@ public class ValidateUserRoleUseCaseTest {
         WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
         String userTokenXml = WhydahUtil.logOnUser(applicationSession, userCredential);
         assertNotNull(userTokenXml);
+    }
+
+    @Test
+    public void bli_test2_logonUser() throws Exception {
+        WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
+        String appTokenId = applicationSession.getActiveApplicationTokenId();
+        String appTokenXml = applicationSession.getActiveApplicationToken();
+        WhydahTemporaryBliUtil.logOnUser(userTokenServiceUri,appTokenId, appTokenXml, userName, password);
     }
 }
