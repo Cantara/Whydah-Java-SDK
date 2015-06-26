@@ -2,12 +2,12 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %log{36} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <log name="com.netflix.hystrix" level="INFO" />
-    <log name="net.whydah" level="trace" />
+    <logger name="com.netflix.hystrix" level="INFO" />
+    <logger name="net.whydah" level="trace" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />

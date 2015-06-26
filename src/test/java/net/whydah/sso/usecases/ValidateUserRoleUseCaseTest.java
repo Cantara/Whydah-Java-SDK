@@ -49,6 +49,7 @@ public class ValidateUserRoleUseCaseTest {
         WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
         String userTokenXml = WhydahUtil.logOnUser(applicationSession, userCredential);
         assertNotNull(userTokenXml);
+        assertTrue(userTokenXml.contains("useradmin@altran.com"));
     }
 
     @Ignore
@@ -70,6 +71,8 @@ public class ValidateUserRoleUseCaseTest {
         String appTokenXml = applicationSession.getActiveApplicationToken();
         String userTokenXml = WhydahTemporaryBliUtil.logOnUser(userTokenServiceUri,appTokenId, appTokenXml, userName, password);
         assertNotNull(userTokenXml);
+        log.debug("userTokenXml {}", userTokenXml);
         assertTrue(userTokenXml.contains(userName));
+        assertTrue(userTokenXml.contains("WhydahUserAdmin"));
     }
 }

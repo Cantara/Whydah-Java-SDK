@@ -41,7 +41,7 @@ public class UserXpathHelper {
         if (userTokenXml == null) {
             log.debug("userTokenXml was empty, so returning empty userId.");
         } else {
-            String expression = "/whydahuser/identity/UID";
+            String expression = "/usertoken/uid";
             userId = findValue(userTokenXml, expression);
         }
         return userId;

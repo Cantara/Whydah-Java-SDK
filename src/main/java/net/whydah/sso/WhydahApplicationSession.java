@@ -1,6 +1,8 @@
 package net.whydah.sso;
 
 import net.whydah.sso.application.ApplicationXpathHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -20,10 +22,11 @@ public class WhydahApplicationSession {
 
     private String applicationTokenId;
     private String applicationTokenXML;
+    private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
 
 
     public WhydahApplicationSession() {
-        this("https://whydahdev.altrancloud.com/tokenservice/", "15", "33779936R6Jr47D4Hj5R6p9qT");
+        this("https://whydahdev.altrancloud.com/tokenservice/", "99", "33879936R6Jr47D4Hj5R6p9qT");
 
     }
 
@@ -59,6 +62,7 @@ public class WhydahApplicationSession {
 
     private void renewWhydahConnection() {
         applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
+        log.info("Received session, applicationTokenXml:"+applicationTokenXML);
         Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML);
         if (expiresBeforeNextSchedule(expires)) {
             applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
@@ -69,6 +73,7 @@ public class WhydahApplicationSession {
     }
     private void initializeWhydahConnection() {
         applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
+        log.info("Initialized new session, applicationTokenXml:"+applicationTokenXML);
 //        applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
         applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
     }
@@ -79,6 +84,7 @@ public class WhydahApplicationSession {
         long j = (timestamp);
         long diffSeconds = j - i;
         if (diffSeconds < 60) {
+            log.info("re-new application session..");
             return true;
         }
         return false;
