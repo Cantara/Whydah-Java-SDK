@@ -27,7 +27,7 @@ public class ValidateUserRoleUseCaseTest {
     public static String TEMPORARY_APPLICATION_ID = "99";//"11";
     public static String TEMPORARY_APPLICATION_SECRET = "33879936R6Jr47D4Hj5R6p9qT";
     public static String userName = "admin";
-    public static String password = "admin";
+    public static String password = "whydahadmin";
 
     private String userAdminServiceUri = "http://localhost:9992/useradminservice";
     private String userTokenServiceUri = "http://localhost:9998/tokenservice";
@@ -63,16 +63,22 @@ public class ValidateUserRoleUseCaseTest {
     }
 
     @Ignore
-    @Test
+    @Test   // NB takes 35 minutes to complete......
     public void test2_logonUserSession() throws Exception {
         UserCredential userCredential = new UserCredential(userName, password);
         WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
         assertTrue(applicationSession.hasActiveSession());
         WhydahUserSession userSession = new WhydahUserSession(applicationSession,userCredential);
         assertTrue(userSession.hasActiveSession());
-        String userTokenXml = userSession.getActiveUserToken();
-        assertNotNull(userTokenXml);
-        assertTrue(userTokenXml.contains("useradmin@altran.com"));
+        assertNotNull(userSession.getActiveUserToken());
+        assertTrue(userSession.getActiveUserToken().contains("useradmin@whydah.net"));
+        Thread.sleep(1000 * 1000);
+        assertTrue(applicationSession.hasActiveSession());
+        WhydahUserSession userSession2 = new WhydahUserSession(applicationSession,userCredential);
+        assertNotNull(userSession2.getActiveUserToken());
+        assertTrue(userSession2.getActiveUserToken().contains("useradmin@whydah.net"));
+        assertTrue(userSession.getActiveUserToken().contains("useradmin@whydah.net"));
+        Thread.sleep(1000 * 1000);
     }
 
     @Ignore
