@@ -29,7 +29,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * Created by totto on 06.05.15.
  *
- * TODO  add init to embedd sts/uas and renewal of appauth and userauth sessions
+ * TTODO  add init to embedd sts/uas and renewal of application and user sessions
  *
  */
 public class WhydahUtil {
@@ -37,11 +37,11 @@ public class WhydahUtil {
 
 
     /**
-     * Logon your appauth to Whydah.
+     * Logon your application to Whydah.
      * @param stsURI URI to the Security Token Service, where you do logon
-     * @param applicationID The registered ID of your appauth.
-     * @param applicationSecret Current, updatet secret of your appauth.
-     * @return XML Representing the appauth. In this you will find the applicationtokenId used as appauth session
+     * @param applicationID The registered ID of your application.
+     * @param applicationSecret Current, updatet secret of your application.
+     * @return applicationTokenXML Representing the application. In this you will find the applicationtokenId used as application session     * @param applicationSecret Current, updatet secret of your application's.
      * for further operations.
      */
     public static String logOnApplication(String stsURI, String applicationID,String applicationSecret){
@@ -53,11 +53,11 @@ public class WhydahUtil {
     }
 
     /**
-     * Extend the appauth's logon expiry period.
+     * Extend the application's's logon expiry period.
      * @param stsURI URI to the Security Token Service, where you do logon
-     * @param applicationID The registered ID of your appauth.
-     * @param applicationSecret Current, updatet secret of your appauth.
-     * @return XML Representing the appauth. In this you will find the applicationtokenId used as appauth session
+     * @param applicationID The registered ID of your application's.
+     * @param applicationSecret Current, updatet secret of your application's.
+     * @return XML Representing the application's. In this you will find the applicationtokenId used as application's session
      * for further operations.
      *
      * TODO   Use extend session not new logon...
@@ -104,14 +104,14 @@ public class WhydahUtil {
      * @param uasUri URI to the User Admin Service
      * @param applicationTokenId TokenId fetched from the XML in logOnApplication
      * @param adminUserTokenId TokenId fetched from the XML returned in logOnApplicationAndUser
-     * @param userIdentity The userauth identity you want to create.
+     * @param userIdentity The user identity you want to create.
      * @return UserIdentityXml
      */
     public static String addUser(String uasUri, String applicationTokenId, String adminUserTokenId, UserIdentityRepresentation userIdentity) {
         String userId = null;
 
 
-        WebTarget addUser = buildBaseTarget(uasUri, applicationTokenId, adminUserTokenId).path("/userauth");
+        WebTarget addUser = buildBaseTarget(uasUri, applicationTokenId, adminUserTokenId).path("/user");
         String userIdentityXml = userIdentity.toXML();
         Response response = addUser.request().accept(MediaType.APPLICATION_XML).post(Entity.entity(userIdentityXml,MediaType.APPLICATION_XML));
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
@@ -140,7 +140,7 @@ public class WhydahUtil {
 
         List<String> createdRolesXml = new ArrayList<>();
         List<UserRole> createdRoles = new ArrayList<>();
-        WebTarget userTarget = buildBaseTarget(uasUri, applicationTokenId, adminUserTokenId).path("/userauth");
+        WebTarget userTarget = buildBaseTarget(uasUri, applicationTokenId, adminUserTokenId).path("/user");
         Response response;
         String userName = "";
         for (UserRole role : roles) {
@@ -167,7 +167,7 @@ public class WhydahUtil {
     public static List<UserRole> listUserRoles(String uasUri, String adminAppTokenId, String adminUserTokenId, String applicationId, String userId ) {
 
         List<UserRole> userRoles = new ArrayList<>();
-        WebTarget userTarget = buildBaseTarget(uasUri, adminAppTokenId, adminUserTokenId).path("/userauth");
+        WebTarget userTarget = buildBaseTarget(uasUri, adminAppTokenId, adminUserTokenId).path("/user");
         Response response;
         response = userTarget.path(userId).path("roles").request().accept(MediaType.APPLICATION_XML).get();
         if (response.getStatus() == OK.getStatusCode()) {
@@ -175,7 +175,7 @@ public class WhydahUtil {
             log.debug("CommandListRoles - listUserRoles - Created role ok {}", rolesXml);
            userRoles = UserRoleXpathHelper.rolesViaJackson(rolesXml);
         } else {
-            log.trace("Failed to find roles for userauth {}, response status {}", userId, response.getStatus());
+            log.trace("Failed to find roles for user {}, response status {}", userId, response.getStatus());
         }
         return userRoles;
     }

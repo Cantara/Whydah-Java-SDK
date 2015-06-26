@@ -52,7 +52,7 @@ public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
-        WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("userauth/" + myAppTokenId + "/get_usertoken_by_usertokenid");
+        WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/get_usertoken_by_usertokenid");
         log.trace("CommandGetUsertokenByUsertokenId  - usertokenid: {} apptoken: {}", usertokenId,myAppTokenXml);
         Form formData = new Form();
         formData.param("apptoken", myAppTokenXml);

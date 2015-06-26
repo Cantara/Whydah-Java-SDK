@@ -15,7 +15,7 @@ import java.util.List;
 public class UserRolesJacksonHelper {
 
 //
-@JacksonXmlProperty(localName = "appauth")
+@JacksonXmlProperty(localName = "application")
 @JacksonXmlElementWrapper(useWrapping = false)
     private UserRoleDTO[] applications;
 

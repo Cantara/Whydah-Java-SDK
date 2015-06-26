@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by totto on 23.06.15.
  * <p>
- * A thread which initiales and keep your appauth session running
+ * A thread which initiales and keep your application session running
  */
 public class WhydahApplicationSession {
 

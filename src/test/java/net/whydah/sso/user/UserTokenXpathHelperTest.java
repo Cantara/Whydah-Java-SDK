@@ -26,22 +26,22 @@ public class UserTokenXpathHelperTest {
             "    <lastname>Nordmann</lastname>\n" +
             "    <email></email>\n" +
             "    <personRef></personRef>\n" +
-            "    <lastSeen></lastSeen>  <!-- Whydah 2.1 date and time of last registered userauth session -->\n" +
-            "    <appauth ID=\"2349785543\">\n" +
+            "    <lastSeen></lastSeen>  <!-- Whydah 2.1 date and time of last registered user session -->\n" +
+            "    <application ID=\"2349785543\">\n" +
             "        <applicationName>Whydah.net</applicationName>\n" +
             "           <organizationName>Kunde 3</organizationName>\n" +
             "              <role name=\"styremedlem\" value=\"\"/>\n" +
             "              <role name=\"president\" value=\"\"/>\n" +
             "           <organizationName>Kunde 4</organizationName>\n" +
             "              <role name=\"styremedlem\" value=\"\"/>\n" +
-            "    </appauth>\n" +
-            "    <appauth ID=\"appa\">\n" +
+            "    </application>\n" +
+            "    <application ID=\"appa\">\n" +
             "        <applicationName>whydag.org</applicationName>\n" +
             "        <organizationName>Kunde 1</organizationName>\n" +
             "        <role name=\"styremedlem\" value=\"Valla\"/>\n" +
-            "    </appauth>\n" +
+            "    </application>\n" +
             " \n" +
-            "    <ns2:link type=\"appauth/xml\" href=\"/\" rel=\"self\"/>\n" +
+            "    <ns2:link type=\"application/xml\" href=\"/\" rel=\"self\"/>\n" +
             "    <hash type=\"MD5\">8a37ef9624ed93db4873035b0de3d1ca</hash>\n" +
             "</usertoken>";
 
@@ -57,27 +57,27 @@ public class UserTokenXpathHelperTest {
             "        <UID>useradmin</UID>\n" +
             "    </identity>\n" +
             "    <applications>\n" +
-            "        <appauth>\n" +
+            "        <application>\n" +
             "            <appId>19</appId>\n" +
             "            <applicationName>UserAdminWebApplication</applicationName>\n" +
             "            <orgName>Support</orgName>\n" +
             "            <roleName>WhydahUserAdmin</roleName>\n" +
             "            <roleValue>1</roleValue>\n" +
-            "        </appauth>\n" +
-            "        <appauth>\n" +
+            "        </application>\n" +
+            "        <application>\n" +
             "            <appId>19</appId>\n" +
             "            <applicationName>UserAdminWebApplication</applicationName>\n" +
             "            <orgName>Support</orgName>\n" +
             "            <roleName>Manager</roleName>\n" +
             "            <roleValue>true</roleValue>\n" +
-            "        </appauth>\n" +
-            "        <appauth>\n" +
+            "        </application>\n" +
+            "        <application>\n" +
             "            <appId>19</appId>\n" +
             "            <applicationName>UserAdminWebApplication</applicationName>\n" +
             "            <orgName>Company</orgName>\n" +
             "            <roleName>WhydahUserAdmin</roleName>\n" +
             "            <roleValue>1</roleValue>\n" +
-            "        </appauth>\n" +
+            "        </application>\n" +
             "    </applications>\n" +
             "</whydahuser>";
 
@@ -111,20 +111,20 @@ public class UserTokenXpathHelperTest {
             "}";
 
     String rolesXml = "<applications>\n" +
-            "        <appauth>\n" +
+            "        <application>\n" +
             "            <appId>19</appId>\n" +
             "            <applicationName>UserAdminWebApplication</applicationName>\n" +
             "            <orgName>Support</orgName>\n" +
             "            <roleName>WhydahUserAdmin</roleName>\n" +
             "            <roleValue>1</roleValue>\n" +
-            "        </appauth>\n" +
-            "        <appauth>\n" +
+            "        </application>\n" +
+            "        <application>\n" +
             "            <appId>19</appId>\n" +
             "            <applicationName>UserAdminWebApplication</applicationName>\n" +
             "            <orgName>Company</orgName>\n" +
             "            <roleName>WhydahUserAdmin</roleName>\n" +
             "            <roleValue>1</roleValue>\n" +
-            "        </appauth>\n" +
+            "        </application>\n" +
             "    </applications>";
 
 
