@@ -48,6 +48,10 @@ public class WhydahUtil {
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
         ApplicationCredential appCredential = new ApplicationCredential(applicationID,applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+        if (myAppTokenXml==null || myAppTokenXml.length()<10){
+            log.error("logOnApplication - unable to create application session on "+stsURI+" for appCredentials: "+appCredential.toXML());
+
+        }
         return myAppTokenXml;
 
     }
