@@ -23,36 +23,38 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ValidateUserRoleUseCaseTest {
     private static final Logger log = getLogger(ValidateUserRoleUseCaseTest.class);
 
-    public static final String TEMPORARY_APPLICATION_ID = "12";//"11";
-    public static final String TEMPORARY_APPLICATION_SECRET = "9ju592A4t8dzz8mz7a5QQJ7Px";
-    public static final String userName = "useradmin";
-    public static final String password = "useradmin42";
+    public static String TEMPORARY_APPLICATION_ID = "99";//"11";
+    public static String TEMPORARY_APPLICATION_SECRET = "33879936R6Jr47D4Hj5R6p9qT";
+    public static String userName = "admin";
+    public static String password = "admin";
 
-//    private final WebTarget userAdminService;
-    //         userCredential = new UserCredential("useradmin", "useradmin42");
-
-    private final String userAdminServiceUri = "https://whydahdev.altrancloud.com/useradminservice";
-    private final String userTokenServiceUri = "https://whydahdev.altrancloud.com/tokenservice";
+    private String userAdminServiceUri = "http://localhost:9992/useradminservice";
+    private String userTokenServiceUri = "http://localhost:9998/tokenservice";
+    private static boolean integrationMode = false;
 
 
     @Before
     public void setUp() throws Exception {
+        if (integrationMode) {
+            userAdminServiceUri = "https://whydahdev.altrancloud.com/useradminservice";
+            userTokenServiceUri = "https://whydahdev.altrancloud.com/tokenservice";
 
+        }
     }
 
     @Ignore
     @Test
-    public void test1_logonApplication() throws Exception{
+    public void test1_logonApplication() throws Exception {
         WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
-        System.out.println("Active ApplicationId:"+applicationSession.getActiveApplicationTokenId());
+        System.out.println("Active ApplicationId:" + applicationSession.getActiveApplicationTokenId());
         assertNotNull(applicationSession.getActiveApplicationTokenId());
-        assertTrue(applicationSession.getActiveApplicationTokenId().length()>3);  // See that we have a real application session
+        assertTrue(applicationSession.getActiveApplicationTokenId().length() > 3);  // See that we have a real application session
     }
 
     @Ignore
     @Test
-    public void test2_logonUser() throws Exception{
-        UserCredential userCredential = new UserCredential(userName,password);
+    public void test2_logonUser() throws Exception {
+        UserCredential userCredential = new UserCredential(userName, password);
         WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
         assertNotNull(applicationSession.getActiveApplicationTokenId());
         assertTrue(applicationSession.getActiveApplicationTokenId().length() > 3);  // See that we have a real application session
@@ -66,11 +68,11 @@ public class ValidateUserRoleUseCaseTest {
     public void bli_test2_logonUser() throws Exception {
         WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
         assertNotNull(applicationSession.getActiveApplicationTokenId());
-        assertTrue(applicationSession.getActiveApplicationTokenId().length()>3);  // See that we have a real application session
+        assertTrue(applicationSession.getActiveApplicationTokenId().length() > 3);  // See that we have a real application session
         String appTokenId = applicationSession.getActiveApplicationTokenId();
         log.trace("appTokenId {}", appTokenId);
         String appTokenXml = applicationSession.getActiveApplicationToken();
-        String userTokenXml = WhydahTemporaryBliUtil.logOnUser(userTokenServiceUri,appTokenId, appTokenXml, userName, password);
+        String userTokenXml = WhydahTemporaryBliUtil.logOnUser(userTokenServiceUri, appTokenId, appTokenXml, userName, password);
         assertNotNull(userTokenXml);
         log.trace("userTokenId {}", UserXpathHelper.getUserTokenId(userTokenXml));
         assertTrue(userTokenXml.contains(userName));
@@ -81,11 +83,11 @@ public class ValidateUserRoleUseCaseTest {
     public void bli_test3_validateRole() throws Exception {
         WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
         assertNotNull(applicationSession.getActiveApplicationTokenId());
-        assertTrue(applicationSession.getActiveApplicationTokenId().length()>3);  // See that we have a real application session
+        assertTrue(applicationSession.getActiveApplicationTokenId().length() > 3);  // See that we have a real application session
         String appTokenId = applicationSession.getActiveApplicationTokenId();
         log.trace("appTokenId {}", appTokenId);
         String appTokenXml = applicationSession.getActiveApplicationToken();
-        String userTokenXml = WhydahTemporaryBliUtil.logOnUser(userTokenServiceUri,appTokenId, appTokenXml, userName, password);
+        String userTokenXml = WhydahTemporaryBliUtil.logOnUser(userTokenServiceUri, appTokenId, appTokenXml, userName, password);
         assertNotNull(userTokenXml);
         log.debug("userTokenXml {}", userTokenXml);
         assertTrue(userTokenXml.contains(userName));
