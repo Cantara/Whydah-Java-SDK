@@ -35,12 +35,12 @@ public class WhydahApplicationSession {
         this.sts = sts;
         this.appId = appId;
         this.appSecret = appSecret;
-        initializeWhydahConnection();
+        initializeWhydahApplicationSession();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
                 new Runnable() {
                     public void run() {
-                        renewWhydahConnection();
+                        renewWhydahApplicationSession();
                     }
                 },
                 1, 60, TimeUnit.SECONDS);
@@ -60,7 +60,18 @@ public class WhydahApplicationSession {
     }
 
 
-    private void renewWhydahConnection() {
+    /*
+    * @return true is session is active and working
+     */
+    public boolean hasActiveSession(){
+        if (applicationTokenXML==null || applicationTokenXML.length() < 4) {
+            return false;
+        }
+        return true;
+    }
+
+
+    private void renewWhydahApplicationSession() {
         log.info("Trying to renew applicationsession");
         applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
         if (applicationTokenXML==null || applicationTokenXML.length() < 4) {
@@ -77,7 +88,7 @@ public class WhydahApplicationSession {
 
 
     }
-    private void initializeWhydahConnection() {
+    private void initializeWhydahApplicationSession() {
         log.info("Initializing new application session");
         applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
         if (applicationTokenXML==null || applicationTokenXML.length() < 4) {
