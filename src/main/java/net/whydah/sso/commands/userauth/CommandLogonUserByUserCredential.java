@@ -97,7 +97,7 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandLogonUserByUserCredential - getFallback - retiurning null  ");
+        log.warn("CommandLogonUserByUserCredential - getFallback - returning null  ");
         return null;
     }
 
