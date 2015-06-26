@@ -1,6 +1,5 @@
 package net.whydah.sso;
 
-import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserXpathHelper;
 import org.slf4j.Logger;
@@ -42,7 +41,7 @@ public class WhydahUserSession {
             ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
                     new Runnable() {
                         public void run() {
-                            renewWhydahUserConnection();
+                            renewWhydahUserSession();
                         }
                     },
                     1,  60, TimeUnit.SECONDS );
@@ -57,7 +56,18 @@ public class WhydahUserSession {
             return userTokenXML;
         }
 
-        private void renewWhydahUserConnection(){
+    /*
+    * @return true is session is active and working
+     */
+    public boolean hasActiveSession(){
+        if (userTokenXML==null || userTokenXML.length() < 4) {
+            return false;
+        }
+        return true;
+    }
+
+
+    private void renewWhydahUserSession(){
             log.info("Renew user session");
             userTokenXML = WhydahUtil.logOnUser(was,userCredential) ;
             if (userTokenXML==null || userTokenXML.length() < 4) {
