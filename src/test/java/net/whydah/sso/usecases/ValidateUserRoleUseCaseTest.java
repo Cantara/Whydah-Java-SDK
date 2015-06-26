@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -21,8 +22,8 @@ public class ValidateUserRoleUseCaseTest {
 
     public static final String TEMPORARY_APPLICATION_ID = "99";//"11";
     public static final String TEMPORARY_APPLICATION_SECRET = "33879936R6Jr47D4Hj5R6p9qT";
-    public static final String userName = "dcadmin";
-    public static final String password = "dcadmin";
+    public static final String userName = "admin";
+    public static final String password = "admin";
 
 //    private final WebTarget userAdminService;
     private final String userAdminServiceUri = "http://localhost:9992/useradminservice";
@@ -56,7 +57,9 @@ public class ValidateUserRoleUseCaseTest {
         WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
         String appTokenId = applicationSession.getActiveApplicationTokenId();
         String appTokenXml = applicationSession.getActiveApplicationToken();
-        WhydahTemporaryBliUtil.logOnUser(userTokenServiceUri,appTokenId, appTokenXml, userName, password);
+        String userTokenXml = WhydahTemporaryBliUtil.logOnUser(userTokenServiceUri,appTokenId, appTokenXml, userName, password);
+        assertNotNull(userTokenXml);
+        assertTrue(userTokenXml.contains(userName));
     }
 
     @Ignore
@@ -65,6 +68,8 @@ public class ValidateUserRoleUseCaseTest {
         WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
         String appTokenId = applicationSession.getActiveApplicationTokenId();
         String appTokenXml = applicationSession.getActiveApplicationToken();
-        WhydahTemporaryBliUtil.logOnUser(userTokenServiceUri,appTokenId, appTokenXml, userName, password);
+        String userTokenXml = WhydahTemporaryBliUtil.logOnUser(userTokenServiceUri,appTokenId, appTokenXml, userName, password);
+        assertNotNull(userTokenXml);
+        assertTrue(userTokenXml.contains(userName));
     }
 }
