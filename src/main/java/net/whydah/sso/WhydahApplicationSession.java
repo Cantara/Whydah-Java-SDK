@@ -66,11 +66,13 @@ public class WhydahApplicationSession {
         if (applicationTokenXML==null || applicationTokenXML.length() < 4) {
             log.error("Error, unable to renew application session, applicationTokenXml:"+applicationTokenXML);
 
-        }
-        Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML);
-        if (expiresBeforeNextSchedule(expires)) {
-            applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
-            applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
+        } else {
+            log.info("Success in renew applicationsession, applicationTokenXml:" + applicationTokenXML);
+            Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML);
+            if (expiresBeforeNextSchedule(expires)) {
+                applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
+                applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
+            }
         }
 
 
@@ -81,9 +83,11 @@ public class WhydahApplicationSession {
         if (applicationTokenXML==null || applicationTokenXML.length() < 4) {
             log.error("Error, unable to initialize new application session, applicationTokenXml:"+applicationTokenXML);
 
-        }
+        } else {
+            log.info("Initializing new application session, applicationTokenXml:" + applicationTokenXML);
 //        applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
-        applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
+            applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
+        }
     }
 
     public static boolean expiresBeforeNextSchedule(Long timestamp) {
