@@ -49,7 +49,7 @@ public class CommandAddUser extends HystrixCommand<String> {
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
-        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/userauth");
+        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/user");
 //        ClientResponse response = addUser.post(Entity.entity(userIdentityXml,MediaType.APPLICATION_XML_TYPE),ClientResponse.class);
         Response response = addUser.request().post(Entity.xml(userIdentityXml));
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {

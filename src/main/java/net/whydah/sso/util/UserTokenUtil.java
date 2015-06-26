@@ -15,11 +15,11 @@ import static javax.ws.rs.core.Response.Status.OK;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * The UserToken list the userauth's identity, and the roles that are enabled on the userauth.
+ * The UserToken list the user's's identity, and the roles that are enabled on the user.
  *
  * You may use UserTokenUtil to:
  * - Fetch the UserToken, based by an UserTokenId.
- * - Query the content of the UserToken. Eg. ask for the RoleValue for an role that the userauth has.
+ * - Query the content of the UserToken. Eg. ask for the RoleValue for an role that the user has.
  * Created by baardl on 23.06.15.
  */
 public class UserTokenUtil {
@@ -48,6 +48,6 @@ public class UserTokenUtil {
 
     static WebTarget buildBaseTarget(String baseUri, String applicationTokenId) {
         Client httpClient = ClientBuilder.newClient();
-        return httpClient.target(baseUri).path("/userauth" ).path(applicationTokenId);
+        return httpClient.target(baseUri).path("/user" ).path(applicationTokenId);
     }
 }
