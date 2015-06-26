@@ -50,8 +50,18 @@ public class ValidateUserRoleUseCaseTest {
         assertNotNull(userTokenXml);
     }
 
+    @Ignore
     @Test
     public void bli_test2_logonUser() throws Exception {
+        WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
+        String appTokenId = applicationSession.getActiveApplicationTokenId();
+        String appTokenXml = applicationSession.getActiveApplicationToken();
+        WhydahTemporaryBliUtil.logOnUser(userTokenServiceUri,appTokenId, appTokenXml, userName, password);
+    }
+
+    @Ignore
+    @Test
+    public void bli_test3_validateRole() throws Exception {
         WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
         String appTokenId = applicationSession.getActiveApplicationTokenId();
         String appTokenXml = applicationSession.getActiveApplicationToken();
