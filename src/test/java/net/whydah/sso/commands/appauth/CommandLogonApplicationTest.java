@@ -1,5 +1,6 @@
 package net.whydah.sso.commands.appauth;
 
+import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
@@ -13,6 +14,7 @@ import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Created by totto on 12/2/14.
@@ -60,6 +62,7 @@ public class CommandLogonApplicationTest {
 
         String myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
         // System.out.println("ApplicationTokenID=" + myApplicationTokenID);
+        assertTrue(myAppTokenXml!=null);
         assertTrue(myAppTokenXml.length() > 6);
 
         Future<String> fmyAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).queue();
@@ -68,6 +71,42 @@ public class CommandLogonApplicationTest {
         Observable<String> omyAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).observe();
         // blocking
         assertTrue(omyAppTokenXml.toBlocking().single().length() > 6);
+    }
+
+    @Test
+    public void testWithCacheHits() {
+        if (integrationMode){
+            HystrixRequestContext context = HystrixRequestContext.initializeContext();
+            try {
+                CommandLogonApplication command2a = new CommandLogonApplication(tokenServiceUri, appCredential);
+                CommandLogonApplication command2b = new CommandLogonApplication(tokenServiceUri, appCredential);
+
+                assertTrue(command2a.execute()!=null);
+                // this is the first time we've executed this command with
+                // the value of "2" so it should not be from cache
+                assertFalse(command2a.isResponseFromCache());
+
+                assertTrue(command2b.execute()!=null);
+                // this is the second time we've executed this command with
+                // the same value so it should return from cache
+                assertTrue(command2b.isResponseFromCache());
+            } finally {
+                context.shutdown();
+            }
+
+            // start a new request context
+            context = HystrixRequestContext.initializeContext();
+            try {
+                CommandLogonApplication command3b = new CommandLogonApplication(tokenServiceUri, appCredential);
+                assertTrue(command3b.execute()!=null);
+                // this is a new request context so this
+                // should not come from cache
+                assertFalse(command3b.isResponseFromCache());
+            } finally {
+                context.shutdown();
+            }
+
+        }
     }
 
 }
