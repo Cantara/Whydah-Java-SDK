@@ -43,7 +43,7 @@ public class WhydahApplicationSession {
                         renewWhydahApplicationSession();
                     }
                 },
-                1, 60, TimeUnit.SECONDS);
+                1, 50, TimeUnit.SECONDS);
     }
 
 
