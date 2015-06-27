@@ -70,8 +70,17 @@ public class WhydahUserSession {
     private void renewWhydahUserSession(){
             log.info("Renew user session");
             userTokenXML = WhydahUtil.logOnUser(was,userCredential) ;
-            if (userTokenXML==null || userTokenXML.length() < 4) {
+            if (!hasActiveSession()) {
                 log.error("Error, unable to initialize new user session, userTokenXML:"+userTokenXML);
+                for (int n=0;n<7 || hasActiveSession();n++){
+                    userTokenXML = WhydahUtil.logOnUser(was, userCredential) ;
+                    log.warn("Retrying renewing user session");
+                    try {
+                        Thread.sleep(1000 * n);
+                    } catch (InterruptedException ie){
+                    }
+                }
+
             } else {
                 log.info("Renew user session successfull.  userTokenXml:"+userTokenXML);
                 Long expires = UserXpathHelper.getTimestampFromUserTokenXml(userTokenXML) + UserXpathHelper.getLifespanFromUserTokenXml(userTokenXML);

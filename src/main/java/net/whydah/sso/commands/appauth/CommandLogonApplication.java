@@ -99,7 +99,11 @@ public class CommandLogonApplication extends HystrixCommand<String> {
     }
 
 
-
+    /**
+     * Fail silent - return null instead of throwing an exception
+     *
+     * @return null
+     */
     @Override
     protected String getFallback() {
         return  null;
