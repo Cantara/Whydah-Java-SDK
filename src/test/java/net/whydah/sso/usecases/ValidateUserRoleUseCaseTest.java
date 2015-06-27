@@ -62,6 +62,7 @@ public class ValidateUserRoleUseCaseTest {
         assertTrue(userTokenXml.contains("useradmin@altran.com"));
     }
 
+    @Ignore
     @Test   // NB takes 35 minutes to complete......
     public void test2_logonUserSession() throws Exception {
         UserCredential userCredential = new UserCredential(userName, password);
