@@ -26,6 +26,21 @@ public class UserXpathHelper {
      * UserTokenXml parsers
      *
      */
+    public static boolean hasRole(String userTokenXml,String applicationId,String roleName) {
+        String userRole = "";
+        if (userTokenXml == null) {
+            log.debug("userTokenXml was empty, so returning false.");
+            return false;
+        } else {
+            String expression = "count(/usertoken/application[@ID='"+applicationId+"']/role[@name='"+roleName+"'])";
+            userRole = findValue(userTokenXml, expression);
+            if (userRole==null || "0".equalsIgnoreCase(userRole)){
+                return false;
+            }
+            return true;
+        }
+    }
+
     public static String getUserTokenId(String userTokenXml) {
         String userTokenId = "";
         if (userTokenXml == null) {
@@ -128,7 +143,7 @@ public class UserXpathHelper {
 
 
     public static String findValue(String xmlString,  String expression) {
-        String value = "";
+        String value = null;
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();

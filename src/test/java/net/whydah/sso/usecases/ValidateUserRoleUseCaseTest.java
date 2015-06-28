@@ -78,6 +78,7 @@ public class ValidateUserRoleUseCaseTest {
         assertNotNull(userSession2.getActiveUserToken());
         assertTrue(userSession2.getActiveUserToken().contains("useradmin@whydah.net"));
         assertTrue(userSession.getActiveUserToken().contains("useradmin@whydah.net"));
+        userSession.getActiveUserTokenId();
         Thread.sleep(1000 * 1000);
     }
 

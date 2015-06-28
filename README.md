@@ -34,7 +34,9 @@ For code and examples for other languages, see <https://github.com/cantara/Whyda
 ```java
         WhydahApplicationSession aSession = new WhydahApplicationSssion(uTokenSUri, appId, appSecret);
         WhydahUserSession uSession = new WhydahUserSession(aSession,userCredential);
-        String userTokenId= uSession.getActiveUserTokenId()
+        if (uSession.hasRole("WhydahAdmin"){
+          // do admin privilege operation
+        }
 ```
 
 ## Binaries
