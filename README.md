@@ -27,6 +27,12 @@ For code and examples for other languages, see <https://github.com/cantara/Whyda
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
 ```
 
+## Example code, with automatic session renewwal
+```java
+        WhydahApplicationSession aSession = new WhydahApplicationSssion(userTokenServiceUri, appId, appSecret);
+        WhydahUserSession uSession = new WhydahUserSession(aSession,userCredential);
+        String userTokenId= urSession.getActiveUserTokenId()
+```
 
 ## Binaries
 
