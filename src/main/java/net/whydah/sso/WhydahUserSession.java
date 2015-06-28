@@ -66,6 +66,10 @@ public class WhydahUserSession {
         return true;
     }
 
+    public boolean hasRole(String roleName){
+        return UserXpathHelper.hasRole(userTokenXML,was.getActiveApplicationTokenId(),roleName);
+    }
+
 
     private void renewWhydahUserSession(){
             log.info("Renew user session");
