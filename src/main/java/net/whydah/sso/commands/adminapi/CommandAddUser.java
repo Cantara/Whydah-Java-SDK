@@ -62,6 +62,7 @@ public class CommandAddUser extends HystrixCommand<String> {
             return responseXML;
         }
 
+        log.warn("CommandAddUser - addUser - failed with status code " + response.getStatus());
         return null;
 
     }
