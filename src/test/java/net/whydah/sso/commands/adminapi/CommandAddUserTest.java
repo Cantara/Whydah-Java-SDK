@@ -1,23 +1,17 @@
 package net.whydah.sso.commands.adminapi;
 
-import net.whydah.sso.WhydahUtil;
 import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationHelper;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
-import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredentialWithStubbedFallback;
-import net.whydah.sso.user.UserCredential;
-import net.whydah.sso.user.UserRole;
-import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.user.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
@@ -25,7 +19,8 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by totto on 29.06.15.
  */
-public class CommandAddUserRoleTest {
+public class CommandAddUserTest {
+
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
@@ -58,7 +53,7 @@ public class CommandAddUserRoleTest {
 
     @Ignore
     @Test
-    public void testAddUserRole() throws Exception {
+    public void testAddUser() throws Exception {
 
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
@@ -69,25 +64,26 @@ public class CommandAddUserRoleTest {
         assertTrue(userTokenId != null && userTokenId.length() > 5);
 
 
-        String userRoleJson = getTestNewUserRole(UserXpathHelper.getUserIdFromUserTokenXml(userToken), myApplicationTokenID);
+        String userIdentityXml = getTestNewUserIdentity(UserXpathHelper.getUserIdFromUserTokenXml(userToken), myApplicationTokenID);
         // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
-        String userAddRoleResult = new CommandAddUserRole(userAdminServiceUri, myApplicationTokenID, userTokenId, userRoleJson).execute();
-        System.out.println("userAddRoleResult:" + userAddRoleResult);
+        String userAddRoleResult = new CommandAddUser(userAdminServiceUri, myApplicationTokenID, userTokenId, userIdentityXml).execute();
+        System.out.println("testAddUser:" + userAddRoleResult);
 
         // Force update with new role
         String userToken2 = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
         System.out.println("userToken2:" + userToken2);
 
-        String applicationsJson = new CommandListApplications(userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
-        System.out.println("applicationsJson=" + applicationsJson);
-        assertTrue(applicationsJson.equalsIgnoreCase(ApplicationHelper.getDummyAppllicationListJson()));
+        String usersListJson = new CommandListUsers(userAdminServiceUri, myApplicationTokenID,userTokenId,"").execute();
+        System.out.println("usersListJson=" + usersListJson);
 
     }
 
-    private String getTestNewUserRole(String userTokenId, String applicationId) {
-        UserRole role = new UserRole(userTokenId, applicationId, "TestOrg", "TestRolename", "testRoleValue");
+    private String getTestNewUserIdentity(String userTokenId, String applicationId) {
+        UserHelper.userDummyIdentityJson();
+        // String username, String firstName, String lastName, String personRef, String email, String cellPhone
+        UserIdentityRepresentation user = new UserIdentityRepresentation("testuser","Mt Test","Testesen","0","test@getwhydah.com","+47 12345678");
 
-        return role.toJson();
+        return user.toJson();
 
     }
 }
