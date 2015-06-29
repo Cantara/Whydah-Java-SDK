@@ -67,7 +67,7 @@ public class WhydahUserSession {
     }
 
     public boolean hasRole(String roleName){
-        return UserXpathHelper.hasRoleInUserToken(userTokenXML, was.getActiveApplicationTokenId(), roleName);
+        return UserXpathHelper.hasRoleFromUserToken(userTokenXML, was.getActiveApplicationTokenId(), roleName);
     }
 
 
