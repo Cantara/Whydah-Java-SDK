@@ -12,6 +12,9 @@ import org.junit.Test;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
+import java.sql.Time;
+import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
@@ -76,7 +79,9 @@ public class CommandAddUserTest {
     }
 
     private UserIdentityRepresentation getTestNewUserIdentity(String userTokenId, String applicationId) {
-        UserIdentityRepresentation user = new UserIdentityRepresentation("tesdddtuser"+UUID.randomUUID().toString(),"Mt Test","Testesen","0","test_"+UUID.randomUUID().toString()+"@getwhydah.com","+47 12345678");
+        Random rand = new Random();
+        rand.setSeed(new java.util.Date().getTime());
+        UserIdentityRepresentation user = new UserIdentityRepresentation("tesdddtuser"+UUID.randomUUID().toString(),"Mt Test","Testesen","0","test_"+UUID.randomUUID().toString()+"@getwhydah.com","+47"+Integer.toString(rand.nextInt(100000000)));
         return user;
 
     }
