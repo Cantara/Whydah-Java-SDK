@@ -80,6 +80,24 @@ public class UserRole {
                 "</application>";
     }
 
+    public String toJson(){
+        String json =  "{";
+        if (isNotEmpty(getId())) {
+            json = json + "\"roleId\":\"" + getId() + "\",";
+        }
+        if (isNotEmpty(getUserId())) {
+            json = json + "\"uid\":\"" + getUserId() + "\",";
+        }
+
+        json = json + "\"applicationId\":\""+ getApplicationId() +"\"," +
+                "\"applicationName\":\"" + null + "\","+
+                "\"applicationRoleName\":\""+ getRoleName() +"\"," +
+                "\"applicationRoleValue\":\""+ getRoleValue() +"\"," +
+                "\"organizationName\":\""+ getOrgName() +"\"}";
+
+        return json;
+
+    }
     public static UserRole fromXml(String roleXml) {
 
         String id = UserXpathHelper.findValue(roleXml,"/application/id");
@@ -95,4 +113,7 @@ public class UserRole {
         return userRole;
     }
 
+    private boolean isNotEmpty(String value) {
+        return value != null && !value.isEmpty();
+    }
 }
