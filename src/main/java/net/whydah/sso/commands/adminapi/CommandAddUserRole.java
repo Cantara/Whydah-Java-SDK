@@ -7,9 +7,14 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.net.URI;
 
+import static javax.ws.rs.core.Response.Status.FORBIDDEN;
+import static javax.ws.rs.core.Response.Status.OK;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -20,7 +25,7 @@ public class CommandAddUserRole extends HystrixCommand<String> {
     private URI userAdminServiceUri;
     private String myAppTokenId;
     private String adminUserTokenId;
-    private String roleJson;
+    private String userRoleJson;
 
 
     public CommandAddUserRole(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson) {
@@ -28,7 +33,7 @@ public class CommandAddUserRole extends HystrixCommand<String> {
         this.userAdminServiceUri = userAdminServiceUri;
         this.myAppTokenId = myAppTokenId;
         this.adminUserTokenId = adminUserTokenId;
-        this.roleJson = roleJson;
+        this.userRoleJson = roleJson;
         if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || roleJson == null) {
             log.error("CommandAddUserRole initialized with null-values - will fail");
         }
@@ -38,14 +43,24 @@ public class CommandAddUserRole extends HystrixCommand<String> {
     @Override
     protected String run() {
 
-        log.trace("CommandAddUserRole - myAppTokenId={}", myAppTokenId);
+        log.trace("CommandAddUserRole - myAppTokenId={} - userRoleJson={}", myAppTokenId, userRoleJson);
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
-        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/xxx");
-        // Response response = addUser.request().post(Entity.xml(userIdentityXml));
-        throw new NotImplementedException();
-        //return null;
+        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/user");
+        Response response = addUser.request(MediaType.APPLICATION_JSON).post(Entity.entity(userRoleJson, MediaType.APPLICATION_JSON));
+        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
+            log.info("CommandAddUser - addUser - User authentication failed with status code " + response.getStatus());
+            return null;
+            //throw new IllegalArgumentException("Log on failed. " + ClientResponse.Status.FORBIDDEN);
+        }
+        if (response.getStatus() == OK.getStatusCode()) {
+            String responseJson = response.readEntity(String.class);
+            log.debug("CommandAddUser - addUser - Log on OK with response {}", responseJson);
+            return responseJson;
+        }
+
+        return null;
 
     }
 
@@ -53,5 +68,5 @@ public class CommandAddUserRole extends HystrixCommand<String> {
     protected String getFallback() {
         return null;
     }
-
 }
+

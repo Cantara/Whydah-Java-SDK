@@ -174,5 +174,12 @@ public class UserXpathHelper {
         return value;
     }
 
+    public static String getUserNameFromUserTokenXml(String userAdminTokenXml) {
+
+        String expresseion = "usertoken/username";
+        String userName = UserXpathHelper.findValue(userAdminTokenXml, expresseion);
+
+        return userName;
+    }
 
 }
