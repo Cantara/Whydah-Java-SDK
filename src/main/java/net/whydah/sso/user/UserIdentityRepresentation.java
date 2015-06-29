@@ -98,4 +98,11 @@ public class UserIdentityRepresentation implements Serializable {
         );
         return strb.toString();
     }
+
+    public String toJson() {
+        String userJson = "{\"username\":\""+ username +"\",\"firstName\":\"" +firstName +"\",\"lastName\":\""+lastName+"\",\"personRef\":\""+personRef+
+                "\",\"email\":\""+email+"\",\"cellPhone\":\""+cellPhone+"\"}";
+        return userJson;
+    }
+
 }
