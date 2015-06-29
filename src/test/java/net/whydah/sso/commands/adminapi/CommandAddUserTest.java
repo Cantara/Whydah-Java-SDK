@@ -63,20 +63,21 @@ public class CommandAddUserTest {
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
         assertTrue(userTokenId != null && userTokenId.length() > 5);
 
-
-        String userIdentityXml = getTestNewUserIdentity(UserXpathHelper.getUserIdFromUserTokenXml(userToken), myApplicationTokenID);
+        UserIdentityRepresentation uir= getTestNewUserIdentity(UserXpathHelper.getUserIdFromUserTokenXml(userToken), myApplicationTokenID);
+        String userIdentityXml=uir.toJson();
         // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
         String userAddRoleResult = new CommandAddUser(userAdminServiceUri, myApplicationTokenID, userTokenId, userIdentityXml).execute();
         System.out.println("testAddUser:" + userAddRoleResult);
 
         String usersListJson = new CommandListUsers(userAdminServiceUri, myApplicationTokenID,userTokenId,"").execute();
         System.out.println("usersListJson=" + usersListJson);
+        assertTrue(usersListJson.indexOf(uir.getUsername())>0);
 
     }
 
-    private String getTestNewUserIdentity(String userTokenId, String applicationId) {
+    private UserIdentityRepresentation getTestNewUserIdentity(String userTokenId, String applicationId) {
         UserIdentityRepresentation user = new UserIdentityRepresentation("tesdddtuser"+UUID.randomUUID().toString(),"Mt Test","Testesen","0","test_"+UUID.randomUUID().toString()+"@getwhydah.com","+47 12345678");
-        return user.toJson();
+        return user;
 
     }
 }

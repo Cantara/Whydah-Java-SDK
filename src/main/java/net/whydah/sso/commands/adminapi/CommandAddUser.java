@@ -3,7 +3,6 @@ package net.whydah.sso.commands.adminapi;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import net.whydah.sso.user.UserCredential;
-import net.whydah.sso.user.UserHelper;
 import org.slf4j.Logger;
 
 import javax.ws.rs.client.Client;
@@ -26,7 +25,7 @@ public class CommandAddUser extends HystrixCommand<String> {
     private String myAppTokenId;
     private String adminUserTokenId;
     private UserCredential userCredential;
-    private String userIdentityXml;
+    private String userIdentityJson;
 
 
 
@@ -35,7 +34,7 @@ public class CommandAddUser extends HystrixCommand<String> {
         this.userAdminServiceUri = userAdminServiceUri;
         this.myAppTokenId=myAppTokenId;
         this.adminUserTokenId=adminUserTokenId;
-        this.userIdentityXml=userIdentityXml;
+        this.userIdentityJson =userIdentityXml;
         if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userIdentityXml==null ) {
             log.error("CommandAddUser initialized with null-values - will fail");
         }
@@ -49,9 +48,9 @@ public class CommandAddUser extends HystrixCommand<String> {
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
-        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/user");
-//        ClientResponse response = addUser.post(Entity.entity(userIdentityXml,MediaType.APPLICATION_XML_TYPE),ClientResponse.class);
-        Response response = addUser.request().post(Entity.xml(userIdentityXml));
+        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/user/");
+//        ClientResponse response = addUser.post(Entity.entity(userIdentityJson,MediaType.APPLICATION_XML_TYPE),ClientResponse.class);
+        Response response = addUser.request().post(Entity.json(userIdentityJson));
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
             log.warn("CommandAddUser - addUser - User authentication failed with status code " + response.getStatus());
             return null;
@@ -67,9 +66,5 @@ public class CommandAddUser extends HystrixCommand<String> {
 
     }
 
-    @Override
-    protected String getFallback() {
-        return null;
-    }
 
 }
