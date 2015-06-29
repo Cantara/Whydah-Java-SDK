@@ -69,10 +69,6 @@ public class CommandAddUserTest {
         String userAddRoleResult = new CommandAddUser(userAdminServiceUri, myApplicationTokenID, userTokenId, userIdentityXml).execute();
         System.out.println("testAddUser:" + userAddRoleResult);
 
-        // Force update with new role
-        String userToken2 = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
-        System.out.println("userToken2:" + userToken2);
-
         String usersListJson = new CommandListUsers(userAdminServiceUri, myApplicationTokenID,userTokenId,"").execute();
         System.out.println("usersListJson=" + usersListJson);
 
