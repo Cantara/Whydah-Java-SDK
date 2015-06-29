@@ -26,10 +26,10 @@ public class CommandAddUserTest {
     private static UserCredential userCredential;
     private static boolean systemTest = false;
     private static URI userAdminServiceUri;
-    public static String TEMPORARY_APPLICATION_ID = "99";//"11";
-    public static String TEMPORARY_APPLICATION_SECRET = "33879936R6Jr47D4Hj5R6p9qT";
-    public static String userName = "useradmin";
-    public static String password = "useradmin42";
+    public static String TEMPORARY_APPLICATION_ID = "11";//"11";
+    public static String TEMPORARY_APPLICATION_SECRET = "6r46g3q986Ep6By7B9J46m96D";
+    public static String userName = "admin";
+    public static String password = "whydahadmin";
 
     private static String userAdminService = "http://localhost:9992/useradminservice";
     private static String userTokenService = "http://localhost:9998/tokenservice";
@@ -75,7 +75,7 @@ public class CommandAddUserTest {
     }
 
     private String getTestNewUserIdentity(String userTokenId, String applicationId) {
-        UserIdentityRepresentation user = new UserIdentityRepresentation("testuser","Mt Test","Testesen","0","test@getwhydah.com","+47 12345678");
+        UserIdentityRepresentation user = new UserIdentityRepresentation("tesdddtuser"+UUID.randomUUID().toString(),"Mt Test","Testesen","0","test_"+UUID.randomUUID().toString()+"@getwhydah.com","+47 12345678");
         return user.toJson();
 
     }
