@@ -26,7 +26,7 @@ public class UserXpathHelper {
      * UserTokenXml parsers
      *
      */
-    public static boolean hasRole(String userTokenXml,String applicationId,String roleName) {
+    public static boolean hasRoleFromUserToken(String userTokenXml, String applicationId, String roleName) {
         String userRole = "";
         if (userTokenXml == null) {
             log.debug("userTokenXml was empty, so returning false.");
@@ -38,6 +38,21 @@ public class UserXpathHelper {
                 return false;
             }
             return true;
+        }
+    }
+
+    public static String getRoleValueFromUserToken(String userTokenXml, String applicationId, String roleName) {
+        String userRole = "";
+        if (userTokenXml == null) {
+            log.debug("userTokenXml was empty, so returning null.");
+            return null;
+        } else {
+            String expression = "count(/usertoken/application[@ID='"+applicationId+"']/role[@name='"+roleName+"'])";
+            userRole = findValue(userTokenXml, expression);
+            if (userRole==null || "0".equalsIgnoreCase(userRole)){
+                return null;
+            }
+            return findValue(userTokenXml,"/usertoken/application[@ID='"+applicationId+"']/role[@name='"+roleName+"']");
         }
     }
 
