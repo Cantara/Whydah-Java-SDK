@@ -46,7 +46,7 @@ public class CommandListApplicationsTest {
 
 
     @Test
-    public void testApplicationLoginCommandFallback() throws Exception {
+    public void testListApplicationsCommandWithFallback() throws Exception {
 
         String myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
         String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
