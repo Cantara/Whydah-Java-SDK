@@ -1,6 +1,5 @@
 package net.whydah.sso.user;
 
-import net.whydah.sso.WhydahUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -158,13 +157,13 @@ public class UserTokenXpathHelperTest {
     @Test
     public void testHasRole(){
         String userToken = UserHelper.getDummyUserToken();
-        assertTrue(UserXpathHelper.hasRole(userToken, "2349785543", "president"));
+        assertTrue(UserXpathHelper.hasRoleInUserToken(userToken, "2349785543", "president"));
     }
 
     @Test
     public void testHasNotRole(){
         String userToken = UserHelper.getDummyUserToken();
-        assertFalse(UserXpathHelper.hasRole(userToken,"2349785543","pprreessiiddeenntt"));
+        assertFalse(UserXpathHelper.hasRoleInUserToken(userToken, "2349785543", "pprreessiiddeenntt"));
     }
 
     @Test
