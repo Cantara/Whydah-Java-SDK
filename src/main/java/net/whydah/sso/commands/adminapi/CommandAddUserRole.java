@@ -47,7 +47,7 @@ public class CommandAddUserRole extends HystrixCommand<String> {
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
-        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/user");
+        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/useraggregate");
         Response response = addUser.request(MediaType.APPLICATION_JSON).post(Entity.entity(userRoleJson, MediaType.APPLICATION_JSON));
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
             log.info("CommandAddUser - addUser - User authentication failed with status code " + response.getStatus());

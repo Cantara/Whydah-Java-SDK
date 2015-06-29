@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -73,6 +74,7 @@ public class CommandAddUserRoleTest {
         // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
         String userAddRoleResult = new CommandAddUserRole(userAdminServiceUri, myApplicationTokenID, userTokenId, userRoleJson).execute();
         System.out.println("userAddRoleResult:" + userAddRoleResult);
+        assertNotNull(userAddRoleResult);
 
         // Force update with new role
         String userToken2 = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
@@ -80,6 +82,7 @@ public class CommandAddUserRoleTest {
 
         String applicationsJson = new CommandListApplications(userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
         System.out.println("applicationsJson=" + applicationsJson);
+        assertNotNull(applicationsJson);
         assertTrue(applicationsJson.equalsIgnoreCase(ApplicationHelper.getDummyAppllicationListJson()));
 
     }
