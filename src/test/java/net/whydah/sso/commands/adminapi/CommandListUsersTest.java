@@ -24,7 +24,7 @@ public class CommandListUsersTest  {
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
-    private static boolean integrationMode = false;
+    private static boolean systemtest = false;
     private static URI userAdminServiceUri;
 
 
@@ -37,7 +37,7 @@ public class CommandListUsersTest  {
 
         userAdminServiceUri = UriBuilder.fromUri("https://no_host").build();
 
-        if (integrationMode) {
+        if (systemtest) {
             tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
             userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
         }
@@ -45,15 +45,15 @@ public class CommandListUsersTest  {
 
 
     @Test
-    public void testApplicationLoginCommandFallback() throws Exception {
+    public void testListUserssCommandWithFallback() throws Exception {
 
         String myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
-        System.out.println(myAppTokenXml);
         String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-        System.out.println(myApplicationTokenID);
+        assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
         String userticket = UUID.randomUUID().toString();
         String userToken = new CommandLogonUserByUserCredentialWithStubbedFallback(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
+        assertTrue(userTokenId!=null && userTokenId.length()>5);
 
         String usersListJson = new CommandListUsersWithStubbedFallback(userAdminServiceUri, myApplicationTokenID,userTokenId,"").execute();
         System.out.println("usersListJson=" + usersListJson);
