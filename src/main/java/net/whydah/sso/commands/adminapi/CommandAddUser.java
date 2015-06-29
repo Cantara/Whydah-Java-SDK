@@ -45,7 +45,7 @@ public class CommandAddUser extends HystrixCommand<String> {
     @Override
     protected String run() {
 
-        log.trace("CommandLogonUserByUserCredential - myAppTokenId={}",myAppTokenId);
+        log.trace("CommandAddUser - myAppTokenId={}",myAppTokenId);
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
@@ -53,37 +53,23 @@ public class CommandAddUser extends HystrixCommand<String> {
 //        ClientResponse response = addUser.post(Entity.entity(userIdentityXml,MediaType.APPLICATION_XML_TYPE),ClientResponse.class);
         Response response = addUser.request().post(Entity.xml(userIdentityXml));
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
-            log.info("CommandLogonUserByUserCredential - addUser - User authentication failed with status code " + response.getStatus());
+            log.warn("CommandAddUser - addUser - User authentication failed with status code " + response.getStatus());
             return null;
             //throw new IllegalArgumentException("Log on failed. " + ClientResponse.Status.FORBIDDEN);
         }
         if (response.getStatus() == OK.getStatusCode()) {
             String responseXML = response.readEntity(String.class);
-            log.debug("CommandLogonUserByUserCredential - addUser - Log on OK with response {}", responseXML);
+            log.info("CommandAddUser - addUser - Log on OK with response {}", responseXML);
             return responseXML;
         }
 
-        /*
-        //retry once for other statuses
-        response = addUser.type(MediaType.APPLICATION_XML_TYPE).post(ClientResponse.class, formData);
-        if (response.getStatus() == OK.getStatusCode()) {
-            String responseXML = response.getEntity(String.class);
-            log.debug("CommandLogonUserByUserCredential - addUser - Log on OK with response {}", responseXML);
-            return responseXML;
-        } else if (response.getStatus() == NOT_FOUND.getStatusCode()) {
-            log.error(ExceptionUtil.printableUrlErrorMessage("CommandLogonUserByUserCredential - addUser - Auth failed - Problems connecting with TokenService", addUser, response));
-        } else {
-            log.info(ExceptionUtil.printableUrlErrorMessage("CommandLogonUserByUserCredential - addUser - User authentication failed", addUser, response));
-        }
-        */
         return null;
-        //throw new RuntimeException("User authentication failed with status code " + response.getStatus());
 
     }
 
     @Override
     protected String getFallback() {
-        return UserHelper.getDummyUserToken();
+        return null;
     }
 
 }
