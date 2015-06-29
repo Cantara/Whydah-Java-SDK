@@ -49,9 +49,5 @@ public class CommandAddApplication extends HystrixCommand<String> {
 
     }
 
-    @Override
-    protected String getFallback() {
-        return null;
-    }
 
 }
