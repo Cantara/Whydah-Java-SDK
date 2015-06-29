@@ -74,10 +74,12 @@ public class WhydahApplicationSession {
     private void renewWhydahApplicationSession() {
         log.info("Trying to renew applicationsession");
         applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
+        applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
         if (!hasActiveSession()) {
             log.error("Error, unable to renew application session, applicationTokenXml:"+applicationTokenXML);
             for (int n=0;n<7 || !hasActiveSession();n++){
                 applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
+                applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
                 log.warn("Retrying renewing application session");
                 try {
                     Thread.sleep(1000 * n);
@@ -99,6 +101,7 @@ public class WhydahApplicationSession {
     private void initializeWhydahApplicationSession() {
         log.info("Initializing new application session");
         applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
+        applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
         if (applicationTokenXML==null || applicationTokenXML.length() < 4) {
             log.error("Error, unable to initialize new application session, applicationTokenXml:"+applicationTokenXML);
 
