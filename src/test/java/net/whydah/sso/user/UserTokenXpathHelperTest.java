@@ -157,13 +157,13 @@ public class UserTokenXpathHelperTest {
     @Test
     public void testHasRole(){
         String userToken = UserHelper.getDummyUserToken();
-        assertTrue(UserXpathHelper.hasRoleInUserToken(userToken, "2349785543", "president"));
+        assertTrue(UserXpathHelper.hasRoleFromUserToken(userToken, "2349785543", "president"));
     }
 
     @Test
     public void testHasNotRole(){
         String userToken = UserHelper.getDummyUserToken();
-        assertFalse(UserXpathHelper.hasRoleInUserToken(userToken, "2349785543", "pprreessiiddeenntt"));
+        assertFalse(UserXpathHelper.hasRoleFromUserToken(userToken, "2349785543", "pprreessiiddeenntt"));
     }
 
     @Test
