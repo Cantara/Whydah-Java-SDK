@@ -75,10 +75,7 @@ public class CommandAddUserTest {
     }
 
     private String getTestNewUserIdentity(String userTokenId, String applicationId) {
-        UserHelper.userDummyIdentityJson();
-        // String username, String firstName, String lastName, String personRef, String email, String cellPhone
         UserIdentityRepresentation user = new UserIdentityRepresentation("testuser","Mt Test","Testesen","0","test@getwhydah.com","+47 12345678");
-
         return user.toJson();
 
     }
