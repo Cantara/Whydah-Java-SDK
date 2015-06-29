@@ -26,14 +26,16 @@ public class CommandAddUserRole extends HystrixCommand<String> {
     private String myAppTokenId;
     private String adminUserTokenId;
     private String userRoleJson;
+    private String uId;
 
 
-    public CommandAddUserRole(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson) {
+    public CommandAddUserRole(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String uId,String roleJson) {
         super(HystrixCommandGroupKey.Factory.asKey("UASUserAdminGroup"));
         this.userAdminServiceUri = userAdminServiceUri;
         this.myAppTokenId = myAppTokenId;
         this.adminUserTokenId = adminUserTokenId;
         this.userRoleJson = roleJson;
+        this.uId=uId;
         if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || roleJson == null) {
             log.error("CommandAddUserRole initialized with null-values - will fail");
         }
@@ -47,16 +49,16 @@ public class CommandAddUserRole extends HystrixCommand<String> {
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
-        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/useraggregate");
-        Response response = addUser.request(MediaType.APPLICATION_JSON).post(Entity.entity(userRoleJson, MediaType.APPLICATION_JSON));
+        WebTarget addRoleUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/user/" + uId + "/role/");
+        Response response = addRoleUser.request(MediaType.APPLICATION_JSON).post(Entity.entity(userRoleJson, MediaType.APPLICATION_JSON));
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
-            log.info("CommandAddUser - addUser - User authentication failed with status code " + response.getStatus());
+            log.info("CommandAddUserRole - addUserRole - User authentication failed with status code " + response.getStatus());
             return null;
             //throw new IllegalArgumentException("Log on failed. " + ClientResponse.Status.FORBIDDEN);
         }
         if (response.getStatus() == OK.getStatusCode()) {
             String responseJson = response.readEntity(String.class);
-            log.debug("CommandAddUser - addUser - Log on OK with response {}", responseJson);
+            log.debug("CommandAddUserRole - addUserRole - Log on OK with response {}", responseJson);
             return responseJson;
         }
 
