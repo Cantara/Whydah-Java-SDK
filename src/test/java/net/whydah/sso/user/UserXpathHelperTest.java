@@ -23,7 +23,6 @@ public class UserXpathHelperTest {
     }
 
 
-
     @Test
     public void testFindOrgName() throws Exception {
         String orgName = UserRoleXpathHelper.getOrgNameFromRoleXml(roleXml);
@@ -35,7 +34,14 @@ public class UserXpathHelperTest {
     public void testExpiresFromUserToken() throws Exception {
         Long timestamp= UserXpathHelper.getTimestampFromUserTokenXml(UserHelper.getDummyUserToken());
         timestamp=timestamp+UserXpathHelper.getLifespanFromUserTokenXml(UserHelper.getDummyUserToken());
-        System.out.printf("timestamp:"+timestamp);
+        System.out.printf("timestamp:" + timestamp);
+    }
+
+    @Test
+    public void testGetUserNameFromUserToken() throws Exception {
+        String userName = UserXpathHelper.getUserNameFromUserTokenXml(userAdminTokenXml);
+        assertEquals("admin", userName);
+
     }
 
     @Test
