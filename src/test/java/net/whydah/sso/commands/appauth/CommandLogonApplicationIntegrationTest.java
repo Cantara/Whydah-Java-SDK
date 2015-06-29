@@ -1,11 +1,11 @@
 package net.whydah.sso.commands.appauth;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.user.UserCredential;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 import static org.junit.Assert.assertTrue;
 
 import org.slf4j.Logger;
