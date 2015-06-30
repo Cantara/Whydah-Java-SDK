@@ -3,7 +3,6 @@ package net.whydah.sso.commands.adminapi;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import org.slf4j.Logger;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -37,14 +36,13 @@ public class CommandUpdateApplication extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-
         log.trace("CommandUpdateApplication - myAppTokenId={}", myAppTokenId);
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
         WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/xxx");
         // Response response = addUser.request().post(Entity.xml(userIdentityXml));
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
         //return null;
 
     }

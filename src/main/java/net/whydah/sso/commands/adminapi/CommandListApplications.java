@@ -3,7 +3,6 @@ package net.whydah.sso.commands.adminapi;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import org.slf4j.Logger;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -41,7 +40,6 @@ public class CommandListApplications extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-
         log.trace("CommandListApplications - myAppTokenId={}", myAppTokenId);
 
         Client tokenServiceClient = ClientBuilder.newClient();
@@ -62,7 +60,6 @@ public class CommandListApplications extends HystrixCommand<String> {
         }
 
         return null;
-
     }
 
     /**
