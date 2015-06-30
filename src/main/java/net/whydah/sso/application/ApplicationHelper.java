@@ -47,6 +47,10 @@ public class ApplicationHelper {
                         "      \"security\": {\n" +
                         "        \"minimumSecurityLevel\": 0,\n" +
                         "        \"minimumDEFCON\": 3,\n" +
+                        "        \"serviceipaddresses\": [\n" +
+                        "            \"217.17.33.67/24\",\n" +
+                        "            \"189.123.123.32/32\"\n" +
+                        "        ],\n" +
                         "        \"minimumUpdateFrequency\": \"60d\",\n" +
                         "        \"crypto\": [\n" +
                         "          {\n" +
@@ -84,6 +88,13 @@ public class ApplicationHelper {
                         "        \"minimumSecurityLevel\": 0,\n" +
                         "        \"minimumDEFCON\": 3,\n" +
                         "        \"minimumUpdateFrequency\": \"60d\",\n" +
+                        "      \"security\": {\n" +
+                        "        \"minimumSecurityLevel\": 0,\n" +
+                        "        \"minimumDEFCON\": 3,\n" +
+                        "        \"serviceipaddresses\": [\n" +
+                        "            \"217.17.33.67/24\",\n" +
+                        "            \"189.123.123.32/32\"\n" +
+                        "        ],\n" +
                         "        \"crypto\": [\n" +
                         "          {\n" +
                         "            \"cryptoId\": \"321asdfaddsgasd\",\n" +
@@ -120,6 +131,13 @@ public class ApplicationHelper {
                         "        \"minimumSecurityLevel\": 0,\n" +
                         "        \"minimumDEFCON\": 3,\n" +
                         "        \"minimumUpdateFrequency\": \"60d\",\n" +
+                        "      \"security\": {\n" +
+                        "        \"minimumSecurityLevel\": 0,\n" +
+                        "        \"minimumDEFCON\": 3,\n" +
+                        "        \"serviceipaddresses\": [\n" +
+                        "            \"217.17.33.67/24\",\n" +
+                        "            \"189.123.123.32/32\"\n" +
+                        "        ],\n" +
                         "        \"crypto\": [\n" +
                         "          {\n" +
                         "            \"cryptoId\": \"321asdfaddsgasd\",\n" +
@@ -156,6 +174,13 @@ public class ApplicationHelper {
                         "        \"minimumSecurityLevel\": 0,\n" +
                         "        \"minimumDEFCON\": 3,\n" +
                         "        \"minimumUpdateFrequency\": \"60d\",\n" +
+                        "      \"security\": {\n" +
+                        "        \"minimumSecurityLevel\": 0,\n" +
+                        "        \"minimumDEFCON\": 3,\n" +
+                        "        \"serviceipaddresses\": [\n" +
+                        "            \"217.17.33.67/24\",\n" +
+                        "            \"189.123.123.32/32\"\n" +
+                        "        ],\n" +
                         "        \"crypto\": [\n" +
                         "          {\n" +
                         "            \"cryptoId\": \"321asdfaddsgasd\",\n" +
@@ -192,6 +217,13 @@ public class ApplicationHelper {
                         "        \"minimumSecurityLevel\": 0,\n" +
                         "        \"minimumDEFCON\": 3,\n" +
                         "        \"minimumUpdateFrequency\": \"60d\",\n" +
+                        "      \"security\": {\n" +
+                        "        \"minimumSecurityLevel\": 0,\n" +
+                        "        \"minimumDEFCON\": 3,\n" +
+                        "        \"serviceipaddresses\": [\n" +
+                        "            \"217.17.33.67/24\",\n" +
+                        "            \"189.123.123.32/32\"\n" +
+                        "        ],\n" +
                         "        \"crypto\": [\n" +
                         "          {\n" +
                         "            \"cryptoId\": \"321asdfaddsgasd\",\n" +
@@ -228,6 +260,13 @@ public class ApplicationHelper {
                         "        \"minimumSecurityLevel\": 0,\n" +
                         "        \"minimumDEFCON\": 3,\n" +
                         "        \"minimumUpdateFrequency\": \"60d\",\n" +
+                        "      \"security\": {\n" +
+                        "        \"minimumSecurityLevel\": 0,\n" +
+                        "        \"minimumDEFCON\": 3,\n" +
+                        "        \"serviceipaddresses\": [\n" +
+                        "            \"217.17.33.67/24\",\n" +
+                        "            \"189.123.123.32/32\"\n" +
+                        "        ],\n" +
                         "        \"crypto\": [\n" +
                         "          {\n" +
                         "            \"cryptoId\": \"321asdfaddsgasd\",\n" +
@@ -264,6 +303,13 @@ public class ApplicationHelper {
                         "        \"minimumSecurityLevel\": 0,\n" +
                         "        \"minimumDEFCON\": 3,\n" +
                         "        \"minimumUpdateFrequency\": \"60d\",\n" +
+                        "      \"security\": {\n" +
+                        "        \"minimumSecurityLevel\": 0,\n" +
+                        "        \"minimumDEFCON\": 3,\n" +
+                        "        \"serviceipaddresses\": [\n" +
+                        "            \"217.17.33.67/24\",\n" +
+                        "            \"189.123.123.32/32\"\n" +
+                        "        ],\n" +
                         "        \"crypto\": [\n" +
                         "          {\n" +
                         "            \"cryptoId\": \"321asdfaddsgasd\",\n" +
