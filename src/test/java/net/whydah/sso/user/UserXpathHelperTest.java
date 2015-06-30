@@ -70,7 +70,7 @@ public class UserXpathHelperTest {
             "    <lifespan>1209600000</lifespan>\n" +
             "    <issuer>http://localhost:9998/tokenservice/user/ac627ab1ccbdb62ec96e702f07f6425b/validate_usertokenid/9739d138-6a42-4fbd-8281-c7775e77c110</issuer>\n" +
             "    <securitylevel>1</securitylevel>\n" +
-            "    <DEFCON></DEFCON>\n" +
+            "    <DEFCON>DEFCON5</DEFCON>\n" +
             "    <username>admin</username>\n" +
             "    <firstname>User</firstname>\n" +
             "    <lastname>Admin</lastname>\n" +
