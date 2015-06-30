@@ -23,25 +23,25 @@ import java.util.List;
 public class Application implements Serializable {
     private static final long serialVersionUID = -3784954322543961744L;
     private String id;
-    private String name;
-    private String description;
+    private String name;            // /sso/welcome and applicationToken
+    private String description;     // /sso/welcome
     private String applicationUrl;  // /sso/welcome
     private String logoUrl;         // /sso/welcome
 
     //private Map security;
 
     private String userTokenFilter; // default true, false will send userTokens with roles for all applications
-    private String securityLevel;    //Minimum UserToken security level allowed to use application
+    private String securityLevel;    //default 0 - no mimimum security level - Minimum UserToken security level allowed to use application
 
-    private String secret;
+    private String secret;    // TODO  to be moved to security/crypto poart of datastructure
 
     //list roleNames
-    private List<Role> roles;   //availableRoleNames
-    private List<String> organizationNames;  //availableOrganizationNames
+    private List<Role> roles;   //availableRoleNames - convenience list of predefined rolenames
+    private List<String> organizationNames;  //availableOrganizationNames - convenience list of predefined rolenames
 
     //defaults Map defaults
-    private String defaultRoleName;     //roleName or roleId here?
-    private String defaultOrganizationName;
+    private String defaultRoleName;     //roleName - the default rolename assigned upon new (UserRole) access to the application
+    private String defaultOrganizationName; // - the default organizationName  assigned upon new (UserRole) access to the application
 
 
     private Application() {
@@ -53,6 +53,7 @@ public class Application implements Serializable {
         this.roles = new ArrayList<>();
         this.organizationNames = new ArrayList<>();
         this.userTokenFilter = "true";
+        this.securityLevel="0";
     }
 
     public void addRole(Role role) {

@@ -27,7 +27,7 @@ public class ApplicationTest {
         Application a = new Application("AppId", "appName");
         //assertTrue("DEFCON5".equalsIgnoreCase(a.getDECFON()));
         assertTrue("0".equalsIgnoreCase(a.getSecurityLevel()));
-        assertTrue(Boolean.getBoolean(a.getUserTokenFilter()));
+        assertTrue(Boolean.valueOf(a.getUserTokenFilter()));
     }
 
 }
