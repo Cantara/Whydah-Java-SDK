@@ -29,13 +29,13 @@ public class CommandAddUser extends HystrixCommand<String> {
 
 
 
-    public CommandAddUser(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String userIdentityXml) {
+    public CommandAddUser(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String userIdentityJson) {
         super(HystrixCommandGroupKey.Factory.asKey("UASUserAdminGroup"));
         this.userAdminServiceUri = userAdminServiceUri;
         this.myAppTokenId=myAppTokenId;
         this.adminUserTokenId=adminUserTokenId;
-        this.userIdentityJson =userIdentityXml;
-        if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userIdentityXml==null ) {
+        this.userIdentityJson =userIdentityJson;
+        if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userIdentityJson==null ) {
             log.error("CommandAddUser initialized with null-values - will fail");
         }
 
@@ -44,12 +44,11 @@ public class CommandAddUser extends HystrixCommand<String> {
     @Override
     protected String run() {
 
-        log.trace("CommandAddUser - myAppTokenId={}",myAppTokenId);
+        log.trace("CommandAddUser - myAppTokenId={}, adminUserTokenId={{}, userIdentityJson={}",myAppTokenId,adminUserTokenId,userIdentityJson);
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
         WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/user/");
-//        ClientResponse response = addUser.post(Entity.entity(userIdentityJson,MediaType.APPLICATION_XML_TYPE),ClientResponse.class);
         Response response = addUser.request().post(Entity.json(userIdentityJson));
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
             log.warn("CommandAddUser - addUser - User authentication failed with status code " + response.getStatus());
