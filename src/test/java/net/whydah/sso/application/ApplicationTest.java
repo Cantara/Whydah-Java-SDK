@@ -1,13 +1,10 @@
 package net.whydah.sso.application;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
-import net.whydah.sso.user.UserCredential;
-import net.whydah.sso.util.UserTokenUtil;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
