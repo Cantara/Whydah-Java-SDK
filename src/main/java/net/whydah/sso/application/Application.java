@@ -136,7 +136,6 @@ public class Application implements Serializable {
         return defaultOrganizationName;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -144,25 +143,37 @@ public class Application implements Serializable {
 
         Application that = (Application) o;
 
+        if (applicationUrl != null ? !applicationUrl.equals(that.applicationUrl) : that.applicationUrl != null)
+            return false;
         if (defaultOrganizationName != null ? !defaultOrganizationName.equals(that.defaultOrganizationName) : that.defaultOrganizationName != null)
             return false;
         if (defaultRoleName != null ? !defaultRoleName.equals(that.defaultRoleName) : that.defaultRoleName != null)
             return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (!id.equals(that.id)) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (logoUrl != null ? !logoUrl.equals(that.logoUrl) : that.logoUrl != null) return false;
         if (!name.equals(that.name)) return false;
         if (organizationNames != null ? !organizationNames.equals(that.organizationNames) : that.organizationNames != null)
             return false;
         if (roles != null ? !roles.equals(that.roles) : that.roles != null) return false;
         if (secret != null ? !secret.equals(that.secret) : that.secret != null) return false;
+        if (securityLevel != null ? !securityLevel.equals(that.securityLevel) : that.securityLevel != null)
+            return false;
+        if (userTokenFilter != null ? !userTokenFilter.equals(that.userTokenFilter) : that.userTokenFilter != null)
+            return false;
+
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + name.hashCode();
         result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (applicationUrl != null ? applicationUrl.hashCode() : 0);
+        result = 31 * result + (logoUrl != null ? logoUrl.hashCode() : 0);
+        result = 31 * result + (userTokenFilter != null ? userTokenFilter.hashCode() : 0);
+        result = 31 * result + (securityLevel != null ? securityLevel.hashCode() : 0);
         result = 31 * result + (secret != null ? secret.hashCode() : 0);
         result = 31 * result + (roles != null ? roles.hashCode() : 0);
         result = 31 * result + (organizationNames != null ? organizationNames.hashCode() : 0);
@@ -187,12 +198,15 @@ public class Application implements Serializable {
             roleNamesString = strb.toString();
         }
 
-
         return "Application{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", secret='" + secret + '\'' +
                 ", description='" + description + '\'' +
+                ", applicationUrl='" + applicationUrl + '\'' +
+                ", logoUrl='" + logoUrl + '\'' +
+                ", userTokenFilter='" + userTokenFilter + '\'' +
+                ", securityLevel='" + securityLevel + '\'' +
                 ", roles=" + roleNamesString +
                 ", defaultRoleName='" + defaultRoleName + '\'' +
                 ", organizationNames=" + availableOrgNamesString +
