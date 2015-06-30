@@ -6,7 +6,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.netflix.hystrix" level="INFO" />
+    <logger name="com.netflix.hystrix" level="WARN" />
     <logger name="net.whydah" level="trace" />
 
     <root level="INFO">

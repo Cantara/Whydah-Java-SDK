@@ -32,4 +32,11 @@ public class ApplicationSerializerTest {
         Application applicationFromJson = ApplicationSerializer.fromJson(json);
         assertEquals(application, applicationFromJson);
     }
+
+    @Test
+    public void fromRealJson() throws Exception{
+        Application applicationFromJson = ApplicationSerializer.fromJson(ApplicationHelper.getDummyAppllicationJson());
+        log.debug(ApplicationSerializer.toJson(applicationFromJson));
+
+    }
 }
