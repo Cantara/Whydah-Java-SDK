@@ -35,12 +35,11 @@ public class Application {
 
     //list roleNames
     private List<Role> roles;   //availableRoleNames
-    //list organizationNames
     private List<String> organizationNames;  //availableOrganizationNames
 
     //defaults Map defaults
     private String defaultRoleName;     //roleName or roleId here?
-    private String defaultOrgName;
+    private String defaultOrganizationName;
 
 
     private Application() {
@@ -96,8 +95,8 @@ public class Application {
     public void setOrganizationNames(List<String> organizationNames) {
         this.organizationNames = organizationNames;
     }
-    public void setDefaultOrgName(String defaultOrgName) {
-        this.defaultOrgName = defaultOrgName;
+    public void setDefaultOrganizationName(String defaultOrganizationName) {
+        this.defaultOrganizationName = defaultOrganizationName;
     }
 
     public String getId() {
@@ -121,8 +120,8 @@ public class Application {
     public List<String> getOrganizationNames() {
         return organizationNames;
     }
-    public String getDefaultOrgName() {
-        return defaultOrgName;
+    public String getDefaultOrganizationName() {
+        return defaultOrganizationName;
     }
 
     /*
@@ -132,7 +131,7 @@ public class Application {
                 "   <applicationid>" + id + "</applicationid>\n" +
                 "   <applicationname>" + name + "</applicationname>\n" +
                 "   <defaultrolename>" + defaultRoleName + "</defaultrolename>\n" +
-                "   <defaultorganizationname>" + defaultOrgName + "</defaultorganizationname>\n" +
+                "   <defaultorganizationname>" + defaultOrganizationName + "</defaultorganizationname>\n" +
                 "  " + buildAvailableOrgAsXml() + "\n" +
                 "  " + buildAvailableRoleAsXml() + "\n" +
                 " </application>\n";
@@ -172,7 +171,7 @@ public class Application {
 
         Application that = (Application) o;
 
-        if (defaultOrgName != null ? !defaultOrgName.equals(that.defaultOrgName) : that.defaultOrgName != null)
+        if (defaultOrganizationName != null ? !defaultOrganizationName.equals(that.defaultOrganizationName) : that.defaultOrganizationName != null)
             return false;
         if (defaultRoleName != null ? !defaultRoleName.equals(that.defaultRoleName) : that.defaultRoleName != null)
             return false;
@@ -195,7 +194,7 @@ public class Application {
         result = 31 * result + (roles != null ? roles.hashCode() : 0);
         result = 31 * result + (organizationNames != null ? organizationNames.hashCode() : 0);
         result = 31 * result + (defaultRoleName != null ? defaultRoleName.hashCode() : 0);
-        result = 31 * result + (defaultOrgName != null ? defaultOrgName.hashCode() : 0);
+        result = 31 * result + (defaultOrganizationName != null ? defaultOrganizationName.hashCode() : 0);
         return result;
     }
 
@@ -224,7 +223,7 @@ public class Application {
                 ", roles=" + roleNamesString +
                 ", defaultRoleName='" + defaultRoleName + '\'' +
                 ", organizationNames=" + availableOrgNamesString +
-                ", defaultOrgName='" + defaultOrgName + '\'' +
+                ", defaultOrganizationName='" + defaultOrganizationName + '\'' +
                 '}';
     }
 

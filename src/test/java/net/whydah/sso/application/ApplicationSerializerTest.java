@@ -23,8 +23,8 @@ public class ApplicationSerializerTest {
         application.addOrganizationName("organizationName1");
         application.setDefaultRoleName("defaultRoleName");
         application.setDefaultRoleName("roleName1");
-        application.setDefaultOrgName("defaultOrgName");
-        application.addOrganizationName(application.getDefaultOrgName());
+        application.setDefaultOrganizationName("defaultOrgName");
+        application.addOrganizationName(application.getDefaultOrganizationName());
         String json = ApplicationSerializer.toJson(application);
         String indented = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapper.readValue(json, Object.class));
         log.debug(indented);
