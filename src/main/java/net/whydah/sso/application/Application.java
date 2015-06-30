@@ -1,5 +1,6 @@
 package net.whydah.sso.application;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,8 @@ import java.util.List;
  *
 * @author <a href="mailto:erik-dev@fjas.no">Erik Drolshammer</a> 2015-06-30
 */
-public class Application {
+public class Application implements Serializable {
+    private static final long serialVersionUID = -3784954322543961744L;
     private String id;
     private String name;
     private String description;
@@ -71,7 +73,6 @@ public class Application {
     public void addOrganizationName(String organizationName) {
         organizationNames.add(organizationName);
     }
-
 
 
     public void setId(String id) {

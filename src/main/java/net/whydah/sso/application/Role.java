@@ -1,9 +1,12 @@
 package net.whydah.sso.application;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:erik-dev@fjas.no">Erik Drolshammer</a> 2015-01-23
  */
-public class Role {
+public class Role implements Serializable {
+    private static final long serialVersionUID = -8050935915438584578L;
     private String id;
     private String name;
 
