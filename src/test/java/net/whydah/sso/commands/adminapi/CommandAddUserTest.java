@@ -1,19 +1,16 @@
 package net.whydah.sso.commands.adminapi;
 
 import net.whydah.sso.application.ApplicationCredential;
-import net.whydah.sso.application.ApplicationHelper;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.*;
+import net.whydah.sso.util.SystemTestUtil;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
-import java.sql.Time;
-import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
@@ -54,34 +51,36 @@ public class CommandAddUserTest {
 
 
 
-    @Ignore
     @Test
     public void testAddUser() throws Exception {
 
-        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
-        String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-        assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
-        String userticket = UUID.randomUUID().toString();
-        String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
-        String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-        assertTrue(userTokenId != null && userTokenId.length() > 5);
+        if (!SystemTestUtil.noLocalWhydahRunning()) {
 
-        UserIdentityRepresentation uir= getTestNewUserIdentity(UserXpathHelper.getUserIdFromUserTokenXml(userToken), myApplicationTokenID);
-        String userIdentityXml=uir.toJson();
-        // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
-        String userAddRoleResult = new CommandAddUser(userAdminServiceUri, myApplicationTokenID, userTokenId, userIdentityXml).execute();
-        System.out.println("testAddUser:" + userAddRoleResult);
+            String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+            String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
+            assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
+            String userticket = UUID.randomUUID().toString();
+            String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
+            String userTokenId = UserXpathHelper.getUserTokenId(userToken);
+            assertTrue(userTokenId != null && userTokenId.length() > 5);
 
-        String usersListJson = new CommandListUsers(userAdminServiceUri, myApplicationTokenID,userTokenId,"").execute();
-        System.out.println("usersListJson=" + usersListJson);
-        assertTrue(usersListJson.indexOf(uir.getUsername())>0);
+            UserIdentityRepresentation uir = getTestNewUserIdentity(UserXpathHelper.getUserIdFromUserTokenXml(userToken), myApplicationTokenID);
+            String userIdentityJson = uir.toJson();
+            // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
+            String userAddRoleResult = new CommandAddUser(userAdminServiceUri, myApplicationTokenID, userTokenId, userIdentityJson).execute();
+            System.out.println("testAddUser:" + userAddRoleResult);
+
+            String usersListJson = new CommandListUsers(userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
+            System.out.println("usersListJson=" + usersListJson);
+            assertTrue(usersListJson.indexOf(uir.getUsername()) > 0);
+        }
 
     }
 
     private UserIdentityRepresentation getTestNewUserIdentity(String userTokenId, String applicationId) {
         Random rand = new Random();
         rand.setSeed(new java.util.Date().getTime());
-        UserIdentityRepresentation user = new UserIdentityRepresentation("tesdddtuser"+UUID.randomUUID().toString(),"Mt Test","Testesen","0","test_"+UUID.randomUUID().toString()+"@getwhydah.com","+47"+Integer.toString(rand.nextInt(100000000)));
+        UserIdentityRepresentation user = new UserIdentityRepresentation("tesdddtuser"+UUID.randomUUID().toString(),"Mt Test","Testesen","0",UUID.randomUUID().toString()+"@getwhydah.com","+47"+Integer.toString(rand.nextInt(100000000)));
         return user;
 
     }
