@@ -72,15 +72,15 @@ public class WhydahApplicationSession {
 
 
     private void renewWhydahApplicationSession() {
-        log.info("Trying to renew applicationsession");
+        log.debug("Trying to renew applicationsession");
         applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
         applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
         if (!hasActiveSession()) {
-            log.error("Error, unable to renew application session, applicationTokenXml:"+applicationTokenXML);
+            log.info("Error, unable to renew application session, applicationTokenXml:"+applicationTokenXML);
             for (int n=0;n<7 || !hasActiveSession();n++){
                 applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
                 applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
-                log.warn("Retrying renewing application session");
+                log.debug("Retrying renewing application session");
                 try {
                     Thread.sleep(1000 * n);
                 } catch (InterruptedException ie){
@@ -103,10 +103,10 @@ public class WhydahApplicationSession {
         applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
         applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
         if (applicationTokenXML==null || applicationTokenXML.length() < 4) {
-            log.error("Error, unable to initialize new application session, applicationTokenXml:"+applicationTokenXML);
+            log.info("Error, unable to initialize new application session, applicationTokenXml:"+applicationTokenXML);
 
         } else {
-            log.info("Initializing new application session, applicationTokenXml:" + applicationTokenXML);
+            log.debug("Initializing new application session, applicationTokenXml:" + applicationTokenXML);
 //        applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
             applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
         }
@@ -118,7 +118,7 @@ public class WhydahApplicationSession {
         long j = (timestamp);
         long diffSeconds = j - i;
         if (diffSeconds < 60) {
-            log.info("re-new application session..");
+            log.debug("re-new application session..");
             return true;
         }
         return false;
