@@ -67,6 +67,22 @@ public class ApplicationXpathHelper {
         return null;
     }
 
+    public static String[] getApplicationsFromApplicationsJson(String applicationsJson){
+        if (applicationsJson == null) {
+            log.debug("getApplicationNamesFromApplicationsJson was empty, so returning null.");
+        } else {
+            List<String>  applications = findJsonpathList(applicationsJson, "$.*");
+            if (applications==null){
+                log.debug("Xpath returned zero hits");
+                return null;
+            }
+            String[] result = new String[applications.size()];
+            return applications.toArray(result);
+        }
+        return null;
+
+    }
+
     public static  String findApplicationNameFromApplicationId(String applicationsJson) {
         if (applicationsJson == null) {
             log.debug("findApplicationNameFromApplicationId was empty, so returning null.");

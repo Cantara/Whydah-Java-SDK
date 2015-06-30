@@ -44,4 +44,14 @@ public class ApplicationSerializerTest {
         log.debug(ApplicationSerializer.toJson(applicationFromJson));
 
     }
+
+    @Test
+    public void fromRealJsonList() throws Exception{
+        String applications[]= ApplicationXpathHelper.getApplicationsFromApplicationsJson(ApplicationHelper.getDummyAppllicationListJson());
+        for (String application : applications) {
+            Application applicationFromJson = ApplicationSerializer.fromJson(application);
+            log.debug(ApplicationSerializer.toJson(applicationFromJson));
+        }
+
+    }
 }
