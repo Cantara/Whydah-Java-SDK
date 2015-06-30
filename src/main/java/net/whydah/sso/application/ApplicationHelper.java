@@ -46,7 +46,7 @@ public class ApplicationHelper {
                         "         ],\n" +
                         "         \"security\":{  \n" +
                         "            \"minimumSecurityLevel\":0,\n" +
-                        "            \"minimumDEFCON\":3,\n" +
+                        "            \"minimumDEFCON\":DEFCON3,\n" +
                         "            \"minimumUpdateFrequency\":\"60d\",\n" +
                         "            \"serviceipaddresses\":[  \n" +
                         "               \"217.17.33.67/24\",\n" +
@@ -86,7 +86,7 @@ public class ApplicationHelper {
                         "         ],\n" +
                         "         \"security\":{  \n" +
                         "            \"minimumSecurityLevel\":0,\n" +
-                        "            \"minimumDEFCON\":3,\n" +
+                        "            \"minimumDEFCON\":DEFCON3,\n" +
                         "            \"minimumUpdateFrequency\":\"60d\",\n" +
                         "            \"serviceipaddresses\":[  \n" +
                         "               \"217.17.33.67/24\",\n" +
@@ -126,7 +126,7 @@ public class ApplicationHelper {
                         "         ],\n" +
                         "         \"security\":{  \n" +
                         "            \"minimumSecurityLevel\":0,\n" +
-                        "            \"minimumDEFCON\":3,\n" +
+                        "            \"minimumDEFCON\":DEFCON3,\n" +
                         "            \"minimumUpdateFrequency\":\"60d\",\n" +
                         "            \"crypto\":[  \n" +
                         "               {  \n" +
@@ -162,7 +162,7 @@ public class ApplicationHelper {
                         "         ],\n" +
                         "         \"security\":{  \n" +
                         "            \"minimumSecurityLevel\":0,\n" +
-                        "            \"minimumDEFCON\":3,\n" +
+                        "            \"minimumDEFCON\":DEFCON3,\n" +
                         "            \"minimumUpdateFrequency\":\"60d\",\n" +
                         "            \"crypto\":[  \n" +
                         "               {  \n" +
@@ -198,7 +198,7 @@ public class ApplicationHelper {
                         "         ],\n" +
                         "         \"security\":{  \n" +
                         "            \"minimumSecurityLevel\":0,\n" +
-                        "            \"minimumDEFCON\":3,\n" +
+                        "            \"minimumDEFCON\":DEFCON3,\n" +
                         "            \"minimumUpdateFrequency\":\"60d\",\n" +
                         "            \"crypto\":[  \n" +
                         "               {  \n" +
@@ -234,7 +234,7 @@ public class ApplicationHelper {
                         "         ],\n" +
                         "         \"security\":{  \n" +
                         "            \"minimumSecurityLevel\":0,\n" +
-                        "            \"minimumDEFCON\":3,\n" +
+                        "            \"minimumDEFCON\":DEFCON3,\n" +
                         "            \"minimumUpdateFrequency\":\"60d\",\n" +
                         "            \"serviceipaddresses\":[  \n" +
                         "               \"217.17.33.67/24\",\n" +
@@ -274,7 +274,7 @@ public class ApplicationHelper {
                         "         ],\n" +
                         "         \"security\":{  \n" +
                         "            \"minimumSecurityLevel\":0,\n" +
-                        "            \"minimumDEFCON\":3,\n" +
+                        "            \"minimumDEFCON\":DEFCON3,\n" +
                         "            \"minimumUpdateFrequency\":\"60d\",\n" +
                         "            \"serviceipaddresses\":[  \n" +
                         "               \"217.17.33.67/24\",\n" +
