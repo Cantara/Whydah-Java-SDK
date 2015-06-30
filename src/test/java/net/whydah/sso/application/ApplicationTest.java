@@ -1,5 +1,6 @@
 package net.whydah.sso.application;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.util.UserTokenUtil;
 import org.junit.Before;
@@ -23,6 +24,7 @@ public class ApplicationTest {
 
     }
 
+    @Ignore
     @Test
     public void testDefaultValuesInApplication() throws Exception {
         Application a = new Application("AppId", "appName");
