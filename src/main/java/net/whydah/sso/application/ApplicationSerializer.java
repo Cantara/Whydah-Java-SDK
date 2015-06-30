@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Responsible for serializing Application to/from json and xml.
@@ -24,6 +25,18 @@ public class ApplicationSerializer {
         }
         return applicationCreatedJson;
     }
+
+    //list of application data, no wrapping element "applications". Need to decide.
+    public static String toJson(List<Application> applications) {
+        String applicationCreatedJson = null;
+        try {
+            applicationCreatedJson = mapper.writeValueAsString(applications);
+        } catch (IOException e) {
+            log.warn("Could not convert applications to Json.");
+        }
+        return applicationCreatedJson;
+    }
+
 
     //Should probably use JsonPath
     public static Application fromJson(String json) {

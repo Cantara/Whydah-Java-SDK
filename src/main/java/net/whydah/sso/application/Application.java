@@ -25,13 +25,13 @@ public class Application implements Serializable {
     private String id;
     private String name;
     private String description;
+    private String applicationUrl;  // /sso/welcome
+    private String logoUrl;         // /sso/welcome
 
-    //to be added later
-    //private String applicationurl;
-    //private String applicationlogo;
-    //private String applicationauditlevel;
-    //private String usertokenfilter;
     //private Map security;
+
+    private String userTokenFilter; // default true, false will send userTokens with roles for all applications
+    private String securityLevel;    //Minimum UserToken security level allowed to use application
 
     private String secret;
 
@@ -52,9 +52,169 @@ public class Application implements Serializable {
         this.name = name;
         this.roles = new ArrayList<>();
         this.organizationNames = new ArrayList<>();
+        this.userTokenFilter = "true";
     }
 
-    /*
+    public void addRole(Role role) {
+        roles.add(role);
+    }
+    public void addOrganizationName(String organizationName) {
+        organizationNames.add(organizationName);
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public void setApplicationUrl(String applicationUrl) {
+        this.applicationUrl = applicationUrl;
+    }
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+    public void setUserTokenFilter(String userTokenFilter) {
+        this.userTokenFilter = userTokenFilter;
+    }
+    public void setSecurityLevel(String securityLevel) {
+        this.securityLevel = securityLevel;
+    }
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+    public void setOrganizationNames(List<String> organizationNames) {
+        this.organizationNames = organizationNames;
+    }
+    public void setDefaultRoleName(String defaultRoleName) {
+        this.defaultRoleName = defaultRoleName;
+    }
+    public void setDefaultOrganizationName(String defaultOrganizationName) {
+        this.defaultOrganizationName = defaultOrganizationName;
+    }
+
+    public String getId() {
+        return id;
+    }
+    public String getName() {
+        return name;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public String getApplicationUrl() {
+        return applicationUrl;
+    }
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+    public String getUserTokenFilter() {
+        return userTokenFilter;
+    }
+    public String getSecurityLevel() {
+        return securityLevel;
+    }
+    public String getSecret() {
+        return secret;
+    }
+    public List<Role> getRoles() {
+        return roles;
+    }
+    public List<String> getOrganizationNames() {
+        return organizationNames;
+    }
+    public String getDefaultRoleName() {
+        return defaultRoleName;
+    }
+    public String getDefaultOrganizationName() {
+        return defaultOrganizationName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Application that = (Application) o;
+
+        if (applicationUrl != null ? !applicationUrl.equals(that.applicationUrl) : that.applicationUrl != null)
+            return false;
+        if (defaultOrganizationName != null ? !defaultOrganizationName.equals(that.defaultOrganizationName) : that.defaultOrganizationName != null)
+            return false;
+        if (defaultRoleName != null ? !defaultRoleName.equals(that.defaultRoleName) : that.defaultRoleName != null)
+            return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (logoUrl != null ? !logoUrl.equals(that.logoUrl) : that.logoUrl != null) return false;
+        if (!name.equals(that.name)) return false;
+        if (organizationNames != null ? !organizationNames.equals(that.organizationNames) : that.organizationNames != null)
+            return false;
+        if (roles != null ? !roles.equals(that.roles) : that.roles != null) return false;
+        if (secret != null ? !secret.equals(that.secret) : that.secret != null) return false;
+        if (securityLevel != null ? !securityLevel.equals(that.securityLevel) : that.securityLevel != null)
+            return false;
+        if (userTokenFilter != null ? !userTokenFilter.equals(that.userTokenFilter) : that.userTokenFilter != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (applicationUrl != null ? applicationUrl.hashCode() : 0);
+        result = 31 * result + (logoUrl != null ? logoUrl.hashCode() : 0);
+        result = 31 * result + (userTokenFilter != null ? userTokenFilter.hashCode() : 0);
+        result = 31 * result + (securityLevel != null ? securityLevel.hashCode() : 0);
+        result = 31 * result + (secret != null ? secret.hashCode() : 0);
+        result = 31 * result + (roles != null ? roles.hashCode() : 0);
+        result = 31 * result + (organizationNames != null ? organizationNames.hashCode() : 0);
+        result = 31 * result + (defaultRoleName != null ? defaultRoleName.hashCode() : 0);
+        result = 31 * result + (defaultOrganizationName != null ? defaultOrganizationName.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        String availableOrgNamesString = "";
+        if (this.organizationNames != null) {
+            availableOrgNamesString = String.join(",", this.organizationNames);
+        }
+
+        String roleNamesString = null;
+        if (roles != null) {
+            StringBuilder strb = new StringBuilder();
+            for (Role role : roles) {
+                strb.append(role.getName()).append(",");
+            }
+            roleNamesString = strb.toString();
+        }
+
+        return "Application{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", secret='" + secret + '\'' +
+                ", description='" + description + '\'' +
+                ", applicationUrl='" + applicationUrl + '\'' +
+                ", logoUrl='" + logoUrl + '\'' +
+                ", userTokenFilter='" + userTokenFilter + '\'' +
+                ", securityLevel='" + securityLevel + '\'' +
+                ", roles=" + roleNamesString +
+                ", defaultRoleName='" + defaultRoleName + '\'' +
+                ", organizationNames=" + availableOrgNamesString +
+                ", defaultOrganizationName='" + defaultOrganizationName + '\'' +
+                '}';
+    }
+
+     /*
     public List<String> getAvailableRoleNames() {
         List<String> names = new ArrayList<>(roles.size());
         for (Role role : roles) {
@@ -67,63 +227,6 @@ public class Application implements Serializable {
     }
     */
 
-    public void addRole(Role role) {
-        roles.add(role);
-    }
-    public void addOrganizationName(String organizationName) {
-        organizationNames.add(organizationName);
-    }
-
-
-    public void setId(String id) {
-        this.id = id;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-    public void setDefaultRoleName(String defaultRoleName) {
-        this.defaultRoleName = defaultRoleName;
-    }
-    public void setOrganizationNames(List<String> organizationNames) {
-        this.organizationNames = organizationNames;
-    }
-    public void setDefaultOrganizationName(String defaultOrganizationName) {
-        this.defaultOrganizationName = defaultOrganizationName;
-    }
-
-    public String getId() {
-        return id;
-    }
-    public String getName() {
-        return name;
-    }
-    public String getSecret() {
-        return secret;
-    }
-    public String getDescription() {
-        return description;
-    }
-    public List<Role> getRoles() {
-        return roles;
-    }
-    public String getDefaultRoleName() {
-        return defaultRoleName;
-    }
-    public List<String> getOrganizationNames() {
-        return organizationNames;
-    }
-    public String getDefaultOrganizationName() {
-        return defaultOrganizationName;
-    }
 
     /*
     public String toXML() {
@@ -165,68 +268,6 @@ public class Application implements Serializable {
     }
     */
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Application that = (Application) o;
-
-        if (defaultOrganizationName != null ? !defaultOrganizationName.equals(that.defaultOrganizationName) : that.defaultOrganizationName != null)
-            return false;
-        if (defaultRoleName != null ? !defaultRoleName.equals(that.defaultRoleName) : that.defaultRoleName != null)
-            return false;
-        if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (!id.equals(that.id)) return false;
-        if (!name.equals(that.name)) return false;
-        if (organizationNames != null ? !organizationNames.equals(that.organizationNames) : that.organizationNames != null)
-            return false;
-        if (roles != null ? !roles.equals(that.roles) : that.roles != null) return false;
-        if (secret != null ? !secret.equals(that.secret) : that.secret != null) return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (secret != null ? secret.hashCode() : 0);
-        result = 31 * result + (roles != null ? roles.hashCode() : 0);
-        result = 31 * result + (organizationNames != null ? organizationNames.hashCode() : 0);
-        result = 31 * result + (defaultRoleName != null ? defaultRoleName.hashCode() : 0);
-        result = 31 * result + (defaultOrganizationName != null ? defaultOrganizationName.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        String availableOrgNamesString = "";
-        if (this.organizationNames != null) {
-            availableOrgNamesString = String.join(",", this.organizationNames);
-        }
-
-        String roleNamesString = null;
-        if (roles != null) {
-            StringBuilder strb = new StringBuilder();
-            for (Role role : roles) {
-                strb.append(role.getName()).append(",");
-            }
-            roleNamesString = strb.toString();
-        }
-
-
-        return "Application{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", secret='" + secret + '\'' +
-                ", description='" + description + '\'' +
-                ", roles=" + roleNamesString +
-                ", defaultRoleName='" + defaultRoleName + '\'' +
-                ", organizationNames=" + availableOrgNamesString +
-                ", defaultOrganizationName='" + defaultOrganizationName + '\'' +
-                '}';
-    }
 
     /*
     public void addAvailableOrgName(String availableOrgName) {

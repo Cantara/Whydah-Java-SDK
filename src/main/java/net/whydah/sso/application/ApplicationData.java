@@ -5,6 +5,7 @@ import java.util.Map;
 /**
  * Created by totto on 24.06.15.
  */
+@Deprecated
 public class ApplicationData {
     private Map defaults;
     private String applicationurl;
