@@ -88,24 +88,4 @@ public class CommandLogonApplication extends HystrixCommand<String> {
         return logonResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE),Response.class);
     }
 
-    /**
-     * Let us use cache instead of duplicate calls to STS
-     *
-     * @return
-     */
-    @Override
-    protected String getCacheKey() {
-        return String.valueOf(appCredential);
-    }
-
-
-    /**
-     * Fail silent - return null instead of throwing an exception
-     *
-     * @return null
-     */
-    @Override
-    protected String getFallback() {
-        return  null;
-    }
 }
