@@ -28,6 +28,11 @@ public class ApplicationSecurity implements Serializable {
      */
     private List<String> allowedIpAddresses;
 
+    /**
+     *  default true, false will send userTokens with roles for all applications
+     */
+    private String userTokenFilter; //
+
     //authentication info
     private String secret;    // TODO extend
 
@@ -35,6 +40,8 @@ public class ApplicationSecurity implements Serializable {
     public ApplicationSecurity() {
         this.minSecurityLevel = "0";
         this.allowedIpAddresses = new ArrayList<>();
+        allowedIpAddresses.add("0.0.0.0/0");
+        this.userTokenFilter = "true";
     }
 
     public void setMinSecurityLevel(String minSecurityLevel) {
@@ -48,6 +55,9 @@ public class ApplicationSecurity implements Serializable {
     }
     public void setAllowedIpAddresses(List<String> allowedIpAddresses) {
         this.allowedIpAddresses = allowedIpAddresses;
+    }
+    public void setUserTokenFilter(String userTokenFilter) {
+        this.userTokenFilter = userTokenFilter;
     }
     public void setSecret(String secret) {
         this.secret = secret;
@@ -65,6 +75,9 @@ public class ApplicationSecurity implements Serializable {
     public List<String> getAllowedIpAddresses() {
         return allowedIpAddresses;
     }
+    public String getUserTokenFilter() {
+        return userTokenFilter;
+    }
     public String getSecret() {
         return secret;
     }
@@ -78,12 +91,13 @@ public class ApplicationSecurity implements Serializable {
 
         if (allowedIpAddresses != null ? !allowedIpAddresses.equals(that.allowedIpAddresses) : that.allowedIpAddresses != null)
             return false;
-        if (minDEFCON != null ? !minDEFCON.equals(that.minDEFCON) : that.minDEFCON != null)
+        if (maxSessionTimout != null ? !maxSessionTimout.equals(that.maxSessionTimout) : that.maxSessionTimout != null)
             return false;
-        if (secret != null ? !secret.equals(that.secret) : that.secret != null) return false;
+        if (minDEFCON != null ? !minDEFCON.equals(that.minDEFCON) : that.minDEFCON != null) return false;
         if (minSecurityLevel != null ? !minSecurityLevel.equals(that.minSecurityLevel) : that.minSecurityLevel != null)
             return false;
-        if (maxSessionTimout != null ? !maxSessionTimout.equals(that.maxSessionTimout) : that.maxSessionTimout != null)
+        if (secret != null ? !secret.equals(that.secret) : that.secret != null) return false;
+        if (userTokenFilter != null ? !userTokenFilter.equals(that.userTokenFilter) : that.userTokenFilter != null)
             return false;
 
         return true;
@@ -95,7 +109,20 @@ public class ApplicationSecurity implements Serializable {
         result = 31 * result + (minDEFCON != null ? minDEFCON.hashCode() : 0);
         result = 31 * result + (maxSessionTimout != null ? maxSessionTimout.hashCode() : 0);
         result = 31 * result + (allowedIpAddresses != null ? allowedIpAddresses.hashCode() : 0);
+        result = 31 * result + (userTokenFilter != null ? userTokenFilter.hashCode() : 0);
         result = 31 * result + (secret != null ? secret.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ApplicationSecurity{" +
+                "minSecurityLevel='" + minSecurityLevel + '\'' +
+                ", minDEFCON='" + minDEFCON + '\'' +
+                ", maxSessionTimout='" + maxSessionTimout + '\'' +
+                ", allowedIpAddresses=" + allowedIpAddresses +
+                ", userTokenFilter='" + userTokenFilter + '\'' +
+                ", secret='" + secret + '\'' +
+                '}';
     }
 }

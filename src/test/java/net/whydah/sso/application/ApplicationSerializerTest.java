@@ -26,7 +26,7 @@ public class ApplicationSerializerTest {
         app1.setDescription("description of application");
         app1.setApplicationUrl("https://webtest.exapmle.com/test.png");
         app1.setLogoUrl("https://webtest.example.com");
-        app1.addRole(new AppplicationRole("roleId1", "roleName1"));
+        app1.addRole(new ApplicationRole("roleId1", "roleName1"));
         app1.addOrganizationName("organizationName1");
         app1.setDefaultRoleName("defaultRoleName");
         app1.setDefaultRoleName("roleName1");

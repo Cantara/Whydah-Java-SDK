@@ -19,16 +19,11 @@ public class Application implements Serializable {
     private String logoUrl;         // /sso/welcome
 
     //list roleNames
-    private List<AppplicationRole> roles;   //availableRoleNames - convenience list of predefined rolenames
+    private List<ApplicationRole> roles;   //availableRoleNames - convenience list of predefined rolenames
     private List<String> organizationNames;  //availableOrganizationNames - convenience list of predefined rolenames
 
     private String defaultRoleName;     //roleName - the default rolename assigned upon new (UserRole) access to the application
     private String defaultOrganizationName; // - the default organizationName  assigned upon new (UserRole) access to the application
-
-    /**
-     *  default true, false will send userTokens with roles for all applications
-     */
-    private String userTokenFilter; //
 
     private ApplicationSecurity security;
 
@@ -41,11 +36,10 @@ public class Application implements Serializable {
         this.name = name;
         this.roles = new ArrayList<>();
         this.organizationNames = new ArrayList<>();
-        this.userTokenFilter = "true";
         this.security = new ApplicationSecurity();
     }
 
-    public void addRole(AppplicationRole role) {
+    public void addRole(ApplicationRole role) {
         roles.add(role);
     }
     public void addOrganizationName(String organizationName) {
@@ -67,7 +61,7 @@ public class Application implements Serializable {
     public void setLogoUrl(String logoUrl) {
         this.logoUrl = logoUrl;
     }
-    public void setRoles(List<AppplicationRole> roles) {
+    public void setRoles(List<ApplicationRole> roles) {
         this.roles = roles;
     }
     public void setOrganizationNames(List<String> organizationNames) {
@@ -78,9 +72,6 @@ public class Application implements Serializable {
     }
     public void setDefaultOrganizationName(String defaultOrganizationName) {
         this.defaultOrganizationName = defaultOrganizationName;
-    }
-    public void setUserTokenFilter(String userTokenFilter) {
-        this.userTokenFilter = userTokenFilter;
     }
     public void setSecurity(ApplicationSecurity security) {
         this.security = security;
@@ -101,7 +92,7 @@ public class Application implements Serializable {
     public String getLogoUrl() {
         return logoUrl;
     }
-    public List<AppplicationRole> getRoles() {
+    public List<ApplicationRole> getRoles() {
         return roles;
     }
     public List<String> getOrganizationNames() {
@@ -112,9 +103,6 @@ public class Application implements Serializable {
     }
     public String getDefaultOrganizationName() {
         return defaultOrganizationName;
-    }
-    public String getUserTokenFilter() {
-        return userTokenFilter;
     }
     public ApplicationSecurity getSecurity() {
         return security;
@@ -140,8 +128,6 @@ public class Application implements Serializable {
         if (organizationNames != null ? !organizationNames.equals(that.organizationNames) : that.organizationNames != null)
             return false;
         if (roles != null ? !roles.equals(that.roles) : that.roles != null) return false;
-        if (userTokenFilter != null ? !userTokenFilter.equals(that.userTokenFilter) : that.userTokenFilter != null)
-            return false;
 
         return true;
     }
@@ -153,7 +139,6 @@ public class Application implements Serializable {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (applicationUrl != null ? applicationUrl.hashCode() : 0);
         result = 31 * result + (logoUrl != null ? logoUrl.hashCode() : 0);
-        result = 31 * result + (userTokenFilter != null ? userTokenFilter.hashCode() : 0);
         result = 31 * result + (roles != null ? roles.hashCode() : 0);
         result = 31 * result + (organizationNames != null ? organizationNames.hashCode() : 0);
         result = 31 * result + (defaultRoleName != null ? defaultRoleName.hashCode() : 0);
@@ -171,7 +156,7 @@ public class Application implements Serializable {
         String roleNamesString = null;
         if (roles != null) {
             StringBuilder strb = new StringBuilder();
-            for (AppplicationRole role : roles) {
+            for (ApplicationRole role : roles) {
                 strb.append(role.getName()).append(",");
             }
             roleNamesString = strb.toString();
@@ -187,7 +172,7 @@ public class Application implements Serializable {
                 ", defaultRoleName='" + defaultRoleName + '\'' +
                 ", organizationNames=" + availableOrgNamesString +
                 ", defaultOrganizationName='" + defaultOrganizationName + '\'' +
-                ", userTokenFilter='" + userTokenFilter + '\'' +
+                ", '" + security.toString() + '\'' +
                 '}';
     }
 }
