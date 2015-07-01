@@ -56,7 +56,6 @@ public class CommandAddUserRoleTest {
      * Fails because no rebuild of active STS cache when new roles are added
      * @throws Exception
      */
-    @Ignore
     @Test
     public void testAddUserRole() throws Exception {
 

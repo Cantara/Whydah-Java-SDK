@@ -18,7 +18,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Created by totto on 24.06.15.
  */
 public class CommandListApplications extends HystrixCommand<String> {
-    private static final Logger log = getLogger(CommandAddUser.class);
+    private static final Logger log = getLogger(CommandListApplications.class);
     private URI userAdminServiceUri;
     private String myAppTokenId;
     private String adminUserTokenId;
@@ -43,7 +43,7 @@ public class CommandListApplications extends HystrixCommand<String> {
         log.trace("CommandListApplications - myAppTokenId={}", myAppTokenId);
         Client tokenServiceClient = ClientBuilder.newClient();
 
-        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/adminapplication/applications");
+        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/applications");
 
         // Works against UIB, still misisng in UAS...
         Response response = addUser.request().get();
@@ -54,27 +54,12 @@ public class CommandListApplications extends HystrixCommand<String> {
         }
         if (response.getStatus() == OK.getStatusCode()) {
             String responseJson = response.readEntity(String.class);
-            log.debug("CommandListApplications - Listing aplications {}", responseJson);
+            log.debug("CommandListApplications - Listing applications {}", responseJson);
             return responseJson;
         }
 
         return null;
     }
 
-    /**
-     * Let us use cache instead as applications is mostly static :)
-     *
-     * @return
-     */
-    @Override
-    protected String getCacheKey() {
-        return String.valueOf(myAppTokenId);
-    }
-
-
-    @Override
-    protected String getFallback() {
-        return null;
-    }
 
 }
