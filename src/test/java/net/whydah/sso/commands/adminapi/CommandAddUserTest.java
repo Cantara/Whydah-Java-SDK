@@ -81,7 +81,7 @@ public class CommandAddUserTest {
     private UserIdentityRepresentation getTestNewUserIdentity(String userTokenId, String applicationId) {
         Random rand = new Random();
         rand.setSeed(new java.util.Date().getTime());
-        UserIdentityRepresentation user = new UserIdentityRepresentation("us" + UUID.randomUUID().toString().replace("-", "").replace("_", ""), "Mt Test", "Testesen", "0", UUID.randomUUID().toString().replace("-", "").replace("_", "") + "@getwhydah.com", "47" + Integer.toString(rand.nextInt(100000000)));
+        UserIdentityRepresentation user = new UserIdentityRepresentation("us" + UUID.randomUUID().toString().replace("-", "").replace("_", "").substring(1, 10), "Mt Test", "Testesen", "0", UUID.randomUUID().toString().replace("-", "").replace("_", "").substring(1, 10) + "@getwhydah.com", "47" + Integer.toString(rand.nextInt(100000000)));
         return user;
 
     }

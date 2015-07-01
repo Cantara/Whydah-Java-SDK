@@ -2,7 +2,6 @@ package net.whydah.sso.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,20 +58,17 @@ public class ApplicationSerializerTest {
     }
 
 
-    @Ignore
     @Test
     public void fromRealJson() throws Exception{
         Application applicationFromJson = ApplicationSerializer.fromJson(ApplicationHelper.getDummyAppllicationJson());
         log.debug(ApplicationSerializer.toJson(applicationFromJson));
     }
 
-    @Ignore
     @Test
     public void fromRealJsonList() throws Exception{
-        String[] applications= ApplicationXpathHelper.getApplicationsFromApplicationsJson(ApplicationHelper.getDummyAppllicationListJson());
-        for (String application : applications) {
-            Application applicationFromJson = ApplicationSerializer.fromJson(application);
-            log.debug(ApplicationSerializer.toJson(applicationFromJson));
+        List<Application> applications = ApplicationSerializer.fromJsonList(ApplicationHelper.getDummyAppllicationListJson());
+        for (Application application : applications) {
+            log.debug(ApplicationSerializer.toJson(application));
         }
 
     }
