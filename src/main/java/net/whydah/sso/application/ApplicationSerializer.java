@@ -1,5 +1,6 @@
 package net.whydah.sso.application;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +45,16 @@ public class ApplicationSerializer {
             ObjectMapper mapper = new ObjectMapper();
             Application application = mapper.readValue(json, Application.class);
             return application;
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Error mapping json for " + json, e);
+        }
+    }
+
+    public static List<Application> fromJsonList(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            List<Application> applications = mapper.readValue(json, new TypeReference<List<Application>>() { });
+            return applications;
         } catch (IOException e) {
             throw new IllegalArgumentException("Error mapping json for " + json, e);
         }

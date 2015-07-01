@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -51,7 +52,11 @@ public class ApplicationSerializerTest {
         String json = ApplicationSerializer.toJson(Arrays.asList(new Application[]{app1, app2}));
         String indented = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapper.readValue(json, Object.class));
         log.debug(indented);
+
+        List<Application> applications = ApplicationSerializer.fromJsonList(json);
+        assertEquals(applications.size(), 2);
     }
+
 
     @Ignore
     @Test
