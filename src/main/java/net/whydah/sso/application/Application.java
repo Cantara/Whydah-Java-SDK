@@ -25,7 +25,22 @@ public class Application implements Serializable {
     private String defaultRoleName;     //roleName - the default rolename assigned upon new (UserRole) access to the application
     private String defaultOrganizationName; // - the default organizationName  assigned upon new (UserRole) access to the application
 
-    private ApplicationSecurity security;
+    private ApplicationSecurity security; // The security config for the application
+    private List<ApplicationACL> acls;  // List of granted ACL for the application
+
+
+
+    public List<ApplicationACL> getAcl() {
+        return acls;
+    }
+
+    public void setAcl(List<ApplicationACL> acls) {
+        this.acls = acls;
+    }
+    public void addAcl(ApplicationACL acl) {
+         acls.add(acl);
+    }
+
 
 
     private Application() {
@@ -37,6 +52,7 @@ public class Application implements Serializable {
         this.roles = new ArrayList<>();
         this.organizationNames = new ArrayList<>();
         this.security = new ApplicationSecurity();
+        this.acls = new ArrayList<>();
     }
 
     public void addRole(ApplicationRole role) {

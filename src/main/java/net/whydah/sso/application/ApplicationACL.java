@@ -1,6 +1,7 @@
 package net.whydah.sso.application;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicationACL implements Serializable {
@@ -30,6 +31,14 @@ public class ApplicationACL implements Serializable {
     public ApplicationACL(String applicationId, String applicationACLPath) {
         this.applicationId = applicationId;
         this.applicationACLPath = applicationACLPath;
+        this.accessRights = new ArrayList<>();
+    }
+
+    public ApplicationACL(String applicationId, String applicationACLPath,String right) {
+        this.applicationId = applicationId;
+        this.applicationACLPath = applicationACLPath;
+        this.accessRights = new ArrayList<>();
+        accessRights.add(right);
     }
 
     public void setId(String applicationId) {
@@ -51,18 +60,19 @@ public class ApplicationACL implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ApplicationACL role = (ApplicationACL) o;
+        ApplicationACL that = (ApplicationACL) o;
 
-        if (!applicationId.equals(role.applicationId)) return false;
-        if (!applicationACLPath.equals(role.applicationACLPath)) return false;
+        if (!applicationId.equals(that.applicationId)) return false;
+        if (!applicationACLPath.equals(that.applicationACLPath)) return false;
+        return !(accessRights != null ? !accessRights.equals(that.accessRights) : that.accessRights != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = applicationId.hashCode();
         result = 31 * result + applicationACLPath.hashCode();
+        result = 31 * result + (accessRights != null ? accessRights.hashCode() : 0);
         return result;
     }
 

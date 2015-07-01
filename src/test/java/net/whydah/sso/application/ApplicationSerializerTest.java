@@ -32,6 +32,7 @@ public class ApplicationSerializerTest {
         app1.setDefaultRoleName("roleName1");
         app1.setDefaultOrganizationName("defaultOrgName");
         app1.addOrganizationName(app1.getDefaultOrganizationName());
+        app1.addAcl(new ApplicationACL("11","/user","READ"));
 
         app1.getSecurity().setSecret("veryVerySecret");
     }
