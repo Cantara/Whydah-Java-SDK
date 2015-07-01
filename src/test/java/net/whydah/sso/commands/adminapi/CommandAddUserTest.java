@@ -23,16 +23,15 @@ import static org.junit.Assert.assertTrue;
  */
 public class CommandAddUserTest {
 
+    public static String TEMPORARY_APPLICATION_ID = "11";//"11";
+    public static String TEMPORARY_APPLICATION_SECRET = "6r46g3q986Ep6By7B9J46m96D";
+    public static String userName = "admin";
+    public static String password = "whydahadmin";
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
     private static boolean systemTest = false;
     private static URI userAdminServiceUri;
-    public static String TEMPORARY_APPLICATION_ID = "11";//"11";
-    public static String TEMPORARY_APPLICATION_SECRET = "6r46g3q986Ep6By7B9J46m96D";
-    public static String userName = "admin";
-    public static String password = "whydahadmin";
-
     private static String userAdminService = "http://localhost:9992/useradminservice";
     private static String userTokenService = "http://localhost:9998/tokenservice";
 
@@ -82,7 +81,7 @@ public class CommandAddUserTest {
     private UserIdentityRepresentation getTestNewUserIdentity(String userTokenId, String applicationId) {
         Random rand = new Random();
         rand.setSeed(new java.util.Date().getTime());
-        UserIdentityRepresentation user = new UserIdentityRepresentation("tesdddtuser"+UUID.randomUUID().toString(),"Mt Test","Testesen","0",UUID.randomUUID().toString()+"@getwhydah.com","+47"+Integer.toString(rand.nextInt(100000000)));
+        UserIdentityRepresentation user = new UserIdentityRepresentation("tesdddtuser" + UUID.randomUUID().toString().replace("-", "").replace("_", ""), "Mt Test", "Testesen", "0", UUID.randomUUID().toString().replace("-", "").replace("_", "") + "@getwhydah.com", "+47" + Integer.toString(rand.nextInt(100000000)));
         return user;
 
     }
