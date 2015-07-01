@@ -1,6 +1,7 @@
 package net.whydah.sso.application;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +34,7 @@ public class ApplicationSecurity implements Serializable {
 
     public ApplicationSecurity() {
         this.minSecurityLevel = "0";
+        this.allowedIpAddresses = new ArrayList<>();
     }
 
     public void setMinSecurityLevel(String minSecurityLevel) {
