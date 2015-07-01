@@ -6,7 +6,6 @@ import net.whydah.sso.WhydahTemporaryBliUtil;
 import net.whydah.sso.WhydahUserSession;
 import net.whydah.sso.WhydahUtil;
 import net.whydah.sso.user.UserCredential;
-import net.whydah.sso.user.UserRole;
 import net.whydah.sso.user.UserXpathHelper;
 import net.whydah.sso.util.SystemTestUtil;
 import org.junit.Before;
@@ -14,10 +13,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -32,13 +29,10 @@ public class ValidateUserRoleUseCaseTest {
     public static String TEMPORARY_APPLICATION_SECRET = "6r46g3q986Ep6By7B9J46m96D";
     public static String userName = "admin";
     public static String password = "whydahadmin";
-    private final String roleName = "TestXXRoleName_"+ UUID.randomUUID();
-
-
+    private static boolean integrationMode = false;
+    private final String roleName = "WhydahUserAdmin";
     private String userAdminServiceUri = "http://localhost:9992/useradminservice";
     private String userTokenServiceUri = "http://localhost:9998/tokenservice";
-    private static boolean integrationMode = false;
-
 
     @Before
     public void setUp() throws Exception {
@@ -128,7 +122,7 @@ public class ValidateUserRoleUseCaseTest {
             String userTokenXmlAfter = WhydahTemporaryBliUtil.logOnUser(userTokenServiceUri, appTokenId, appTokenXml, userName, password);
 //            assertNotNull(createdRoles);
 //            assertTrue(createdRoles.size() >=1);
-            assertTrue(UserXpathHelper.hasRoleFromUserToken(userTokenXmlAfter, TEMPORARY_APPLICATION_ID, roleName));
+            assertTrue(UserXpathHelper.hasRoleFromUserToken(userTokenXmlAfter, "19", roleName));
 
            // UserRole userRole = createdRoles.get(1);
           //  assertEquals("TestOrg",userRole.getOrgName());
