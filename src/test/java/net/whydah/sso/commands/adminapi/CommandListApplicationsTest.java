@@ -1,8 +1,6 @@
 package net.whydah.sso.commands.adminapi;
 
-import net.whydah.sso.application.ApplicationCredential;
-import net.whydah.sso.application.ApplicationHelper;
-import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.application.*;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
@@ -15,6 +13,7 @@ import org.junit.Test;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
@@ -24,15 +23,13 @@ import static org.junit.Assert.assertTrue;
  */
 public class CommandListApplicationsTest {
 
+    public static String userName = "admin";
+    public static String password = "whydahadmin";
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
     private static boolean systemTest = false;
     private static URI userAdminServiceUri;
-    public static String userName = "admin";
-    public static String password = "whydahadmin";
-
-
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -82,7 +79,10 @@ public class CommandListApplicationsTest {
 
             String applicationsJson = new CommandListApplications(userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
             System.out.println("applicationsJson=" + applicationsJson);
-            assertTrue(applicationsJson.length()>100);
+            assertTrue(applicationsJson.length() > 100);
+            List<Application> applications = ApplicationSerializer.fromJsonList(applicationsJson);
+            assertTrue(applications.size() > 6);
+
         }
     }
 
