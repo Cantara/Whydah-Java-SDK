@@ -26,7 +26,7 @@ public class ApplicationTest {
     public void testDefaultValuesInApplication() throws Exception {
         Application a = new Application("AppId", "appName");
         //assertTrue("DEFCON5".equalsIgnoreCase(a.getDECFON()));
-        assertTrue("0".equalsIgnoreCase(a.getSecurityLevel()));
+        assertTrue("0".equalsIgnoreCase(a.getSecurity().getMinSecurityLevel()));
         assertTrue(Boolean.valueOf(a.getUserTokenFilter()));
     }
 

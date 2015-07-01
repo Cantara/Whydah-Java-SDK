@@ -5,15 +5,15 @@ import java.io.Serializable;
 /**
  * @author <a href="mailto:erik-dev@fjas.no">Erik Drolshammer</a> 2015-01-23
  */
-public class Role implements Serializable {
+public class AppplicationRole implements Serializable {
     private static final long serialVersionUID = -8050935915438584578L;
     private String id;
     private String name;
 
-    private Role() {
+    private AppplicationRole() {
     }
 
-    public Role(String id, String name) {
+    public AppplicationRole(String id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -37,7 +37,7 @@ public class Role implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Role role = (Role) o;
+        AppplicationRole role = (AppplicationRole) o;
 
         if (!id.equals(role.id)) return false;
         if (!name.equals(role.name)) return false;

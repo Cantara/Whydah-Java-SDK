@@ -26,21 +26,21 @@ public class ApplicationSerializerTest {
         app1.setDescription("description of application");
         app1.setApplicationUrl("https://webtest.exapmle.com/test.png");
         app1.setLogoUrl("https://webtest.example.com");
-        app1.setSecurityLevel("0");
-        app1.setSecret("veryVerySecret");
-        app1.addRole(new Role("roleId1", "roleName1"));
+        app1.addRole(new AppplicationRole("roleId1", "roleName1"));
         app1.addOrganizationName("organizationName1");
         app1.setDefaultRoleName("defaultRoleName");
         app1.setDefaultRoleName("roleName1");
         app1.setDefaultOrganizationName("defaultOrgName");
         app1.addOrganizationName(app1.getDefaultOrganizationName());
+
+        app1.getSecurity().setSecret("veryVerySecret");
     }
 
     @Test
     public void testToFromJson() throws Exception {
         String json = ApplicationSerializer.toJson(app1);
         String indented = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapper.readValue(json, Object.class));
-        log.debug(indented);
+        log.debug("\n" + indented);
 
         Application applicationFromJson = ApplicationSerializer.fromJson(json);
         assertEquals(app1, applicationFromJson);
@@ -51,7 +51,7 @@ public class ApplicationSerializerTest {
         Application app2 = new Application("appId2", "applicationName2");
         String json = ApplicationSerializer.toJson(Arrays.asList(new Application[]{app1, app2}));
         String indented = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapper.readValue(json, Object.class));
-        log.debug(indented);
+        log.debug("\n" + indented);
 
         List<Application> applications = ApplicationSerializer.fromJsonList(json);
         assertEquals(applications.size(), 2);

@@ -8,40 +8,29 @@ import java.util.List;
  *
  * DTO for Application.
  *
- * Erik's notes:
- *
- * applications
- *      application, applicationID, name
- *          relations   (organisation)
- *              relation1, id, name
- *                  properties / hashmap (mappet tidligere til roller)
- *              relation2, id, name
- *                  properties / hashmap
- *
-* @author <a href="mailto:erik-dev@fjas.no">Erik Drolshammer</a> 2015-06-30
+ * @author <a href="mailto:erik-dev@fjas.no">Erik Drolshammer</a> 2015-06-30
 */
 public class Application implements Serializable {
-    private static final long serialVersionUID = -3784954322543961744L;
+    private static final long serialVersionUID = -3045715282910406580L;
     private String id;
-    private String name;            // /sso/welcome and applicationToken
+    private String name;            // |/sso/welcome and applicationToken
     private String description;     // /sso/welcome
     private String applicationUrl;  // /sso/welcome
     private String logoUrl;         // /sso/welcome
 
-    //private Map security;
-
-    private String userTokenFilter; // default true, false will send userTokens with roles for all applications
-    private String securityLevel;    //default 0 - no mimimum security level - Minimum UserToken security level allowed to use application
-
-    private String secret;    // TODO  to be moved to security/crypto poart of datastructure
-
     //list roleNames
-    private List<Role> roles;   //availableRoleNames - convenience list of predefined rolenames
+    private List<AppplicationRole> roles;   //availableRoleNames - convenience list of predefined rolenames
     private List<String> organizationNames;  //availableOrganizationNames - convenience list of predefined rolenames
 
-    //defaults Map defaults
     private String defaultRoleName;     //roleName - the default rolename assigned upon new (UserRole) access to the application
     private String defaultOrganizationName; // - the default organizationName  assigned upon new (UserRole) access to the application
+
+    /**
+     *  default true, false will send userTokens with roles for all applications
+     */
+    private String userTokenFilter; //
+
+    private ApplicationSecurity security;
 
 
     private Application() {
@@ -53,10 +42,10 @@ public class Application implements Serializable {
         this.roles = new ArrayList<>();
         this.organizationNames = new ArrayList<>();
         this.userTokenFilter = "true";
-        this.securityLevel="0";
+        this.security = new ApplicationSecurity();
     }
 
-    public void addRole(Role role) {
+    public void addRole(AppplicationRole role) {
         roles.add(role);
     }
     public void addOrganizationName(String organizationName) {
@@ -78,16 +67,7 @@ public class Application implements Serializable {
     public void setLogoUrl(String logoUrl) {
         this.logoUrl = logoUrl;
     }
-    public void setUserTokenFilter(String userTokenFilter) {
-        this.userTokenFilter = userTokenFilter;
-    }
-    public void setSecurityLevel(String securityLevel) {
-        this.securityLevel = securityLevel;
-    }
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-    public void setRoles(List<Role> roles) {
+    public void setRoles(List<AppplicationRole> roles) {
         this.roles = roles;
     }
     public void setOrganizationNames(List<String> organizationNames) {
@@ -98,6 +78,12 @@ public class Application implements Serializable {
     }
     public void setDefaultOrganizationName(String defaultOrganizationName) {
         this.defaultOrganizationName = defaultOrganizationName;
+    }
+    public void setUserTokenFilter(String userTokenFilter) {
+        this.userTokenFilter = userTokenFilter;
+    }
+    public void setSecurity(ApplicationSecurity security) {
+        this.security = security;
     }
 
     public String getId() {
@@ -115,16 +101,7 @@ public class Application implements Serializable {
     public String getLogoUrl() {
         return logoUrl;
     }
-    public String getUserTokenFilter() {
-        return userTokenFilter;
-    }
-    public String getSecurityLevel() {
-        return securityLevel;
-    }
-    public String getSecret() {
-        return secret;
-    }
-    public List<Role> getRoles() {
+    public List<AppplicationRole> getRoles() {
         return roles;
     }
     public List<String> getOrganizationNames() {
@@ -135,6 +112,12 @@ public class Application implements Serializable {
     }
     public String getDefaultOrganizationName() {
         return defaultOrganizationName;
+    }
+    public String getUserTokenFilter() {
+        return userTokenFilter;
+    }
+    public ApplicationSecurity getSecurity() {
+        return security;
     }
 
     @Override
@@ -157,9 +140,6 @@ public class Application implements Serializable {
         if (organizationNames != null ? !organizationNames.equals(that.organizationNames) : that.organizationNames != null)
             return false;
         if (roles != null ? !roles.equals(that.roles) : that.roles != null) return false;
-        if (secret != null ? !secret.equals(that.secret) : that.secret != null) return false;
-        if (securityLevel != null ? !securityLevel.equals(that.securityLevel) : that.securityLevel != null)
-            return false;
         if (userTokenFilter != null ? !userTokenFilter.equals(that.userTokenFilter) : that.userTokenFilter != null)
             return false;
 
@@ -174,8 +154,6 @@ public class Application implements Serializable {
         result = 31 * result + (applicationUrl != null ? applicationUrl.hashCode() : 0);
         result = 31 * result + (logoUrl != null ? logoUrl.hashCode() : 0);
         result = 31 * result + (userTokenFilter != null ? userTokenFilter.hashCode() : 0);
-        result = 31 * result + (securityLevel != null ? securityLevel.hashCode() : 0);
-        result = 31 * result + (secret != null ? secret.hashCode() : 0);
         result = 31 * result + (roles != null ? roles.hashCode() : 0);
         result = 31 * result + (organizationNames != null ? organizationNames.hashCode() : 0);
         result = 31 * result + (defaultRoleName != null ? defaultRoleName.hashCode() : 0);
@@ -193,7 +171,7 @@ public class Application implements Serializable {
         String roleNamesString = null;
         if (roles != null) {
             StringBuilder strb = new StringBuilder();
-            for (Role role : roles) {
+            for (AppplicationRole role : roles) {
                 strb.append(role.getName()).append(",");
             }
             roleNamesString = strb.toString();
@@ -202,101 +180,14 @@ public class Application implements Serializable {
         return "Application{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", secret='" + secret + '\'' +
                 ", description='" + description + '\'' +
                 ", applicationUrl='" + applicationUrl + '\'' +
                 ", logoUrl='" + logoUrl + '\'' +
-                ", userTokenFilter='" + userTokenFilter + '\'' +
-                ", securityLevel='" + securityLevel + '\'' +
                 ", roles=" + roleNamesString +
                 ", defaultRoleName='" + defaultRoleName + '\'' +
                 ", organizationNames=" + availableOrgNamesString +
                 ", defaultOrganizationName='" + defaultOrganizationName + '\'' +
+                ", userTokenFilter='" + userTokenFilter + '\'' +
                 '}';
     }
-
-     /*
-    public List<String> getAvailableRoleNames() {
-        List<String> names = new ArrayList<>(roles.size());
-        for (Role role : roles) {
-            names.add(role.getName());
-        }
-        if (names.isEmpty()) {
-            return null;
-        }
-        return names;
-    }
-    */
-
-
-    /*
-    public String toXML() {
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?> \n " +
-                " <application>\n" +
-                "   <applicationid>" + id + "</applicationid>\n" +
-                "   <applicationname>" + name + "</applicationname>\n" +
-                "   <defaultrolename>" + defaultRoleName + "</defaultrolename>\n" +
-                "   <defaultorganizationname>" + defaultOrganizationName + "</defaultorganizationname>\n" +
-                "  " + buildAvailableOrgAsXml() + "\n" +
-                "  " + buildAvailableRoleAsXml() + "\n" +
-                " </application>\n";
-    }
-
-    private String buildAvailableOrgAsXml() {
-        if(organizationNames == null || organizationNames.size() == 0) {
-            return "<organizationsnames/>";
-        }else {
-            StringBuilder availableXml = new StringBuilder("<organizationsnames>\n");
-            for (String availableOrgName : organizationNames) {
-                availableXml.append("<orgName>").append(availableOrgName).append("</orgName>").append("\n");
-            }
-            availableXml.append("</organizationsnames>");
-            return availableXml.toString();
-        }
-    }
-
-    private String buildAvailableRoleAsXml() {
-        if (getAvailableRoleNames() == null || getAvailableRoleNames().size() == 0) {
-            return "<rolenames/>";
-        } else {
-            StringBuilder availableXml = new StringBuilder("<rolenames>\n");
-            for (String roleName : getAvailableRoleNames()) {
-                availableXml.append("<roleName>").append(roleName).append("</roleName>").append("\n");
-            }
-            availableXml.append("</rolenames>");
-            return availableXml.toString();
-        }
-    }
-    */
-
-
-    /*
-    public void addAvailableOrgName(String availableOrgName) {
-        if (organizationNames == null) {
-            organizationNames = new ArrayList();
-        }
-        if (availableOrgName != null) {
-            this.organizationNames.add(availableOrgName);
-        }
-    }
-    public void removeAvailableOrgName(String availableOrgName) {
-        if (organizationNames != null && availableOrgName != null) {
-            organizationNames.remove(availableOrgName);
-        }
-    }
-    public void addAvailableRoleName(String availableRoleName) {
-        if (availableRoleNames == null) {
-            availableRoleNames = new ArrayList();
-        }
-        if (availableRoleName != null) {
-            this.availableRoleNames.add(availableRoleName);
-        }
-    }
-
-    public void removeAvailableRoleName(String availableRoleName) {
-        if (availableRoleNames != null && availableRoleName != null) {
-            availableRoleNames.remove(availableRoleName);
-        }
-    }
-    */
 }
