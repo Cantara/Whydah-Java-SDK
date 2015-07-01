@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.appauth;
 
-import net.whydah.sso.application.ApplicationCredentialDummy;
+import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationHelper;
 
 import java.net.URI;
@@ -11,7 +11,7 @@ import java.net.URI;
 public class CommandLogonApplicationWithStubbedFallback extends CommandLogonApplication {
 
 
-    public CommandLogonApplicationWithStubbedFallback(URI tokenServiceUri, ApplicationCredentialDummy appCredential) {
+    public CommandLogonApplicationWithStubbedFallback(URI tokenServiceUri, ApplicationCredential appCredential) {
         super(tokenServiceUri, appCredential);
     }
 

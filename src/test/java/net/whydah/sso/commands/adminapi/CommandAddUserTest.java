@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.adminapi;
 
-import net.whydah.sso.application.ApplicationCredentialDummy;
+import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 public class CommandAddUserTest {
 
     private static URI tokenServiceUri;
-    private static ApplicationCredentialDummy appCredential;
+    private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
     private static boolean systemTest = false;
     private static URI userAdminServiceUri;
@@ -39,7 +39,7 @@ public class CommandAddUserTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        appCredential = new ApplicationCredentialDummy(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
+        appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
         tokenServiceUri = UriBuilder.fromUri(userTokenService).build();
         userCredential = new UserCredential(userName, password);
 

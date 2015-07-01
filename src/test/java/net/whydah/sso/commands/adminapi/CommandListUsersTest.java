@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.adminapi;
 
-import net.whydah.sso.application.ApplicationCredentialDummy;
+import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredentialWithStubbedFallback;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 public class CommandListUsersTest  {
 
     private static URI tokenServiceUri;
-    private static ApplicationCredentialDummy appCredential;
+    private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
     private static boolean systemtest = false;
     private static URI userAdminServiceUri;
@@ -31,7 +31,7 @@ public class CommandListUsersTest  {
 
     @BeforeClass
     public static void setup() throws Exception {
-        appCredential = new ApplicationCredentialDummy("15","33779936R6Jr47D4Hj5R6p9qT");
+        appCredential = new ApplicationCredential("15","33779936R6Jr47D4Hj5R6p9qT");
         tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
         userCredential = new UserCredential("useradmin", "useradmin42");
 

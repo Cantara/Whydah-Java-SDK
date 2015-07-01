@@ -1,6 +1,6 @@
 package net.whydah.sso.util;
 
-import net.whydah.sso.application.ApplicationCredentialDummy;
+import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.commands.adminapi.CommandListApplications;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
@@ -30,7 +30,7 @@ public class WhydahAdminUtil {
      * @param userCredential User access credentials
      * @return Json Representing the applications.
      */
-    public static String listRegisteredWhydahApplications(URI tokenServiceUri, URI userAdminServiceUri, ApplicationCredentialDummy appCredential, UserCredential userCredential){
+    public static String listRegisteredWhydahApplications(URI tokenServiceUri, URI userAdminServiceUri, ApplicationCredential appCredential, UserCredential userCredential){
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         String userticket = UUID.randomUUID().toString();

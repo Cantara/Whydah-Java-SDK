@@ -1,6 +1,7 @@
 package net.whydah.sso;
 
-import net.whydah.sso.application.ApplicationCredentialDummy;
+import net.whydah.sso.application.ApplicationCredential;
+import net.whydah.sso.application.ApplicationCredentialSerializer;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
@@ -48,10 +49,10 @@ public class WhydahUtil {
      */
     public static String logOnApplication(String stsURI, String applicationID, String applicationSecret) {
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
-        ApplicationCredentialDummy appCredential = new ApplicationCredentialDummy(applicationID, applicationSecret);
+        ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         if (myAppTokenXml == null || myAppTokenXml.length() < 10) {
-            log.error("logOnApplication - unable to create application session on " + stsURI + " for appCredentials: " + appCredential.toXML());
+            log.error("logOnApplication - unable to create application session on " + stsURI + " for appCredentials: " + ApplicationCredentialSerializer.toXML(appCredential));
 
         }
         return myAppTokenXml;
@@ -71,7 +72,7 @@ public class WhydahUtil {
      */
     public static String extendApplicationSession(String stsURI, String applicationID, String applicationSecret) {
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
-        ApplicationCredentialDummy appCredential = new ApplicationCredentialDummy(applicationID, applicationSecret);
+        ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         return myAppTokenXml;
 
@@ -80,7 +81,7 @@ public class WhydahUtil {
 
     public static String logOnApplicationAndUser(String stsURI, String applicationID, String applicationSecret, String username, String password) {
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
-        ApplicationCredentialDummy appCredential = new ApplicationCredentialDummy(applicationID, applicationSecret);
+        ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         UserCredential userCredential = new UserCredential(username, password);

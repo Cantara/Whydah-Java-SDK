@@ -1,7 +1,7 @@
 package net.whydah.sso.commands.appauth;
 
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import net.whydah.sso.application.ApplicationCredentialDummy;
+import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationHelper;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,14 +19,14 @@ import static org.junit.Assert.*;
 public class CommandLogonApplicationTest {
 
     private static URI tokenServiceUri;
-    private static ApplicationCredentialDummy appCredential;
+    private static ApplicationCredential appCredential;
     private static boolean integrationMode = false;
 
 
 
     @BeforeClass
     public static void setup() throws Exception {
-        appCredential = new ApplicationCredentialDummy("15","33779936R6Jr47D4Hj5R6p9qT");
+        appCredential = new ApplicationCredential("15","33779936R6Jr47D4Hj5R6p9qT");
         tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
         if (integrationMode) {
             tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
@@ -38,8 +38,7 @@ public class CommandLogonApplicationTest {
     @Test
     public void testApplicationLoginCommandFallback() throws Exception {
 
-        String applicationsecret = "false secret";
-        appCredential.setApplicationSecret(applicationsecret);
+        appCredential=new ApplicationCredential("15","false secret");
 
         String myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
         // System.out.println("ApplicationTokenID=" + myApplicationTokenID);
