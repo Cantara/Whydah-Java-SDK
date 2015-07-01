@@ -3,7 +3,7 @@ package net.whydah.sso.commands.appauth;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import net.whydah.sso.application.ApplicationCredential;
+import net.whydah.sso.application.ApplicationCredentialDummy;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-import static javax.ws.rs.core.Response.Status.*;
+import static javax.ws.rs.core.Response.Status.OK;
 
 /**
  * Created by totto on 12/1/14.
@@ -30,9 +30,9 @@ public class CommandLogonApplication extends HystrixCommand<String> {
 
     private static final Logger log = LoggerFactory.getLogger(CommandLogonApplication.class);
     private URI tokenServiceUri ;
-    private ApplicationCredential appCredential ;
+    private ApplicationCredentialDummy appCredential ;
 
-    public CommandLogonApplication(URI tokenServiceUri,ApplicationCredential appCredential) {
+    public CommandLogonApplication(URI tokenServiceUri,ApplicationCredentialDummy appCredential) {
         super(HystrixCommandGroupKey.Factory.asKey("SSOApplicationAuthGroup"));
         this.tokenServiceUri = tokenServiceUri;
         this.appCredential=appCredential;

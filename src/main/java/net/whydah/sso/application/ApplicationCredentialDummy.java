@@ -1,0 +1,47 @@
+package net.whydah.sso.application;
+
+/**
+ * Created by totto on 12/2/14.
+ */
+public class ApplicationCredentialDummy {
+
+    public ApplicationCredentialDummy(String applicationID, String applicationSecret) {
+        this.applicationID = applicationID;
+        this.applicationSecret = applicationSecret;
+    }
+
+    public ApplicationCredentialDummy() {
+    }
+
+    private String applicationID = "apphkjhkjhkjh";
+    private String applicationSecret = "nmnmnm,n,";
+
+
+    public String toXML() {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?> \n " +
+                "<applicationcredential>\n" +
+                "    <params>\n" +
+                "        <applicationID>" + getApplicationID() + "</applicationID>\n" +
+                "        <applicationSecret>" + getApplicationSecret() + "</applicationSecret>\n" +
+                "    </params> \n" +
+                "</applicationcredential>\n";
+    }
+
+
+    public void setApplicationID(String applicationID) {
+        this.applicationID = applicationID;
+    }
+
+    public void setApplicationSecret(String applicationSecret) {
+        this.applicationSecret = applicationSecret;
+    }
+
+    public String getApplicationID() {
+        return applicationID;
+    }
+
+    public String getApplicationSecret() {
+        return applicationSecret;
+    }
+
+}

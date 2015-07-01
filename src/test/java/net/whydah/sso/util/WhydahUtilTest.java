@@ -1,7 +1,7 @@
 package net.whydah.sso.util;
 
 import net.whydah.sso.WhydahUtil;
-import net.whydah.sso.application.ApplicationCredential;
+import net.whydah.sso.application.ApplicationCredentialDummy;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
@@ -43,7 +43,7 @@ public class WhydahUtilTest {
     @Before
     public void setUp() throws Exception {
         URI tokenServiceUri = UriBuilder.fromUri(userTokenServiceUri).build();
-        ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID,TEMPORARY_APPLICATION_SECRET);
+        ApplicationCredentialDummy appCredential = new ApplicationCredentialDummy(TEMPORARY_APPLICATION_ID,TEMPORARY_APPLICATION_SECRET);
         myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         userCredential = new UserCredential("", "altranadmin");

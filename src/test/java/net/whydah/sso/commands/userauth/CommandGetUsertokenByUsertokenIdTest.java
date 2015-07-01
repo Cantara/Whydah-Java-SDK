@@ -2,24 +2,17 @@ package net.whydah.sso.commands.userauth;
 
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import junit.framework.Assert;
-import net.whydah.sso.WhydahUtil;
-import net.whydah.sso.application.ApplicationCredential;
+import net.whydah.sso.application.ApplicationCredentialDummy;
 import net.whydah.sso.application.ApplicationXpathHelper;
-import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserXpathHelper;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
-import static junit.framework.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -27,7 +20,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class CommandGetUsertokenByUsertokenIdTest {
     private static URI tokenServiceUri;
-    private static ApplicationCredential appCredential;
+    private static ApplicationCredentialDummy appCredential;
     private static UserCredential userCredential;
     private static boolean integrationMode = false;
 
@@ -38,7 +31,7 @@ public class CommandGetUsertokenByUsertokenIdTest {
         if (integrationMode) {
             tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
         }
-        appCredential = new ApplicationCredential();
+        appCredential = new ApplicationCredentialDummy();
         appCredential.setApplicationID("15");
         String applicationsecret = "33779936R6Jr47D4Hj5R6p9qT";
 

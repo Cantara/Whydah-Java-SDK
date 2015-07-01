@@ -1,18 +1,17 @@
 package net.whydah.sso.commands.appauth;
 
-import net.whydah.sso.application.ApplicationCredential;
+import net.whydah.sso.application.ApplicationCredentialDummy;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.user.UserCredential;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.Ignore;
-import static org.junit.Assert.assertTrue;
-
+import org.junit.Test;
 import org.slf4j.Logger;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 
+import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -43,7 +42,7 @@ public class CommandLogonApplicationIntegrationTest {
     @Ignore
     @Test
     public void testLogonApplication() throws Exception{
-        ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID,TEMPORARY_APPLICATION_SECRET);
+        ApplicationCredentialDummy appCredential = new ApplicationCredentialDummy(TEMPORARY_APPLICATION_ID,TEMPORARY_APPLICATION_SECRET);
         myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         assertTrue(myApplicationTokenID!=null && myApplicationTokenID.length()>5);

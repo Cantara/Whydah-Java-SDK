@@ -1,11 +1,14 @@
 package net.whydah.sso.util;
 
 import net.whydah.sso.WhydahUtil;
-import net.whydah.sso.application.ApplicationCredential;
+import net.whydah.sso.application.ApplicationCredentialDummy;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.user.*;
+import net.whydah.sso.user.UserCredential;
+import net.whydah.sso.user.UserRole;
+import net.whydah.sso.user.UserRoleXpathHelper;
+import net.whydah.sso.user.UserXpathHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +51,7 @@ public class UserTokenUtilTest {
     public void setUp() throws Exception {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
             tokenServiceUri = UriBuilder.fromUri(userTokenServiceUri).build();
-            ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
+            ApplicationCredentialDummy appCredential = new ApplicationCredentialDummy(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
             myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
             myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             userCredential = new UserCredential(userName, password);

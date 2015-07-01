@@ -41,7 +41,6 @@ public class CommandListApplications extends HystrixCommand<String> {
     @Override
     protected String run() {
         log.trace("CommandListApplications - myAppTokenId={}", myAppTokenId);
-
         Client tokenServiceClient = ClientBuilder.newClient();
 
         WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/adminapplication/applications");

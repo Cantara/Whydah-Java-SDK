@@ -1,9 +1,8 @@
 package net.whydah.sso.commands.appauth;
 
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import net.whydah.sso.application.ApplicationCredential;
+import net.whydah.sso.application.ApplicationCredentialDummy;
 import net.whydah.sso.application.ApplicationHelper;
-import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import rx.Observable;
@@ -12,9 +11,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.concurrent.Future;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 /**
  * Created by totto on 12/2/14.
@@ -22,14 +19,14 @@ import static org.junit.Assert.assertFalse;
 public class CommandLogonApplicationTest {
 
     private static URI tokenServiceUri;
-    private static ApplicationCredential appCredential;
+    private static ApplicationCredentialDummy appCredential;
     private static boolean integrationMode = false;
 
 
 
     @BeforeClass
     public static void setup() throws Exception {
-        appCredential = new ApplicationCredential("15","33779936R6Jr47D4Hj5R6p9qT");
+        appCredential = new ApplicationCredentialDummy("15","33779936R6Jr47D4Hj5R6p9qT");
         tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
         if (integrationMode) {
             tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
