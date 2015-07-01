@@ -12,26 +12,36 @@ public class ApplicationSecurity implements Serializable {
 
     /**
      * The minimum security level for user and application tokens allowed to use application.
-     * Default 0 - no minimum security level.
+     * Legal security level values are: 0, 1, 2, 3, 4, 5
+     * Default 0 - minimum security level is 0.  .
      */
     private String minSecurityLevel;
     /**
      * The minimum DEFCON level an application accepts to have session under.
+     * Defaults to DEFCON5 - all clear sessions only
      */
     private String minDEFCON;
     /**
      * max length of a application and user session for a given application
+     *
+     * Defaults to 60*60*24 = 24 hours
      */
     private String maxSessionTimoutSeconds;
     /**
      * The ip addresses/ip ranges we accept an application to send requests from to this application.
+     *
+     * Defalts to no check setting
+     *
      */
     private List<String> allowedIpAddresses;
 
     /**
-     *  default true, false will send userTokens with roles for all applications
+     *  default true, false will send userTokens with roles for all applications and is reserved for
+     *  coordinnating and administrating applications
+     *  
      */
     private String userTokenFilter; //
+
 
     //authentication info
     private String secret;    // TODO extend
