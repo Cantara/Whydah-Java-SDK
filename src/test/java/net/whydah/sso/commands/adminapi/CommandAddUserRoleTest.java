@@ -1,23 +1,19 @@
 package net.whydah.sso.commands.adminapi;
 
-import net.whydah.sso.WhydahUtil;
 import net.whydah.sso.application.ApplicationCredential;
-import net.whydah.sso.application.ApplicationHelper;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
-import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredentialWithStubbedFallback;
 import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserRole;
 import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.util.SystemTestUtil;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertNotNull;
@@ -56,35 +52,41 @@ public class CommandAddUserRoleTest {
     }
 
 
-
+    /**
+     * Fails because no rebuild of active STS cache when new roles are added
+     * @throws Exception
+     */
     @Ignore
     @Test
     public void testAddUserRole() throws Exception {
 
-        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
-        String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-        assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
-        String userticket = UUID.randomUUID().toString();
-        String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
-        String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-        String uId = UserXpathHelper.getUserIdFromUserTokenXml(userToken);
-        assertTrue(userTokenId != null && userTokenId.length() > 5);
+        if (!SystemTestUtil.noLocalWhydahRunning()) {
+
+            String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+            String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
+            assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
+            String userticket = UUID.randomUUID().toString();
+            String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
+            String userTokenId = UserXpathHelper.getUserTokenId(userToken);
+            String uId = UserXpathHelper.getUserIdFromUserTokenXml(userToken);
+            assertTrue(userTokenId != null && userTokenId.length() > 5);
 
 
-        String userRoleJson = getTestNewUserRole(UserXpathHelper.getUserIdFromUserTokenXml(userToken), myApplicationTokenID);
-        // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
-        String userAddRoleResult = new CommandAddUserRole(userAdminServiceUri, myApplicationTokenID, userTokenId, uId, userRoleJson).execute();
-        System.out.println("userAddRoleResult:" + userAddRoleResult);
-        assertNotNull(userAddRoleResult);
+            String userRoleJson = getTestNewUserRole(UserXpathHelper.getUserIdFromUserTokenXml(userToken), myApplicationTokenID);
+            // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
+            String userAddRoleResult = new CommandAddUserRole(userAdminServiceUri, myApplicationTokenID, userTokenId, uId, userRoleJson).execute();
+            System.out.println("userAddRoleResult:" + userAddRoleResult);
+            assertNotNull(userAddRoleResult);
 
-        // Force update with new role
-        String userToken2 = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
-        System.out.println("userToken2:" + userToken2);
+            // Force update with new role
+            String userToken2 = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
+            System.out.println("userToken2:" + userToken2);
 
-        String applicationsJson = new CommandListApplications(userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
-        System.out.println("applicationsJson=" + applicationsJson);
+            String applicationsJson = new CommandListApplications(userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
+            System.out.println("applicationsJson=" + applicationsJson);
 //        assertNotNull(applicationsJson);
 //        assertTrue(applicationsJson.equalsIgnoreCase(ApplicationHelper.getDummyAppllicationListJson()));
+        }
 
     }
 

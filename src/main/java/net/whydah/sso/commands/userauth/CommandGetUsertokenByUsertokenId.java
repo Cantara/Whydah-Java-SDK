@@ -86,11 +86,5 @@ public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
 
     }
 
-        @Override
-        protected String getFallback() {
-        return null;
-    }
-
-
 
     }

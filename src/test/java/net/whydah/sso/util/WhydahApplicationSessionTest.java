@@ -28,17 +28,20 @@ public class WhydahApplicationSessionTest {
 
     @Ignore
     @Test
-    public void testTimeoutOnLocahost() throws Exception{
-        WhydahApplicationSession applicationSession = new WhydahApplicationSession("http://localhost:9998/tokenservice","15","33779936R6Jr47D4Hj5R6p9qT");
-        String appToken=applicationSession.getActiveApplicationToken();
-        Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationSession.getActiveApplicationToken());
-        System.out.println("Application expires in "+expires+" seconds");
-        assertTrue(!applicationSession.expiresBeforeNextSchedule(expires));
-        System.out.println("Thread waiting to expire...  (will take "+expires+" seconds...)");
-        Thread.sleep(expires * 1000);
-        // Should be marked timeout
-        assertTrue(applicationSession.expiresBeforeNextSchedule(expires));
-        // Session should have been renewed and given a new applicationTokenID
-        assertFalse(appToken.equals(applicationSession.getActiveApplicationToken()));
+    public void testTimeoutOnLocahost() throws Exception {
+        if (!SystemTestUtil.noLocalWhydahRunning()) {
+
+            WhydahApplicationSession applicationSession = new WhydahApplicationSession("http://localhost:9998/tokenservice", "15", "33779936R6Jr47D4Hj5R6p9qT");
+            String appToken = applicationSession.getActiveApplicationToken();
+            Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationSession.getActiveApplicationToken());
+            System.out.println("Application expires in " + expires + " seconds");
+            assertTrue(!applicationSession.expiresBeforeNextSchedule(expires));
+            System.out.println("Thread waiting to expire...  (will take " + expires + " seconds...)");
+            Thread.sleep(expires * 1000);
+            // Should be marked timeout
+            assertTrue(applicationSession.expiresBeforeNextSchedule(expires));
+            // Session should have been renewed and given a new applicationTokenID
+            assertFalse(appToken.equals(applicationSession.getActiveApplicationToken()));
+        }
     }
 }

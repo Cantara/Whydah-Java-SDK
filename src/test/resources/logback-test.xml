@@ -7,7 +7,7 @@
     </appender>
 
     <logger name="com.netflix.hystrix" level="WARN" />
-    <logger name="net.whydah.sso" level="INFO" />
+    <logger name="net.whydah.sso" level="trace" />
     <logger name="net.whydah.sso.application" level="trace" />
     <logger name="net.whydah.sso.user" level="trace" />
     <logger name="net.whydah.sso.util" level="trace" />

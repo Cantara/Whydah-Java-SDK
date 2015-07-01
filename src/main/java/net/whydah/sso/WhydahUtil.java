@@ -188,7 +188,7 @@ public class WhydahUtil {
         return userRoles;
     }
 
-    public static String getUsertokenByUsertokeniId(String stsUri, String myAppTokenId, String myAppTokenXml ,String userTokenId) {
+    public static String getUserTokenByUserTokenId(String stsUri, String myAppTokenId, String myAppTokenXml ,String userTokenId) {
         URI tokenServiceUri = UriBuilder.fromUri(stsUri).build();
         CommandGetUsertokenByUsertokenId command = new CommandGetUsertokenByUsertokenId(tokenServiceUri,myAppTokenId,myAppTokenXml, userTokenId);
         String userTokenXml = command.execute();
