@@ -9,7 +9,6 @@ import net.whydah.sso.user.UserRole;
 import net.whydah.sso.user.UserXpathHelper;
 import net.whydah.sso.util.SystemTestUtil;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.UriBuilder;
@@ -23,16 +22,15 @@ import static org.junit.Assert.assertTrue;
  * Created by totto on 29.06.15.
  */
 public class CommandAddUserRoleTest {
+    public static String TEMPORARY_APPLICATION_ID = "11";//"11";
+    public static String TEMPORARY_APPLICATION_SECRET = "6r46g3q986Ep6By7B9J46m96D";
+    public static String userName = "admin";
+    public static String password = "whydahadmin";
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
     private static boolean systemTest = false;
     private static URI userAdminServiceUri;
-    public static String TEMPORARY_APPLICATION_ID = "11";//"11";
-    public static String TEMPORARY_APPLICATION_SECRET = "6r46g3q986Ep6By7B9J46m96D";
-    public static String userName = "admin";
-    public static String password = "whydahadmin";
-
     private static String userAdminService = "http://localhost:9992/useradminservice";
     private static String userTokenService = "http://localhost:9998/tokenservice";
 
@@ -71,7 +69,7 @@ public class CommandAddUserRoleTest {
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
 
-            String userRoleJson = getTestNewUserRole(UserXpathHelper.getUserIdFromUserTokenXml(userToken), myApplicationTokenID);
+            String userRoleJson = getTestNewUserRole(UserXpathHelper.getUserIdFromUserTokenXml(userToken), TEMPORARY_APPLICATION_ID);
             // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
             String userAddRoleResult = new CommandAddUserRole(userAdminServiceUri, myApplicationTokenID, userTokenId, uId, userRoleJson).execute();
             System.out.println("userAddRoleResult:" + userAddRoleResult);
@@ -80,9 +78,11 @@ public class CommandAddUserRoleTest {
             // Force update with new role
             String userToken2 = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
             System.out.println("userToken2:" + userToken2);
+            assertTrue(userToken2.length() > userToken.length());
 
             String applicationsJson = new CommandListApplications(userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
             System.out.println("applicationsJson=" + applicationsJson);
+            assertNotNull(applicationsJson);
 //        assertNotNull(applicationsJson);
 //        assertTrue(applicationsJson.equalsIgnoreCase(ApplicationHelper.getDummyAppllicationListJson()));
         }
@@ -90,7 +90,7 @@ public class CommandAddUserRoleTest {
     }
 
     private String getTestNewUserRole(String userTokenId, String applicationId) {
-        UserRole role = new UserRole(userTokenId, applicationId, "TestOrg", "TestRolename", "testRoleValue");
+        UserRole role = new UserRole(userTokenId, applicationId, "TestOrg" + UUID.randomUUID(), "TestRolename" + UUID.randomUUID(), "testRoleValue");
 
         return role.toJson();
 
