@@ -56,6 +56,15 @@ public class UserXpathHelper {
         }
     }
 
+    public static String getRoleNamesFromUserToken(String userTokenXml) {
+        if (userTokenXml == null) {
+            log.debug("userTokenXml was empty, so returning null.");
+            return null;
+        }
+        return findValue(userTokenXml, "/usertoken/*/role/@name");
+    }
+
+
     public static String getUserTokenId(String userTokenXml) {
         String userTokenId = "";
         if (userTokenXml == null) {
