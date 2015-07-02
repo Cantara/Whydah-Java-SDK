@@ -8,6 +8,7 @@ import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.util.SystemTestUtil;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -34,12 +35,12 @@ public class CommandLogonUserByUserCredentialTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
+        tokenServiceUri = UriBuilder.fromUri("http://localhost:9998/tokenservice").build();
         if (integrationMode) {
             tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
         }
-        appCredential = new ApplicationCredential("15","33779936R6Jr47D4Hj5R6p9qT");
-        userCredential = new UserCredential("useradmin", "useradmin42");
+        appCredential = new ApplicationCredential("11", "6r46g3q986Ep6By7B9J46m96D");
+        userCredential = new UserCredential("admin", "whydahadmin");
 
         // HystrixCommandProperties.Setter().withFallbackEnabled(!integrationMode);
         HystrixRequestContext context = HystrixRequestContext.initializeContext();
@@ -87,7 +88,7 @@ public class CommandLogonUserByUserCredentialTest {
 
     @Test
     public void testFullCircleWithContextTest() {
-        if (integrationMode) {
+        if (!SystemTestUtil.noLocalWhydahRunning()) {
 
             HystrixRequestContext context = HystrixRequestContext.initializeContext();
             try {
@@ -127,19 +128,22 @@ public class CommandLogonUserByUserCredentialTest {
 
     }
 
-    @Ignore
+    @Ignore   // This is a longlivity test, so set as Ignore to be run manually from time to time
+    @Test
     public void testRegressionFullCircleWithContext() {
-        int successFull=0;
-        int nonSuccessFull=0;
-        for (int n = 0; n < 100; n++) {
-            try {
-                testFullCircleWithContext();
-                successFull++;
-            } catch (Exception e){
-                nonSuccessFull++;
+        if (!SystemTestUtil.noLocalWhydahRunning()) {
+            int successFull = 0;
+            int nonSuccessFull = 0;
+            for (int n = 0; n < 100; n++) {
+                try {
+                    testFullCircleWithContext();
+                    successFull++;
+                } catch (Exception e) {
+                    nonSuccessFull++;
+                }
             }
-        }
-        System.out.println("Regression result:  success:"+successFull+" Failures: "+nonSuccessFull);
+            System.out.println("Regression result:  success:" + successFull + " Failures: " + nonSuccessFull);
 
+        }
     }
 }
