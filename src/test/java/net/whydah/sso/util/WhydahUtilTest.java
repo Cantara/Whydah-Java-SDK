@@ -59,7 +59,9 @@ public class WhydahUtilTest {
 
     @Test
     public void testLogOnApplicationAndUser() throws Exception {
-        assertNotNull(adminUserTokenId);
+        if (!SystemTestUtil.noLocalWhydahRunning()) {
+            assertNotNull(adminUserTokenId);
+        }
 
     }
 
