@@ -15,8 +15,16 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ApplicationXpathHelperTest {
 
     private static final Logger log = getLogger(ApplicationXpathHelperTest.class);
-
-
+    private static String applicationTokenXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?> \n" +
+            "  <applicationtoken>\n" +
+            "     <params>\n" +
+            "         <applicationtokenID>757b505cfd34c64c85ca5b5690ee5293</applicationtokenID>\n" +
+            "         <applicationid>201</applicationid>\n" +
+            "         <applicationname></applicationname>\n" +
+            "         <expires>1435242569010</expires>\n" +
+            "     </params> \n" +
+            "     <Url type=\"application/xml\" method=\"POST\"                 template=\"http://localhost:9998/tokenservice/user/757b505cfd34c64c85ca5b5690ee5293/get_usertoken_by_usertokenid\"/> \n" +
+            " </applicationtoken>";
 
     @Before
     public void setUp() throws Exception {
@@ -39,15 +47,13 @@ public class ApplicationXpathHelperTest {
     public void testGetUserRoleFromUserToken() throws Exception {
         String applications[] = ApplicationXpathHelper.getApplicationNamesFromApplicationsJson(ApplicationHelper.getDummyAppllicationListJson());
         System.out.println("Found applications "+applications.length);
-        assertTrue(7 == applications.length);
-        assertTrue("SecurityTokenService".equalsIgnoreCase(applications[0]));
+        assertTrue(7 < applications.length);
+        assertTrue("ACS".equalsIgnoreCase(applications[0]));
         assertTrue("m2Circle".equalsIgnoreCase(applications[6]));
         for(String s : applications)
             System.out.println("ApplicationName: "+s);
 
     }
-
-
 
     @Ignore   // TODO  Make this jsonpath work..
     @Test
@@ -56,17 +62,6 @@ public class ApplicationXpathHelperTest {
             System.out.println("ApplicationName: " + applicationName);
 
     }
-
-    private static String applicationTokenXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?> \n" +
-            "  <applicationtoken>\n" +
-            "     <params>\n" +
-            "         <applicationtokenID>757b505cfd34c64c85ca5b5690ee5293</applicationtokenID>\n" +
-            "         <applicationid>201</applicationid>\n" +
-            "         <applicationname></applicationname>\n" +
-            "         <expires>1435242569010</expires>\n" +
-            "     </params> \n" +
-            "     <Url type=\"application/xml\" method=\"POST\"                 template=\"http://localhost:9998/tokenservice/user/757b505cfd34c64c85ca5b5690ee5293/get_usertoken_by_usertokenid\"/> \n" +
-            " </applicationtoken>";
 
 
 }
