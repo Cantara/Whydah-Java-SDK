@@ -1,5 +1,6 @@
 package net.whydah.sso.user.types;
 
+
 import java.io.Serializable;
 
 public class ApplicationRoleEntry implements Serializable {
@@ -70,6 +71,10 @@ public class ApplicationRoleEntry implements Serializable {
                 ", roleName='" + roleName + '\'' +
                 ", roleValue='" + roleValue + '\'' +
                 '}';
+    }
+
+    public String toJson() {
+        return "{\"applicationRoleName\":\"" + applicationName + "\",\"applicationRoleValue\":\"" + roleValue + "\",\"applicationId\":\"" + applicationId + "\",\"applicationName\":\"" + applicationName + "\",\"organizationName\":\"" + organizationName + "\"}";
     }
 
     @Override
