@@ -160,13 +160,13 @@ public class UserTokenMapper {
     private static UserToken parseUserAggregateJson(String userAggregateJSON) {
         try {
             DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
-            String uid = getUidFromUserAggregateJson("$.identity.uid", userAggregateJSON);
-            String userName = getUidFromUserAggregateJson("$.identity.username", userAggregateJSON);
-            String firstName = getUidFromUserAggregateJson("$.identity.firstName", userAggregateJSON);
-            String lastName = getUidFromUserAggregateJson("$.identity.lastName", userAggregateJSON);
-            String email = getUidFromUserAggregateJson("$.identity.email", userAggregateJSON);
-            String cellPhone = getUidFromUserAggregateJson("$.identity.cellPhone", userAggregateJSON);
-            String personRef = getUidFromUserAggregateJson("$.identity.personRef", userAggregateJSON);
+            String uid = getStringFromJsonpathExpression("$.identity.uid", userAggregateJSON);
+            String userName = getStringFromJsonpathExpression("$.identity.username", userAggregateJSON);
+            String firstName = getStringFromJsonpathExpression("$.identity.firstName", userAggregateJSON);
+            String lastName = getStringFromJsonpathExpression("$.identity.lastName", userAggregateJSON);
+            String email = getStringFromJsonpathExpression("$.identity.email", userAggregateJSON);
+            String cellPhone = getStringFromJsonpathExpression("$.identity.cellPhone", userAggregateJSON);
+            String personRef = getStringFromJsonpathExpression("$.identity.personRef", userAggregateJSON);
 
             // TODO  add rolemapping
             List<ApplicationRoleEntry> roleList = new ArrayList<>();
@@ -200,7 +200,7 @@ public class UserTokenMapper {
     }
 
 
-    public static String getUidFromUserAggregateJson(String expression, String jsonString) throws PathNotFoundException {
+    public static String getStringFromJsonpathExpression(String expression, String jsonString) throws PathNotFoundException {
         //String expression = "$.identity.uid";
         String value = "";
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(jsonString);

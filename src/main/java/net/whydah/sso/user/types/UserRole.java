@@ -1,11 +1,9 @@
 package net.whydah.sso.user.types;
 
-import net.whydah.sso.user.UserRoleJsonHelper;
+import net.whydah.sso.user.UserRoleMapper;
 import net.whydah.sso.user.UserRoleXpathHelper;
 
-/**
- * Created by baardl on 19.06.15.
- */
+// TODO  merge with ApplicationRoleEntry
 public class UserRole {
 
     private final String userName;
@@ -88,7 +86,7 @@ public class UserRole {
     }
 
     public String toJson(){
-        return UserRoleJsonHelper.toJson(this);
+        return UserRoleMapper.toJson(this);
     }
 
     private boolean isNotEmpty(String value) {

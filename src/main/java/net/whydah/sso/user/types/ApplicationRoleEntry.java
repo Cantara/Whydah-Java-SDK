@@ -3,6 +3,7 @@ package net.whydah.sso.user.types;
 import java.io.Serializable;
 
 
+// TODO  merge with userRole
 public class ApplicationRoleEntry implements Serializable {
     private static final long serialVersionUID = -1557134588400171584L;
     private String applicationId;
