@@ -1,12 +1,12 @@
 package net.whydah.sso.user.types;
 
-
 import java.io.Serializable;
+
 
 public class ApplicationRoleEntry implements Serializable {
     private static final long serialVersionUID = -1557134588400171584L;
     private String applicationId;
-    private String applicationName;
+    private String applicationRoleName;
     private String organizationName;
     private String roleName;
     private String roleValue;
@@ -14,9 +14,9 @@ public class ApplicationRoleEntry implements Serializable {
     public ApplicationRoleEntry() {
     }
 
-    public ApplicationRoleEntry(String applicationId, String applicationName, String organizationName, String roleName, String roleValue) {
+    public ApplicationRoleEntry(String applicationId, String applicationRoleName, String organizationName, String roleName, String roleValue) {
         this.applicationId = applicationId;
-        this.applicationName = applicationName;
+        this.applicationRoleName = applicationRoleName;
         this.organizationName = organizationName;
         this.roleName = roleName;
         this.roleValue = roleValue;
@@ -30,12 +30,12 @@ public class ApplicationRoleEntry implements Serializable {
         this.applicationId = applicationId;
     }
 
-    public String getApplicationName() {
-        return applicationName;
+    public String getApplicationRoleName() {
+        return applicationRoleName;
     }
 
-    public void setApplicationName(String applicationName) {
-        this.applicationName = applicationName;
+    public void setApplicationRoleName(String applicationRoleName) {
+        this.applicationRoleName = applicationRoleName;
     }
 
     public String getOrganizationName() {
@@ -66,7 +66,7 @@ public class ApplicationRoleEntry implements Serializable {
     public String toString() {
         return "ApplicationRoleEntry{" +
                 "applicationId='" + applicationId + '\'' +
-                ", applicationName='" + applicationName + '\'' +
+                ", applicationRoleName='" + applicationRoleName + '\'' +
                 ", organizationName='" + organizationName + '\'' +
                 ", roleName='" + roleName + '\'' +
                 ", roleValue='" + roleValue + '\'' +
@@ -74,7 +74,7 @@ public class ApplicationRoleEntry implements Serializable {
     }
 
     public String toJson() {
-        return "{\"applicationRoleName\":\"" + applicationName + "\",\"applicationRoleValue\":\"" + roleValue + "\",\"applicationId\":\"" + applicationId + "\",\"applicationName\":\"" + applicationName + "\",\"organizationName\":\"" + organizationName + "\"}";
+        return "{\"applicationRoleName\":\"" + applicationRoleName + "\",\"applicationRoleValue\":\"" + roleValue + "\",\"applicationId\":\"" + applicationId + "\",\"organizationName\":\"" + organizationName + "\"}";
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ApplicationRoleEntry implements Serializable {
         ApplicationRoleEntry roleEntry = (ApplicationRoleEntry) o;
 
         if (!applicationId.equals(roleEntry.applicationId)) return false;
-        if (applicationName != null ? !applicationName.equals(roleEntry.applicationName) : roleEntry.applicationName != null)
+        if (applicationRoleName != null ? !applicationRoleName.equals(roleEntry.applicationRoleName) : roleEntry.applicationRoleName != null)
             return false;
         if (!organizationName.equals(roleEntry.organizationName)) return false;
         if (!roleName.equals(roleEntry.roleName)) return false;
@@ -97,7 +97,7 @@ public class ApplicationRoleEntry implements Serializable {
     @Override
     public int hashCode() {
         int result = applicationId.hashCode();
-        result = 31 * result + (applicationName != null ? applicationName.hashCode() : 0);
+        result = 31 * result + (applicationRoleName != null ? applicationRoleName.hashCode() : 0);
         result = 31 * result + organizationName.hashCode();
         result = 31 * result + roleName.hashCode();
         result = 31 * result + roleValue.hashCode();
