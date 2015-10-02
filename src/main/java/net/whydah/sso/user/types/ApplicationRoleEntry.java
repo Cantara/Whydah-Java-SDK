@@ -1,4 +1,4 @@
-package net.whydah.sso.user;
+package net.whydah.sso.user.types;
 
 import java.io.Serializable;
 

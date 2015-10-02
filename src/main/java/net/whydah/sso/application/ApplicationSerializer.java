@@ -2,6 +2,7 @@ package net.whydah.sso.application;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.whydah.sso.application.types.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

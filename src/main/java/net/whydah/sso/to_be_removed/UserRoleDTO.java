@@ -1,4 +1,6 @@
-package net.whydah.sso.user;
+package net.whydah.sso.to_be_removed;
+
+import net.whydah.sso.user.types.UserRole;
 
 /**
  * Created by baardl on 23.06.15.

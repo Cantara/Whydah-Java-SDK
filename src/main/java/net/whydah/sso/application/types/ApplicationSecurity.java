@@ -1,4 +1,4 @@
-package net.whydah.sso.application;
+package net.whydah.sso.application.types;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -56,42 +56,52 @@ public class ApplicationSecurity implements Serializable {
         this.userTokenFilter = "true";
     }
 
-    public void setMinSecurityLevel(String minSecurityLevel) {
-        this.minSecurityLevel = minSecurityLevel;
-    }
-    public void setMinDEFCON(String minDEFCON) {
-        this.minDEFCON = minDEFCON;
-    }
-    public void setMaxSessionTimoutSeconds(String maxSessionTimoutSeconds) {
-        this.maxSessionTimoutSeconds = maxSessionTimoutSeconds;
-    }
-    public void setAllowedIpAddresses(List<String> allowedIpAddresses) {
-        this.allowedIpAddresses = allowedIpAddresses;
-    }
-    public void setUserTokenFilter(String userTokenFilter) {
-        this.userTokenFilter = userTokenFilter;
-    }
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
     public String getMinSecurityLevel() {
         return minSecurityLevel;
     }
+
+    public void setMinSecurityLevel(String minSecurityLevel) {
+        this.minSecurityLevel = minSecurityLevel;
+    }
+
     public String getMinDEFCON() {
         return minDEFCON;
     }
+
+    public void setMinDEFCON(String minDEFCON) {
+        this.minDEFCON = minDEFCON;
+    }
+
     public String getMaxSessionTimoutSeconds() {
         return maxSessionTimoutSeconds;
     }
+
+    public void setMaxSessionTimoutSeconds(String maxSessionTimoutSeconds) {
+        this.maxSessionTimoutSeconds = maxSessionTimoutSeconds;
+    }
+
     public List<String> getAllowedIpAddresses() {
         return allowedIpAddresses;
     }
+
+    public void setAllowedIpAddresses(List<String> allowedIpAddresses) {
+        this.allowedIpAddresses = allowedIpAddresses;
+    }
+
     public String getUserTokenFilter() {
         return userTokenFilter;
     }
+
+    public void setUserTokenFilter(String userTokenFilter) {
+        this.userTokenFilter = userTokenFilter;
+    }
+
     public String getSecret() {
         return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
     @Override

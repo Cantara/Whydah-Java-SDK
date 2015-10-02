@@ -1,7 +1,8 @@
-package net.whydah.sso;
+package net.whydah.sso.session;
 
-import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.util.WhydahUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,10 +17,9 @@ import java.util.concurrent.TimeUnit;
 public class WhydahUserSession {
 
 
+    private static final Logger log = LoggerFactory.getLogger(WhydahUserSession.class);
         private WhydahApplicationSession was;
         private UserCredential userCredential;
-        private static final Logger log = LoggerFactory.getLogger(WhydahUserSession.class);
-
         private String userTokenId;
         private String userTokenXML;
 
@@ -47,6 +47,16 @@ public class WhydahUserSession {
                     1,  60, TimeUnit.SECONDS );
         }
 
+    public static boolean expiresBeforeNextSchedule(Long timestamp) {
+
+        long i = System.currentTimeMillis();
+        long j = timestamp;
+        long diffSeconds = j - i;
+        if (diffSeconds < 60) {
+            return true;
+        }
+        return false;
+    }
 
         public String getActiveUserTokenId(){
             return userTokenId;
@@ -70,10 +80,9 @@ public class WhydahUserSession {
         return UserXpathHelper.hasRoleFromUserToken(userTokenXML, was.getActiveApplicationTokenId(), roleName);
     }
 
-
     private void renewWhydahUserSession(){
             log.info("Renew user session");
-            userTokenXML = WhydahUtil.logOnUser(was,userCredential) ;
+        userTokenXML = WhydahUtil.logOnUser(was, userCredential);
             if (!hasActiveSession()) {
                 log.error("Error, unable to initialize new user session, userTokenXML:"+userTokenXML);
                 for (int n=0;n<7 || hasActiveSession();n++){
@@ -106,17 +115,6 @@ public class WhydahUserSession {
             userTokenId = UserXpathHelper.getUserTokenId(this.userTokenXML);
         }
     }
-
-    public  static boolean expiresBeforeNextSchedule(Long timestamp){
-
-            long i = System.currentTimeMillis();
-            long j = timestamp;
-            long diffSeconds  = j-i;
-            if (diffSeconds<60){
-                return true;
-            }
-            return false;
-        }
 }
 
 

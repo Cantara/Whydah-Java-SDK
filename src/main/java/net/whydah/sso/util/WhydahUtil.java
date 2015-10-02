@@ -1,15 +1,16 @@
-package net.whydah.sso;
+package net.whydah.sso.util;
 
-import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationCredentialSerializer;
 import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.user.UserCredential;
-import net.whydah.sso.user.UserIdentityRepresentation;
-import net.whydah.sso.user.UserRole;
+import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.UserRoleXpathHelper;
+import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.user.types.UserIdentityRepresentation;
+import net.whydah.sso.user.types.UserRole;
 import org.slf4j.Logger;
 
 import javax.ws.rs.client.Client;

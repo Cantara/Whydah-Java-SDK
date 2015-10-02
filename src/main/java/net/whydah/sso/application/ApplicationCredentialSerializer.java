@@ -1,5 +1,6 @@
 package net.whydah.sso.application;
 
+import net.whydah.sso.application.types.ApplicationCredential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;

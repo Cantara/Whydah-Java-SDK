@@ -1,4 +1,4 @@
-package net.whydah.sso.application;
+package net.whydah.sso.application.types;
 
 /**
  * Created by totto on 12/2/14.

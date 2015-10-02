@@ -1,5 +1,6 @@
 package net.whydah.sso.user;
 
+import net.whydah.sso.user.types.UserRole;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;

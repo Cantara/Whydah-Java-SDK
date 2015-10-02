@@ -1,7 +1,7 @@
 package net.whydah.sso.commands.userauth;
 
-import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserHelper;
+import net.whydah.sso.user.types.UserCredential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

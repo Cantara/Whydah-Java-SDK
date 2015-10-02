@@ -4,6 +4,8 @@ package net.whydah.sso.user;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import net.whydah.sso.to_be_removed.UserRoleDTO;
+import net.whydah.sso.user.types.UserRole;
 
 import java.util.ArrayList;
 import java.util.List;

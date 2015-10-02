@@ -2,7 +2,7 @@ package net.whydah.sso.commands.adminapi;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
-import net.whydah.sso.user.UserCredential;
+import net.whydah.sso.user.types.UserCredential;
 import org.slf4j.Logger;
 
 import javax.ws.rs.client.Client;
@@ -12,8 +12,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-import static javax.ws.rs.core.Response.Status.*;
-
+import static javax.ws.rs.core.Response.Status.FORBIDDEN;
+import static javax.ws.rs.core.Response.Status.OK;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**

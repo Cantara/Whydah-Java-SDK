@@ -1,14 +1,13 @@
 package net.whydah.sso.util;
 
-import net.whydah.sso.WhydahUtil;
-import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.user.UserCredential;
-import net.whydah.sso.user.UserRole;
 import net.whydah.sso.user.UserRoleXpathHelper;
 import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.user.types.UserRole;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,17 +34,16 @@ public class UserTokenUtilTest {
     public static String password = "whydahadmin";
     private final String userAdminServiceUri = "http://localhost:9992/useradminservice";
     private final String userTokenServiceUri = "http://localhost:9998/tokenservice";
+    private final String orgName = "testOrg";
+    private final String roleName = "TestXXRoleName_" + UUID.randomUUID();
+    private final String roleName2 = "TestXXRoleName_" + UUID.randomUUID();
+    private final String roleValue = "true";
     private String myApplicationTokenID = null;
     private String myAppTokenXml = null;
     private URI tokenServiceUri = null;
     private UserCredential userCredential = null;
     private String adminUserTokenId = null;
     private String adminUserId = null;
-
-    private final String orgName = "testOrg";
-    private final String roleName = "TestXXRoleName_"+UUID.randomUUID();
-    private final String roleName2 = "TestXXRoleName_"+UUID.randomUUID();
-    private final String roleValue = "true";
 
     @Before
     public void setUp() throws Exception {

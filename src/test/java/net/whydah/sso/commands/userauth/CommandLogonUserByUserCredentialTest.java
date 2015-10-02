@@ -1,14 +1,14 @@
 package net.whydah.sso.commands.userauth;
 
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import net.whydah.sso.WhydahUtil;
-import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
-import net.whydah.sso.user.UserCredential;
 import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.SystemTestUtil;
+import net.whydah.sso.util.WhydahUtil;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;

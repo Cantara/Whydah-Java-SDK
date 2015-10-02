@@ -1,4 +1,6 @@
-package net.whydah.sso.application;
+package net.whydah.sso.application.types;
+
+import net.whydah.sso.application.ApplicationACL;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,20 +31,6 @@ public class Application implements Serializable {
     private List<ApplicationACL> acls;  // List of granted ACL for the application
 
 
-
-    public List<ApplicationACL> getAcl() {
-        return acls;
-    }
-
-    public void setAcl(List<ApplicationACL> acls) {
-        this.acls = acls;
-    }
-    public void addAcl(ApplicationACL acl) {
-         acls.add(acl);
-    }
-
-
-
     private Application() {
     }
 
@@ -55,6 +43,18 @@ public class Application implements Serializable {
         this.acls = new ArrayList<>();
     }
 
+    public List<ApplicationACL> getAcl() {
+        return acls;
+    }
+
+    public void setAcl(List<ApplicationACL> acls) {
+        this.acls = acls;
+    }
+
+    public void addAcl(ApplicationACL acl) {
+        acls.add(acl);
+    }
+
     public void addRole(ApplicationRole role) {
         roles.add(role);
     }
@@ -62,66 +62,84 @@ public class Application implements Serializable {
         organizationNames.add(organizationName);
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public void setApplicationUrl(String applicationUrl) {
-        this.applicationUrl = applicationUrl;
-    }
-    public void setLogoUrl(String logoUrl) {
-        this.logoUrl = logoUrl;
-    }
-    public void setRoles(List<ApplicationRole> roles) {
-        this.roles = roles;
-    }
-    public void setOrganizationNames(List<String> organizationNames) {
-        this.organizationNames = organizationNames;
-    }
-    public void setDefaultRoleName(String defaultRoleName) {
-        this.defaultRoleName = defaultRoleName;
-    }
-    public void setDefaultOrganizationName(String defaultOrganizationName) {
-        this.defaultOrganizationName = defaultOrganizationName;
-    }
-    public void setSecurity(ApplicationSecurity security) {
-        this.security = security;
-    }
-
     public String getId() {
         return id;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDescription() {
         return description;
     }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getApplicationUrl() {
         return applicationUrl;
     }
+
+    public void setApplicationUrl(String applicationUrl) {
+        this.applicationUrl = applicationUrl;
+    }
+
     public String getLogoUrl() {
         return logoUrl;
     }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
     public List<ApplicationRole> getRoles() {
         return roles;
     }
+
+    public void setRoles(List<ApplicationRole> roles) {
+        this.roles = roles;
+    }
+
     public List<String> getOrganizationNames() {
         return organizationNames;
     }
+
+    public void setOrganizationNames(List<String> organizationNames) {
+        this.organizationNames = organizationNames;
+    }
+
     public String getDefaultRoleName() {
         return defaultRoleName;
     }
+
+    public void setDefaultRoleName(String defaultRoleName) {
+        this.defaultRoleName = defaultRoleName;
+    }
+
     public String getDefaultOrganizationName() {
         return defaultOrganizationName;
     }
+
+    public void setDefaultOrganizationName(String defaultOrganizationName) {
+        this.defaultOrganizationName = defaultOrganizationName;
+    }
+
     public ApplicationSecurity getSecurity() {
         return security;
+    }
+
+    public void setSecurity(ApplicationSecurity security) {
+        this.security = security;
     }
 
     @Override

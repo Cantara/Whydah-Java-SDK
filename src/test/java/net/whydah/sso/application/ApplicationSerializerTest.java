@@ -1,6 +1,8 @@
 package net.whydah.sso.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.whydah.sso.application.types.Application;
+import net.whydah.sso.application.types.ApplicationRole;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;

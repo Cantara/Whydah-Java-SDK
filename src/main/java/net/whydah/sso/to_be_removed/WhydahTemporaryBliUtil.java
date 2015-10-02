@@ -1,6 +1,6 @@
-package net.whydah.sso;
+package net.whydah.sso.to_be_removed;
 
-import net.whydah.sso.user.UserCredential;
+import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.ExceptionUtil;
 import org.slf4j.Logger;
 

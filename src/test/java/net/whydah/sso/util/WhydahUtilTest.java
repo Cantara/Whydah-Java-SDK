@@ -1,14 +1,13 @@
 package net.whydah.sso.util;
 
-import net.whydah.sso.WhydahUtil;
-import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.user.UserCredential;
-import net.whydah.sso.user.UserIdentityRepresentation;
-import net.whydah.sso.user.UserRole;
 import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.user.types.UserIdentityRepresentation;
+import net.whydah.sso.user.types.UserRole;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;

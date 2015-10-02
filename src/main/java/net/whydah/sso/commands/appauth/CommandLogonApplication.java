@@ -3,9 +3,9 @@ package net.whydah.sso.commands.appauth;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationCredentialSerializer;
 import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.application.types.ApplicationCredential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

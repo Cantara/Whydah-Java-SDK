@@ -1,16 +1,18 @@
-package net.whydah.sso.user;
+package net.whydah.sso.user.types;
+
+import net.whydah.sso.user.UserXpathHelper;
 
 /**
  * Created by baardl on 19.06.15.
  */
 public class UserRole {
 
-    private String id = null;
-    private String userId = null;
     private final String userName;
     private final String applicationId;
     private final String orgName;
     private final String roleName;
+    private String id = null;
+    private String userId = null;
     private String roleValue;
 
 
@@ -27,6 +29,21 @@ public class UserRole {
         this.orgName = orgName;
         this.roleName = roleName;
         this.roleValue = roleValue;
+    }
+
+    public static UserRole fromXml(String roleXml) {
+
+        String id = UserXpathHelper.findValue(roleXml, "/application/id");
+        String userId = UserXpathHelper.findValue(roleXml, "/application/uid");
+        String appId = UserXpathHelper.findValue(roleXml, "/application/appId");
+        String appName = UserXpathHelper.findValue(roleXml, "/application/applicationName");
+        String orgName = UserXpathHelper.findValue(roleXml, "/application/orgName");
+        String roleName = UserXpathHelper.findValue(roleXml, "/application/roleName");
+        String roleValue = UserXpathHelper.findValue(roleXml, "/application/roleValue");
+        UserRole userRole = new UserRole(null, appId, orgName, roleName, roleValue);
+        userRole.setId(id);
+        userRole.setUserId(userId);
+        return userRole;
     }
 
     public String getUserName() {
@@ -97,20 +114,6 @@ public class UserRole {
 
         return json;
 
-    }
-    public static UserRole fromXml(String roleXml) {
-
-        String id = UserXpathHelper.findValue(roleXml,"/application/id");
-        String userId = UserXpathHelper.findValue(roleXml,"/application/uid");
-        String appId = UserXpathHelper.findValue(roleXml,"/application/appId");
-        String appName = UserXpathHelper.findValue(roleXml,"/application/applicationName");
-        String orgName = UserXpathHelper.findValue(roleXml,"/application/orgName");
-        String roleName = UserXpathHelper.findValue(roleXml,"/application/roleName");
-        String roleValue = UserXpathHelper.findValue(roleXml,"/application/roleValue");
-        UserRole userRole = new UserRole(null, appId,orgName,roleName,roleValue);
-        userRole.setId(id);
-        userRole.setUserId(userId);
-        return userRole;
     }
 
     private boolean isNotEmpty(String value) {

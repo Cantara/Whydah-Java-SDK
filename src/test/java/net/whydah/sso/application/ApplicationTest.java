@@ -1,5 +1,6 @@
 package net.whydah.sso.application;
 
+import net.whydah.sso.application.types.Application;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;

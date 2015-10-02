@@ -1,7 +1,7 @@
 package net.whydah.sso.commands.appauth;
 
-import net.whydah.sso.application.ApplicationCredential;
 import net.whydah.sso.application.ApplicationHelper;
+import net.whydah.sso.application.types.ApplicationCredential;
 
 import java.net.URI;
 

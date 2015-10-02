@@ -1,7 +1,7 @@
 package net.whydah.sso.util;
 
-import net.whydah.sso.WhydahApplicationSession;
 import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.session.WhydahApplicationSession;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;

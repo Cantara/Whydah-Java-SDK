@@ -2,7 +2,7 @@ package net.whydah.sso.commands.userauth;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
-import net.whydah.sso.user.UserCredential;
+import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

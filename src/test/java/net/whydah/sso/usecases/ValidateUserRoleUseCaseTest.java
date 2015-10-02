@@ -1,13 +1,13 @@
 package net.whydah.sso.usecases;
 
 
-import net.whydah.sso.WhydahApplicationSession;
-import net.whydah.sso.WhydahTemporaryBliUtil;
-import net.whydah.sso.WhydahUserSession;
-import net.whydah.sso.WhydahUtil;
-import net.whydah.sso.user.UserCredential;
+import net.whydah.sso.session.WhydahApplicationSession;
+import net.whydah.sso.session.WhydahUserSession;
+import net.whydah.sso.to_be_removed.WhydahTemporaryBliUtil;
 import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.SystemTestUtil;
+import net.whydah.sso.util.WhydahUtil;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

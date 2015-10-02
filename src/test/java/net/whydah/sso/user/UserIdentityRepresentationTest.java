@@ -1,5 +1,6 @@
 package net.whydah.sso.user;
 
+import net.whydah.sso.user.types.UserIdentityRepresentation;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -19,9 +20,10 @@ import static org.junit.Assert.assertEquals;
  */
 public class UserIdentityRepresentationTest {
 
+    private static final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     private String username = null;
     private UserIdentityRepresentation userIdentity = null;
-    private static final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
     @Before
     public void setUp() throws Exception {
         username = "_temp_username_" + System.currentTimeMillis();

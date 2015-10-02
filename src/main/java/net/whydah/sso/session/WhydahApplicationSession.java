@@ -1,6 +1,7 @@
-package net.whydah.sso;
+package net.whydah.sso.session;
 
 import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.util.WhydahUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,13 +17,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class WhydahApplicationSession {
 
+    private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
     private String sts;
     private String appId;
     private String appSecret;
-
     private String applicationTokenId;
     private String applicationTokenXML;
-    private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
 
 
     public WhydahApplicationSession() {
@@ -46,6 +46,17 @@ public class WhydahApplicationSession {
                 1, 50, TimeUnit.SECONDS);
     }
 
+    public static boolean expiresBeforeNextSchedule(Long timestamp) {
+
+        long i = System.currentTimeMillis();
+        long j = (timestamp);
+        long diffSeconds = j - i;
+        if (diffSeconds < 60) {
+            log.debug("re-new application session..");
+            return true;
+        }
+        return false;
+    }
 
     public String getActiveApplicationTokenId() {
         return applicationTokenId;
@@ -59,7 +70,6 @@ public class WhydahApplicationSession {
         return sts;
     }
 
-
     /*
     * @return true is session is active and working
      */
@@ -69,7 +79,6 @@ public class WhydahApplicationSession {
         }
         return true;
     }
-
 
     private void renewWhydahApplicationSession() {
         log.debug("Trying to renew applicationsession");
@@ -98,6 +107,7 @@ public class WhydahApplicationSession {
 
 
     }
+
     private void initializeWhydahApplicationSession() {
         log.info("Initializing new application session");
         applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
@@ -110,17 +120,5 @@ public class WhydahApplicationSession {
 //        applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
             applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
         }
-    }
-
-    public static boolean expiresBeforeNextSchedule(Long timestamp) {
-
-        long i = System.currentTimeMillis();
-        long j = (timestamp);
-        long diffSeconds = j - i;
-        if (diffSeconds < 60) {
-            log.debug("re-new application session..");
-            return true;
-        }
-        return false;
     }
 }
