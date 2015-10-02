@@ -40,37 +40,37 @@ public class ApplicationSerializerTest {
 
     @Test
     public void testToFromJson() throws Exception {
-        String json = ApplicationSerializer.toJson(app1);
+        String json = ApplicationMapper.toJson(app1);
         String indented = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapper.readValue(json, Object.class));
         log.debug("\n" + indented);
 
-        Application applicationFromJson = ApplicationSerializer.fromJson(json);
+        Application applicationFromJson = ApplicationMapper.fromJson(json);
         assertEquals(app1, applicationFromJson);
     }
 
     @Test
     public void testToApplicationList() throws Exception {
         Application app2 = new Application("appId2", "applicationName2");
-        String json = ApplicationSerializer.toJson(Arrays.asList(new Application[]{app1, app2}));
+        String json = ApplicationMapper.toJson(Arrays.asList(new Application[]{app1, app2}));
         String indented = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapper.readValue(json, Object.class));
         log.debug("\n" + indented);
 
-        List<Application> applications = ApplicationSerializer.fromJsonList(json);
+        List<Application> applications = ApplicationMapper.fromJsonList(json);
         assertEquals(applications.size(), 2);
     }
 
 
     @Test
     public void fromRealJson() throws Exception{
-        Application applicationFromJson = ApplicationSerializer.fromJson(ApplicationHelper.getDummyAppllicationJson());
-        log.debug(ApplicationSerializer.toJson(applicationFromJson));
+        Application applicationFromJson = ApplicationMapper.fromJson(ApplicationHelper.getDummyAppllicationJson());
+        log.debug(ApplicationMapper.toJson(applicationFromJson));
     }
 
     @Test
     public void fromRealJsonList() throws Exception{
-        List<Application> applications = ApplicationSerializer.fromJsonList(ApplicationHelper.getDummyAppllicationListJson());
+        List<Application> applications = ApplicationMapper.fromJsonList(ApplicationHelper.getDummyAppllicationListJson());
         for (Application application : applications) {
-            log.debug(ApplicationSerializer.toJson(application));
+            log.debug(ApplicationMapper.toJson(application));
         }
 
     }

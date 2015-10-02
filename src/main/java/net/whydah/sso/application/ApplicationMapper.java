@@ -14,8 +14,8 @@ import java.util.List;
  *
  * @author <a href="mailto:erik-dev@fjas.no">Erik Drolshammer</a> 2015-06-30
  */
-public class ApplicationSerializer {
-    private static final Logger log = LoggerFactory.getLogger(ApplicationSerializer.class);
+public class ApplicationMapper {
+    private static final Logger log = LoggerFactory.getLogger(ApplicationMapper.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static String toJson(Application application) {

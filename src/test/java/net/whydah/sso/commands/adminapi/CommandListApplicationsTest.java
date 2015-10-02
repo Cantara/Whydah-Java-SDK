@@ -1,7 +1,7 @@
 package net.whydah.sso.commands.adminapi;
 
 import net.whydah.sso.application.ApplicationHelper;
-import net.whydah.sso.application.ApplicationSerializer;
+import net.whydah.sso.application.ApplicationMapper;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.application.types.ApplicationCredential;
@@ -84,7 +84,7 @@ public class CommandListApplicationsTest {
             String applicationsJson = new CommandListApplications(userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
             System.out.println("applicationsJson=" + applicationsJson);
             assertTrue(applicationsJson.length() > 100);
-            List<Application> applications = ApplicationSerializer.fromJsonList(applicationsJson);
+            List<Application> applications = ApplicationMapper.fromJsonList(applicationsJson);
             assertTrue(applications.size() > 6);
 
         }
