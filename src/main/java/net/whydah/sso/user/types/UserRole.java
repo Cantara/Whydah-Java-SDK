@@ -1,6 +1,7 @@
 package net.whydah.sso.user.types;
 
-import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.user.UserRoleJsonHelper;
+import net.whydah.sso.user.UserRoleXpathHelper;
 
 /**
  * Created by baardl on 19.06.15.
@@ -32,18 +33,7 @@ public class UserRole {
     }
 
     public static UserRole fromXml(String roleXml) {
-
-        String id = UserXpathHelper.findValue(roleXml, "/application/id");
-        String userId = UserXpathHelper.findValue(roleXml, "/application/uid");
-        String appId = UserXpathHelper.findValue(roleXml, "/application/appId");
-        String appName = UserXpathHelper.findValue(roleXml, "/application/applicationName");
-        String orgName = UserXpathHelper.findValue(roleXml, "/application/orgName");
-        String roleName = UserXpathHelper.findValue(roleXml, "/application/roleName");
-        String roleValue = UserXpathHelper.findValue(roleXml, "/application/roleValue");
-        UserRole userRole = new UserRole(null, appId, orgName, roleName, roleValue);
-        userRole.setId(id);
-        userRole.setUserId(userId);
-        return userRole;
+        return UserRoleXpathHelper.fromXml(roleXml);
     }
 
     public String getUserName() {
@@ -98,22 +88,7 @@ public class UserRole {
     }
 
     public String toJson(){
-        String json =  "{";
-        if (isNotEmpty(getId())) {
-            json = json + "\"roleId\":\"" + getId() + "\",";
-        }
-        if (isNotEmpty(getUserId())) {
-            json = json + "\"uid\":\"" + getUserId() + "\",";
-        }
-
-        json = json + "\"applicationId\":\""+ getApplicationId() +"\"," +
-                "\"applicationName\":\"" + null + "\","+
-                "\"applicationRoleName\":\""+ getRoleName() +"\"," +
-                "\"applicationRoleValue\":\""+ getRoleValue() +"\"," +
-                "\"organizationName\":\""+ getOrgName() +"\"}";
-
-        return json;
-
+        return UserRoleJsonHelper.toJson(this);
     }
 
     private boolean isNotEmpty(String value) {

@@ -27,6 +27,21 @@ public class UserRoleXpathHelper {
 
     private static final Logger log = LoggerFactory.getLogger(UserRoleXpathHelper.class);
 
+    public static UserRole fromXml(String roleXml) {
+
+        String id = UserXpathHelper.findValue(roleXml, "/application/id");
+        String userId = UserXpathHelper.findValue(roleXml, "/application/uid");
+        String appId = UserXpathHelper.findValue(roleXml, "/application/appId");
+        String appName = UserXpathHelper.findValue(roleXml, "/application/applicationName");
+        String orgName = UserXpathHelper.findValue(roleXml, "/application/orgName");
+        String roleName = UserXpathHelper.findValue(roleXml, "/application/roleName");
+        String roleValue = UserXpathHelper.findValue(roleXml, "/application/roleValue");
+        UserRole userRole = new UserRole(null, appId, orgName, roleName, roleValue);
+        userRole.setId(id);
+        userRole.setUserId(userId);
+        return userRole;
+    }
+
 
     public static UserRole[] getUserRoleFromUserTokenXml(String userTokenXml) {
         if (userTokenXml == null) {
