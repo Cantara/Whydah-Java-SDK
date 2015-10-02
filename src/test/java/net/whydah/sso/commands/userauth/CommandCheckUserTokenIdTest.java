@@ -1,7 +1,6 @@
 package net.whydah.sso.commands.userauth;
 
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import junit.framework.Assert;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
@@ -15,7 +14,7 @@ import java.net.URI;
 
 import static org.junit.Assert.assertTrue;
 
-public class CommandGetUsertokenByUsertokenIdTest {
+public class CommandCheckUserTokenIdTest {
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
@@ -28,7 +27,7 @@ public class CommandGetUsertokenByUsertokenIdTest {
         if (integrationMode) {
             tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
         }
-        appCredential = new ApplicationCredential("15","33779936R6Jr47D4Hj5R6p9qT");
+        appCredential = new ApplicationCredential("15", "33779936R6Jr47D4Hj5R6p9qT");
         userCredential = new UserCredential("useradmin", "useradmin42");
 
         // HystrixCommandProperties.Setter().withFallbackEnabled(!integrationMode);
@@ -51,12 +50,10 @@ public class CommandGetUsertokenByUsertokenIdTest {
         String userToken = new CommandLogonUserByUserCredentialWithStubbedFallback(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential).execute();
 
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-        String userToken2 = new CommandGetUsertokenByUsertokenIdWithStubbedFallback(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userTokenId).execute();
-
-        Assert.assertTrue(userToken.equalsIgnoreCase(userToken2));
-
-
+        boolean isvalidToken = new CommandValidateUsertokenIdWithStubbedFallback(tokenServiceUri, myApplicationTokenID, userTokenId).execute();
+        assertTrue("Error: usertokenid NOT verified successfully", isvalidToken);
     }
 
 
 }
+
