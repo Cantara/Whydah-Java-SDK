@@ -13,9 +13,6 @@ import javax.ws.rs.core.Response;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.OK;
 
-/**
- * @author <a href="mailto:erik-dev@fjas.no">Erik Drolshammer</a> 2015-07-06
- */
 public class CommandValidateApplicationTokenId extends HystrixCommand<Boolean> {
     private static final Logger log = LoggerFactory.getLogger(CommandValidateApplicationTokenId.class);
 
@@ -37,7 +34,7 @@ public class CommandValidateApplicationTokenId extends HystrixCommand<Boolean> {
         log.trace("{} - applicationTokenId={}", CommandValidateApplicationTokenId.class.getSimpleName(), applicationTokenId);
 
         if (applicationTokenId == null || applicationTokenId.length() < 4) {
-            log.warn("Null or too short applicationTokenId={}. return false", applicationTokenId);
+            log.warn("CommandValidateApplicationTokenId - Null or too short applicationTokenId={}. return false", applicationTokenId);
             return false;
         }
 
@@ -46,11 +43,11 @@ public class CommandValidateApplicationTokenId extends HystrixCommand<Boolean> {
         WebTarget verifyResource = tokenServiceClient.target(tokenServiceUri).path(applicationTokenId).path("validate");
         Response response = verifyResource.request().get(Response.class);
         if (response.getStatus() == OK.getStatusCode()) {
-            log.info("ApplicationTokenId authentication for {}: {} {}", verifyResource.getUri().toString(), response.getStatusInfo().getStatusCode(), response.getStatusInfo().getReasonPhrase());
+            log.info("CommandValidateApplicationTokenId - ApplicationTokenId authentication for {}: {} {}", verifyResource.getUri().toString(), response.getStatusInfo().getStatusCode(), response.getStatusInfo().getReasonPhrase());
             return true;
         }
         if (response.getStatus() == CONFLICT.getStatusCode()) {
-            log.warn("ApplicationTokenId authentication for {}: {} {}", verifyResource.getUri().toString(), response.getStatusInfo().getStatusCode(), response.getStatusInfo().getReasonPhrase());
+            log.warn("CommandValidateApplicationTokenId - ApplicationTokenId authentication for {}: {} {}", verifyResource.getUri().toString(), response.getStatusInfo().getStatusCode(), response.getStatusInfo().getReasonPhrase());
             return false;
         }
 
@@ -58,13 +55,15 @@ public class CommandValidateApplicationTokenId extends HystrixCommand<Boolean> {
         log.info("retry...");
         response = verifyResource.request().get(Response.class);
         boolean bolRes = response.getStatus() == OK.getStatusCode();
-        log.warn("ApplicationTokenId authentication for {}: {} {}", verifyResource.getUri().toString(), response.getStatusInfo().getStatusCode(), response.getStatusInfo().getReasonPhrase());
+        log.warn("CommandValidateApplicationTokenId - ApplicationTokenId authentication for {}: {} {}", verifyResource.getUri().toString(), response.getStatusInfo().getStatusCode(), response.getStatusInfo().getReasonPhrase());
         return bolRes;
     }
 
 
     @Override
     protected Boolean getFallback() {
+
+        log.warn("CommandValidateApplicationTokenId - timeout");
         return false;
     }
 }

@@ -44,7 +44,7 @@ public class CommandAddUser extends HystrixCommand<String> {
     @Override
     protected String run() {
 
-        log.trace("CommandAddUser - myAppTokenId={}, adminUserTokenId={{}, userIdentityJson={}",myAppTokenId,adminUserTokenId,userIdentityJson);
+        log.trace("CommandAddUser - myAppTokenId={}, adminUserTokenId={{}, userIdentityJson={}", myAppTokenId, adminUserTokenId, userIdentityJson);
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
@@ -64,6 +64,12 @@ public class CommandAddUser extends HystrixCommand<String> {
         log.warn("CommandAddUser - addUser - failed with status code " + response.getStatus());
         return null;
 
+    }
+
+    @Override
+    protected String getFallback() {
+        log.warn("CommandAddUser - timeout");
+        return null;
     }
 
 

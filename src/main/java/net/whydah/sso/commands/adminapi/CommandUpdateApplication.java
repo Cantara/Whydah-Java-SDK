@@ -47,4 +47,11 @@ public class CommandUpdateApplication extends HystrixCommand<String> {
 
     }
 
+    @Override
+    protected String getFallback() {
+        log.warn("CommandUpdateApplication - timeout");
+        return null;
+    }
+
+
 }

@@ -19,9 +19,6 @@ import java.util.UUID;
 
 import static javax.ws.rs.core.Response.Status.*;
 
-/**
- * Created by totto on 12/2/14.
- */
 public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
     private static final Logger log = LoggerFactory.getLogger(CommandLogonUserByUserCredential.class);
@@ -97,7 +94,7 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandLogonUserByUserCredential - getFallback - returning null  ");
+        log.warn("CommandLogonUserByUserCredential - timeout - returning null  ");
         return null;
     }
 

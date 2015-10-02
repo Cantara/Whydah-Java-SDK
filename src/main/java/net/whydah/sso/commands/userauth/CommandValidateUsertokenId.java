@@ -14,9 +14,6 @@ import java.net.URI;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.OK;
 
-/**
- * Created by totto on 12/2/14.
- */
 public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
     private static final Logger log = LoggerFactory.getLogger(CommandValidateUsertokenId.class);
 
@@ -39,7 +36,7 @@ public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
         log.trace("{} - myAppTokenId={}, userTokenID{}", CommandValidateUsertokenId.class.getSimpleName(), myAppTokenId, usertokenid);
 
         if (usertokenid == null || usertokenid.length() < 4) {
-            log.warn("verifyUserTokenId - Called with bogus usertokenid={}. return false", usertokenid);
+            log.warn("CommandValidateUsertokenId - Called with bogus usertokenid={}. return false", usertokenid);
             return false;
         }
         // logonApplication();
@@ -47,19 +44,19 @@ public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
         WebTarget verifyResource = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/validate_usertokenid/" + usertokenid);
         Response response = get(verifyResource);
         if (response.getStatus() == OK.getStatusCode()) {
-            log.info("verifyUserTokenId - validate_usertokenid {}  result {}", verifyResource.getUri().toString(), response);
+            log.info("CommandValidateUsertokenId - validate_usertokenid {}  result {}", verifyResource.getUri().toString(), response);
             return true;
         }
         if (response.getStatus() == CONFLICT.getStatusCode()) {
-            log.warn("verifyUserTokenId - usertokenid not ok: {}", response);
+            log.warn("CommandValidateUsertokenId - usertokenid not ok: {}", response);
             return false;
         }
         //retry
-        log.info("verifyUserTokenId - retrying usertokenid ");
+        log.info("CommandValidateUsertokenId - retrying usertokenid ");
         //logonApplication();
         response = get(verifyResource);
         boolean bolRes = response.getStatus() == OK.getStatusCode();
-        log.info("verifyUserTokenId - validate_usertokenid {}  result {}", verifyResource.getUri().toString(), response);
+        log.info("CommandValidateUsertokenId - validate_usertokenid {}  result {}", verifyResource.getUri().toString(), response);
         return bolRes;
     }
 
@@ -69,6 +66,7 @@ public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
 
     @Override
     protected Boolean getFallback() {
+        log.warn("CommandValidateUsertokenId - timeout");
         return false;
     }
 

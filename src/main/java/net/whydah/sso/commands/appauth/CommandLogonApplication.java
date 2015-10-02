@@ -20,13 +20,6 @@ import java.net.URI;
 
 import static javax.ws.rs.core.Response.Status.OK;
 
-/**
- * Created by totto on 12/1/14.
- *
- * Log on an application given supplied appauth credentials and return an applicationTokenID which is
- * an application session key.
- *
- */
 public class CommandLogonApplication extends HystrixCommand<String> {
 
     private static final Logger log = LoggerFactory.getLogger(CommandLogonApplication.class);
@@ -87,6 +80,12 @@ public class CommandLogonApplication extends HystrixCommand<String> {
 
     private Response postForm(Form formData, WebTarget logonResource) {
         return logonResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE),Response.class);
+    }
+
+    @Override
+    protected String getFallback() {
+        log.warn("CommandLogonApplication - timeout");
+        return null;
     }
 
 }

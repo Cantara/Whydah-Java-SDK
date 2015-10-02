@@ -45,4 +45,11 @@ public class CommandAddApplication extends HystrixCommand<String> {
         throw new UnsupportedOperationException();
         //return null;
     }
+
+    @Override
+    protected String getFallback() {
+        log.warn("CommandAddApplication - timeout");
+        return null;
+    }
+
 }

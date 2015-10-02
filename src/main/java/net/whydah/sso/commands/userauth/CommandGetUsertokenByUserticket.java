@@ -15,11 +15,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-import static javax.ws.rs.core.Response.Status.*;
+import static javax.ws.rs.core.Response.Status.FORBIDDEN;
+import static javax.ws.rs.core.Response.Status.OK;
 
-/**
- * Created by totto on 12/2/14.
- */
 public class CommandGetUsertokenByUserticket extends HystrixCommand<String> {
 
     private static final Logger log = LoggerFactory.getLogger(CommandGetUsertokenByUserticket.class);
@@ -87,6 +85,8 @@ public class CommandGetUsertokenByUserticket extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
+
+        log.warn("CommandGetUsertokenByUserticket - timeout");
         return null;
     }
 

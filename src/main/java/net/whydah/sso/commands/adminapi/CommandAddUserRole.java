@@ -67,7 +67,10 @@ public class CommandAddUserRole extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
+        log.warn("CommandAddUserRole - timeout");
         return null;
     }
+
+
 }
 

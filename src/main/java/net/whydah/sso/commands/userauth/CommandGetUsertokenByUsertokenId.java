@@ -18,9 +18,6 @@ import java.net.URI;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.OK;
 
-/**
- * Created by totto on 25.06.15.
- */
 public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
 
         private static final Logger log = LoggerFactory.getLogger(CommandGetUsertokenByUserticket.class);
@@ -53,7 +50,7 @@ public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
         Client tokenServiceClient = ClientBuilder.newClient();
 
         WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/get_usertoken_by_usertokenid");
-        log.trace("CommandGetUsertokenByUsertokenId  - usertokenid: {} apptoken: {}", usertokenId,myAppTokenXml);
+            log.trace("CommandGetUsertokenByUsertokenId  - usertokenid: {} apptoken: {}", usertokenId, myAppTokenXml);
         Form formData = new Form();
         formData.param("apptoken", myAppTokenXml);
         formData.param("usertokenId", usertokenId);
@@ -86,5 +83,11 @@ public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
 
     }
 
-
+    @Override
+    protected String getFallback() {
+        log.warn("CommandGetUsertokenByUsertokenId - timeout");
+        return null;
     }
+
+
+}
