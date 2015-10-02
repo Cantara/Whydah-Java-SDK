@@ -1,8 +1,5 @@
 package net.whydah.sso.user;
 
-/**
- * Created by totto on 12/2/14.
- */
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
