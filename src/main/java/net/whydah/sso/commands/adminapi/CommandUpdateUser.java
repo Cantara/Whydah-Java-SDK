@@ -6,7 +6,9 @@ import org.slf4j.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 import java.net.URI;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -38,10 +40,10 @@ public class CommandUpdateUser extends HystrixCommand<String> {
     protected String run() {
         log.trace("CommandUpdateUser - myAppTokenId={}", myAppTokenId);
 
-        Client tokenServiceClient = ClientBuilder.newClient();
+        Client uasClient = ClientBuilder.newClient();
 
-        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/xxx");
-        // Response response = addUser.request().post(Entity.xml(userIdentityXml));
+        WebTarget updateUser = uasClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/xxx");
+        Response response = updateUser.request().post(Entity.json(userJson));
         throw new UnsupportedOperationException();
         //return null;
 
