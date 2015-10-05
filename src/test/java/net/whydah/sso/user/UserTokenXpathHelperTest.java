@@ -10,9 +10,6 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
-/**
- * Created by totto on 22.06.15.
- */
 public class UserTokenXpathHelperTest {
     private static final Logger log = getLogger(UserTokenXpathHelperTest.class);
 

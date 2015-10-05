@@ -1,9 +1,8 @@
-package net.whydah.sso.commands.adminapi;
+package net.whydah.sso.commands.adminapi.user;
 
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
-import net.whydah.sso.commands.adminapi.user.CommandAddUserRole;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.UserXpathHelper;
@@ -20,9 +19,6 @@ import java.util.UUID;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by totto on 29.06.15.
- */
 public class CommandAddUserRoleTest {
     public static String TEMPORARY_APPLICATION_ID = "11";//"11";
     public static String TEMPORARY_APPLICATION_SECRET = "6r46g3q986Ep6By7B9J46m96D";

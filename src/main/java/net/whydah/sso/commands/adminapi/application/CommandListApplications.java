@@ -14,9 +14,7 @@ import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.OK;
 import static org.slf4j.LoggerFactory.getLogger;
 
-/**
- * Created by totto on 24.06.15.
- */
+
 public class CommandListApplications extends HystrixCommand<String> {
     private static final Logger log = getLogger(CommandListApplications.class);
     private URI userAdminServiceUri;

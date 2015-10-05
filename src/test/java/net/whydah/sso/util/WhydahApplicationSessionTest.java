@@ -10,9 +10,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
-/**
- * Created by totto on 23.06.15.
- */
 public class WhydahApplicationSessionTest {
 
     private static final Logger log = getLogger(WhydahApplicationSessionTest.class);

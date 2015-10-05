@@ -4,9 +4,6 @@ import net.whydah.sso.application.ApplicationHelper;
 
 import java.net.URI;
 
-/**
- * Created by totto on 24.06.15.
- */
 public class CommandListApplicationsWithStubbedFallback extends CommandListApplications {
 
 
@@ -18,8 +15,6 @@ public class CommandListApplicationsWithStubbedFallback extends CommandListAppli
     protected String getFallback() {
         return ApplicationHelper.getDummyAppllicationListJson();
     }
-
-
 
 
 }

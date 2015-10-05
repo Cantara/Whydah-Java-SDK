@@ -1,8 +1,7 @@
-package net.whydah.sso.commands.adminapi;
+package net.whydah.sso.commands.adminapi.user;
 
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
-import net.whydah.sso.commands.adminapi.user.CommandListUsersWithStubbedFallback;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredentialWithStubbedFallback;
 import net.whydah.sso.user.UserHelper;

@@ -1,12 +1,10 @@
-package net.whydah.sso.commands.adminapi;
+package net.whydah.sso.commands.adminapi.application;
 
 import net.whydah.sso.application.ApplicationHelper;
 import net.whydah.sso.application.ApplicationMapper;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.application.types.ApplicationCredential;
-import net.whydah.sso.commands.adminapi.application.CommandListApplications;
-import net.whydah.sso.commands.adminapi.application.CommandListApplicationsWithStubbedFallback;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
@@ -24,9 +22,6 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by totto on 24.06.15.
- */
 public class CommandListApplicationsTest {
 
     public static String userName = "admin";

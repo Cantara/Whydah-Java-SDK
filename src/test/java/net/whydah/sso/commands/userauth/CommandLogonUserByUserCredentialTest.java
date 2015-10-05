@@ -22,9 +22,6 @@ import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by totto on 12/2/14.
- */
 public class CommandLogonUserByUserCredentialTest {
 
     private static URI tokenServiceUri;
