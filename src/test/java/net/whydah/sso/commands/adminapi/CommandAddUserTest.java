@@ -2,6 +2,8 @@ package net.whydah.sso.commands.adminapi;
 
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
+import net.whydah.sso.commands.adminapi.user.CommandAddUser;
+import net.whydah.sso.commands.adminapi.user.CommandListUsers;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.UserXpathHelper;

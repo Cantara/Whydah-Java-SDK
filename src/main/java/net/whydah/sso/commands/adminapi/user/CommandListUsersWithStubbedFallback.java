@@ -1,4 +1,4 @@
-package net.whydah.sso.commands.adminapi;
+package net.whydah.sso.commands.adminapi.user;
 
 import net.whydah.sso.user.UserHelper;
 

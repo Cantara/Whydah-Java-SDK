@@ -1,7 +1,8 @@
-package net.whydah.sso.commands.adminapi;
+package net.whydah.sso.commands.adminapi.application;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import net.whydah.sso.commands.adminapi.user.CommandAddUser;
 import org.slf4j.Logger;
 
 import javax.ws.rs.client.Client;

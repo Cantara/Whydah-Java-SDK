@@ -5,6 +5,8 @@ import net.whydah.sso.application.ApplicationMapper;
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.application.types.ApplicationCredential;
+import net.whydah.sso.commands.adminapi.application.CommandListApplications;
+import net.whydah.sso.commands.adminapi.application.CommandListApplicationsWithStubbedFallback;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
