@@ -6,7 +6,9 @@ import org.slf4j.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 import java.net.URI;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -40,10 +42,9 @@ public class CommandAddApplication extends HystrixCommand<String> {
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
-        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/xxx");
-        // Response response = addUser.request().post(Entity.xml(userIdentityXml));
-        throw new UnsupportedOperationException();
-        //return null;
+        WebTarget addApplication = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/xxx");
+        Response response = addApplication.request().post(Entity.json(applicationJson));
+        return null;
     }
 
     @Override
