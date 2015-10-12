@@ -49,7 +49,7 @@ public class CommandAddApplication extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandAddApplication - timeout");
+        log.warn("CommandAddApplication - timeout - uri={}", userAdminServiceUri.toString());
         return null;
     }
 

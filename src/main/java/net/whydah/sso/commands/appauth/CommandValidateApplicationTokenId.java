@@ -62,8 +62,7 @@ public class CommandValidateApplicationTokenId extends HystrixCommand<Boolean> {
 
     @Override
     protected Boolean getFallback() {
-
-        log.warn("CommandValidateApplicationTokenId - timeout");
+        log.warn("CommandValidateApplicationTokenId - timeout - uri={}", tokenServiceUri.toString());
         return false;
     }
 }

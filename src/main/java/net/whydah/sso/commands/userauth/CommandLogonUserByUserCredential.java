@@ -96,7 +96,7 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandLogonUserByUserCredential - timeout - returning null  ");
+        log.warn("CommandLogonUserByUserCredential - timeout - uri={}", tokenServiceUri.toString());
         return null;
     }
 

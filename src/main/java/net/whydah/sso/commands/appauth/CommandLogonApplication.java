@@ -87,7 +87,7 @@ public class CommandLogonApplication extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandLogonApplication - timeout");
+        log.warn("CommandLogonApplication - timeout - uri={}", tokenServiceUri.toString());
         return null;
     }
 

@@ -64,7 +64,7 @@ public class CommandListUsers extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandListUsers - timeout");
+        log.warn("CommandListUsers - timeout - uri={}", userAdminServiceUri.toString());
         return null;
     }
 
