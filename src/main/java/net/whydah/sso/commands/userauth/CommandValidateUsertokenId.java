@@ -33,7 +33,7 @@ public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
 
     @Override
     protected Boolean run() {
-        log.trace("{} - myAppTokenId={}, userTokenID{}", CommandValidateUsertokenId.class.getSimpleName(), myAppTokenId, usertokenid);
+        log.trace("CommandValidateUsertokenId - uri={} myAppTokenId={}", tokenServiceUri.toString(), myAppTokenId);
 
         if (usertokenid == null || usertokenid.length() < 4) {
             log.warn("CommandValidateUsertokenId - Called with bogus usertokenid={}. return false", usertokenid);

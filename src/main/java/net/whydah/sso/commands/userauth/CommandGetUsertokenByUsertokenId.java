@@ -46,7 +46,8 @@ public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
     protected String run() {
 
         String responseXML = null;
-        log.trace("CommandGetUsertokenByUsertokenId - myAppTokenId={}", myAppTokenId);
+        log.trace("CommandGetUsertokenByUsertokenId - uri={} myAppTokenId={}", tokenServiceUri.toString(), myAppTokenId);
+
 
         Client tokenServiceClient = ClientBuilder.newClient();
 

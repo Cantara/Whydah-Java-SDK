@@ -56,7 +56,7 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-        log.trace("CommandLogonUserByUserCredential - myAppTokenId={}",myAppTokenId);
+        log.trace("CommandLogonUserByUserCredential - uri={} myAppTokenId={}", tokenServiceUri.toString(), myAppTokenId);
 
         Client tokenServiceClient = ClientBuilder.newClient();
         WebTarget getUserToken = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/" + userticket + "/usertoken");

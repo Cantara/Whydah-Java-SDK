@@ -31,7 +31,7 @@ public class CommandValidateApplicationTokenId extends HystrixCommand<Boolean> {
     //TODO ED: Currently only authentication is performed. Should also perform authorization.
     @Override
     protected Boolean run() {
-        log.trace("{} - applicationTokenId={}", CommandValidateApplicationTokenId.class.getSimpleName(), applicationTokenId);
+        log.trace("CommandValidateApplicationTokenId - uri={} applicationTokenId={}", tokenServiceUri.toString(), applicationTokenId);
 
         if (applicationTokenId == null || applicationTokenId.length() < 4) {
             log.warn("CommandValidateApplicationTokenId - Null or too short applicationTokenId={}. return false", applicationTokenId);
