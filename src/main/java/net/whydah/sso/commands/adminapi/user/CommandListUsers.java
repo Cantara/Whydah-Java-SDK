@@ -2,6 +2,7 @@ package net.whydah.sso.commands.adminapi.user;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
 import org.slf4j.Logger;
 
 import javax.ws.rs.client.Client;
@@ -14,9 +15,7 @@ import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.OK;
 import static org.slf4j.LoggerFactory.getLogger;
 
-/**
- * Created by totto on 24.06.15.
- */
+
 public class CommandListUsers extends HystrixCommand<String> {
     private static final Logger log = getLogger(CommandAddUser.class);
     private URI userAdminServiceUri;
@@ -26,7 +25,8 @@ public class CommandListUsers extends HystrixCommand<String> {
 
 
     public CommandListUsers(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String userQuery) {
-        super(HystrixCommandGroupKey.Factory.asKey("UASUserAdminGroup"));
+        super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("UASUserAdminGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+                .withExecutionTimeoutInMilliseconds(3000)));
         this.userAdminServiceUri = userAdminServiceUri;
         this.myAppTokenId = myAppTokenId;
         this.adminUserTokenId = adminUserTokenId;

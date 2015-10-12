@@ -2,6 +2,7 @@ package net.whydah.sso.commands.appauth;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import net.whydah.sso.application.ApplicationCredentialSerializer;
 import net.whydah.sso.application.ApplicationXpathHelper;
@@ -27,7 +28,9 @@ public class CommandLogonApplication extends HystrixCommand<String> {
     private ApplicationCredential appCredential ;
 
     public CommandLogonApplication(URI tokenServiceUri,ApplicationCredential appCredential) {
-        super(HystrixCommandGroupKey.Factory.asKey("SSOApplicationAuthGroup"));
+        super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("UASUserAdminGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+                .withExecutionTimeoutInMilliseconds(3000)));
+
         this.tokenServiceUri = tokenServiceUri;
         this.appCredential=appCredential;
         if (tokenServiceUri==null || appCredential==null ){
@@ -42,7 +45,7 @@ public class CommandLogonApplication extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-        log.trace("CommandLogonApplication - appCredential={}", ApplicationCredentialSerializer.toXML(appCredential));
+        log.trace("CommandLogonApplication - uri={} appCredential={}", tokenServiceUri.toString(), ApplicationCredentialSerializer.toXML(appCredential));
 
         Client tokenServiceClient = ClientBuilder.newClient();
         Form formData = new Form();

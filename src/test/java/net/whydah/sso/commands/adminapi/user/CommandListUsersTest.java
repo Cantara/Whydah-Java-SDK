@@ -2,11 +2,14 @@ package net.whydah.sso.commands.adminapi.user;
 
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
+import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
+import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredentialWithStubbedFallback;
 import net.whydah.sso.user.UserHelper;
 import net.whydah.sso.user.UserXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.util.SSLTool;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -16,48 +19,65 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by totto on 25.06.15.
- */
+
 public class CommandListUsersTest  {
 
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
-    private static boolean systemtest = false;
+    private static boolean systemtest = true;
     private static URI userAdminServiceUri;
 
 
 
     @BeforeClass
     public static void setup() throws Exception {
-        appCredential = new ApplicationCredential("15","33779936R6Jr47D4Hj5R6p9qT");
+        appCredential = new ApplicationCredential("15", "HK8fGpWmK66ckWaEVn3tF9fRK");
         tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
         userCredential = new UserCredential("useradmin", "useradmin42");
 
         userAdminServiceUri = UriBuilder.fromUri("https://no_host").build();
 
         if (systemtest) {
-            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
-            userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
+            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
+            userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/useradminservice/").build();
         }
+        SSLTool.disableCertificateValidation();
     }
 
 
     @Test
-    public void testListUserssCommandWithFallback() throws Exception {
+    public void testListUsersCommandWithFallback() throws Exception {
 
-        String myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
+        String myAppTokenXml;
+        if (systemtest) {
+            myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+        } else {
+            myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
+        }
+        System.out.println("myAppTokenXml:" + myAppTokenXml);
         String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
         String userticket = UUID.randomUUID().toString();
-        String userToken = new CommandLogonUserByUserCredentialWithStubbedFallback(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
+
+        String userToken;
+        if (systemtest) {
+            userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
+        } else {
+            userToken = new CommandLogonUserByUserCredentialWithStubbedFallback(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
+        }
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
         assertTrue(userTokenId!=null && userTokenId.length()>5);
 
-        String usersListJson = new CommandListUsersWithStubbedFallback(userAdminServiceUri, myApplicationTokenID,userTokenId,"").execute();
+        String usersListJson;
+        if (systemtest) {
+            usersListJson = new CommandListUsers(userAdminServiceUri, myApplicationTokenID, userTokenId, "*").execute();
+        } else {
+            usersListJson = new CommandListUsersWithStubbedFallback(userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
+            assertTrue(usersListJson.equalsIgnoreCase(UserHelper.getDummyUserListJson()));
+        }
+
         System.out.println("usersListJson=" + usersListJson);
-        assertTrue(usersListJson.equalsIgnoreCase(UserHelper.getDummyUserListJson()));
 
     }
 
