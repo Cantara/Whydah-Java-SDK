@@ -1,5 +1,6 @@
 package net.whydah.sso.commands.adminapi.user;
 
+
 import net.whydah.sso.application.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
@@ -18,7 +19,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
 
-public class CommandGetUserTest {
+public class CommandGetUserAggregateTest {
 
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
@@ -44,7 +45,7 @@ public class CommandGetUserTest {
 
 
     @Test
-    public void testCommandGetUser() throws Exception {
+    public void testGetUserAggregate() throws Exception {
 
         String myAppTokenXml;
         if (systemtest) {
@@ -68,10 +69,9 @@ public class CommandGetUserTest {
 
         String usersListJson;
         if (systemtest) {
-            usersListJson = new CommandGetUser(userAdminServiceUri, myApplicationTokenID, userTokenId, "useradmin").execute();
-            System.out.println("usersJson=" + usersListJson);
+            usersListJson = new CommandGetUserAggregate(userAdminServiceUri, myApplicationTokenID, userTokenId, "useradmin").execute();
+            System.out.println("userJson=" + usersListJson);
         }
-
 
     }
 
