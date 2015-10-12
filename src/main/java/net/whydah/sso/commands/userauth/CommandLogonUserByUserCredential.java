@@ -2,6 +2,7 @@ package net.whydah.sso.commands.userauth;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.ExceptionUtil;
 import org.slf4j.Logger;
@@ -31,7 +32,8 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
 
 
     public CommandLogonUserByUserCredential(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml ,UserCredential userCredential) {
-        super(HystrixCommandGroupKey.Factory.asKey("SSOAUserAuthGroup"));
+        super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("SSOAUserAuthGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+                .withExecutionTimeoutInMilliseconds(3000)));
         this.tokenServiceUri = tokenServiceUri;
         this.myAppTokenId=myAppTokenId;
         this.myAppTokenXml=myAppTokenXml;
