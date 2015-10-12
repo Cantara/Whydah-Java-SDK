@@ -24,7 +24,7 @@ public class CommandGetUserAggregateTest {
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
-    private static boolean systemtest = false;
+    private static boolean systemtest = true;
     private static URI userAdminServiceUri;
 
 

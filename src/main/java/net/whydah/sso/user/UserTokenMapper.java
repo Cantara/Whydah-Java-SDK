@@ -3,6 +3,9 @@ package net.whydah.sso.user;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import net.minidev.json.JSONValue;
 import net.whydah.sso.user.types.ApplicationRoleEntry;
 import net.whydah.sso.user.types.UserToken;
 import org.slf4j.Logger;
@@ -200,6 +203,68 @@ public class UserTokenMapper {
     }
 
 
+    public static UserToken fromUserAggregateJson2(String userAggregateJson) {
+        UserToken userToken = parseUserAggregateJson2(userAggregateJson);
+        userToken.setTokenid(generateID());
+        userToken.setTimestamp(String.valueOf(System.currentTimeMillis()));
+        String securityLevel = "1"; //UserIdentity as source = securitylevel=0
+        userToken.setSecurityLevel(securityLevel);
+
+        //userToken.setDefcon(defcon);
+        //String issuer = extractIssuer(appTokenXml);
+        //userToken.setIssuer(TOKEN_ISSUER);
+        //userToken.setLifespan(lifespanMs);
+        return userToken;
+    }
+
+    /**
+     * {"uid":"useradmin","username":"useradmin","firstName":"UserAdmin","lastName":"UserAdminWebApp","personRef":"42","email":"whydahadmin@getwhydah.com","cellPhone":"87654321","roles": [{"applicationId":"19","applicationName":"","applicationRoleName":"WhydahUserAdmin","applicationRoleValue":"1","organizationName":""}]}
+     */
+    private static UserToken parseUserAggregateJson2(String userAggregateJSON) {
+        try {
+            DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
+            String uid = getStringFromJsonpathExpression("$.uid", userAggregateJSON);
+            String userName = getStringFromJsonpathExpression("$.username", userAggregateJSON);
+            String firstName = getStringFromJsonpathExpression("$.firstName", userAggregateJSON);
+            String lastName = getStringFromJsonpathExpression("$.lastName", userAggregateJSON);
+            String email = getStringFromJsonpathExpression("$.email", userAggregateJSON);
+            String cellPhone = getStringFromJsonpathExpression("$.cellPhone", userAggregateJSON);
+            String personRef = getStringFromJsonpathExpression("$.personRef", userAggregateJSON);
+
+            // TODO  add rolemapping
+            List<ApplicationRoleEntry> roleList = new ArrayList<>();
+
+            JSONObject json = (JSONObject) JSONValue.parseWithException(userAggregateJSON);
+            JSONArray roles = (JSONArray) json.get("roles");
+
+            for (int i = 0; i < roles.size(); i++) {
+                JSONObject roleentry = (JSONObject) roles.get(i);
+                ApplicationRoleEntry role = new ApplicationRoleEntry();
+                role.setApplicationId((String) roleentry.get("applicationId"));
+                role.setApplicationRoleName((String) roleentry.get("applicationName"));
+                role.setOrganizationName((String) roleentry.get("organizationName"));
+                role.setRoleName((String) roleentry.get("applicationRoleName"));
+                role.setRoleValue((String) roleentry.get("applicationRoleValue"));
+                roleList.add(role);
+            }
+
+            UserToken userToken = new UserToken();
+            userToken.setUid(uid);
+            userToken.setUserName(userName);
+            userToken.setFirstName(firstName);
+            userToken.setLastName(lastName);
+            userToken.setEmail(email);
+            userToken.setPersonRef(personRef);
+            userToken.setCellPhone(cellPhone);
+            userToken.setRoleList(roleList);
+            return userToken;
+        } catch (Exception e) {
+            log.error("Error parsing userAggregateJSON " + userAggregateJSON, e);
+            return null;
+        }
+    }
+
+
     public static String getStringFromJsonpathExpression(String expression, String jsonString) throws PathNotFoundException {
         //String expression = "$.identity.uid";
         String value = "";
@@ -208,6 +273,11 @@ public class UserTokenMapper {
         value = result.toString();
 
         return value;
+    }
+
+    public static JSONArray getStringArrayFromJsonpathExpression(String expression, String jsonString) throws PathNotFoundException {
+        Object document = Configuration.defaultConfiguration().jsonProvider().parse(jsonString);
+        return JsonPath.read(document, expression);
     }
 
 
