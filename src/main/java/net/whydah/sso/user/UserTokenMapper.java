@@ -146,8 +146,8 @@ public class UserTokenMapper {
     }
 
     //String appTokenXml
-    public static UserToken fromUserAggregateJson(String userAggregateJson) {
-        UserToken userToken = parseUserAggregateJson(userAggregateJson);
+    public static UserToken fromUserIdentityJson(String userIdentityJSON) {
+        UserToken userToken = parseUserIdentityJson(userIdentityJSON);
         userToken.setTokenid(generateID());
         userToken.setTimestamp(String.valueOf(System.currentTimeMillis()));
         String securityLevel = "1"; //UserIdentity as source = securitylevel=0
@@ -160,31 +160,17 @@ public class UserTokenMapper {
         return userToken;
     }
 
-    private static UserToken parseUserAggregateJson(String userAggregateJSON) {
+    private static UserToken parseUserIdentityJson(String userIdentityJSON) {
         try {
             DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
-            String uid = getStringFromJsonpathExpression("$.identity.uid", userAggregateJSON);
-            String userName = getStringFromJsonpathExpression("$.identity.username", userAggregateJSON);
-            String firstName = getStringFromJsonpathExpression("$.identity.firstName", userAggregateJSON);
-            String lastName = getStringFromJsonpathExpression("$.identity.lastName", userAggregateJSON);
-            String email = getStringFromJsonpathExpression("$.identity.email", userAggregateJSON);
-            String cellPhone = getStringFromJsonpathExpression("$.identity.cellPhone", userAggregateJSON);
-            String personRef = getStringFromJsonpathExpression("$.identity.personRef", userAggregateJSON);
+            String uid = getStringFromJsonpathExpression("$.identity.uid", userIdentityJSON);
+            String userName = getStringFromJsonpathExpression("$.identity.username", userIdentityJSON);
+            String firstName = getStringFromJsonpathExpression("$.identity.firstName", userIdentityJSON);
+            String lastName = getStringFromJsonpathExpression("$.identity.lastName", userIdentityJSON);
+            String email = getStringFromJsonpathExpression("$.identity.email", userIdentityJSON);
+            String cellPhone = getStringFromJsonpathExpression("$.identity.cellPhone", userIdentityJSON);
+            String personRef = getStringFromJsonpathExpression("$.identity.personRef", userIdentityJSON);
 
-            // TODO  add rolemapping
-            List<ApplicationRoleEntry> roleList = new ArrayList<>();
-            /**
-             NodeList applicationNodes = (NodeList) xPath.evaluate("/whydahuser/applications/application/appId", doc, XPathConstants.NODESET);
-             for (int i = 1; i < applicationNodes.getLength() + 1; i++) {
-             ApplicationRoleEntry role = new ApplicationRoleEntry();
-             role.setApplicationId((String) xPath.evaluate("/whydahuser/applications/application[" + i + "]/appId", doc, XPathConstants.STRING));
-             role.setApplicationRoleName((String) xPath.evaluate("/whydahuser/applications/application[" + i + "]/applicationName", doc, XPathConstants.STRING));
-             role.setOrganizationName((String) xPath.evaluate("/whydahuser/applications/application[" + i + "]/orgName", doc, XPathConstants.STRING));
-             role.setRoleName((String) xPath.evaluate("/whydahuser/applications/application[" + i + "]/roleName", doc, XPathConstants.STRING));
-             role.setRoleValue((String) xPath.evaluate("/whydahuser/applications/application[" + i + "]/roleValue", doc, XPathConstants.STRING));
-             roleList.add(role);
-             }
-             */
 
             UserToken userToken = new UserToken();
             userToken.setUid(uid);
@@ -194,17 +180,16 @@ public class UserTokenMapper {
             userToken.setEmail(email);
             userToken.setPersonRef(personRef);
             userToken.setCellPhone(cellPhone);
-            userToken.setRoleList(roleList);
             return userToken;
         } catch (Exception e) {
-            log.error("Error parsing userAggregateJSON " + userAggregateJSON, e);
+            log.error("Error parsing userAggregateJSON " + userIdentityJSON, e);
             return null;
         }
     }
 
 
-    public static UserToken fromUserAggregateJson2(String userAggregateJson) {
-        UserToken userToken = parseUserAggregateJson2(userAggregateJson);
+    public static UserToken fromUserAggregateJson(String userAggregateJson) {
+        UserToken userToken = parseUserAggregateJson(userAggregateJson);
         userToken.setTokenid(generateID());
         userToken.setTimestamp(String.valueOf(System.currentTimeMillis()));
         String securityLevel = "1"; //UserIdentity as source = securitylevel=0
@@ -220,7 +205,7 @@ public class UserTokenMapper {
     /**
      * {"uid":"useradmin","username":"useradmin","firstName":"UserAdmin","lastName":"UserAdminWebApp","personRef":"42","email":"whydahadmin@getwhydah.com","cellPhone":"87654321","roles": [{"applicationId":"19","applicationName":"","applicationRoleName":"WhydahUserAdmin","applicationRoleValue":"1","organizationName":""}]}
      */
-    private static UserToken parseUserAggregateJson2(String userAggregateJSON) {
+    private static UserToken parseUserAggregateJson(String userAggregateJSON) {
         try {
             DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
             String uid = getStringFromJsonpathExpression("$.uid", userAggregateJSON);
