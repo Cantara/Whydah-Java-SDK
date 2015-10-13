@@ -203,7 +203,8 @@ public class UserTokenMapper {
     }
 
     /**
-     * {"uid":"useradmin","username":"useradmin","firstName":"UserAdmin","lastName":"UserAdminWebApp","personRef":"42","email":"whydahadmin@getwhydah.com","cellPhone":"87654321","roles": [{"applicationId":"19","applicationName":"","applicationRoleName":"WhydahUserAdmin","applicationRoleValue":"1","organizationName":""}]}
+     * {"uid":"useradmin","username":"useradmin","firstName":"UserAdmin","lastName":"UserAdminWebApp","personRef":"42","email":"whydahadmin@getwhydah.com","cellPhone":"87654321",
+     * "roles": [{"applicationId":"19","applicationName":"","applicationRoleName":"WhydahUserAdmin","applicationRoleValue":"1","organizationName":""}]}
      */
     private static UserToken parseUserAggregateJson(String userAggregateJSON) {
         try {
@@ -221,16 +222,17 @@ public class UserTokenMapper {
 
             JSONObject json = (JSONObject) JSONValue.parseWithException(userAggregateJSON);
             JSONArray roles = (JSONArray) json.get("roles");
-
-            for (int i = 0; i < roles.size(); i++) {
-                JSONObject roleentry = (JSONObject) roles.get(i);
-                ApplicationRoleEntry role = new ApplicationRoleEntry();
-                role.setApplicationId((String) roleentry.get("applicationId"));
-                role.setApplicationRoleName((String) roleentry.get("applicationName"));
-                role.setOrganizationName((String) roleentry.get("organizationName"));
-                role.setRoleName((String) roleentry.get("applicationRoleName"));
-                role.setRoleValue((String) roleentry.get("applicationRoleValue"));
-                roleList.add(role);
+            if (roles != null) {
+                for (int i = 0; i < roles.size(); i++) {
+                    JSONObject roleentry = (JSONObject) roles.get(i);
+                    ApplicationRoleEntry role = new ApplicationRoleEntry();
+                    role.setApplicationId((String) roleentry.get("applicationId"));
+                    role.setApplicationRoleName((String) roleentry.get("applicationName"));
+                    role.setOrganizationName((String) roleentry.get("organizationName"));
+                    role.setRoleName((String) roleentry.get("applicationRoleName"));
+                    role.setRoleValue((String) roleentry.get("applicationRoleValue"));
+                    roleList.add(role);
+                }
             }
 
             UserToken userToken = new UserToken();
