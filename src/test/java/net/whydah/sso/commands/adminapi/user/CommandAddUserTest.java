@@ -7,6 +7,7 @@ import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.UserXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserIdentityRepresentation;
+import net.whydah.sso.util.SSLTool;
 import net.whydah.sso.util.SystemTestUtil;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,9 +43,10 @@ public class CommandAddUserTest {
         userAdminServiceUri = UriBuilder.fromUri(userAdminService).build();
 
         if (systemTest) {
-            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
-            userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
+            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
+            userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
         }
+        SSLTool.disableCertificateValidation();
     }
 
 
