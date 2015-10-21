@@ -6,8 +6,10 @@ import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredentialWithStubbedFallback;
+import net.whydah.sso.user.UserTokenMapper;
 import net.whydah.sso.user.UserXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.user.types.UserToken;
 import net.whydah.sso.util.SSLTool;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,7 +25,7 @@ public class CommandGetUserTest {
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
-    private static boolean systemtest = false;
+    private static boolean systemtest = true;
     private static URI userAdminServiceUri;
 
 
@@ -66,10 +68,12 @@ public class CommandGetUserTest {
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
         assertTrue(userTokenId != null && userTokenId.length() > 5);
 
-        String usersListJson;
+        String userAggregateJson;
         if (systemtest) {
-            usersListJson = new CommandGetUser(userAdminServiceUri, myApplicationTokenID, userTokenId, "useradmin").execute();
-            System.out.println("usersJson=" + usersListJson);
+            userAggregateJson = new CommandGetUser(userAdminServiceUri, myApplicationTokenID, userTokenId, "useradmin").execute();
+            System.out.println("userAggregateJson=" + userAggregateJson);
+            UserToken foundUserToken = UserTokenMapper.fromUserAggregateJson(userAggregateJson);
+            System.out.println(foundUserToken.toString());
         }
 
 

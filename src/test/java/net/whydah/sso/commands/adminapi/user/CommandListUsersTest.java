@@ -17,6 +17,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.UUID;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
@@ -78,6 +79,40 @@ public class CommandListUsersTest  {
         }
 
         System.out.println("usersListJson=" + usersListJson);
+
+    }
+
+    @Test
+    public void testUserExists() throws Exception {
+
+        String myAppTokenXml;
+        if (systemtest) {
+            myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+        } else {
+            myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
+        }
+        System.out.println("myAppTokenXml:" + myAppTokenXml);
+        String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
+        assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
+        String userticket = UUID.randomUUID().toString();
+
+        String userToken;
+        if (systemtest) {
+            userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
+        } else {
+            userToken = new CommandLogonUserByUserCredentialWithStubbedFallback(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
+        }
+        String userTokenId = UserXpathHelper.getUserTokenId(userToken);
+        assertTrue(userTokenId != null && userTokenId.length() > 5);
+
+        boolean usersExist = false;
+        if (systemtest) {
+            usersExist = new CommandUserExists(userAdminServiceUri, myApplicationTokenID, userTokenId, "acsemployee").execute();
+            assertTrue(usersExist);
+            usersExist = new CommandUserExists(userAdminServiceUri, myApplicationTokenID, userTokenId, "acsempdloyee").execute();
+            assertFalse(usersExist);
+        }
+
 
     }
 
