@@ -1,6 +1,7 @@
 package net.whydah.sso.commands.userauth;
 
-import net.whydah.sso.user.UserHelper;
+
+import net.whydah.sso.user.helpers.UserHelper;
 
 import java.net.URI;
 

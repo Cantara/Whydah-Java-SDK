@@ -1,6 +1,6 @@
 package net.whydah.sso.user;
 
-import net.whydah.sso.user.types.UserIdentityRepresentation;
+import net.whydah.sso.user.types.UserIdentity;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -22,12 +22,12 @@ public class UserIdentityRepresentationTest {
 
     private static final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     private String username = null;
-    private UserIdentityRepresentation userIdentity = null;
+    private UserIdentity userIdentity = null;
 
     @Before
     public void setUp() throws Exception {
         username = "_temp_username_" + System.currentTimeMillis();
-         userIdentity = new UserIdentityRepresentation(username,"first","last","ref",username +"@example.com","+4712345678");
+        userIdentity = new UserIdentity(username, "first", "last", "ref", username + "@example.com", "+4712345678");
     }
 
     @Test

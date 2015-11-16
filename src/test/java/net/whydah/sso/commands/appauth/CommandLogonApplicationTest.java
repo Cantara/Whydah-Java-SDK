@@ -1,7 +1,7 @@
 package net.whydah.sso.commands.appauth;
 
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import net.whydah.sso.application.ApplicationHelper;
+import net.whydah.sso.application.helpers.ApplicationHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import org.junit.BeforeClass;
 import org.junit.Test;

@@ -1,16 +1,16 @@
 package net.whydah.sso.util;
 
-import net.whydah.sso.application.ApplicationCredentialSerializer;
-import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
+import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.session.WhydahApplicationSession;
-import net.whydah.sso.user.UserRoleXpathHelper;
+import net.whydah.sso.user.helpers.UserRoleXpathHelper;
+import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.user.types.UserIdentityRepresentation;
-import net.whydah.sso.user.types.UserRole;
+import net.whydah.sso.user.types.UserIdentity;
 import org.slf4j.Logger;
 
 import javax.ws.rs.client.Client;
@@ -51,7 +51,7 @@ public class WhydahUtil {
         ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         if (myAppTokenXml == null || myAppTokenXml.length() < 10) {
-            log.error("logOnApplication - unable to create application session on " + stsURI + " for appCredentials: " + ApplicationCredentialSerializer.toXML(appCredential));
+            log.error("logOnApplication - unable to create application session on " + stsURI + " for appCredentials: " + ApplicationCredentialMapper.toXML(appCredential));
 
         }
         return myAppTokenXml;
@@ -116,7 +116,7 @@ public class WhydahUtil {
      * @param userIdentity       The user identity you want to create.
      * @return UserIdentityXml
      */
-    public static String addUser(String uasUri, String applicationTokenId, String adminUserTokenId, UserIdentityRepresentation userIdentity) {
+    public static String addUser(String uasUri, String applicationTokenId, String adminUserTokenId, UserIdentity userIdentity) {
         String userId = null;
 
 
@@ -145,14 +145,14 @@ public class WhydahUtil {
      * @param roles              List of roles to be created.
      * @return List of the roles that has been creatd. Empty list if no roles were created.
      */
-    public static List<UserRole> addRolesToUser(String uasUri, String applicationTokenId, String adminUserTokenId, List<UserRole> roles) {
+    public static List<UserApplicationRoleEntry> addRolesToUser(String uasUri, String applicationTokenId, String adminUserTokenId, List<UserApplicationRoleEntry> roles) {
 
         List<String> createdRolesXml = new ArrayList<>();
-        List<UserRole> createdRoles = new ArrayList<>();
+        List<UserApplicationRoleEntry> createdRoles = new ArrayList<>();
         WebTarget userTarget = buildBaseTarget(uasUri, applicationTokenId, adminUserTokenId).path("/user");
         Response response;
         String userName = "";
-        for (UserRole role : roles) {
+        for (UserApplicationRoleEntry role : roles) {
             String roleXml = role.toXML();
             log.trace("Try to add role {}", roleXml);
             userName = role.getUserName();
@@ -167,22 +167,22 @@ public class WhydahUtil {
             }
         }
         for (String createdRoleXml : createdRolesXml) {
-            UserRole createdUserRole = UserRole.fromXml(createdRoleXml);
+            UserApplicationRoleEntry createdUserRole = UserApplicationRoleEntry.fromXml(createdRoleXml);
             createdRoles.add(createdUserRole);
         }
         return createdRoles;
     }
 
-    public static List<UserRole> listUserRoles(String uasUri, String adminAppTokenId, String adminUserTokenId, String applicationId, String userId) {
+    public static List<UserApplicationRoleEntry> listUserRoles(String uasUri, String adminAppTokenId, String adminUserTokenId, String applicationId, String userId) {
 
-        List<UserRole> userRoles = new ArrayList<>();
+        List<UserApplicationRoleEntry> userRoles = new ArrayList<>();
         WebTarget userTarget = buildBaseTarget(uasUri, adminAppTokenId, adminUserTokenId).path("/user");
         Response response;
         response = userTarget.path(userId).path("roles").request().accept(MediaType.APPLICATION_XML).get();
         if (response.getStatus() == OK.getStatusCode()) {
             String rolesXml = response.readEntity(String.class);
             log.debug("CommandListRoles - listUserRoles - Created role ok {}", rolesXml);
-            userRoles = UserRoleXpathHelper.rolesViaJackson(rolesXml);
+            userRoles = UserRoleXpathHelper.getUserRoleFromUserAggregateXml(rolesXml);  // ).rolesViaJackson
         } else {
             log.trace("Failed to find roles for user {}, response status {}", userId, response.getStatus());
         }

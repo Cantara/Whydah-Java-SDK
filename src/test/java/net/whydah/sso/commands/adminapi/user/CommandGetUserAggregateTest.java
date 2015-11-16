@@ -1,13 +1,13 @@
 package net.whydah.sso.commands.adminapi.user;
 
 
-import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredentialWithStubbedFallback;
-import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.SSLTool;
 import org.junit.BeforeClass;

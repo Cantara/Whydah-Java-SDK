@@ -4,8 +4,8 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import net.whydah.sso.application.ApplicationCredentialSerializer;
-import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
+import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,11 +45,11 @@ public class CommandLogonApplication extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-        log.trace("CommandLogonApplication - uri={} appCredential={}", tokenServiceUri.toString(), ApplicationCredentialSerializer.toXML(appCredential));
+        log.trace("CommandLogonApplication - uri={} appCredential={}", tokenServiceUri.toString(), ApplicationCredentialMapper.toXML(appCredential));
 
         Client tokenServiceClient = ClientBuilder.newClient();
         Form formData = new Form();
-        formData.param("applicationcredential", ApplicationCredentialSerializer.toXML(appCredential));
+        formData.param("applicationcredential", ApplicationCredentialMapper.toXML(appCredential));
 
         Response response;
         WebTarget logonResource = tokenServiceClient.target(tokenServiceUri).path("logon");

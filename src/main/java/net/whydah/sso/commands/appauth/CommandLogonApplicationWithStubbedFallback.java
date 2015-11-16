@@ -1,13 +1,10 @@
 package net.whydah.sso.commands.appauth;
 
-import net.whydah.sso.application.ApplicationHelper;
+import net.whydah.sso.application.helpers.ApplicationHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 
 import java.net.URI;
 
-/**
- * Created by totto on 24.06.15.
- */
 public class CommandLogonApplicationWithStubbedFallback extends CommandLogonApplication {
 
 

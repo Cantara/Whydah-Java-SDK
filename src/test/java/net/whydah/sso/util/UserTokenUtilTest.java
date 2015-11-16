@@ -1,13 +1,13 @@
 package net.whydah.sso.util;
 
-import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.user.UserRoleXpathHelper;
-import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.user.helpers.UserRoleXpathHelper;
+import net.whydah.sso.user.helpers.UserXpathHelper;
+import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.user.types.UserRole;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,10 +68,10 @@ public class UserTokenUtilTest {
     public void testAddUserRolesAndFindIt() throws Exception {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
             String roleValue = "true";
-            UserRole role = new UserRole(userName, TEMPORARY_APPLICATION_ID, orgName, roleName, roleValue);
-            List<UserRole> roles = new ArrayList<>();
+            UserApplicationRoleEntry role = new UserApplicationRoleEntry(userName, TEMPORARY_APPLICATION_ID, orgName, roleName, roleValue);
+            List<UserApplicationRoleEntry> roles = new ArrayList<>();
             roles.add(role);
-            role = new UserRole(userName, TEMPORARY_APPLICATION_ID, orgName, roleName2, roleValue);
+            role = new UserApplicationRoleEntry(userName, TEMPORARY_APPLICATION_ID, orgName, roleName2, roleValue);
             roles.add(role);
             WhydahUtil.addRolesToUser(userAdminServiceUri, myApplicationTokenID, adminUserTokenId, roles);
             //Re-login after add roles
@@ -82,9 +82,9 @@ public class UserTokenUtilTest {
             assertNotNull(userTokenXml);
 
             String expression = "/usertoken/uid";
-            String userId = UserXpathHelper.findValue(userTokenXml, expression);
+            String userId = UserXpathHelper.getUserIdFromUserTokenXml(userTokenXml);
             assertEquals("admin", userId);
-            UserRole[] userRoles = UserRoleXpathHelper.getUserRoleFromUserTokenXml(userTokenXml);
+            UserApplicationRoleEntry[] userRoles = UserRoleXpathHelper.getUserRoleFromUserTokenXml(userTokenXml);
             assertTrue(UserXpathHelper.hasRoleFromUserToken(userTokenXml, TEMPORARY_APPLICATION_ID, roleName));
             assertTrue(UserXpathHelper.hasRoleFromUserToken(userTokenXml, TEMPORARY_APPLICATION_ID, roleName2));
 

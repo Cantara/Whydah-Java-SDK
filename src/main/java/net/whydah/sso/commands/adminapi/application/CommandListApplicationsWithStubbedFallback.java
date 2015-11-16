@@ -1,6 +1,7 @@
 package net.whydah.sso.commands.adminapi.application;
 
-import net.whydah.sso.application.ApplicationHelper;
+
+import net.whydah.sso.application.helpers.ApplicationHelper;
 
 import java.net.URI;
 

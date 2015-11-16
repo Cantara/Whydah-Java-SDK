@@ -1,13 +1,13 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.user.helpers.UserXpathHelper;
+import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.user.types.UserRole;
 import net.whydah.sso.util.SystemTestUtil;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -88,7 +88,7 @@ public class CommandAddUserRoleTest {
     }
 
     private String getTestNewUserRole(String userTokenId, String applicationId) {
-        UserRole role = new UserRole(userTokenId, applicationId, "TestOrg" + UUID.randomUUID(), "TestRolename" + UUID.randomUUID(), "testRoleValue");
+        UserApplicationRoleEntry role = new UserApplicationRoleEntry(userTokenId, applicationId, "TestOrg" + UUID.randomUUID(), "TestRolename" + UUID.randomUUID(), "testRoleValue");
 
         return role.toJson();
 

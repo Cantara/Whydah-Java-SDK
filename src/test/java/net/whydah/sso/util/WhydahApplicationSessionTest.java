@@ -1,6 +1,6 @@
 package net.whydah.sso.util;
 
-import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.session.WhydahApplicationSession;
 import org.junit.Ignore;
 import org.junit.Test;

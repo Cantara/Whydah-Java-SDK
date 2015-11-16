@@ -1,8 +1,12 @@
 package net.whydah.sso.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.whydah.sso.application.helpers.ApplicationHelper;
+import net.whydah.sso.application.mappers.ApplicationMapper;
 import net.whydah.sso.application.types.Application;
-import net.whydah.sso.application.types.ApplicationRole;
+import net.whydah.sso.application.types.ApplicationACL;
+import net.whydah.sso.application.types.ApplicationAvailableOrganizationNames;
+import net.whydah.sso.application.types.ApplicationAvailableRoleNames;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -27,12 +31,12 @@ public class ApplicationSerializerTest {
         app1.setDescription("description of application");
         app1.setApplicationUrl("https://webtest.exapmle.com/test.png");
         app1.setLogoUrl("https://webtest.example.com");
-        app1.addRole(new ApplicationRole("roleId1", "roleName1"));
-        app1.addOrganizationName("organizationName1");
+        app1.addRole(new ApplicationAvailableRoleNames("roleId1", "roleName1"));
+        app1.addOrganizationName(new ApplicationAvailableOrganizationNames("orgId", "organizationName1"));
         app1.setDefaultRoleName("defaultRoleName");
         app1.setDefaultRoleName("roleName1");
         app1.setDefaultOrganizationName("defaultOrgName");
-        app1.addOrganizationName(app1.getDefaultOrganizationName());
+        app1.addOrganizationName(new ApplicationAvailableOrganizationNames("orgDefault", app1.getDefaultOrganizationName()));
         app1.addAcl(new ApplicationACL("11","/user","READ"));
 
         app1.getSecurity().setSecret("veryVerySecret");
@@ -62,7 +66,7 @@ public class ApplicationSerializerTest {
 
     @Test
     public void fromRealJson() throws Exception{
-        Application applicationFromJson = ApplicationMapper.fromJson(ApplicationHelper.getDummyAppllicationJson());
+        Application applicationFromJson = ApplicationMapper.fromJson(ApplicationHelper.getDummyApplicationJson());
         log.debug(ApplicationMapper.toJson(applicationFromJson));
     }
 

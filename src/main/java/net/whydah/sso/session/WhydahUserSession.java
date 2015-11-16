@@ -1,6 +1,6 @@
 package net.whydah.sso.session;
 
-import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.WhydahUtil;
 import org.slf4j.Logger;

@@ -1,12 +1,12 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.user.UserXpathHelper;
+import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.user.types.UserIdentityRepresentation;
+import net.whydah.sso.user.types.UserIdentity;
 import net.whydah.sso.util.SSLTool;
 import net.whydah.sso.util.SystemTestUtil;
 import org.junit.BeforeClass;
@@ -64,7 +64,7 @@ public class CommandAddUserTest {
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
-            UserIdentityRepresentation uir = getTestNewUserIdentity(UserXpathHelper.getUserIdFromUserTokenXml(userToken), myApplicationTokenID);
+            UserIdentity uir = getTestNewUserIdentity(UserXpathHelper.getUserIdFromUserTokenXml(userToken), myApplicationTokenID);
             String userIdentityJson = uir.toJson();
             // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
             String userAddRoleResult = new CommandAddUser(userAdminServiceUri, myApplicationTokenID, userTokenId, userIdentityJson).execute();
@@ -77,10 +77,10 @@ public class CommandAddUserTest {
 
     }
 
-    private UserIdentityRepresentation getTestNewUserIdentity(String userTokenId, String applicationId) {
+    private UserIdentity getTestNewUserIdentity(String userTokenId, String applicationId) {
         Random rand = new Random();
         rand.setSeed(new java.util.Date().getTime());
-        UserIdentityRepresentation user = new UserIdentityRepresentation("us" + UUID.randomUUID().toString().replace("-", "").replace("_", "").substring(1, 10), "Mt Test", "Testesen", "0", UUID.randomUUID().toString().replace("-", "").replace("_", "").substring(1, 10) + "@getwhydah.com", "47" + Integer.toString(rand.nextInt(100000000)));
+        UserIdentity user = new UserIdentity("us" + UUID.randomUUID().toString().replace("-", "").replace("_", "").substring(1, 10), "Mt Test", "Testesen", "0", UUID.randomUUID().toString().replace("-", "").replace("_", "").substring(1, 10) + "@getwhydah.com", "47" + Integer.toString(rand.nextInt(100000000)));
         return user;
 
     }

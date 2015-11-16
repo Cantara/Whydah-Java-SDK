@@ -1,12 +1,10 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import net.whydah.sso.user.UserHelper;
+
+import net.whydah.sso.user.helpers.UserHelper;
 
 import java.net.URI;
 
-/**
- * Created by totto on 25.06.15.
- */
 public class CommandListUsersWithStubbedFallback extends CommandListUsers {
 
 

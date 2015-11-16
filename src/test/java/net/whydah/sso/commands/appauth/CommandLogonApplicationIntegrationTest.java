@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.appauth;
 
-import net.whydah.sso.application.ApplicationXpathHelper;
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.SystemTestUtil;

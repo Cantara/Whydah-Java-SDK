@@ -1,5 +1,8 @@
 package net.whydah.sso.user;
 
+import net.whydah.sso.user.helpers.UserHelper;
+import net.whydah.sso.user.helpers.UserRoleXpathHelper;
+import net.whydah.sso.user.helpers.UserXpathHelper;
 import org.junit.Before;
 import org.junit.Test;
 
