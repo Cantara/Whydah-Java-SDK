@@ -7,9 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 
-/**
- * Created by totto on 24.06.15.
- */
 public class CommandLogonUserByUserCredentialWithStubbedFallback extends CommandLogonUserByUserCredential {
 
     private static final Logger log = LoggerFactory.getLogger(CommandLogonUserByUserCredentialWithStubbedFallback.class);
