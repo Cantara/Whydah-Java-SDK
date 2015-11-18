@@ -41,8 +41,8 @@ public class CommandListApplicationsTest {
         userAdminServiceUri = UriBuilder.fromUri("https://no_host").build();
 
         if (systemTest) {
-            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
-            userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/useradminservice/").build();
+            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
+            userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/useradminservice/").build();
         }
     }
 
