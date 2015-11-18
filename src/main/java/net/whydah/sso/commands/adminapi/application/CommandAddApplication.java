@@ -38,11 +38,11 @@ public class CommandAddApplication extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-        log.trace("CommandAddApplication - myAppTokenId={}", myAppTokenId);
+        log.trace("CommandAddApplication - myAppTokenId={} - \n\n adding applicationJson={}", myAppTokenId, applicationJson);
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
-        WebTarget addApplication = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/adminapplications");
+        WebTarget addApplication = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/application");
         Response response = addApplication.request().post(Entity.json(applicationJson));
         return null;
     }
