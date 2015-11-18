@@ -44,7 +44,7 @@ public class CommandAddApplication extends HystrixCommand<String> {
 
         WebTarget addApplication = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/application");
         Response response = addApplication.request().post(Entity.json(applicationJson));
-        return null;
+        return response.getEntity().toString();
     }
 
     @Override
