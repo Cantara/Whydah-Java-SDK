@@ -43,7 +43,6 @@ public class CommandListApplications extends HystrixCommand<String> {
 
         WebTarget applicationList = uasClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/applications");
 
-        // Works against UIB, still misisng in UAS...
         Response response = applicationList.request().get();
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
             log.info("CommandListApplications -  User authentication failed with status code " + response.getStatus());
