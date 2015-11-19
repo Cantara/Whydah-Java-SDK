@@ -18,7 +18,6 @@ import org.junit.Test;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
@@ -26,10 +25,9 @@ import static org.junit.Assert.assertTrue;
 public class CommandAddApplicationTest {
 
     public static String TEMPORARY_APPLICATION_ID = "11";//"11";
-    public static String TEMPORARY_APPLICATION_SECRET = "NNNmHsQDCerVWx5d6aCjug9fyPE";
+    public static String TEMPORARY_APPLICATION_SECRET = "LLNmHsQDCerVWx5d6aCjug9fyPE";
     public static String userName = "useradmin";
     public static String password = "useradmin";
-    static Random ran = new Random();
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
@@ -55,35 +53,7 @@ public class CommandAddApplicationTest {
     }
 
     public static String getDummyApplicationJson() {
-        return "{\n" +
-                "  \"id\" : \"" + ran.nextInt(9999) + "\",\n" +
-                "  \"name\" : \"ACS" + ran.nextInt(9999) + "\",\n" +
-                "  \"description\" : \"Application description here\",\n" +
-                "  \"applicationUrl\" : \"http://my.application.com\",\n" +
-                "  \"logoUrl\" : \"http://my.application.com/mylogo.png\",\n" +
-                "  \"roles\" : [ {\n" +
-                "    \"id\" : \"roleId1\",\n" +
-                "    \"name\" : \"roleName1\"\n" +
-                "  } ],\n" +
-                "  \"defaultRoleName\" : \"Employee\",\n" +
-                "  \"organizationNames\" : [ {\n" +
-                "    \"id\" : \"orgId\",\n" +
-                "    \"name\" : \"organizationName1\"\n" +
-                "  }, {\n" +
-                "    \"id\" : \"orgidxx\",\n" +
-                "    \"name\" : \"defaultOrgName\"\n" +
-                "  } ],\n" +
-                "  \"defaultOrganizationName\" : \"ACSOrganization\",\n" +
-                "  \"security\" : {\n" +
-                "    \"minSecurityLevel\" : \"0\",\n" +
-                "    \"minDEFCON\" : \"DEFCON5\",\n" +
-                "    \"maxSessionTimoutSeconds\" : \"86400\",\n" +
-                "    \"allowedIpAddresses\" : [ \"0.0.0.0/0\" ],\n" +
-                "    \"userTokenFilter\" : \"true\",\n" +
-                "    \"secret\" : \"45fhRM6nbKZ2wfC6RMmMuzXpk\"\n" +
-                "  },\n" +
-                "  \"acl\" : [ ]\n" +
-                "}";
+        return ApplicationHelper.getDummyApplicationJson();
     }
 
     @Test
@@ -92,6 +62,7 @@ public class CommandAddApplicationTest {
         if (!SystemTestUtil.noLocalWhydahRunning() || systemTest) {
 
 
+            System.out.printf("Adding application:\n" + ApplicationMapper.toPrettyJson(ApplicationMapper.fromJson(getDummyApplicationJson())));
             String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
@@ -118,7 +89,7 @@ public class CommandAddApplicationTest {
         System.out.println("applicationsJson=" + applicationsJson);
         assertTrue(applicationsJson.length() > 100);
         List<Application> applications = ApplicationMapper.fromJsonList(applicationsJson);
-        assertTrue(applications.size() > 6);
+        assertTrue(applications.size() > 2);
         return applications.size();
 
 
