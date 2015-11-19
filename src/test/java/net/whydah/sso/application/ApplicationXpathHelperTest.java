@@ -12,9 +12,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
-/**
- * Created by totto on 24.06.15.
- */
 public class ApplicationXpathHelperTest {
 
     private static final Logger log = getLogger(ApplicationXpathHelperTest.class);
@@ -46,25 +43,6 @@ public class ApplicationXpathHelperTest {
         assertEquals(appTokenId,ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXml));
     }
 
-    @Test
-    public void testGetUserRoleFromUserToken() throws Exception {
-        String applications[] = ApplicationJsonpathHelper.getApplicationNamesFromApplicationsJson(ApplicationHelper.getDummyAppllicationListJson());
-        System.out.println("Found applications "+applications.length);
-        assertTrue(7 < applications.length);
-        assertTrue("ACS".equalsIgnoreCase(applications[0]));
-        assertTrue("m2Circle".equalsIgnoreCase(applications[6]));
-        for(String s : applications)
-            System.out.println("ApplicationName: "+s);
-
-    }
-
-    @Ignore   // TODO  Make this jsonpath work..
-    @Test
-    public void testFindApplicationNameFromApplicationId() throws Exception {
-        String applicationName = ApplicationJsonpathHelper.findApplicationNameFromApplicationId(ApplicationHelper.getDummyAppllicationListJson());
-            System.out.println("ApplicationName: " + applicationName);
-
-    }
 
 
 }
