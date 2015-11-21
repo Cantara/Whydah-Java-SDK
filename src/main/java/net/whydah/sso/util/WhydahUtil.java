@@ -27,7 +27,6 @@ import java.util.UUID;
 
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.OK;
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by totto on 06.05.15.
@@ -48,7 +47,7 @@ public class WhydahUtil {
      */
     public static String logOnApplication(String stsURI, String applicationID, String applicationSecret) {
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
-        ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationSecret);
+        ApplicationCredential appCredential = new ApplicationCredential(applicationID, "", applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         if (myAppTokenXml == null || myAppTokenXml.length() < 10) {
             log.error("logOnApplication - unable to create application session on " + stsURI + " for appCredentials: " + ApplicationCredentialMapper.toXML(appCredential));
