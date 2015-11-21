@@ -29,6 +29,7 @@ public class WhydaUtilUserRolesJacksonHelperTest {
     public static final String TEMPORARY_APPLICATION_ID = "201";//"11";
     public static final String TEMPORARY_APPLICATION_SECRET = "bbbbbbbbbbbbbbbbbbbbbbbbb";
     private static final Logger log = getLogger(WhydaUtilUserRolesJacksonHelperTest.class);
+    public static String TEMPORARY_APPLICATION_NAME = "MyApp";//"11";
     private final String userAdminServiceUri = "http://localhost:9992/useradminservice";
     private final String userTokenServiceUri = "http://localhost:9998/tokenservice";
     private final String orgName = "testOrg";
@@ -44,7 +45,7 @@ public class WhydaUtilUserRolesJacksonHelperTest {
     @Before
     public void setUp() throws Exception {
         URI tokenServiceUri = UriBuilder.fromUri(userTokenServiceUri).build();
-        ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID,TEMPORARY_APPLICATION_SECRET);
+        ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
         myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         userCredential = new UserCredential("altranadmin", "altranadmin");

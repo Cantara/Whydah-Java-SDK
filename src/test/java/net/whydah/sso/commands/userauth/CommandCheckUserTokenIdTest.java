@@ -27,7 +27,7 @@ public class CommandCheckUserTokenIdTest {
         if (integrationMode) {
             tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
         }
-        appCredential = new ApplicationCredential("15", "33779936R6Jr47D4Hj5R6p9qT");
+        appCredential = new ApplicationCredential("15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
         userCredential = new UserCredential("useradmin", "useradmin42");
 
         // HystrixCommandProperties.Setter().withFallbackEnabled(!integrationMode);

@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 public class CommandAddUserTest {
 
     public static String TEMPORARY_APPLICATION_ID = "11";//"11";
+    public static String TEMPORARY_APPLICATION_NAME = "MyApp";//"11";
     public static String TEMPORARY_APPLICATION_SECRET = "6r46g3q986Ep6By7B9J46m96D";
     public static String userName = "admin";
     public static String password = "whydahadmin";
@@ -36,7 +37,7 @@ public class CommandAddUserTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
+        appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
         tokenServiceUri = UriBuilder.fromUri(userTokenService).build();
         userCredential = new UserCredential(userName, password);
 

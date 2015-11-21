@@ -28,7 +28,7 @@ public class WhydahApplicationSessionTest {
     public void testTimeoutOnLocahost() throws Exception {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
 
-            WhydahApplicationSession applicationSession = new WhydahApplicationSession("http://localhost:9998/tokenservice", "15", "33779936R6Jr47D4Hj5R6p9qT");
+            WhydahApplicationSession applicationSession = new WhydahApplicationSession("http://localhost:9998/tokenservice", "15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
             String appToken = applicationSession.getActiveApplicationToken();
             Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationSession.getActiveApplicationToken());
             System.out.println("Application expires in " + expires + " seconds");

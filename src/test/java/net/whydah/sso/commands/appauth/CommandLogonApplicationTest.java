@@ -26,7 +26,7 @@ public class CommandLogonApplicationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        appCredential = new ApplicationCredential("15","33779936R6Jr47D4Hj5R6p9qT");
+        appCredential = new ApplicationCredential("15", "TempApp", "33779936R6Jr47D4Hj5R6p9qT");
         tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
         if (integrationMode) {
             tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
@@ -38,7 +38,7 @@ public class CommandLogonApplicationTest {
     @Test
     public void testApplicationLoginCommandFallback() throws Exception {
 
-        appCredential=new ApplicationCredential("15","false secret");
+        appCredential = new ApplicationCredential("15", "TempApp", "false secret");
 
         String myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
         // System.out.println("ApplicationTokenID=" + myApplicationTokenID);

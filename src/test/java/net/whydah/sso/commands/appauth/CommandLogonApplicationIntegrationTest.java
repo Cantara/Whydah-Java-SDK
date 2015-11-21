@@ -23,6 +23,7 @@ public class CommandLogonApplicationIntegrationTest {
     //    public static final String TEMPORARY_APPLICATION_ID = "201";//"11";
 //    public static final String TEMPORARY_APPLICATION_SECRET = "33779936R6Jr47D4Hj5R6p9qT";
     public static String TEMPORARY_APPLICATION_ID = "11";//"11";
+    public static String TEMPORARY_APPLICATION_NAME = "MyApp";//"11";
     public static String TEMPORARY_APPLICATION_SECRET = "6r46g3q986Ep6By7B9J46m96D";
     public static String userName = "admin";
     public static String password = "whydahadmin";
@@ -47,7 +48,7 @@ public class CommandLogonApplicationIntegrationTest {
     @Test
     public void testLogonApplication() throws Exception {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
-            ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
+            ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
             myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
             myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);

@@ -34,7 +34,7 @@ public class CommandListApplicationsTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        appCredential = new ApplicationCredential("15","33779936R6Jr47D4Hj5R6p9qT");
+        appCredential = new ApplicationCredential("15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
         tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
         userCredential = new UserCredential(userName, password);
 

@@ -36,7 +36,7 @@ public class CommandLogonUserByUserCredentialTest {
         if (integrationMode) {
             tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
         }
-        appCredential = new ApplicationCredential("11", "6r46g3q986Ep6By7B9J46m96D");
+        appCredential = new ApplicationCredential("11", "my app", "6r46g3q986Ep6By7B9J46m96D");
         userCredential = new UserCredential("admin", "whydahadmin");
 
         // HystrixCommandProperties.Setter().withFallbackEnabled(!integrationMode);
@@ -76,7 +76,7 @@ public class CommandLogonUserByUserCredentialTest {
     public void tesLogOnApplicationAndUser() throws Exception {
 
         if (integrationMode) {
-            String userToken = WhydahUtil.logOnApplicationAndUser(tokenServiceUri.toString(), appCredential.getApplicationID(), appCredential.getApplicationSecret(), userCredential.getUserName(), userCredential.getPassword());
+            String userToken = WhydahUtil.logOnApplicationAndUser(tokenServiceUri.toString(), appCredential.getApplicationID(), "", appCredential.getApplicationSecret(), userCredential.getUserName(), userCredential.getPassword());
             assertNotNull(userToken);
             assertTrue(userToken.contains("usertoken"));
         }

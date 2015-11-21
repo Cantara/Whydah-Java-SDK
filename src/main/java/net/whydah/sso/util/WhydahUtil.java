@@ -12,6 +12,7 @@ import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserIdentity;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -28,12 +29,8 @@ import java.util.UUID;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.OK;
 
-/**
- * Created by totto on 06.05.15.
- *
- */
 public class WhydahUtil {
-    private static final Logger log = getLogger(WhydahUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(WhydahUtil.class);
 
 
     /**
@@ -68,18 +65,18 @@ public class WhydahUtil {
      * <p>
      * TODO   Use extend session not new logon...
      */
-    public static String extendApplicationSession(String stsURI, String applicationID, String applicationSecret) {
+    public static String extendApplicationSession(String stsURI, String applicationID, String applicationName, String applicationSecret) {
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
-        ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationSecret);
+        ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationName, applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         return myAppTokenXml;
 
     }
 
 
-    public static String logOnApplicationAndUser(String stsURI, String applicationID, String applicationSecret, String username, String password) {
+    public static String logOnApplicationAndUser(String stsURI, String applicationID, String applicationName, String applicationSecret, String username, String password) {
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
-        ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationSecret);
+        ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationName, applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         UserCredential userCredential = new UserCredential(username, password);

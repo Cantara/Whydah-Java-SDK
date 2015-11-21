@@ -33,7 +33,7 @@ public class CommandListUsersTest  {
 
     @BeforeClass
     public static void setup() throws Exception {
-        appCredential = new ApplicationCredential("15", "HK8fGpWmK66ckWaEVn3tF9fRK");
+        appCredential = new ApplicationCredential("15", "MyApp", "HK8fGpWmK66ckWaEVn3tF9fRK");
         tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
         userCredential = new UserCredential("useradmin", "useradmin42");
 

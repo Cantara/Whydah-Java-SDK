@@ -29,6 +29,7 @@ public class UserTokenUtilTest {
     private static final Logger log = getLogger(UserTokenUtilTest.class);
 
     public static String TEMPORARY_APPLICATION_ID = "11";//"11";
+    public static String TEMPORARY_APPLICATION_NAME = "MyApp";//"11";
     public static String TEMPORARY_APPLICATION_SECRET = "6r46g3q986Ep6By7B9J46m96D";
     public static String userName = "admin";
     public static String password = "whydahadmin";
@@ -49,7 +50,7 @@ public class UserTokenUtilTest {
     public void setUp() throws Exception {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
             tokenServiceUri = UriBuilder.fromUri(userTokenServiceUri).build();
-            ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
+            ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
             myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
             myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             userCredential = new UserCredential(userName, password);

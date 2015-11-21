@@ -25,6 +25,7 @@ public class ValidateUserRoleUseCaseTest {
     //public static String TEMPORARY_APPLICATION_ID = "99";//"11";
     //public static String TEMPORARY_APPLICATION_SECRET = "33879936R6Jr47D4Hj5R6p9qT";
     public static String TEMPORARY_APPLICATION_ID = "11";//"11";
+    public static String TEMPORARY_APPLICATION_NAME = "MyApp";//"11";
     public static String TEMPORARY_APPLICATION_SECRET = "6r46g3q986Ep6By7B9J46m96D";
     public static String userName = "admin";
     public static String password = "whydahadmin";
@@ -45,7 +46,7 @@ public class ValidateUserRoleUseCaseTest {
     @Test
     public void test1_logonApplication() throws Exception {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
-            WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
+            WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
             System.out.println("Active ApplicationId:" + applicationSession.getActiveApplicationTokenId());
             assertTrue(applicationSession.hasActiveSession());
         }
@@ -56,7 +57,7 @@ public class ValidateUserRoleUseCaseTest {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
 
             UserCredential userCredential = new UserCredential(userName, password);
-            WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
+            WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
             assertTrue(applicationSession.hasActiveSession());
             String userTokenXml = WhydahUtil.logOnUser(applicationSession, userCredential);
             assertNotNull(userTokenXml);
@@ -68,7 +69,7 @@ public class ValidateUserRoleUseCaseTest {
     @Test   // NB takes 35 minutes to complete......
     public void test2_logonUserSession() throws Exception {
         UserCredential userCredential = new UserCredential(userName, password);
-        WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
+        WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
         assertTrue(applicationSession.hasActiveSession());
         WhydahUserSession userSession = new WhydahUserSession(applicationSession,userCredential);
         assertTrue(userSession.hasActiveSession());
@@ -89,7 +90,7 @@ public class ValidateUserRoleUseCaseTest {
     public void bli_test2_logonUser() throws Exception {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
 
-            WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
+            WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
             assertTrue(applicationSession.hasActiveSession());
             String appTokenId = applicationSession.getActiveApplicationTokenId();
             log.trace("appTokenId {}", appTokenId);
@@ -106,7 +107,7 @@ public class ValidateUserRoleUseCaseTest {
     public void bli_test3_validateRole() throws Exception {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
 
-            WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_SECRET);
+            WhydahApplicationSession applicationSession = new WhydahApplicationSession(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
             assertTrue(applicationSession.hasActiveSession());
             String appTokenId = applicationSession.getActiveApplicationTokenId();
             log.trace("appTokenId {}", appTokenId);
