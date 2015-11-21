@@ -25,7 +25,7 @@ public class CommandGetUserTest {
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
-    private static boolean systemtest = true;
+    private static boolean systemtest = false;
     private static URI userAdminServiceUri;
 
 
