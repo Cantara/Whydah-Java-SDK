@@ -16,33 +16,36 @@ import javax.ws.rs.core.Response;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
+ * Used by UAS to autenticate application against UIB.
+ *
  * @author <a href="mailto:erik-dev@fjas.no">Erik Drolshammer</a> 2015-11-21.
  */
-public class CommandAuthenticateApplication extends HystrixCommand<Response> {
+public class CommandAuthenticateApplicationUIB extends HystrixCommand<Response> {
     public static final String UAS_APP_CREDENTIAL_XML = "uasAppCredentialXml";
     public static final String APP_CREDENTIAL_XML = "appCredentialXml";
     private static final String APPLICATION_AUTH_PATH = "application/auth";
-    private static final Logger log = getLogger(CommandAuthenticateApplication.class);
+    private static final Logger log = getLogger(CommandAuthenticateApplicationUIB.class);
     private String uibUri;
     private String stsApplicationtokenId;
     private String uasAppCredentialXml;
     private String appCredentialXml;
 
 
-    public CommandAuthenticateApplication(String uibUri, String stsApplicationtokenId, String uasAppCredentialXml, String appCredentialXml) {
+    public CommandAuthenticateApplicationUIB(String uibUri, String stsApplicationtokenId, String uasAppCredentialXml,
+                                             String appCredentialXml) {
         super(HystrixCommandGroupKey.Factory.asKey("UIBApplicationAdminGroup"));
         this.uibUri = uibUri;
         this.stsApplicationtokenId = stsApplicationtokenId;
         this.uasAppCredentialXml = uasAppCredentialXml;
         this.appCredentialXml = appCredentialXml;
         if (uibUri == null || stsApplicationtokenId == null || uasAppCredentialXml == null || appCredentialXml == null) {
-            log.error("{} initialized with null-values - will fail", CommandAuthenticateApplication.class.getSimpleName());
+            log.error("{} initialized with null-values - will fail", CommandAuthenticateApplicationUIB.class.getSimpleName());
         }
     }
 
     @Override
     protected Response run() {
-        log.trace("{} - stsApplicationtokenId={}, ", CommandAuthenticateApplication.class.getSimpleName(), stsApplicationtokenId);
+        log.trace("{} - stsApplicationtokenId={}, ", CommandAuthenticateApplicationUIB.class.getSimpleName(), stsApplicationtokenId);
         Client client = ClientBuilder.newClient();
         WebTarget uib = client.target(uibUri);
         WebTarget webResource = uib.path(stsApplicationtokenId).path(APPLICATION_AUTH_PATH);
@@ -55,7 +58,7 @@ public class CommandAuthenticateApplication extends HystrixCommand<Response> {
 
     @Override
     protected Response getFallback() {
-        log.warn("{} - timeout - uibUri={}", CommandAuthenticateApplication.class.getSimpleName(), uibUri);
+        log.warn("{} - timeout - uibUri={}", CommandAuthenticateApplicationUIB.class.getSimpleName(), uibUri);
         return null;
     }
 }
