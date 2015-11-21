@@ -20,20 +20,23 @@ public class WhydahApplicationSession {
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
     private String sts;
     private String appId;
+    private String appName;
     private String appSecret;
     private String applicationTokenId;
+    private String applicationName;
     private String applicationTokenXML;
 
 
     public WhydahApplicationSession() {
-        this("https://whydahdev.altrancloud.com/tokenservice/", "99", "33879936R6Jr47D4Hj5R6p9qT");
+        this("https://whydahdev.altrancloud.com/tokenservice/", "99", "TestApp", "33879936R6Jr47D4Hj5R6p9qT");
 
     }
 
 
-    public WhydahApplicationSession(String sts, String appId, String appSecret) {
+    public WhydahApplicationSession(String sts, String appId, String appName, String appSecret) {
         this.sts = sts;
         this.appId = appId;
+        this.appName = appName;
         this.appSecret = appSecret;
         initializeWhydahApplicationSession();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -84,6 +87,7 @@ public class WhydahApplicationSession {
         log.debug("Trying to renew applicationsession");
         applicationTokenXML = WhydahUtil.logOnApplication(sts, appId, appSecret);
         applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
+        applicationName = ApplicationXpathHelper.getAppNameFromAppTokenXml(applicationTokenXML);
         if (!hasActiveSession()) {
             log.info("Error, unable to renew application session, applicationTokenXml:"+applicationTokenXML);
             for (int n=0;n<7 || !hasActiveSession();n++){
@@ -100,7 +104,7 @@ public class WhydahApplicationSession {
             log.info("Success in renew applicationsession, applicationTokenXml:" + applicationTokenXML);
             Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML);
             if (expiresBeforeNextSchedule(expires)) {
-                applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
+                applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, applicationName, appSecret);
                 applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
             }
         }
