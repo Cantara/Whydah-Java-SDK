@@ -29,7 +29,7 @@ public class CommandLogonApplication extends HystrixCommand<String> {
 
     public CommandLogonApplication(URI tokenServiceUri,ApplicationCredential appCredential) {
         super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("UASUserAdminGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
-                .withExecutionTimeoutInMilliseconds(3000)));
+                .withExecutionTimeoutInMilliseconds(6000)));
 
         this.tokenServiceUri = tokenServiceUri;
         this.appCredential=appCredential;
