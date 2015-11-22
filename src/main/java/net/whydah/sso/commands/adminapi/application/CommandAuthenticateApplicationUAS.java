@@ -21,6 +21,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author <a href="mailto:erik-dev@fjas.no">Erik Drolshammer</a> 2015-11-21.
  */
 public class CommandAuthenticateApplicationUAS extends HystrixCommand<Response> {
+    public static final String APP_CREDENTIAL_XML = "appCredentialXml";
     private static final String APPLICATION_AUTH_PATH = "application/auth";
     private static final Logger log = getLogger(CommandAuthenticateApplicationUAS.class);
     private String uibUri;
@@ -45,7 +46,7 @@ public class CommandAuthenticateApplicationUAS extends HystrixCommand<Response> 
         WebTarget uib = client.target(uibUri);
         WebTarget webResource = uib.path(stsApplicationtokenId).path(APPLICATION_AUTH_PATH);
         MultivaluedMap<String,String> formData = new MultivaluedHashMap<>(2);
-        formData.add(CommandAuthenticateApplicationUIB.APP_CREDENTIAL_XML, appCredentialXml);
+        formData.add(APP_CREDENTIAL_XML, appCredentialXml);
         return webResource.request(MediaType.APPLICATION_FORM_URLENCODED)
                           .post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED));
     }
