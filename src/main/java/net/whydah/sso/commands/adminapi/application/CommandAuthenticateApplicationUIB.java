@@ -39,7 +39,7 @@ public class CommandAuthenticateApplicationUIB extends HystrixCommand<Response> 
         this.uasAppCredentialXml = uasAppCredentialXml;
         this.appCredentialXml = appCredentialXml;
         if (uibUri == null || stsApplicationtokenId == null || uasAppCredentialXml == null || appCredentialXml == null) {
-            log.error("{} initialized with null-values - will fail", CommandAuthenticateApplicationUIB.class.getSimpleName());
+            log.error("{} initialized with null-values - will fail  uibUri:{}, stsApplicationtokenId:{}, uasAppCredentialXml:{}, appCredentialXml:{}", CommandAuthenticateApplicationUIB.class.getSimpleName(), uibUri, stsApplicationtokenId, uasAppCredentialXml, appCredentialXml);
         }
     }
 
