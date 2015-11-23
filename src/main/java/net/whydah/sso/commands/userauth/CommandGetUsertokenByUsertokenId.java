@@ -31,7 +31,7 @@ public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
 
     public CommandGetUsertokenByUsertokenId(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, String usertokenId) {
         super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("SSOAUserAuthGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
-                .withExecutionTimeoutInMilliseconds(3000)));
+                .withExecutionTimeoutInMilliseconds(6000)));
         this.tokenServiceUri = tokenServiceUri;
         this.myAppTokenId = myAppTokenId;
         this.usertokenId = usertokenId;
