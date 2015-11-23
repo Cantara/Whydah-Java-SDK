@@ -54,8 +54,8 @@ public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
         WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/get_usertoken_by_usertokenid");
         log.trace("CommandGetUsertokenByUsertokenId  - usertokenid: {} apptoken: {}", usertokenId, myAppTokenXml);
         Form formData = new Form();
-        formData.param("apptoken", myAppTokenXml);
-        formData.param("usertokenId", usertokenId);
+        formData.param("apptoken", myAppTokenXml);  //
+        formData.param("usertokenid", usertokenId);  //usertokenid
 
         Response response = userTokenResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
