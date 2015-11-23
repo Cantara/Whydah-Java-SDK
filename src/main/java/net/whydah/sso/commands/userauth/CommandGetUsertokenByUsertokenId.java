@@ -59,15 +59,14 @@ public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
 
         Response response = userTokenResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
-            log.warn("CommandGetUsertokenByUsertokenId failed");
-            throw new IllegalArgumentException("CommandGetUsertokenByUserticket  failed.");
+            log.debug("CommandGetUsertokenByUsertokenId - Response Code from STS: {}", response.getStatus());
+            throw new IllegalArgumentException("CommandGetUsertokenByUsertokenId failed.");
         }
-        if (response.getStatus() == OK.getStatusCode()) {
-            responseXML = response.readEntity(String.class);
-            log.debug("CommandGetUsertokenByUsertokenId - Response OK with XML: {}", responseXML);
-        } else {
+        if (!(response.getStatus() == OK.getStatusCode())) {
             log.debug("CommandGetUsertokenByUsertokenId - Response Code from STS: {}", response.getStatus());
         }
+        responseXML = response.readEntity(String.class);
+        log.debug("CommandGetUsertokenByUsertokenId - Response OK with XML: {}", responseXML);
 
         if (responseXML == null) {
             String authenticationFailedMessage = ExceptionUtil.printableUrlErrorMessage("User session failed", userTokenResource, response);
