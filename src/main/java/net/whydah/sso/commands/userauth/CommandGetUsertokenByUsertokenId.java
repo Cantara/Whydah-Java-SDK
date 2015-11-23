@@ -81,7 +81,7 @@ public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandGetUsertokenByUsertokenId - timeout - uri={}", tokenServiceUri.toString());
+        log.warn("CommandGetUsertokenByUsertokenId - timeout - uri={} - usertokenId:{} - myAppTokenId: {}", tokenServiceUri.toString(), usertokenId, myAppTokenId);
         return null;
     }
 
