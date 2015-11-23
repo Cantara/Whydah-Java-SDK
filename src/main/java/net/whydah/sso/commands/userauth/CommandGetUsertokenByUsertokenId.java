@@ -37,7 +37,7 @@ public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
         this.usertokenId = usertokenId;
         this.myAppTokenXml = myAppTokenXml;
         if (tokenServiceUri == null || myAppTokenId == null || myAppTokenXml == null || usertokenId == null) {
-            log.error("CommandGetUsertokenByUsertokenId initialized with null-values - will fail");
+            log.error("CommandGetUsertokenByUsertokenId initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, usertokenId:{}", tokenServiceUri.toString(), myAppTokenId, usertokenId);
         }
 
     }
@@ -46,7 +46,7 @@ public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
     protected String run() {
 
         String responseXML = null;
-        log.trace("CommandGetUsertokenByUsertokenId - uri={} myAppTokenId={}", tokenServiceUri.toString(), myAppTokenId);
+        log.trace("CommandGetUsertokenByUsertokenId - uri={} myAppTokenId={}, usertokenId:{}", tokenServiceUri.toString(), myAppTokenId, usertokenId);
 
 
         Client tokenServiceClient = ClientBuilder.newClient();
@@ -66,12 +66,7 @@ public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
             responseXML = response.readEntity(String.class);
             log.debug("CommandGetUsertokenByUsertokenId - Response OK with XML: {}", responseXML);
         } else {
-            //retry
-            response = userTokenResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
-            if (response.getStatus() == OK.getStatusCode()) {
-                responseXML = response.readEntity(String.class);
-                log.debug("CommandGetUsertokenByUsertokenId - Response OK with XML: {}", responseXML);
-            }
+            log.debug("CommandGetUsertokenByUsertokenId - Response Code from STS: {}", response.getStatus());
         }
 
         if (responseXML == null) {
