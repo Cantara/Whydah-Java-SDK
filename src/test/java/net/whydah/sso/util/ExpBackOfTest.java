@@ -15,7 +15,7 @@ public class ExpBackOfTest {
 
 
     @Test
-    public void testAndDocumentExpotensialbackup() {
+    public void testAndDocumentExpotensialBackOff() {
         BackOff exponentialBackOff = new ExponentialBackOff();
         BackOffExecution backOffExecution = exponentialBackOff.start();
 
