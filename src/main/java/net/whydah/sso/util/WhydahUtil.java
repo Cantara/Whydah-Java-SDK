@@ -54,6 +54,17 @@ public class WhydahUtil {
 
     }
 
+    public static String logOnApplication(String stsURI, ApplicationCredential myAppcredential) {
+        URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
+        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, myAppcredential).execute();
+        if (myAppTokenXml == null || myAppTokenXml.length() < 10) {
+            log.error("logOnApplication - unable to create application session on " + stsURI + " for appCredentials: " + ApplicationCredentialMapper.toXML(myAppcredential));
+
+        }
+        return myAppTokenXml;
+
+    }
+
     /**
      * Extend the application's's logon expiry period.
      *
@@ -73,6 +84,12 @@ public class WhydahUtil {
 
     }
 
+    public static String extendApplicationSession(String stsURI, ApplicationCredential myAppcredential) {
+        URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
+        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, myAppcredential).execute();
+        return myAppTokenXml;
+
+    }
 
     public static String logOnApplicationAndUser(String stsURI, String applicationID, String applicationName, String applicationSecret, String username, String password) {
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
