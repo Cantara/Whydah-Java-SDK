@@ -44,7 +44,7 @@ public class CommandGetApplicationIdFromApplicationTokenId extends HystrixComman
         Response response = verifyResource.request().get(Response.class);
         if (response.getStatus() == OK.getStatusCode()) {
             log.info("ComandGetApplicationIDFromApplicationTokenId - ApplicationTokenId authentication for {}: {} {}", verifyResource.getUri().toString(), response.getStatusInfo().getStatusCode(), response.getStatusInfo().getReasonPhrase());
-            return response.toString();
+            return response.readEntity(String.class);
         }
         if (response.getStatus() == CONFLICT.getStatusCode()) {
             log.warn("ComandGetApplicationIDFromApplicationTokenId - ApplicationTokenId authentication for {}: {} {}", verifyResource.getUri().toString(), response.getStatusInfo().getStatusCode(), response.getStatusInfo().getReasonPhrase());
