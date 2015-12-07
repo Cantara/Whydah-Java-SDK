@@ -40,7 +40,7 @@ public class CommandUpdateUserRole extends HystrixCommand<String> {
 
         Client tokenServiceClient = ClientBuilder.newClient();
 
-        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/xxx");
+        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId).path(adminUserTokenId).path("/xxx");
         // Response response = addUser.request().post(Entity.xml(userIdentityXml));
         throw new UnsupportedOperationException();
         //return null;

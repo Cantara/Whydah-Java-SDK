@@ -39,7 +39,7 @@ public class CommandUpdateUser extends HystrixCommand<String> {
 
         Client uasClient = ClientBuilder.newClient();
 
-        WebTarget updateUser = uasClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/xxx");
+        WebTarget updateUser = uasClient.target(userAdminServiceUri).path(myAppTokenId).path(adminUserTokenId).path("/xxx");
         Response response = updateUser.request().post(Entity.json(userJson));
         throw new UnsupportedOperationException();
         //return null;

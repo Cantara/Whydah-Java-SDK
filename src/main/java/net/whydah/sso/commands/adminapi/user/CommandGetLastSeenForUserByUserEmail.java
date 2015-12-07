@@ -43,7 +43,7 @@ public class CommandGetLastSeenForUserByUserEmail extends HystrixCommand<String>
         String responseXML = null;
         log.trace("CommandGetLastSeenForUserByUserEmail - uri={} myAppTokenId={}, userEmail:{}", tokenServiceUri.toString(), myAppTokenId, userEmail);
         Client tokenServiceClient = ClientBuilder.newClient();
-        WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("user").path(myAppTokenId).path(userEmail).path("/get_usertoken_by_usertokenid");
+        WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("user").path(myAppTokenId).path(userEmail).path("get_usertoken_by_usertokenid");
         log.trace("CommandGetLastSeenForUserByUserEmail  - userEmail: {}", userEmail);
 
         Response response = userTokenResource.request().get();

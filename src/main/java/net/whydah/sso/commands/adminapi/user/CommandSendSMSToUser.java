@@ -46,7 +46,7 @@ public class CommandSendSMSToUser extends HystrixCommand<String> {
         }
         Client smsClient = ClientBuilder.newClient();
 
-        WebTarget userDirectory = smsClient.target(smsGWUrl).path("/sendsms/").path(cellNo).path(smsMessage);
+        WebTarget userDirectory = smsClient.target(smsGWUrl).path("sendsms").path(cellNo).path(smsMessage);
 
         // Works against UIB, still misisng in UAS...
         Response response = userDirectory.request().get();

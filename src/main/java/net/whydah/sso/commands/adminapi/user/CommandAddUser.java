@@ -39,7 +39,7 @@ public class CommandAddUser extends HystrixCommand<String> {
 
         log.trace("CommandAddUser - myAppTokenId={}, adminUserTokenId={{}, userIdentityJson={}", myAppTokenId, adminUserTokenId, userIdentityJson);
         Client tokenServiceClient = ClientBuilder.newClient();
-        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/user/");
+        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId).path(adminUserTokenId).path("user");
         Response response = addUser.request().post(Entity.json(userIdentityJson));
         if (response.getStatus() == OK.getStatusCode()) {
             String responseXML = response.readEntity(String.class);

@@ -42,7 +42,7 @@ public class CommandUserExists extends HystrixCommand<Boolean> {
         log.trace("CommandUserExists - myAppTokenId={}", myAppTokenId);
         Client uasClient = ClientBuilder.newClient();
 
-        WebTarget userDirectory = uasClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/users/find/" + userQuery);
+        WebTarget userDirectory = uasClient.target(userAdminServiceUri).path(myAppTokenId).path(adminUserTokenId).path("users").path("find/").path(userQuery);
 
         // Works against UIB, still misisng in UAS...
         Response response = userDirectory.request().get();

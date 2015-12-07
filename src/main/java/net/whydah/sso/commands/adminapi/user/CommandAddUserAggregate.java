@@ -37,7 +37,7 @@ public class CommandAddUserAggregate extends HystrixCommand<String> {
 
         log.trace("CommandAddUserAggregate - myAppTokenId={}, adminUserTokenId={{}, userAggregateJson={}", myAppTokenId, adminUserTokenId, userAggregateJson);
         Client tokenServiceClient = ClientBuilder.newClient();
-        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/useraggregate/");
+        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId).path(adminUserTokenId).path("useraggregate");
         Response response = addUser.request().post(Entity.json(userAggregateJson));
         if (response.getStatus() == OK.getStatusCode()) {
             String responseXML = response.readEntity(String.class);
