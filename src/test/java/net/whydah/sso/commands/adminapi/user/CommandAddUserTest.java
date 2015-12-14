@@ -5,6 +5,7 @@ import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.helpers.UserXpathHelper;
+import net.whydah.sso.user.mappers.UserIdentityMapper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserIdentity;
 import net.whydah.sso.util.SSLTool;
@@ -66,7 +67,7 @@ public class CommandAddUserTest {
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
             UserIdentity uir = getTestNewUserIdentity(UserXpathHelper.getUserIdFromUserTokenXml(userToken), myApplicationTokenID);
-            String userIdentityJson = uir.toJson();
+            String userIdentityJson = UserIdentityMapper.toJson(uir);
             // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
             String userAddRoleResult = new CommandAddUser(userAdminServiceUri, myApplicationTokenID, userTokenId, userIdentityJson).execute();
             System.out.println("testAddUser:" + userAddRoleResult);

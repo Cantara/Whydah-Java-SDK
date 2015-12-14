@@ -1,7 +1,6 @@
 package net.whydah.sso.commands.userauth;
 
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import junit.framework.Assert;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
@@ -53,7 +52,7 @@ public class CommandGetUsertokenByUsertokenIdTest {
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
         String userToken2 = new CommandGetUsertokenByUsertokenIdWithStubbedFallback(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userTokenId).execute();
 
-        Assert.assertTrue(userToken.equalsIgnoreCase(userToken2));
+        assertTrue(userToken.equalsIgnoreCase(userToken2));
 
 
     }

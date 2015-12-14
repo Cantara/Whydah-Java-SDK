@@ -18,9 +18,7 @@ import java.net.URI;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import static junit.framework.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CommandLogonUserByUserCredentialTest {
 

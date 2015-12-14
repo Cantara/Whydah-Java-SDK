@@ -3,6 +3,7 @@ package net.whydah.sso.commands.userauth;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
+import net.whydah.sso.user.mappers.UserCredentialMapper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.ExceptionUtil;
 import org.slf4j.Logger;
@@ -62,7 +63,7 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
         WebTarget getUserToken = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/" + userticket + "/usertoken");
         Form formData = new Form();
         formData.param("apptoken", myAppTokenXml);
-        formData.param("usercredential", userCredential.toXML());
+        formData.param("usercredential", UserCredentialMapper.toXML(userCredential));
         Response response = postForm(formData,getUserToken);
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
             log.warn("CommandLogonUserByUserCredential - getUserToken - User authentication failed with status code " + response.getStatus());

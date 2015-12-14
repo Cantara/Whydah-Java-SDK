@@ -8,6 +8,7 @@ import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.helpers.UserRoleXpathHelper;
+import net.whydah.sso.user.mappers.UserIdentityMapper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserIdentity;
@@ -134,7 +135,7 @@ public class WhydahUtil {
 
 
         WebTarget addUser = buildBaseTarget(uasUri, applicationTokenId, adminUserTokenId).path("/user");
-        String userIdentityJson = userIdentity.toJson();
+        String userIdentityJson = UserIdentityMapper.toJson(userIdentity);
         System.out.println(userIdentityJson);
         Response response = addUser.request().accept(MediaType.APPLICATION_JSON).post(Entity.entity(userIdentityJson, MediaType.APPLICATION_JSON));
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
