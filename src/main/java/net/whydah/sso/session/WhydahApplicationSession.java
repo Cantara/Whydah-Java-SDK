@@ -11,11 +11,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by totto on 23.06.15.
- * <p>
- * A thread which initiales and keep your application session running
- */
 public class WhydahApplicationSession {
 
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
@@ -78,19 +73,15 @@ public class WhydahApplicationSession {
     * @return true is session is active and working
      */
     public boolean hasActiveSession() {
-        if (applicationTokenXML == null || applicationTokenXML.length() < 4) {
+        if (applicationTokenId == null || applicationTokenId.length() < 4) {
             return false;
         }
         return true;
     }
 
     private void renewWhydahApplicationSession() {
-//        log.debug("Trying to renew applicationsession");
-//        applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
-//        applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
-//        applicationName = ApplicationXpathHelper.getAppNameFromAppTokenXml(applicationTokenXML);
         if (!hasActiveSession()) {
-            log.info("Error, unable to renew application session, applicationTokenXml:" + applicationTokenXML);
+            log.info("No active application session, applicationTokenXml:" + applicationTokenXML);
             for (int n = 0; n < 7 || !hasActiveSession(); n++) {
                 applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
                 applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
@@ -102,11 +93,12 @@ public class WhydahApplicationSession {
             }
 
         } else {
-            log.info("Success in renew applicationsession, applicationTokenXml:" + applicationTokenXML);
+            log.info("Active session found, applicationTokenXML:" + applicationTokenXML);
             Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML);
             if (expiresBeforeNextSchedule(expires)) {
                 applicationTokenXML = WhydahUtil.extendApplicationSession(sts, myAppCredential);
                 applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
+                log.info("Success in renew applicationsession, applicationTokenXml:" + applicationTokenXML);
             }
         }
 
