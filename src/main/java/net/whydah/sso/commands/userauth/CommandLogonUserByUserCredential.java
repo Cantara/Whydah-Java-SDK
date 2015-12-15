@@ -55,6 +55,11 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
         this.userticket=userticket;
     }
 
+    public CommandLogonUserByUserCredential(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, String userCredentialXml, String userticket) {
+        this(tokenServiceUri, myAppTokenId, myAppTokenXml, UserCredentialMapper.fromXml(userCredentialXml));
+        this.userticket = userticket;
+    }
+
     @Override
     protected String run() {
         log.trace("CommandLogonUserByUserCredential - uri={} myAppTokenId={}", tokenServiceUri.toString(), myAppTokenId);
