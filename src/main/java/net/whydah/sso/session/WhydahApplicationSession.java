@@ -81,7 +81,7 @@ public class WhydahApplicationSession {
 
     private void renewWhydahApplicationSession() {
         if (!hasActiveSession()) {
-            log.info("No active application session, applicationTokenXml:" + applicationTokenXML);
+            log.info("No active application session, applicationTokenId:" + applicationTokenId);
             for (int n = 0; n < 7 || !hasActiveSession(); n++) {
                 applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
                 applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
@@ -93,12 +93,12 @@ public class WhydahApplicationSession {
             }
 
         } else {
-            log.info("Active session found, applicationTokenXML:" + applicationTokenXML);
+            log.info("Active session found, applicationTokenId:" + applicationTokenId);
             Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML);
             if (expiresBeforeNextSchedule(expires)) {
                 applicationTokenXML = WhydahUtil.extendApplicationSession(sts, myAppCredential);
                 applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
-                log.info("Success in renew applicationsession, applicationTokenXml:" + applicationTokenXML);
+                log.info("Success in renew applicationsession, applicationTokenId:" + applicationTokenId);
             }
         }
 
@@ -113,7 +113,7 @@ public class WhydahApplicationSession {
             log.info("Error, unable to initialize new application session, applicationTokenXml:" + applicationTokenXML);
 
         } else {
-            log.debug("Initializing new application session, applicationTokenXml:" + applicationTokenXML);
+            log.debug("Initializing new application session, applicationTokenId:" + applicationTokenId);
 //        applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
             applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
         }
