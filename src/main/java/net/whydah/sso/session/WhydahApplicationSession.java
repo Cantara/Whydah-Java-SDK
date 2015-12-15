@@ -51,7 +51,7 @@ public class WhydahApplicationSession {
         long j = (timestamp);
         long diffSeconds = j - i;
         if (diffSeconds < 60) {
-            log.debug("re-new application session..");
+            log.debug("expiresBeforeNextSchedule - re-new application session..");
             return true;
         }
         return false;
@@ -96,7 +96,8 @@ public class WhydahApplicationSession {
             log.info("Active session found, applicationTokenId:" + applicationTokenId);
             Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML);
             if (expiresBeforeNextSchedule(expires)) {
-                applicationTokenXML = WhydahUtil.extendApplicationSession(sts, myAppCredential);
+                log.info("Active session expires before next check, re-new");
+                applicationTokenXML = WhydahUtil.extendApplicationSession(sts, getActiveApplicationTokenId());
                 applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
                 log.info("Success in renew applicationsession, applicationTokenId:" + applicationTokenId);
             }

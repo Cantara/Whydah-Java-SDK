@@ -4,6 +4,7 @@ import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
+import net.whydah.sso.commands.appauth.CommandRenewApplicationSession;
 import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.session.WhydahApplicationSession;
@@ -85,9 +86,9 @@ public class WhydahUtil {
 
     }
 
-    public static String extendApplicationSession(String stsURI, ApplicationCredential myAppcredential) {
+    public static String extendApplicationSession(String stsURI, String applicationTokenId) {
         URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
-        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, myAppcredential).execute();
+        String myAppTokenXml = new CommandRenewApplicationSession(tokenServiceUri, applicationTokenId).execute();
         return myAppTokenXml;
 
     }
