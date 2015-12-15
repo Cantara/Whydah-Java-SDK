@@ -69,11 +69,12 @@ public class WhydahApplicationSession {
         return sts;
     }
 
+
     /*
     * @return true is session is active and working
      */
     public boolean hasActiveSession() {
-        if (applicationTokenId != null || applicationTokenId.length() > 4) {
+        if (applicationTokenId == null || applicationTokenId.length() < 4) {
             return false;
         }
         return true;
@@ -82,7 +83,7 @@ public class WhydahApplicationSession {
     private void renewWhydahApplicationSession() {
         if (!hasActiveSession()) {
             log.info("No active application session, applicationTokenId:" + applicationTokenId);
-            for (int n = 0; n < 7 || !hasActiveSession(); n++) {
+            for (int n = 0; n < 3 || !hasActiveSession(); n++) {
                 applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
                 applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
                 log.debug("Retrying renewing application session");
@@ -91,7 +92,6 @@ public class WhydahApplicationSession {
                 } catch (InterruptedException ie) {
                 }
             }
-
         } else {
             log.info("Active session found, applicationTokenId:" + applicationTokenId);
             Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML);
@@ -107,9 +107,8 @@ public class WhydahApplicationSession {
                 }
             }
         }
-
-
     }
+
 
     private void initializeWhydahApplicationSession() {
         log.info("Initializing new application session");
