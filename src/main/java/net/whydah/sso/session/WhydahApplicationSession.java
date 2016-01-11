@@ -2,6 +2,7 @@ package net.whydah.sso.session;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
+import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.util.WhydahUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +83,8 @@ public class WhydahApplicationSession {
         if (applicationTokenId == null || applicationTokenId.length() < 4) {
             return false;
         }
-        return true;
+        return new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId()).execute();
+        //return true;
     }
 
     private void renewWhydahApplicationSession() {
