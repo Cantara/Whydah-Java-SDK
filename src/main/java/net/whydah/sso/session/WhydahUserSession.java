@@ -92,6 +92,10 @@ public class WhydahUserSession {
                         Thread.sleep(1000 * n);
                     } catch (InterruptedException ie){
                     }
+                    // If we keep failing, let us force renew of application session too
+                    if (n > 2) {
+                        was.killApplicationSession();
+                    }
                 }
 
             } else {

@@ -69,6 +69,11 @@ public class WhydahApplicationSession {
         return sts;
     }
 
+    public void killApplicationSession() {
+        applicationTokenId = null;
+        applicationTokenXML = null;
+        initializeWhydahApplicationSession();
+    }
 
     /*
     * @return true is session is active and working
