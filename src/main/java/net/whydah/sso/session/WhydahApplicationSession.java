@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class WhydahApplicationSession {
 
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
+    private static final int SESSION_CHECK_INTERVAL = 50;
     private String sts;
     private ApplicationCredential myAppCredential;
     private String applicationTokenId;
@@ -43,7 +44,7 @@ public class WhydahApplicationSession {
                         renewWhydahApplicationSession();
                     }
                 },
-                1, 50, TimeUnit.SECONDS);
+                1, SESSION_CHECK_INTERVAL, TimeUnit.SECONDS);
     }
 
     public static boolean expiresBeforeNextSchedule(Long timestamp) {
@@ -51,7 +52,7 @@ public class WhydahApplicationSession {
         long i = System.currentTimeMillis();
         long j = (timestamp);
         long diffSeconds = j - i;
-        if (diffSeconds < 60) {
+        if (diffSeconds < SESSION_CHECK_INTERVAL) {
             log.debug("expiresBeforeNextSchedule - re-new application session..");
             return true;
         }
@@ -104,15 +105,24 @@ public class WhydahApplicationSession {
             Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationTokenXML);
             if (expiresBeforeNextSchedule(expires)) {
                 log.info("Active session expires before next check, re-new");
-                applicationTokenXML = WhydahUtil.extendApplicationSession(sts, getActiveApplicationTokenId());
-                if (applicationTokenXML != null && applicationTokenXML.length() > 10) {
-                    applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
-                    if (hasActiveSession()) {
-                        log.info("Success in renew applicationsession, applicationTokenId:" + applicationTokenId);
+                for (int n = 0; n < 5; n++) {
+                    applicationTokenXML = WhydahUtil.extendApplicationSession(sts, getActiveApplicationTokenId());
+                    if (applicationTokenXML != null && applicationTokenXML.length() > 10) {
+                        applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
+                        if (hasActiveSession()) {
+                            log.info("Success in renew applicationsession, applicationTokenId:" + applicationTokenId);
+                        }
+                    } else {
+                        log.info("Fail to renew applicationsession");
+                        if (n > 3) {
+                            // OK, we wont get a renewed session, so we start a new one
+                            initializeWhydahApplicationSession();
+                        }
                     }
-                } else {
-                    log.info("Fail to renew applicationsession");
-
+                    try {
+                        Thread.sleep(1000 * n);
+                    } catch (InterruptedException ie) {
+                    }
                 }
             }
         }
