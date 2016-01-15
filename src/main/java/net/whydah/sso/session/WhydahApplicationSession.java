@@ -105,9 +105,11 @@ public class WhydahApplicationSession {
             if (expiresBeforeNextSchedule(expires)) {
                 log.info("Active session expires before next check, re-new");
                 applicationTokenXML = WhydahUtil.extendApplicationSession(sts, getActiveApplicationTokenId());
-                applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
-                if (hasActiveSession()) {
-                    log.info("Success in renew applicationsession, applicationTokenId:" + applicationTokenId);
+                if (applicationTokenXML != null && applicationTokenXML.length() > 10) {
+                    applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
+                    if (hasActiveSession()) {
+                        log.info("Success in renew applicationsession, applicationTokenId:" + applicationTokenId);
+                    }
                 } else {
                     log.info("Fail to renew applicationsession");
 
