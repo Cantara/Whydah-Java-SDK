@@ -117,6 +117,7 @@ public class WhydahApplicationSession {
                         if (n > 3) {
                             // OK, we wont get a renewed session, so we start a new one
                             initializeWhydahApplicationSession();
+                            n = 0;
                         }
                     }
                     try {
