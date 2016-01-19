@@ -53,7 +53,7 @@ public class CommandRenewApplicationSession extends HystrixCommand<String> {
         try {
             response = postForm(formData, applicationRenewResource);
         } catch (RuntimeException e) {
-            log.error("CommandRenewApplicationSession - logonApplication - Problem connecting to {}", applicationRenewResource.toString());
+            log.error("CommandRenewApplicationSession - renew_applicationtoken - Problem connecting to {}", applicationRenewResource.toString());
             throw (e);
         }
         String myAppTokenXml = response.readEntity(String.class);
