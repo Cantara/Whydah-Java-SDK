@@ -111,6 +111,7 @@ public class WhydahApplicationSession {
                         applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
                         if (hasActiveSession()) {
                             log.info("Success in renew applicationsession, applicationTokenId:" + applicationTokenId);
+                            break;
                         }
                     } else {
                         log.info("Fail to renew applicationsession");
