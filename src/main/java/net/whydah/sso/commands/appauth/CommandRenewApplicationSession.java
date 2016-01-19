@@ -25,7 +25,7 @@ public class CommandRenewApplicationSession extends HystrixCommand<String> {
     private String applicationtokenid;
 
     public CommandRenewApplicationSession(URI tokenServiceUri, String applicationtokenid) {
-        super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("UASUserAdminGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+        super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("STSApplicationAdminGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
                 .withExecutionTimeoutInMilliseconds(3000)));
 
         this.tokenServiceUri = tokenServiceUri;

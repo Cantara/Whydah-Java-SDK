@@ -21,7 +21,7 @@ public class CommandGetApplicationIdFromApplicationTokenId extends HystrixComman
     private final String applicationTokenId;
 
     public CommandGetApplicationIdFromApplicationTokenId(URI tokenServiceUri, String applicationTokenId) {
-        super(HystrixCommandGroupKey.Factory.asKey("SSOUserAuthGroup"));
+        super(HystrixCommandGroupKey.Factory.asKey("STSApplicationAdminGroup"));
         this.tokenServiceUri = tokenServiceUri;
         this.applicationTokenId = applicationTokenId;
         if (tokenServiceUri == null || applicationTokenId == null) {
