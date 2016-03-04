@@ -13,7 +13,11 @@ public class SSLTool {
     private static final Logger log = LoggerFactory.getLogger(SSLTool.class);
 
 
-    public static SSLContext sc;
+    public static SSLContext sc = null;
+
+    public static boolean isCertificateCheckDisabled() {
+        return sc == null;
+    }
     public static void disableCertificateValidation() {
 
         log.warn("Installing a trust manager which does not validate SSL/TLS certificates, DO NOT USE IN PRODUCTION!!");
