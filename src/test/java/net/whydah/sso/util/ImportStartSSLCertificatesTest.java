@@ -14,7 +14,7 @@ public class ImportStartSSLCertificatesTest {
         InputStream is;
 
         try {
-            is = new FileInputStream("/src/cantara/Whydah-Java-SDK/src/resources/ca.crt");
+            is = new FileInputStream("./src/resources/ca.crt");
 
             SSLTool.ensureSslCertIsInKeystore("startssl-ca", is);
             is.close();
