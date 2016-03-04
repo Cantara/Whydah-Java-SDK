@@ -3,16 +3,13 @@ package net.whydah.sso.commands.appauth;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
-import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.SSLTool;
 import net.whydah.sso.util.SystemTestUtil;
-import org.glassfish.jersey.SslConfigurator;
-import org.glassfish.jersey.client.ClientConfig;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -33,15 +30,12 @@ public class CommandLogonApplicationIntegrationTest {
 //    public static final String TEMPORARY_APPLICATION_SECRET = "33779936R6Jr47D4Hj5R6p9qT";
     public static String TEMPORARY_APPLICATION_ID = "2215";//"11";
     public static String TEMPORARY_APPLICATION_NAME = "Whydah-SSOLoginWebApp";//"Whydah-SSOLoginWebApp";
-    public static String TEMPORARY_APPLICATION_SECRET = "33779936R6Jr47D4Hj5R6p9qT";
+    public static String TEMPORARY_APPLICATION_SECRET = "3242342";
 
     private final String userTokenServiceUri = "https://whydahdev.cantara.no/tokenservice/";
     private String myApplicationTokenID = null;
     private String myAppTokenXml = null;
     private URI tokenServiceUri = null;
-    private UserCredential userCredential = null;
-    private String adminUserTokenId = null;
-    private String adminUserId = null;
 
 
     @Before
@@ -53,7 +47,7 @@ public class CommandLogonApplicationIntegrationTest {
 
     @Test
     public void testLogonApplication() throws Exception {
-        if (SystemTestUtil.noLocalWhydahRunning()) {
+        if (!SystemTestUtil.noLocalWhydahRunning()) {
             SSLTool.disableCertificateValidation();
             ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
             myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
@@ -64,6 +58,7 @@ public class CommandLogonApplicationIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testCommandLogic(){
         SSLTool.disableCertificateValidation();
         ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
