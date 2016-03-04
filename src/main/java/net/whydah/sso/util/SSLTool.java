@@ -110,4 +110,36 @@ public class SSLTool {
             cacertsOs.close();
         }
     }
+
+
+    private static void readCertificates() throws Exception {
+        loadFromClasspath("ca.crt");
+        loadFromFile("ca.crt");
+        loadFromClasspath("sub.class1.server.ca.crt");
+        loadFromFile("sub.class1.server.ca.crt");
+        loadFromClasspath("sub.class2.server.ca.crt");
+        loadFromFile("sub.class1.server.ca.crt");
+        loadFromClasspath("sub.class3.server.ca.crt");
+        loadFromFile("sub.class3.server.ca.crt");
+        loadFromClasspath("sub.class4.server.ca.crt");
+        loadFromFile("sub.class4.server.ca.crt");
+    }
+
+    private static void loadFromClasspath(String certFile) throws Exception {
+        log.info("Loading certificate from classpath: {}", certFile);
+        InputStream is = SSLTool.class.getClassLoader().getResourceAsStream(certFile);
+        if (is == null) {
+            log.error("Error reading {} from classpath.", certFile);
+        }
+        SSLTool.ensureSslCertIsInKeystore("startssl-" + certFile, is);
+        is.close();
+    }
+
+    private static void loadFromFile(String certFile) throws Exception {
+        InputStream is = new FileInputStream(certFile);
+        SSLTool.ensureSslCertIsInKeystore("startssl-" + certFile, is);
+        is.close();
+
+    }
+
 }
