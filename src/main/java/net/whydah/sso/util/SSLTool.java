@@ -21,9 +21,13 @@ public class SSLTool {
     private static final String CACERTS_PATH = "/lib/security/cacerts";
     private static final String CACERTS_PASSWORD = "changeit";
     public static SSLContext sc = null;
+    public static SSLSocketFactory TRUSTED_FACTORY;
+    public static HostnameVerifier hv;
+    private static SSLSocketFactory sslSocketFactory;
+
 
     public static boolean isCertificateCheckDisabled() {
-        return sc == null;
+        return sc != null;
     }
 
     public static void disableCertificateValidation() {
@@ -41,10 +45,12 @@ public class SSLTool {
 
                     public void checkServerTrusted(X509Certificate[] certs, String authType) {
                     }
+
+
                 }};
 
         // Ignore differences between given hostname and certificate hostname
-        HostnameVerifier hv = new HostnameVerifier() {
+        hv = new HostnameVerifier() {
             public boolean verify(String hostname, SSLSession session) {
                 return true;
             }
@@ -52,13 +58,18 @@ public class SSLTool {
 
         // Install the all-trusting trust manager
         try {
-            sc = SSLContext.getInstance("SSL");
+            sc = SSLContext.getInstance("TLS");
             sc.init(null, trustAllCerts, new SecureRandom());
+            TRUSTED_FACTORY = sc.getSocketFactory();
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
             HttpsURLConnection.setDefaultHostnameVerifier(hv);
+            //context.init( new KeyManager[0], tm, new SecureRandom( ) );
+
+            sslSocketFactory = (SSLSocketFactory) sc.getSocketFactory();
         } catch (Exception e) {
         }
     }
+
 
     /**
      * Add a certificate to the cacerts keystore if it's not already included
