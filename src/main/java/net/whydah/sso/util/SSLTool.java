@@ -13,6 +13,7 @@ public class SSLTool {
     private static final Logger log = LoggerFactory.getLogger(SSLTool.class);
 
 
+    public static SSLContext sc;
     public static void disableCertificateValidation() {
 
         log.warn("Installing a trust manager which does not validate SSL/TLS certificates, DO NOT USE IN PRODUCTION!!");
@@ -39,7 +40,7 @@ public class SSLTool {
 
         // Install the all-trusting trust manager
         try {
-            SSLContext sc = SSLContext.getInstance("SSL");
+            sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, new SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
             HttpsURLConnection.setDefaultHostnameVerifier(hv);
