@@ -17,6 +17,7 @@ import java.security.cert.X509Certificate;
 
 public class SSLTool {
 
+
     private static final Logger log = LoggerFactory.getLogger(SSLTool.class);
     private static final String CACERTS_PATH = "/lib/security/cacerts";
     private static final String CACERTS_PASSWORD = "changeit";
@@ -25,6 +26,9 @@ public class SSLTool {
     public static HostnameVerifier hv;
     private static SSLSocketFactory sslSocketFactory;
 
+    static {
+        readCertificates();
+    }
 
     public static boolean isCertificateCheckDisabled() {
         return sc != null;
@@ -112,17 +116,32 @@ public class SSLTool {
     }
 
 
-    private static void readCertificates() throws Exception {
-        loadFromClasspath("ca.crt");
-        loadFromFile("ca.crt");
-        loadFromClasspath("sub.class1.server.ca.crt");
-        loadFromFile("sub.class1.server.ca.crt");
-        loadFromClasspath("sub.class2.server.ca.crt");
-        loadFromFile("sub.class1.server.ca.crt");
-        loadFromClasspath("sub.class3.server.ca.crt");
-        loadFromFile("sub.class3.server.ca.crt");
-        loadFromClasspath("sub.class4.server.ca.crt");
-        loadFromFile("sub.class4.server.ca.crt");
+    private static void readCertificates() {
+        try {
+            loadFromClasspath("ca.crt");
+            loadFromFile("ca.crt");
+        } catch (Exception e) {
+        }
+        try {
+            loadFromClasspath("sub.class1.server.ca.crt");
+            loadFromFile("sub.class1.server.ca.crt");
+        } catch (Exception e) {
+        }
+        try {
+            loadFromClasspath("sub.class2.server.ca.crt");
+            loadFromFile("sub.class2.server.ca.crt");
+        } catch (Exception e) {
+        }
+        try {
+            loadFromClasspath("sub.class3.server.ca.crt");
+            loadFromFile("sub.class3.server.ca.crt");
+        } catch (Exception e) {
+        }
+        try {
+            loadFromClasspath("sub.class4.server.ca.crt");
+            loadFromFile("sub.class4.server.ca.crt");
+        } catch (Exception e) {
+        }
     }
 
     private static void loadFromClasspath(String certFile) throws Exception {
@@ -136,9 +155,15 @@ public class SSLTool {
     }
 
     private static void loadFromFile(String certFile) throws Exception {
-        InputStream is = new FileInputStream(certFile);
-        SSLTool.ensureSslCertIsInKeystore("startssl-" + certFile, is);
-        is.close();
+        try {
+            InputStream is = new FileInputStream(certFile);
+            if (is != null) {
+                SSLTool.ensureSslCertIsInKeystore("startssl-" + certFile, is);
+            }
+            is.close();
+        } catch (Exception e) {
+            log.error("Error reading sub.class4.server.ca.crt from classpath.");
+        }
 
     }
 
