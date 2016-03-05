@@ -54,7 +54,8 @@ public class CommandListUserLogins extends HystrixCommand<String> {
 
 
 //        WebTarget updateUser = statisticsClient.target(statisticsServiceUri).path(myAppTokenId).path(adminUserTokenId).path("customer").path(userid);
-        WebTarget findUserLogons = statisticsClient.target(statisticsServiceUri).path(prefix).path("logon").path("user").path(userid);
+        WebTarget findUserLogons = statisticsClient.target(statisticsServiceUri)
+                .path("observe").path("activities").path(prefix).path("logon").path("user").path(userid);
         Response response = findUserLogons.request().get();
         log.debug("CommandListUserLogins - Returning list of user logons {}", response.getStatus());
         if (response.getStatus() == OK.getStatusCode()) {
