@@ -39,8 +39,8 @@ public class CommandGetUser extends HystrixCommand<String> {
 
         Client uasClient = ClientBuilder.newClient();
 
-        WebTarget updateUser = uasClient.target(userAdminServiceUri).path(myAppTokenId).path(adminUserTokenId).path("user").path(userID);
-        Response response = updateUser.request().get();
+        WebTarget getUser = uasClient.target(userAdminServiceUri).path(myAppTokenId).path(adminUserTokenId).path("user").path(userID);
+        Response response = getUser.request().get();
         if (response.getStatus() == OK.getStatusCode()) {
             String responseJson = response.readEntity(String.class);
             log.debug("CommandGetUser - Returning user {}", responseJson);
