@@ -94,6 +94,10 @@ public class WhydahApplicationSession {
             for (int n = 0; n < 3 || !hasActiveSession(); n++) {
                 applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
                 applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
+                if (hasActiveSession()) {
+                    log.info("Successful renew of applicationsession, applicationTokenId:" + applicationTokenId);
+                    break;
+                }
                 log.debug("Retrying renewing application session");
                 try {
                     Thread.sleep(1000 * n);

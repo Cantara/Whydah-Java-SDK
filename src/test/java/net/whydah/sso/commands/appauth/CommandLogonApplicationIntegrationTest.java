@@ -50,6 +50,7 @@ public class CommandLogonApplicationIntegrationTest {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
             SSLTool.disableCertificateValidation();
             ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
+            appCredential = new ApplicationCredential("02d50dfe-a0b2-4d0e-a17b-8f2287ee8b6d","baardl-test","gggggllasgggakkklaadd");
             myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
             myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
