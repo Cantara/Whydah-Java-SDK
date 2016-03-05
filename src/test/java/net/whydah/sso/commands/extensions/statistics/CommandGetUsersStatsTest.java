@@ -8,13 +8,14 @@ import org.junit.Test;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
+import java.time.Instant;
 
 import static org.junit.Assert.assertTrue;
 
 /**
  * Created by baardl on 05.03.16.
  */
-public class CommandListUserLoginsTest {
+public class CommandGetUsersStatsTest {
     public static String userName = "admin";
     public static String password = "whydahadmin";
     private static URI statisticsServiceUri;
@@ -34,18 +35,19 @@ public class CommandListUserLoginsTest {
         }
     }
 
-
     @Test
-    public void testUserLoginsCustomerCommand() throws Exception {
+    public void testGetUsersStatsCommand() throws Exception {
 
         String myApplicationTokenID = "";
         String adminUserTokenId = "";
         String userid = "me";
         SSLTool.disableCertificateValidation();
-        String userLogins = new CommandListUserLogins(statisticsServiceUri, myApplicationTokenID, adminUserTokenId, userid).execute();
-        System.out.println("Returned list of userlogins: " + userLogins);
-        assertTrue(userLogins != null);
-        assertTrue(userLogins.length() > 10);
+        Instant now = Instant.now();
+        Instant lessOneHour = now.minusSeconds(60*60);
+        String userStats = new CommandGetUsersStats(statisticsServiceUri, myApplicationTokenID, adminUserTokenId, lessOneHour, now).execute();
+        System.out.println("Returned list of userlogins: " + userStats);
+        assertTrue(userStats != null);
+        assertTrue(userStats.length() > 10);
 
     }
 }
