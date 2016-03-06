@@ -4,6 +4,7 @@ import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.SSLTool;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.UriBuilder;
@@ -35,6 +36,7 @@ public class CommandListUserLoginsTest {
     }
 
 
+    @Ignore
     @Test
     public void testUserLoginsCustomerCommand() throws Exception {
 
