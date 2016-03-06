@@ -20,7 +20,7 @@ public class CommandListUserLoginsTest {
     private static URI statisticsServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
-    private static boolean systemTest = true;
+    private static boolean systemTest = false;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -40,7 +40,7 @@ public class CommandListUserLoginsTest {
 
         String myApplicationTokenID = "";
         String adminUserTokenId = "";
-        String userid = "me";
+        String userid = "useradmin";
         SSLTool.disableCertificateValidation();
         String userLogins = new CommandListUserLogins(statisticsServiceUri, myApplicationTokenID, adminUserTokenId, userid).execute();
         System.out.println("Returned list of userlogins: " + userLogins);
