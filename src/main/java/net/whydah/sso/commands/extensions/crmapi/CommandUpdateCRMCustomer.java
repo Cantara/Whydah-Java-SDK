@@ -14,10 +14,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.ACCEPTED;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class CommandCreateCRMCustomer extends HystrixCommand<String> {
+public class CommandUpdateCRMCustomer extends HystrixCommand<String> {
     private static final Logger log = getLogger(CommandCreateCRMCustomer.class);
     private URI crmServiceUri;
     private String myAppTokenId;
@@ -26,7 +26,7 @@ public class CommandCreateCRMCustomer extends HystrixCommand<String> {
     private String customerJson;
 
 
-    public CommandCreateCRMCustomer(URI crmServiceUri, String myAppTokenId, String adminUserTokenId, String personRef, String customerJson) {
+    public CommandUpdateCRMCustomer(URI crmServiceUri, String myAppTokenId, String adminUserTokenId, String personRef, String customerJson) {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("CrmExtensionGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
                 .withExecutionTimeoutInMilliseconds(3000)));
 
@@ -37,7 +37,7 @@ public class CommandCreateCRMCustomer extends HystrixCommand<String> {
         this.customerJson = customerJson;
 
         if (crmServiceUri == null || personRef == null || customerJson == null) {
-            log.error("CommandCreateCRMCustomer initialized with null-values - will fail");
+            log.error("CommandUpdateCRMCustomer initialized with null-values - will fail");
         }
 
     }
@@ -55,16 +55,16 @@ public class CommandCreateCRMCustomer extends HystrixCommand<String> {
 
         WebTarget createCustomer = crmClient.target(crmServiceUri).path("customer").path(personRef);
 
-        Response response = createCustomer.request().post(Entity.entity(customerJson, MediaType.APPLICATION_JSON_TYPE));
+        Response response = createCustomer.request().put(Entity.entity(customerJson, MediaType.APPLICATION_JSON_TYPE));
 
-        log.debug("CommandCreateCRMCustomer - Returning CRM location {}", response.getStatus());
-        if (response.getStatus() == CREATED.getStatusCode()) {
+        log.debug("CommandUpdateCRMCustomer - Returning CRM location {}", response.getStatus());
+        if (response.getStatus() == ACCEPTED.getStatusCode()) {
             String locationHeader = response.getHeaderString("location");
-            log.debug("CommandCreateCRMCustomer - Returning CRM location {}", locationHeader);
+            log.debug("CommandUpdateCRMCustomer - Returning CRM location {}", locationHeader);
             return locationHeader;
         }
         String responseJson = response.readEntity(String.class);
-        log.debug("CommandCreateCRMCustomer - Returning CRM location '{}', status {}", responseJson, response.getStatus());
+        log.debug("CommandUpdateCRMCustomer - Returning CRM location '{}', status {}", responseJson, response.getStatus());
         return null;
 
 
@@ -72,7 +72,7 @@ public class CommandCreateCRMCustomer extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandCreateCRMCustomer - fallback - uri={}", crmServiceUri.toString());
+        log.warn("CommandUpdateCRMCustomer - fallback - uri={}", crmServiceUri.toString());
         return null;
     }
 
