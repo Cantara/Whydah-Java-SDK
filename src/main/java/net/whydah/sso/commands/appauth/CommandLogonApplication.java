@@ -59,8 +59,7 @@ public class CommandLogonApplication extends HystrixCommand<String> {
                 log.warn("Unexpected response from STS. Response is {} content is {}", responseBody, responseBody);
 
         }
-        return null;
-
+        throw new RuntimeException("CommandLogonApplication - Application authentication failed");
 
     }
 
