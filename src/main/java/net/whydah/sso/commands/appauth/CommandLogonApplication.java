@@ -40,23 +40,23 @@ public class CommandLogonApplication extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-        log.trace("CommandLogonApplication - uri={} appCredential={}", tokenServiceUri.toString(), ApplicationCredentialMapper.toXML(appCredential));
+        String myURL = tokenServiceUri.toString() + "logon";
+        log.trace("CommandLogonApplication - uri={} appCredential={}", myURL, ApplicationCredentialMapper.toXML(appCredential));
 
         Map<String, String> data = new HashMap<String, String>();
         data.put("applicationcredential", ApplicationCredentialMapper.toXML(appCredential));
 
-
-        String myURL = tokenServiceUri.toString() + "/logon";
         HttpRequest request = HttpRequest.post(myURL).contentType(HttpSender.APPLICATION_FORM_URLENCODED).form(data);
         int statusCode = request.code();
         String responseBody = request.body();
         switch (statusCode) {
             case HttpSender.STATUS_OK:
-                log.trace("Updated via http ok. Response is {}", responseBody);
                 log.debug("CommandLogonApplication - Applogon ok: apptokenxml: {}", responseBody);
                 String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(responseBody);
                 log.trace("CommandLogonApplication - myAppTokenId: {}", myApplicationTokenID);
                 return myApplicationTokenID;
+            default:
+                log.warn("Unexpected response from STS. Response is {} content is {}", responseBody, responseBody);
 
         }
         return null;
