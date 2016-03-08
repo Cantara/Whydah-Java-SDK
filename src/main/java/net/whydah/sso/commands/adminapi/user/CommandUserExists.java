@@ -63,7 +63,7 @@ public class CommandUserExists extends HystrixCommand<Boolean> {
 
     @Override
     protected Boolean getFallback() {
-        log.warn("CommandUserExists - timeout - uri={}", userAdminServiceUri.toString());
+        log.warn("CommandUserExists - fallback - uri={}", userAdminServiceUri.toString());
         return null;
     }
 

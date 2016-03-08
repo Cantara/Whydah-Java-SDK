@@ -58,7 +58,7 @@ public class CommandSendThreatSignal extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandSendThreatSignal - timeout - uri={} -  myAppTokenId: {}", tokenServiceUri.toString(), myAppTokenId);
+        log.warn("CommandSendThreatSignal - fallback - uri={} -  myAppTokenId: {}", tokenServiceUri.toString(), myAppTokenId);
         return null;
     }
 

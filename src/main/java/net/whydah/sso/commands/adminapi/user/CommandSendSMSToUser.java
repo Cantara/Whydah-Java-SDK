@@ -68,7 +68,7 @@ public class CommandSendSMSToUser extends HystrixCommand<String> {
     @Override
     protected String getFallback() {
 
-        log.warn("CommandSendSMSToUser - getFallback - not configured ");
+        log.warn("CommandSendSMSToUser - fallback - not configured ");
         return ApplicationHelper.getDummyAppllicationListJson();
     }
 

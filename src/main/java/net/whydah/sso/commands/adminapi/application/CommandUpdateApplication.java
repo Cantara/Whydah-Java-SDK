@@ -51,7 +51,7 @@ public class CommandUpdateApplication extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandUpdateApplication - timeout - uri={}", userAdminServiceUri.toString());
+        log.warn("CommandUpdateApplication - fallback - uri={}", userAdminServiceUri.toString());
         return null;
     }
 

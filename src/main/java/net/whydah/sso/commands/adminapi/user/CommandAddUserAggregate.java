@@ -52,7 +52,7 @@ public class CommandAddUserAggregate extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandAddUserAggregate - timeout - uri={}", userAdminServiceUri.toString());
+        log.warn("CommandAddUserAggregate - fallback - uri={}", userAdminServiceUri.toString());
         return null;
     }
 

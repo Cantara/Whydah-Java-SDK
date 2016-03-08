@@ -69,7 +69,7 @@ public class CommandRenewApplicationSession extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandRenewApplicationSession - timeout - uri={}", tokenServiceUri.toString());
+        log.warn("CommandRenewApplicationSession - fallback - uri={}", tokenServiceUri.toString());
         return null;
     }
 

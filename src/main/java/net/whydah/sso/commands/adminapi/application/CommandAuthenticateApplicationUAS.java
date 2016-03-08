@@ -53,7 +53,7 @@ public class CommandAuthenticateApplicationUAS extends HystrixCommand<Response> 
 
     @Override
     protected Response getFallback() {
-        log.warn("{} - timeout - uibUri={}", CommandAuthenticateApplicationUAS.class.getSimpleName(), uibUri);
+        log.warn("{} - fallback - uibUri={}", CommandAuthenticateApplicationUAS.class.getSimpleName(), uibUri);
         return null;
     }
 }

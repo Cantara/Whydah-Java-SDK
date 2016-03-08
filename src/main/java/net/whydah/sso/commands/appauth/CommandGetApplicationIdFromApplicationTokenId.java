@@ -56,7 +56,7 @@ public class CommandGetApplicationIdFromApplicationTokenId extends HystrixComman
 
     @Override
     protected String getFallback() {
-        log.warn("ComandGetApplicationIDFromApplicationTokenId - timeout - uri={}", tokenServiceUri.toString());
+        log.warn("ComandGetApplicationIDFromApplicationTokenId - fallback - uri={}", tokenServiceUri.toString());
         return null;
     }
 }

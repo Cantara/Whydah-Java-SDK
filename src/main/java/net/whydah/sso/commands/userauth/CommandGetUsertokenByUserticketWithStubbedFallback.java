@@ -20,7 +20,7 @@ public class CommandGetUsertokenByUserticketWithStubbedFallback extends CommandG
     @Override
     protected String getFallback() {
 
-        log.warn("CommandGetUsertokenByUserticketWithStubbedFallback - getFallback - override with fallback ");
+        log.warn("CommandGetUsertokenByUserticketWithStubbedFallback - fallback - override with fallback ");
         return UserHelper.getDummyUserToken();
     }
 
