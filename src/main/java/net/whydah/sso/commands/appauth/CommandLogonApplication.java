@@ -54,7 +54,7 @@ public class CommandLogonApplication extends HystrixCommand<String> {
                 log.debug("CommandLogonApplication - Applogon ok: apptokenxml: {}", responseBody);
                 String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(responseBody);
                 log.trace("CommandLogonApplication - myAppTokenId: {}", myApplicationTokenID);
-                return myApplicationTokenID;
+                return responseBody;
             default:
                 log.warn("Unexpected response from STS. Response is {} content is {}", responseBody, responseBody);
 
