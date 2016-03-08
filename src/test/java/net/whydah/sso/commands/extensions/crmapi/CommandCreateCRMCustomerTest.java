@@ -13,8 +13,8 @@ import java.net.URI;
 import static org.junit.Assert.assertTrue;
 
 public class CommandCreateCRMCustomerTest {
-    public static String userName = "admin";
-    public static String password = "whydahadmin";
+    public static String userName = "crmadmin";
+    public static String password = "my_secret_password";
     private static URI crmServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
@@ -22,8 +22,8 @@ public class CommandCreateCRMCustomerTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        appCredential = new ApplicationCredential("15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
-        crmServiceUri = UriBuilder.fromUri("https://no_host").build();
+        appCredential = new ApplicationCredential("2299", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
+        crmServiceUri = UriBuilder.fromUri("https:/nohost/crmservice").build();
         userCredential = new UserCredential(userName, password);
 
 
@@ -39,9 +39,9 @@ public class CommandCreateCRMCustomerTest {
 
         String myApplicationTokenID = "";
         String adminUserTokenId = "";
-        String personRef = "12345678";
+        String personRef = "123456";
         String personJson = "{\n" +
-                "  \"id\" : \"12345\",\n" +
+                "  \"id\" : \"123456\",\n" +
                 "  \"firstname\" : \"First\",\n" +
                 "  \"lastname\" : \"Lastname\",\n" +
                 "  \"emailaddresses\" : {\n" +
