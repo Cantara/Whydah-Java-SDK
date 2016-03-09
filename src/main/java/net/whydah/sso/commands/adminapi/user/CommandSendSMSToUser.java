@@ -1,75 +1,53 @@
 package net.whydah.sso.commands.adminapi.user;
 
-
+import com.github.kevinsawicki.http.HttpRequest;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
-import net.whydah.sso.application.helpers.ApplicationHelper;
+import net.whydah.sso.util.HttpSender;
 import org.slf4j.Logger;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-import java.net.URI;
-
-import static javax.ws.rs.core.Response.Status.FORBIDDEN;
-import static javax.ws.rs.core.Response.Status.OK;
 import static org.slf4j.LoggerFactory.getLogger;
+
 
 public class CommandSendSMSToUser extends HystrixCommand<String> {
     private static final Logger log = getLogger(CommandSendSMSToUser.class);
+    private String serviceUrl;
     private String smsMessage;
     private String cellNo;
-    private URI smsGWUrl;
+    private String queryparam;
 
 
-    public CommandSendSMSToUser(URI smsGWUrl, String cellNo, String smsMessage) {
+    public CommandSendSMSToUser(String serviceURL, String serviceAccount, String username, String password, String queryParam, String cellNo, String smsMessage) {
         super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("CommandSendSMSToUser")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
                 .withExecutionTimeoutInMilliseconds(3000)));
         this.smsMessage = smsMessage;
         this.cellNo = cellNo;
-        this.smsGWUrl = smsGWUrl;
-
+        this.serviceUrl = serviceURL;
+        String replacedStr = queryParam.replaceAll("smsrecepient", cellNo);
+        replacedStr = replacedStr.replaceAll("serviceAccount", serviceAccount);
+        replacedStr = replacedStr.replaceAll("smsserviceusername", username);
+        replacedStr = replacedStr.replaceAll("smsservicepassword", password);
+        this.queryparam = replacedStr.replaceAll("smscontent", smsMessage.replaceAll(" ", "%20"));
     }
-
 
     @Override
     protected String run() {
 
-        log.trace("CommandSendSMSToUser");
-
-        try {
-            Thread.sleep(6000);  // lets us just fo a timeout
-        } catch (Exception e) {
-            // No Action
+        log.trace("CommandSendSMSToUser {}, using service {} and query template {} message {}", cellNo, serviceUrl, queryparam, smsMessage);
+        HttpRequest request = HttpRequest.get(serviceUrl + "?" + queryparam).contentType(HttpSender.APPLICATION_JSON);
+        int statusCode = request.code();
+        String responseBody = request.body();
+        switch (statusCode) {
+            case HttpSender.STATUS_OK:
+                log.debug("CommandSendSMSToUser -  ok: result: {}", responseBody);
+                return responseBody;
+            default:
+                log.warn("Unexpected response from STS. Response is {} content is {}", responseBody, responseBody);
         }
-        Client smsClient = ClientBuilder.newClient();
+        log.warn("CommandSendSMSToUser - failed");
+        throw new RuntimeException("CommandSendSMSToUser - failed");
 
-        WebTarget userDirectory = smsClient.target(smsGWUrl).path("sendsms").path(cellNo).path(smsMessage);
-
-        // Works against UIB, still misisng in UAS...
-        Response response = userDirectory.request().get();
-        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
-            log.info("CommandListUsers -  userDirectory failed with status code " + response.getStatus());
-            return null;
-            //throw new IllegalArgumentException("Log on failed. " + ClientResponse.Status.FORBIDDEN);
-        }
-        if (response.getStatus() == OK.getStatusCode()) {
-            String responseJson = response.readEntity(String.class);
-            log.debug("CommandListUsers - Listing users {}", responseJson);
-            return responseJson;
-        }
-
-        return null;
-
-    }
-
-    @Override
-    protected String getFallback() {
-
-        log.warn("CommandSendSMSToUser - fallback - not configured ");
-        return ApplicationHelper.getDummyAppllicationListJson();
     }
 
 
