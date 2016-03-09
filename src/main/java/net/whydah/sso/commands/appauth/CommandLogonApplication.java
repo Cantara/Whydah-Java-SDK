@@ -40,13 +40,13 @@ public class CommandLogonApplication extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-        String myURL = tokenServiceUri.toString() + "logon";
-        log.trace("CommandLogonApplication - uri={} appCredential={}", myURL, ApplicationCredentialMapper.toXML(appCredential));
+        String logonServiceUrl = tokenServiceUri.toString() + "logon";
+        log.trace("CommandLogonApplication - uri={} appCredential={}", logonServiceUrl, ApplicationCredentialMapper.toXML(appCredential));
 
         Map<String, String> data = new HashMap<String, String>();
         data.put("applicationcredential", ApplicationCredentialMapper.toXML(appCredential));
 
-        HttpRequest request = HttpRequest.post(myURL).contentType(HttpSender.APPLICATION_FORM_URLENCODED).form(data);
+        HttpRequest request = HttpRequest.post(logonServiceUrl).contentType(HttpSender.APPLICATION_FORM_URLENCODED).form(data);
         int statusCode = request.code();
         String responseBody = request.body();
         switch (statusCode) {
