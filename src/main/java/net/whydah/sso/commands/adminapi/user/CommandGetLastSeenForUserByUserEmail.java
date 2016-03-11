@@ -64,7 +64,7 @@ public class CommandGetLastSeenForUserByUserEmail extends HystrixCommand<String>
 
     @Override
     protected String getFallback() {
-        log.warn("CommandGetLastSeenForUserByUserEmail - timeout - uri={} - myAppTokenId: {} - userEmail:{}  ", tokenServiceUri.toString(), myAppTokenId, userEmail);
+        log.warn("CommandGetLastSeenForUserByUserEmail - fallback - uri={} - myAppTokenId: {} - userEmail:{}  ", tokenServiceUri.toString(), myAppTokenId, userEmail);
         return null;
     }
 

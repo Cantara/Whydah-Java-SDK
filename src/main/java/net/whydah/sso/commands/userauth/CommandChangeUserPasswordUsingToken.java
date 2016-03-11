@@ -49,7 +49,7 @@ public class CommandChangeUserPasswordUsingToken extends HystrixCommand<Response
 
     @Override
     protected Response getFallback() {
-        log.warn("{} - timeout - uibUri={}", CommandChangeUserPasswordUsingToken.class.getSimpleName(), uibUri);
+        log.warn("{} - fallback - uibUri={}", CommandChangeUserPasswordUsingToken.class.getSimpleName(), uibUri);
         return null;
     }
 }

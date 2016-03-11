@@ -41,7 +41,7 @@ public class CommandResetUserPassword extends HystrixCommand<Response> {
 
     @Override
     protected Response getFallback() {
-        log.warn("{} - timeout - uibUri={}", CommandResetUserPassword.class.getSimpleName(), uibUri);
+        log.warn("{} - fallback - uibUri={}", CommandResetUserPassword.class.getSimpleName(), uibUri);
         return null;
     }
 }

@@ -3,6 +3,7 @@ package net.whydah.sso.commands.appauth;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import net.whydah.sso.application.helpers.ApplicationHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
+import net.whydah.sso.util.SSLTool;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import rx.Observable;
@@ -26,12 +27,13 @@ public class CommandLogonApplicationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        appCredential = new ApplicationCredential("15", "TempApp", "33779936R6Jr47D4Hj5R6p9qT");
+        appCredential = new ApplicationCredential("2215", "TempApp", "337799332424234R6p9qT");
         tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
         if (integrationMode) {
-            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
+            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
         }
 
+        SSLTool.disableCertificateValidation();
     }
 
 

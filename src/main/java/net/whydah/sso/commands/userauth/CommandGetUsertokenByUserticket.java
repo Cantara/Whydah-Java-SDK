@@ -86,7 +86,7 @@ public class CommandGetUsertokenByUserticket extends HystrixCommand<String> {
     @Override
     protected String getFallback() {
 
-        log.warn("CommandGetUsertokenByUserticket - timeout - uri={}", tokenServiceUri.toString());
+        log.warn("CommandGetUsertokenByUserticket - fallback - uri={}", tokenServiceUri.toString());
         return null;
     }
 
