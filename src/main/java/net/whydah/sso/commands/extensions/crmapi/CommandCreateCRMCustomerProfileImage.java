@@ -40,12 +40,11 @@ public class CommandCreateCRMCustomerProfileImage extends HystrixCommand<String>
         this.contentType = contentType;
 
         if (crmServiceUri == null || personRef == null || imageData == null || contentType == null) {
-            log.error("CommandCreateCRMCustomer initialized with null-values - will fail");
+            log.error("CommandCreateCRMCustomerProfileImage initialized with null-values - will fail");
         }
 
     }
 
-    @Ignore
     @Override
     protected String run() {
         log.trace("CommandCreateCRMCustomerProfileImage - myAppTokenId={}", myAppTokenId);
@@ -76,7 +75,7 @@ public class CommandCreateCRMCustomerProfileImage extends HystrixCommand<String>
 
     @Override
     protected String getFallback() {
-        log.warn("CommandCreateCRMCustomer - fallback - uri={}", crmServiceUri.toString());
+        log.warn("CommandCreateCRMCustomerProfileImage - fallback - uri={}", crmServiceUri.toString());
         return null;
     }
 

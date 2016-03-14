@@ -12,9 +12,9 @@ import java.net.URI;
 
 import static org.junit.Assert.assertTrue;
 
-public class CommandCreateCRMCustomerProfileImageTest {
-    public static String userName = "crmadmin";
-    public static String password = "my_secret_password";
+public class CommandUpdateCRMCustomerProfileImageTest {
+    public static String userName = "admin";
+    public static String password = "whydahadmin";
     private static URI crmServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
@@ -22,8 +22,8 @@ public class CommandCreateCRMCustomerProfileImageTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        appCredential = new ApplicationCredential("2299", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
-        crmServiceUri = UriBuilder.fromUri("https:/nohost/crmservice").build();
+        appCredential = new ApplicationCredential("15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
+        crmServiceUri = UriBuilder.fromUri("https://no_host").build();
         userCredential = new UserCredential(userName, password);
 
 
@@ -32,9 +32,10 @@ public class CommandCreateCRMCustomerProfileImageTest {
         }
     }
 
+
     @Ignore
     @Test
-    public void testCreateCRMCustomerProfileImageCommand() throws Exception {
+    public void testUpdateCRMCustomerProfileImageCommand() throws Exception {
 
         String myApplicationTokenID = "";
         String adminUserTokenId = "";
@@ -50,9 +51,10 @@ public class CommandCreateCRMCustomerProfileImageTest {
         String contenttype = "image/jpeg";
 
         SSLTool.disableCertificateValidation();
-        String imageLocation = new CommandCreateCRMCustomerProfileImage(crmServiceUri, myApplicationTokenID, adminUserTokenId, personRef, contenttype, data).execute();
-        System.out.println("Returned CRM customer image location: " + imageLocation);
-        assertTrue(imageLocation != null);
-        assertTrue(imageLocation.endsWith(personRef + "/image"));
+        String customerJsonLocation = new CommandUpdateCRMCustomerProfileImage(crmServiceUri, myApplicationTokenID, adminUserTokenId, personRef, contenttype, data).execute();
+        System.out.println("Returned CRM profileImage location: " + customerJsonLocation);
+        assertTrue(customerJsonLocation != null);
+        assertTrue(customerJsonLocation.endsWith(personRef + "/image"));
+
     }
 }
