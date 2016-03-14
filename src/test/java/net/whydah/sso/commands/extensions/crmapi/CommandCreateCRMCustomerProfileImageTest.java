@@ -33,6 +33,7 @@ public class CommandCreateCRMCustomerProfileImageTest {
     }
 
 
+    @Ignore
     @Test
     public void testCreateCRMCustomerProfileImageCommand() throws Exception {
 
