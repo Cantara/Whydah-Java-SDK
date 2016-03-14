@@ -36,7 +36,7 @@ public class CommandCreateCRMCustomer extends HystrixCommand<String> {
         this.personRef = personRef;
         this.customerJson = customerJson;
 
-        if (crmServiceUri == null || personRef == null || customerJson == null) {
+        if (crmServiceUri == null || customerJson == null) {
             log.error("CommandCreateCRMCustomer initialized with null-values - will fail");
         }
 
@@ -53,18 +53,23 @@ public class CommandCreateCRMCustomer extends HystrixCommand<String> {
             crmClient = ClientBuilder.newBuilder().sslContext(SSLTool.sc).hostnameVerifier((s1, s2) -> true).build();
         }
 
-        WebTarget createCustomer = crmClient.target(crmServiceUri).path("customer").path(personRef);
+        WebTarget createCustomer = crmClient.target(crmServiceUri).path("customer");
+
+        if (personRef != null) {
+            createCustomer = createCustomer.path(personRef);
+        }
 
         Response response = createCustomer.request().post(Entity.entity(customerJson, MediaType.APPLICATION_JSON_TYPE));
 
-        log.debug("CommandCreateCRMCustomer - Returning CRM location {}", response.getStatus());
+        log.debug("CommandCreateCRMCustomer - Returning status {}", response.getStatus());
         if (response.getStatus() == CREATED.getStatusCode()) {
             String locationHeader = response.getHeaderString("location");
-            log.debug("CommandCreateCRMCustomer - Returning CRM location {}", locationHeader);
-            return locationHeader;
+            String crmCustomerId = locationHeader.substring(locationHeader.lastIndexOf("/")+1);
+            log.debug("CommandCreateCRMCustomer - Returning CRM Id {}", crmCustomerId);
+            return crmCustomerId;
         }
         String responseJson = response.readEntity(String.class);
-        log.debug("CommandCreateCRMCustomer - Returning CRM location '{}', status {}", responseJson, response.getStatus());
+        log.debug("CommandCreateCRMCustomer - Returning response '{}', status {}", responseJson, response.getStatus());
         return null;
 
 
