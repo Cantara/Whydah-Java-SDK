@@ -1,18 +1,14 @@
 package net.whydah.sso.commands.adminapi.user;
 
+import com.github.kevinsawicki.http.HttpRequest;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
+import net.whydah.sso.util.HttpSender;
 import org.slf4j.Logger;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
 import java.net.URI;
 
-import static javax.ws.rs.core.Response.Status.FORBIDDEN;
-import static javax.ws.rs.core.Response.Status.OK;
 import static org.slf4j.LoggerFactory.getLogger;
 
 
@@ -41,24 +37,22 @@ public class CommandListUsers extends HystrixCommand<String> {
     protected String run() {
 
         log.trace("CommandListUsers - myAppTokenId={}", myAppTokenId);
-        Client uasClient = ClientBuilder.newClient();
+        String uasAdminApiUrl = userAdminServiceUri.toString() + myAppTokenId + "/" + adminUserTokenId + "/users/find/" + userQuery;
 
-        WebTarget userDirectory = uasClient.target(userAdminServiceUri).path(myAppTokenId).path(adminUserTokenId).path("users").path("find").path(userQuery);
+        HttpRequest request = HttpRequest.get(uasAdminApiUrl);
+        int statusCode = request.code();
+        String responseBody = request.body();
+        switch (statusCode) {
+            case HttpSender.STATUS_OK:
+                log.debug("CommandListUsers - {}", responseBody);
+                return responseBody;
+            default:
+                log.warn("Unexpected response from UAS. Response is {} content is {}", responseBody, responseBody);
 
-        // Works against UIB, still misisng in UAS...
-        Response response = userDirectory.request().get();
-        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
-            log.info("CommandListUsers -  userDirectory failed with status code " + response.getStatus());
-            return null;
-            //throw new IllegalArgumentException("Log on failed. " + ClientResponse.Status.FORBIDDEN);
         }
-        if (response.getStatus() == OK.getStatusCode()) {
-            String responseJson = response.readEntity(String.class);
-            log.debug("CommandListUsers - Listing users {}", responseJson);
-            return responseJson;
-        }
+        throw new RuntimeException("CommandListUsers - Operation failed");
 
-        return null;
+
     }
 
 
