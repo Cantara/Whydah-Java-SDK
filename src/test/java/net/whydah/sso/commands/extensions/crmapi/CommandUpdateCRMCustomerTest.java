@@ -37,8 +37,9 @@ public class CommandUpdateCRMCustomerTest {
     @Test
     public void testUpdateCRMCustomerCommand() throws Exception {
 
-        String myApplicationTokenID = "";
-        String adminUserTokenId = "";
+        String myApplicationTokenID = "dummyAppTokenId";
+        String adminUserTokenId = "dummyAdminUserToken";
+
         String personRef = "12345678";
         String personJson = "{\"id\":\"12345678\",\"firstname\":\"First\",\"lastname\":\"Lastname\",\"emailaddresses\":null,\"phonenumbers\":null,\"defaultAddressLabel\":null,\"deliveryaddresses\":{\"work\":{\"addressLine1\":\"Karl Johansgate 6\",\"addressLine2\":null,\"postalcode\":\"0160\",\"postalcity\":\"Oslo\"}}}";
         SSLTool.disableCertificateValidation();

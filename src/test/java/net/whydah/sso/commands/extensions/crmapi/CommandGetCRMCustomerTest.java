@@ -35,9 +35,10 @@ public class CommandGetCRMCustomerTest {
     @Test
     public void testGetCRMCustomerCommand() throws Exception {
 
-        String myApplicationTokenID = "";
-        String adminUserTokenId = "";
-        String personRef = "1234";
+        String myApplicationTokenID = "dummyAppTokenId";
+        String adminUserTokenId = "dummyAdminUserToken";
+
+        String personRef = "1234567890";
         SSLTool.disableCertificateValidation();
         String customerJson = new CommandGetCRMCustomer(crmServiceUri, myApplicationTokenID, adminUserTokenId, personRef).execute();
         System.out.println("Returned CRM customer: " + customerJson);

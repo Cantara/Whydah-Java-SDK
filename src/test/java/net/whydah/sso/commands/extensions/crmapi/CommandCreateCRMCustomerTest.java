@@ -37,8 +37,8 @@ public class CommandCreateCRMCustomerTest {
     @Test
     public void testCreateCRMCustomerCommand() throws Exception {
 
-        String myApplicationTokenID = "";
-        String adminUserTokenId = "";
+        String myApplicationTokenID = "dummyAppTokenId";
+        String adminUserTokenId = "dummyAdminUserToken";
         String personRef = "123456"; //Must be unique for test to pass
         String personJson = "{\n" +
                 "  \"id\" : \"123456\",\n" +
@@ -96,8 +96,8 @@ public class CommandCreateCRMCustomerTest {
     @Test
     public void testCreateCRMCustomerCommand_NoId() throws Exception {
 
-        String myApplicationTokenID = "";
-        String adminUserTokenId = "";
+        String myApplicationTokenID = "dummyAppTokenId";
+        String adminUserTokenId = "dummyAdminUserToken";
         String personRef = null;
         String personJson = "{\n" +
                 "  \"id\" : \"123456\",\n" +

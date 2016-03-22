@@ -31,8 +31,7 @@ public class CommandGetCRMCustomer extends HystrixCommand<String> {
         this.myAppTokenId = myAppTokenId;
         this.adminUserTokenId = adminUserTokenId;
         this.personRef = personRef;
-//        if (crmServiceUri == null || myAppTokenId == null || adminUserTokenId == null || personRef == null) {
-        if (crmServiceUri == null || personRef == null) {
+        if (crmServiceUri == null || myAppTokenId == null || adminUserTokenId == null || personRef == null) {
             log.error("CommandGetCRMCustomer initialized with null-values - will fail");
         }
 
@@ -50,8 +49,8 @@ public class CommandGetCRMCustomer extends HystrixCommand<String> {
             crmClient = ClientBuilder.newBuilder().sslContext(SSLTool.sc).hostnameVerifier((s1, s2) -> true).build();
         }
 
-//        WebTarget updateUser = crmClient.target(crmServiceUri).path(myAppTokenId).path(adminUserTokenId).path("customer").path(personRef);
-        WebTarget getCustomer = crmClient.target(crmServiceUri).path("customer").path(personRef);
+        WebTarget getCustomer = crmClient.target(crmServiceUri).path(myAppTokenId).path(adminUserTokenId).path("customer").path(personRef);
+
         Response response = getCustomer.request().get();
         log.debug("CommandGetCRMCustomer - Returning CRM customer {}", response.getStatus());
         if (response.getStatus() == OK.getStatusCode()) {

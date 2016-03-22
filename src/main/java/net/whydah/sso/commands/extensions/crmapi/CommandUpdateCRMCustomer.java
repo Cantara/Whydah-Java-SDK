@@ -36,7 +36,7 @@ public class CommandUpdateCRMCustomer extends HystrixCommand<String> {
         this.personRef = personRef;
         this.customerJson = customerJson;
 
-        if (crmServiceUri == null || personRef == null || customerJson == null) {
+        if (crmServiceUri == null || myAppTokenId == null || adminUserTokenId == null || personRef == null || customerJson == null) {
             log.error("CommandUpdateCRMCustomer initialized with null-values - will fail");
         }
 
@@ -53,9 +53,9 @@ public class CommandUpdateCRMCustomer extends HystrixCommand<String> {
             crmClient = ClientBuilder.newBuilder().sslContext(SSLTool.sc).hostnameVerifier((s1, s2) -> true).build();
         }
 
-        WebTarget createCustomer = crmClient.target(crmServiceUri).path("customer").path(personRef);
+        WebTarget updateCustomer = crmClient.target(crmServiceUri).path(myAppTokenId).path(adminUserTokenId).path("customer").path(personRef);
 
-        Response response = createCustomer.request().put(Entity.entity(customerJson, MediaType.APPLICATION_JSON_TYPE));
+        Response response = updateCustomer.request().put(Entity.entity(customerJson, MediaType.APPLICATION_JSON_TYPE));
 
         log.debug("CommandUpdateCRMCustomer - Returning CRM location {}", response.getStatus());
         if (response.getStatus() == ACCEPTED.getStatusCode()) {
