@@ -64,7 +64,7 @@ public class CommandListUserActivities extends HystrixCommand<String> {
         log.debug("CommandListUserActivities - Returning list of usersession {}", response.getStatus());
         if (response.getStatus() == OK.getStatusCode()) {
             String responseJson = response.readEntity(String.class);
-            log.debug("CommandListUserActivities - Returning list of usersession  {}", responseJson);
+            log.debug("CommandListUserActivities - Returning list of usersession  {}", responseJson.substring(0, Math.min(responseJson.length(), 300)));  // max first 300 characters
             return responseJson;
         }
         String responseJson = response.readEntity(String.class);
