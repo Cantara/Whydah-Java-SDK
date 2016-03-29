@@ -92,7 +92,6 @@ public class CommandCreateCRMCustomerTest {
 
     }
 
-    @Ignore
     @Test
     public void testCreateCRMCustomerCommand_NoId() throws Exception {
 
