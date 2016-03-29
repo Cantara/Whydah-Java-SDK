@@ -6,18 +6,12 @@ import com.netflix.hystrix.HystrixCommandProperties;
 import net.whydah.sso.util.SSLTool;
 import org.slf4j.Logger;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriter;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import java.util.Iterator;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -25,17 +19,17 @@ public class CommandGetCRMCustomerProfileImage extends HystrixCommand<byte[]> {
     private static final Logger log = getLogger(CommandGetCRMCustomerProfileImage.class);
     private URI crmServiceUri;
     private String myAppTokenId;
-    private String adminUserTokenId;
+    private String userTokenId;
     private String personRef;
 
 
-    public CommandGetCRMCustomerProfileImage(URI crmServiceUri, String myAppTokenId, String adminUserTokenId, String personRef) {
+    public CommandGetCRMCustomerProfileImage(URI crmServiceUri, String myAppTokenId, String userTokenId, String personRef) {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("CrmExtensionGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
                 .withExecutionTimeoutInMilliseconds(3000)));
 
         this.crmServiceUri = crmServiceUri;
         this.myAppTokenId = myAppTokenId;
-        this.adminUserTokenId = adminUserTokenId;
+        this.userTokenId = userTokenId;
         this.personRef = personRef;
 
         if (crmServiceUri == null || personRef == null) {
@@ -55,7 +49,7 @@ public class CommandGetCRMCustomerProfileImage extends HystrixCommand<byte[]> {
             crmClient = ClientBuilder.newBuilder().sslContext(SSLTool.sc).hostnameVerifier((s1, s2) -> true).build();
         }
 
-        WebTarget getProfileImage = crmClient.target(crmServiceUri).path("customer").path(personRef).path("image");
+        WebTarget getProfileImage = crmClient.target(crmServiceUri).path(myAppTokenId).path(userTokenId).path("customer").path(personRef).path("image");
 
 
         try {

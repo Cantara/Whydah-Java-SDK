@@ -38,8 +38,8 @@ public class CommandGetCRMCustomerProfileImageTest {
     @Test
     public void testGetCRMCustomerProfileImageCommand() throws Exception {
 
-        String myApplicationTokenID = "";
-        String adminUserTokenId = "";
+        String myApplicationTokenID = "dummyAppTokenId";
+        String adminUserTokenId = "dummyAdminUserToken";
         String personRef = "1234567890";
         SSLTool.disableCertificateValidation();
         byte[] image = new CommandGetCRMCustomerProfileImage(crmServiceUri, myApplicationTokenID, adminUserTokenId, personRef).execute();

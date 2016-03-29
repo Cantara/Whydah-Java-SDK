@@ -21,22 +21,22 @@ public class CommandCreateCRMCustomer extends HystrixCommand<String> {
     private static final Logger log = getLogger(CommandCreateCRMCustomer.class);
     private URI crmServiceUri;
     private String myAppTokenId;
-    private String adminUserTokenId;
+    private String userTokenId;
     private String personRef;
     private String customerJson;
 
 
-    public CommandCreateCRMCustomer(URI crmServiceUri, String myAppTokenId, String adminUserTokenId, String personRef, String customerJson) {
+    public CommandCreateCRMCustomer(URI crmServiceUri, String myAppTokenId, String userTokenId, String personRef, String customerJson) {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("CrmExtensionGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
                 .withExecutionTimeoutInMilliseconds(3000)));
 
         this.crmServiceUri = crmServiceUri;
         this.myAppTokenId = myAppTokenId;
-        this.adminUserTokenId = adminUserTokenId;
+        this.userTokenId = userTokenId;
         this.personRef = personRef;
         this.customerJson = customerJson;
 
-        if (crmServiceUri == null || myAppTokenId == null || adminUserTokenId == null || personRef == null) {
+        if (crmServiceUri == null || myAppTokenId == null || userTokenId == null || personRef == null) {
             log.error("CommandCreateCRMCustomer initialized with null-values - will fail");
         }
 
@@ -53,7 +53,7 @@ public class CommandCreateCRMCustomer extends HystrixCommand<String> {
             crmClient = ClientBuilder.newBuilder().sslContext(SSLTool.sc).hostnameVerifier((s1, s2) -> true).build();
         }
 
-        WebTarget createCustomer = crmClient.target(crmServiceUri).path(myAppTokenId).path(adminUserTokenId).path("customer");
+        WebTarget createCustomer = crmClient.target(crmServiceUri).path(myAppTokenId).path(userTokenId).path("customer");
 
         if (personRef != null) {
             createCustomer = createCustomer.path(personRef);

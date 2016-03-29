@@ -3,7 +3,6 @@ package net.whydah.sso.commands.extensions.crmapi;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import net.whydah.sso.util.SSLTool;
 import org.slf4j.Logger;
 
@@ -11,7 +10,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
@@ -22,19 +20,19 @@ public class CommandCreateCRMCustomerProfileImage extends HystrixCommand<String>
     private static final Logger log = getLogger(CommandCreateCRMCustomerProfileImage.class);
     private URI crmServiceUri;
     private String myAppTokenId;
-    private String adminUserTokenId;
+    private String userTokenId;
     private String personRef;
     private String contentType;
     private byte[] imageData;
 
 
-    public CommandCreateCRMCustomerProfileImage(URI crmServiceUri, String myAppTokenId, String adminUserTokenId, String personRef, String contentType, byte[] imageData) {
+    public CommandCreateCRMCustomerProfileImage(URI crmServiceUri, String myAppTokenId, String userTokenId, String personRef, String contentType, byte[] imageData) {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("CrmExtensionGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
                 .withExecutionTimeoutInMilliseconds(3000)));
 
         this.crmServiceUri = crmServiceUri;
         this.myAppTokenId = myAppTokenId;
-        this.adminUserTokenId = adminUserTokenId;
+        this.userTokenId = userTokenId;
         this.personRef = personRef;
         this.imageData = imageData;
         this.contentType = contentType;
@@ -56,7 +54,7 @@ public class CommandCreateCRMCustomerProfileImage extends HystrixCommand<String>
             crmClient = ClientBuilder.newBuilder().sslContext(SSLTool.sc).hostnameVerifier((s1, s2) -> true).build();
         }
 
-        WebTarget createProfileImage = crmClient.target(crmServiceUri).path("customer").path(personRef).path("image");
+        WebTarget createProfileImage = crmClient.target(crmServiceUri).path(myAppTokenId).path(userTokenId).path("customer").path(personRef).path("image");
 
         Response response = createProfileImage.request().post(Entity.entity(imageData, contentType));
 
