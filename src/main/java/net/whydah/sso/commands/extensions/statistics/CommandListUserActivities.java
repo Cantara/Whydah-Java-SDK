@@ -24,17 +24,17 @@ public class CommandListUserActivities extends HystrixCommand<String> {
     private final String prefix;
     private URI statisticsServiceUri;
     private String myAppTokenId;
-    private String adminUserTokenId;
+    private String userTokenId;
     private String userid;
 
 
-    public CommandListUserActivities(URI statisticsServiceUri, String myAppTokenId, String adminUserTokenId, String userid) {
+    public CommandListUserActivities(URI statisticsServiceUri, String myAppTokenId, String userTokenId, String userid) {
         super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("StatisticsExtensionGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
                 .withExecutionTimeoutInMilliseconds(3000)));
 
         this.statisticsServiceUri = statisticsServiceUri;
         this.myAppTokenId = myAppTokenId;
-        this.adminUserTokenId = adminUserTokenId;
+        this.userTokenId = userTokenId;
         this.userid = userid;
         this.prefix = "whydah";
 //        if (statisticsServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userid == null) {
