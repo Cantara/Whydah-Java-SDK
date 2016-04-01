@@ -48,7 +48,7 @@ public class CommandUserExists extends HystrixCommand<Boolean> {
         Response response = userDirectory.request().get();
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
             log.info("CommandUserExists -  userDirectory failed with status code " + response.getStatus());
-            return null;
+            return false;
             //throw new IllegalArgumentException("Log on failed. " + ClientResponse.Status.FORBIDDEN);
         }
         if (response.getStatus() == OK.getStatusCode()) {
@@ -57,14 +57,14 @@ public class CommandUserExists extends HystrixCommand<Boolean> {
             return responseJson.length() > 30;
         }
 
-        return null;
+        return false;
     }
 
 
     @Override
     protected Boolean getFallback() {
         log.warn("CommandUserExists - fallback - uri={}", userAdminServiceUri.toString());
-        return null;
+        return false;
     }
 
 
