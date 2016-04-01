@@ -54,7 +54,7 @@ public class CommandUserExists extends HystrixCommand<Boolean> {
         if (response.getStatus() == OK.getStatusCode()) {
             String responseJson = response.readEntity(String.class);
             log.debug("CommandUserExists - Listing users {}", responseJson);
-            return responseJson.length() > 30;
+            return responseJson.length() > 20;
         }
 
         return false;

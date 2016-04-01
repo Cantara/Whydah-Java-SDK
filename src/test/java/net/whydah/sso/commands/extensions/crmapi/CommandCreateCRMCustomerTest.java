@@ -93,6 +93,7 @@ public class CommandCreateCRMCustomerTest {
     }
 
     @Test
+    @Ignore
     public void testCreateCRMCustomerCommand_NoId() throws Exception {
 
         String myApplicationTokenID = "dummyAppTokenId";
