@@ -32,6 +32,8 @@ public class CommandUserExists extends HystrixCommand<Boolean> {
         this.userQuery = userQuery;
         if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userQuery == null) {
             log.error("CommandUserExists initialized with null-values - will fail");
+            log.error("CommandSendSMSToUser initialized with null-values - will fail - userAdminServiceUri:{}, myAppTokenId:{}, adminUserTokenId:{}, userQuery:{}", userAdminServiceUri, myAppTokenId, adminUserTokenId, userQuery);
+
         }
 
     }
