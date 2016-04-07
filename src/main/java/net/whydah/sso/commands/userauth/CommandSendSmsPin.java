@@ -17,37 +17,35 @@ import java.net.URI;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class CommandSendPhoneVerificationPin extends HystrixCommand<Response> {
-    private static final Logger log = getLogger(CommandSendPhoneVerificationPin.class);
+public class CommandSendSmsPin extends HystrixCommand<Response> {
+    private static final Logger log = getLogger(CommandSendSmsPin.class);
     private URI tokenServiceUri;
     private String appTokenXml;
     private String phoneNo;
     private String pin;
 
-    public CommandSendPhoneVerificationPin(URI tokenServiceUri, String appTokenXml, String phoneNo, String pin) {
+    public CommandSendSmsPin(URI tokenServiceUri, String appTokenXml, String phoneNo, String pin) {
         super(HystrixCommandGroupKey.Factory.asKey("SSOAUserAuthGroup"));
         this.tokenServiceUri = tokenServiceUri;
         this.appTokenXml = appTokenXml;
         this.phoneNo = phoneNo;
         this.pin = pin;
         if (this.tokenServiceUri == null || this.appTokenXml == null || this.phoneNo == null || this.pin == null) {
-            log.error("{} initialized with null-values - will fail", CommandSendPhoneVerificationPin.class.getSimpleName());
+            log.error("{} initialized with null-values - will fail", CommandSendSmsPin.class.getSimpleName());
         }
     }
 
     @Override
     protected Response run() {
-        log.trace("{} - appTokenXml={}, ", CommandSendPhoneVerificationPin.class.getSimpleName(), appTokenXml);
+        log.trace("{} - appTokenXml={}, ", CommandSendSmsPin.class.getSimpleName(), appTokenXml);
 
         String myAppTokenId = UserTokenXpathHelper.getAppTokenIdFromAppToken(appTokenXml);
-        UserTokenXpathHelper.getAppTokenIdFromAppToken(appTokenXml);
 
         Client client = ClientBuilder.newClient();
         WebTarget sts = client.target(tokenServiceUri);
 
-        WebTarget webResource = sts.path(myAppTokenId).path("send_phone_verification_pin");
+        WebTarget webResource = sts.path(myAppTokenId).path("send_sms_pin");
         Form formData = new Form();
-        formData.param("appTokenXml", appTokenXml);
         formData.param("phoneNo", phoneNo);
         formData.param("smsPin", pin);
 
@@ -56,7 +54,7 @@ public class CommandSendPhoneVerificationPin extends HystrixCommand<Response> {
 
     @Override
     protected Response getFallback() {
-        log.warn("{} - fallback - uibUri={}", CommandSendPhoneVerificationPin.class.getSimpleName(), tokenServiceUri);
+        log.warn("{} - fallback - uibUri={}", CommandSendSmsPin.class.getSimpleName(), tokenServiceUri);
         return null;
     }
 }

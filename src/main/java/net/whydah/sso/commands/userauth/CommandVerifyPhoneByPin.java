@@ -40,7 +40,6 @@ public class CommandVerifyPhoneByPin extends HystrixCommand<Response> {
         log.trace("{} - appTokenXml={}, ", CommandVerifyPhoneByPin.class.getSimpleName(), appTokenXml);
 
         String myAppTokenId = UserTokenXpathHelper.getAppTokenIdFromAppToken(appTokenXml);
-        UserTokenXpathHelper.getAppTokenIdFromAppToken(appTokenXml);
 
         Client client = ClientBuilder.newClient();
         WebTarget sts = client.target(tokenServiceUri);
