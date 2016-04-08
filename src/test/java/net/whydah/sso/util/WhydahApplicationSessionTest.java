@@ -29,8 +29,8 @@ public class WhydahApplicationSessionTest {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
 
             WhydahApplicationSession applicationSession = new WhydahApplicationSession("http://localhost:9998/tokenservice", "15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
-            String appToken = applicationSession.getActiveApplicationToken();
-            Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationSession.getActiveApplicationToken());
+            String appToken = applicationSession.getActiveApplicationTokenXML();
+            Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationSession.getActiveApplicationTokenXML());
             System.out.println("Application expires in " + expires + " seconds");
             assertTrue(!applicationSession.expiresBeforeNextSchedule(expires));
             System.out.println("Thread waiting to expire...  (will take " + expires + " seconds...)");

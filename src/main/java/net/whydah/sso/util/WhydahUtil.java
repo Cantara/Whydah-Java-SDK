@@ -111,7 +111,7 @@ public class WhydahUtil {
             log.warn("Illegal application session from WhydahApplicationSession, applicationTokenId:" + was.getActiveApplicationTokenId());
 
         }
-        String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, was.getActiveApplicationTokenId(), was.getActiveApplicationToken(), userCredential, UUID.randomUUID().toString()).execute();
+        String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userCredential, UUID.randomUUID().toString()).execute();
         return userToken;
 
     }
@@ -119,7 +119,7 @@ public class WhydahUtil {
 
     public static String extendUserSession(WhydahApplicationSession was, UserCredential userCredential) {
         URI tokenServiceUri = UriBuilder.fromUri(was.getSTS()).build();
-        String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, was.getActiveApplicationTokenId(), was.getActiveApplicationToken(), userCredential, UUID.randomUUID().toString()).execute();
+        String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userCredential, UUID.randomUUID().toString()).execute();
         return userToken;
 
     }

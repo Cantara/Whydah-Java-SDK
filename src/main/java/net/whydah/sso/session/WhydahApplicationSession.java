@@ -1,7 +1,9 @@
 package net.whydah.sso.session;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
+import net.whydah.sso.application.mappers.ApplicationTokenMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
+import net.whydah.sso.application.types.ApplicationToken;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.util.WhydahUtil;
 import org.slf4j.Logger;
@@ -21,10 +23,11 @@ public class WhydahApplicationSession {
     private String applicationTokenId;
     private String applicationName;
     private String applicationTokenXML;
+    private ApplicationToken applicationToken;
 
 
     public WhydahApplicationSession() {
-        this("https://whydahdev.altrancloud.com/tokenservice/", "99", "TestApp", "33879936R6Jr47D4Hj5R6p9qT");
+        this("https://whydahdev.cantara.no/tokenservice/", "99", "TestApp", "33879936R6Jr47D4Hj5R6p9qT");
 
     }
 
@@ -59,11 +62,19 @@ public class WhydahApplicationSession {
         return false;
     }
 
+    public ApplicationToken getActiveApplicationToken() {
+        return applicationToken;
+    }
+
     public String getActiveApplicationTokenId() {
         return applicationTokenId;
     }
 
-    public String getActiveApplicationToken() {
+    public String getActiveApplicationName() {
+        return applicationName;
+    }
+
+    public String getActiveApplicationTokenXML() {
         return applicationTokenXML;
     }
 
@@ -93,8 +104,8 @@ public class WhydahApplicationSession {
             log.info("No active application session, applicationTokenId:" + applicationTokenId);
             for (int n = 0; n < 3 || !hasActiveSession(); n++) {
                 applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
-                applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
                 if (hasActiveSession()) {
+                    setApplicationSessionParameters(applicationTokenXML);
                     log.info("Successful renew of applicationsession, applicationTokenId:" + applicationTokenId);
                     break;
                 }
@@ -135,17 +146,22 @@ public class WhydahApplicationSession {
     }
 
 
-    private void initializeWhydahApplicationSession() {
+    private boolean initializeWhydahApplicationSession() {
         log.info("Initializing new application session");
         applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
-        applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
-        if (applicationTokenXML == null || applicationTokenXML.length() < 4) {
+        if (!hasActiveSession()) {
             log.info("Error, unable to initialize new application session, applicationTokenXml:" + applicationTokenXML);
-
+            return false;
         } else {
+            setApplicationSessionParameters(applicationTokenXML);
             log.debug("Initializing new application session, applicationTokenId:" + applicationTokenId);
-//        applicationTokenXML = WhydahUtil.extendApplicationSession(sts, appId, appSecret);
-            applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
+            return true;
         }
+    }
+
+    private void setApplicationSessionParameters(String applicationTokenXML) {
+        applicationToken = ApplicationTokenMapper.fromXml(applicationTokenXML);
+        applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
+        applicationName = ApplicationXpathHelper.getAppNameFromAppTokenXml(applicationTokenXML);
     }
 }

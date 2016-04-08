@@ -94,7 +94,7 @@ public class ValidateUserRoleUseCaseTest {
             assertTrue(applicationSession.hasActiveSession());
             String appTokenId = applicationSession.getActiveApplicationTokenId();
             log.trace("appTokenId {}", appTokenId);
-            String appTokenXml = applicationSession.getActiveApplicationToken();
+            String appTokenXml = applicationSession.getActiveApplicationTokenXML();
             String userTokenXml = null;// WhydahTemporaryBliUtil.logOnUser(userTokenServiceUri, appTokenId, appTokenXml, userName, password);
             assertNotNull(userTokenXml);
             log.trace("userTokenId {}", UserXpathHelper.getUserTokenId(userTokenXml));
@@ -111,7 +111,7 @@ public class ValidateUserRoleUseCaseTest {
             assertTrue(applicationSession.hasActiveSession());
             String appTokenId = applicationSession.getActiveApplicationTokenId();
             log.trace("appTokenId {}", appTokenId);
-            String appTokenXml = applicationSession.getActiveApplicationToken();
+            String appTokenXml = applicationSession.getActiveApplicationTokenXML();
             String userTokenXml = null;//  WhydahTemporaryBliUtil.logOnUser(userTokenServiceUri, appTokenId, appTokenXml, userName, password);
             assertNotNull(userTokenXml);
             log.debug("userTokenXml {}", userTokenXml);
