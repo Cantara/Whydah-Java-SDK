@@ -88,27 +88,18 @@ public class WhydahApplicationSession {
         initializeWhydahApplicationSession();
     }
 
-    /*
-    * @return true is session is active and working
-     */
-    public boolean hasActiveSession() {
-        if (applicationTokenId == null || applicationTokenId.length() < 4) {
-            return false;
-        }
-        return new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId()).execute();
-        //return true;
-    }
 
     private void renewWhydahApplicationSession() {
         if (!hasActiveSession()) {
             log.info("No active application session, applicationTokenId:" + applicationTokenId);
             for (int n = 0; n < 3 || !hasActiveSession(); n++) {
                 applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
-                if (hasActiveSession()) {
+                if (isActiveSession(applicationTokenXML)) {
                     setApplicationSessionParameters(applicationTokenXML);
                     log.info("Successful renew of applicationsession, applicationTokenId:" + applicationTokenId);
                     break;
                 }
+                log.info("Unsuccessful attempt to renew application session, returned applicationtoken: " + applicationTokenXML);
                 log.debug("Retrying renewing application session");
                 try {
                     Thread.sleep(1000 * n);
@@ -164,4 +155,31 @@ public class WhydahApplicationSession {
         applicationTokenId = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(applicationTokenXML);
         applicationName = ApplicationXpathHelper.getAppNameFromAppTokenXml(applicationTokenXML);
     }
+
+    /*
+* @return true is session is active and working
+ */
+    public boolean hasActiveSession() {
+        if (applicationTokenId == null || applicationTokenId.length() < 4) {
+            return false;
+        }
+        return new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId()).execute();
+        //return true;
+    }
+
+    /*
+* @return true if applicationTokenXML seems sensible
+*/
+    public boolean isActiveSession(String applicationTokenXML) {
+        try {
+            ApplicationToken at = ApplicationTokenMapper.fromApplicationCredentialXML(applicationTokenXML);
+            if (at.getApplicationID().length() > 8) {
+                return true;
+            }
+        } catch (Exception e) {
+
+        }
+        return false;
+    }
+
 }
