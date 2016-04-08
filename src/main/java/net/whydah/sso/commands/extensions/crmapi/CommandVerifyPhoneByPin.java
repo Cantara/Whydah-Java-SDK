@@ -16,7 +16,7 @@ import java.net.URI;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class CommandVerifyPhoneByPin extends HystrixCommand<Response> {
+public class CommandVerifyPhoneByPin extends HystrixCommand<Boolean> {
     private static final Logger log = getLogger(CommandVerifyPhoneByPin.class);
     private final String personRef;
     private final String userTokenId;
@@ -39,7 +39,7 @@ public class CommandVerifyPhoneByPin extends HystrixCommand<Response> {
     }
 
     @Override
-    protected Response run() {
+    protected Boolean run() {
         log.trace("{} - appTokenXml={}, ", CommandVerifyPhoneByPin.class.getSimpleName(), appTokenXml);
 
         String myAppTokenId = UserTokenXpathHelper.getAppTokenIdFromAppToken(appTokenXml);
@@ -53,12 +53,16 @@ public class CommandVerifyPhoneByPin extends HystrixCommand<Response> {
         formData.param("phoneNo", phoneNo);
         formData.param("smsPin", pin);
 
-        return webResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE),Response.class);
+        Response response = webResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
+        if (response.getStatus() == 200) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
 
     @Override
-    protected Response getFallback() {
+    protected Boolean getFallback() {
         log.warn("{} - fallback - crmUri={}", CommandVerifyPhoneByPin.class.getSimpleName(), crmServiceUri);
-        return null;
+        return Boolean.FALSE;
     }
 }

@@ -16,7 +16,7 @@ import java.net.URI;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class CommandVerifyEmailByToken extends HystrixCommand<Response> {
+public class CommandVerifyEmailByToken extends HystrixCommand<Boolean> {
     private static final Logger log = getLogger(CommandVerifyEmailByToken.class);
     private final String personRef;
     private final String userTokenId;
@@ -39,7 +39,7 @@ public class CommandVerifyEmailByToken extends HystrixCommand<Response> {
     }
 
     @Override
-    protected Response run() {
+    protected Boolean run() {
         log.trace("{} - appTokenXml={}, ", CommandVerifyEmailByToken.class.getSimpleName(), appTokenXml);
 
         String myAppTokenId = UserTokenXpathHelper.getAppTokenIdFromAppToken(appTokenXml);
@@ -53,12 +53,16 @@ public class CommandVerifyEmailByToken extends HystrixCommand<Response> {
         formData.param("emailaddress", emailaddress);
         formData.param("token", token);
 
-        return webResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE),Response.class);
+        Response response = webResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
+        if (response.getStatus() == 200) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
 
     @Override
-    protected Response getFallback() {
+    protected Boolean getFallback() {
         log.warn("{} - fallback - crmUri={}", CommandVerifyEmailByToken.class.getSimpleName(), crmServiceUri);
-        return null;
+        return Boolean.FALSE;
     }
 }
