@@ -1,4 +1,4 @@
-package net.whydah.sso.commands.userauth;
+package net.whydah.sso.commands.extensions.crmapi;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
@@ -12,25 +12,28 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.net.URI;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class CommandVerifyPhoneByPin extends HystrixCommand<Response> {
     private static final Logger log = getLogger(CommandVerifyPhoneByPin.class);
-    private URI tokenServiceUri;
+    private final String personRef;
+    private final String userTokenId;
+    private URI crmServiceUri;
     private String appTokenXml;
     private String phoneNo;
     private String pin;
 
-    public CommandVerifyPhoneByPin(URI tokenServiceUri, String appTokenXml, String phoneNo, String pin) {
-        super(HystrixCommandGroupKey.Factory.asKey("SSOAUserAuthGroup"));
-        this.tokenServiceUri = tokenServiceUri;
+    public CommandVerifyPhoneByPin(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String phoneNo, String pin) {
+        super(HystrixCommandGroupKey.Factory.asKey("CrmExtensionGroup"));
+        this.crmServiceUri = crmServiceUri;
         this.appTokenXml = appTokenXml;
+        this.userTokenId = userTokenId;
+        this.personRef = personRef;
         this.phoneNo = phoneNo;
         this.pin = pin;
-        if (this.tokenServiceUri == null || this.appTokenXml == null || this.phoneNo == null || this.pin == null) {
+        if (this.crmServiceUri == null || this.appTokenXml == null || this.phoneNo == null || this.pin == null) {
             log.error("{} initialized with null-values - will fail", CommandVerifyPhoneByPin.class.getSimpleName());
         }
     }
@@ -41,10 +44,10 @@ public class CommandVerifyPhoneByPin extends HystrixCommand<Response> {
 
         String myAppTokenId = UserTokenXpathHelper.getAppTokenIdFromAppToken(appTokenXml);
 
-        Client client = ClientBuilder.newClient();
-        WebTarget sts = client.target(tokenServiceUri);
+        Client crmClient = ClientBuilder.newClient();
+        WebTarget sts = crmClient.target(crmServiceUri).path(myAppTokenId).path(userTokenId).path("customer").path(personRef);
 
-        WebTarget webResource = sts.path(myAppTokenId).path("verify_phone_by_pin");
+        WebTarget webResource = sts.path(myAppTokenId).path("verify").path("phone");
         Form formData = new Form();
         formData.param("appTokenXml", appTokenXml);
         formData.param("phoneNo", phoneNo);
@@ -55,7 +58,7 @@ public class CommandVerifyPhoneByPin extends HystrixCommand<Response> {
 
     @Override
     protected Response getFallback() {
-        log.warn("{} - fallback - uibUri={}", CommandVerifyPhoneByPin.class.getSimpleName(), tokenServiceUri);
+        log.warn("{} - fallback - crmUri={}", CommandVerifyPhoneByPin.class.getSimpleName(), crmServiceUri);
         return null;
     }
 }
