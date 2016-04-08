@@ -172,7 +172,7 @@ public class WhydahApplicationSession {
 */
     public boolean isActiveSession(String applicationTokenXML) {
         try {
-            ApplicationToken at = ApplicationTokenMapper.fromApplicationCredentialXML(applicationTokenXML);
+            ApplicationToken at = ApplicationTokenMapper.fromXml(applicationTokenXML);
             if (at.getApplicationID().length() > 8) {
                 return true;
             }
