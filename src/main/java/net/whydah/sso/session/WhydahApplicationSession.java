@@ -171,6 +171,9 @@ public class WhydahApplicationSession {
 * @return true if applicationTokenXML seems sensible
 */
     public boolean isActiveSession(String applicationTokenXML) {
+        if (applicationTokenXML.length() > 8) {
+            return true;
+        }
         try {
             ApplicationToken at = ApplicationTokenMapper.fromXml(applicationTokenXML);
             if (at.getApplicationID().length() > 8) {
