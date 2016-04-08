@@ -40,12 +40,8 @@ public class CommandLogonUserByUserCredential  extends HystrixCommand<String> {
         this.myAppTokenXml=myAppTokenXml;
         this.userCredential=userCredential;
         this.userticket= UUID.randomUUID().toString();  // Create new UUID ticket if not provided
-        if (tokenServiceUri==null || myAppTokenId==null || myAppTokenXml==null || userCredential==null || userCredential==null){
-            log.error("CommandLogonUserByUserCredential initialized with null-values - will fail");
-            throw new IllegalArgumentException("Missing parameters for \n" +
-                    "\ttokenServiceUri ["+ tokenServiceUri + "], \n" +
-                    "\tmyAppTokenId ["+ myAppTokenId + "], \n" +
-                    "\tmyAppTokenXml["+myAppTokenXml + "] or \n\tuserCredential["+userCredential + "]");
+        if (tokenServiceUri == null || myAppTokenId == null || myAppTokenXml == null || userCredential == null) {
+            log.error("CommandLogonUserByUserCredential initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, myAppTokenXml:{}, userCredential:*****", tokenServiceUri, myAppTokenId, myAppTokenXml, userCredential);
         }
     }
 
