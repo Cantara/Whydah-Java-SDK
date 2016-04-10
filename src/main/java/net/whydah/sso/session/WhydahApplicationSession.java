@@ -75,7 +75,7 @@ public class WhydahApplicationSession {
     }
 
     public String getActiveApplicationTokenXML() {
-        return applicationTokenXML;
+        return ApplicationTokenMapper.toXML(applicationToken);
     }
 
     public String getSTS() {
