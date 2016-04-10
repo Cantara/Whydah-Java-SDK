@@ -19,7 +19,7 @@ public class CommandChangeUserPasswordUsingToken extends HystrixCommand<Response
     static final String CHANGE_PASSWORD_TOKEN_KEY = "changePasswordToken";
     //public static final String NEW_PASSWORD_KEY = "newpassword";
     private static final Logger log = getLogger(CommandChangeUserPasswordUsingToken.class);
-    private String uibUri;
+    private String uasUrl;
     private String applicationtokenId;
     private String uid;
     private String changePasswordToken;
@@ -28,7 +28,7 @@ public class CommandChangeUserPasswordUsingToken extends HystrixCommand<Response
 
     public CommandChangeUserPasswordUsingToken(String uibUri, String applicationtokenId, String uid, String changePasswordToken, String json) {
         super(HystrixCommandGroupKey.Factory.asKey("SSOAUserAuthGroup"));
-        this.uibUri = uibUri;
+        this.uasUrl = uibUri;
         this.applicationtokenId = applicationtokenId;
         this.uid = uid;
         this.changePasswordToken = changePasswordToken;
@@ -36,20 +36,23 @@ public class CommandChangeUserPasswordUsingToken extends HystrixCommand<Response
         if (uibUri == null || applicationtokenId == null || uid == null || changePasswordToken == null || json == null) {
             log.error("{} initialized with null-values - will fail", CommandChangeUserPasswordUsingToken.class.getSimpleName());
         }
+        if (uibUri == null || applicationtokenId == null || uid == null || changePasswordToken == null || json == null) {
+            log.error("CommandGetUsertokenByUserticket initialized with null-values - will fail uibUri:{} myAppTokenId:{}, uid:{}...", uibUri, applicationtokenId, uid);
+        }
     }
 
     @Override
     protected Response run() {
         log.trace("{} - applicationtokenId={}, ", CommandChangeUserPasswordUsingToken.class.getSimpleName(), applicationtokenId);
         Client client = ClientBuilder.newClient();
-        WebTarget uib = client.target(uibUri);
+        WebTarget uib = client.target(uasUrl);
         WebTarget webResource = uib.path(applicationtokenId).path("user").path(uid).path("change_password");
         return webResource.queryParam(CHANGE_PASSWORD_TOKEN_KEY, changePasswordToken).request().post(Entity.json(json));
     }
 
     @Override
     protected Response getFallback() {
-        log.warn("{} - fallback - uibUri={}", CommandChangeUserPasswordUsingToken.class.getSimpleName(), uibUri);
+        log.warn("{} - fallback - uasUrl={}", CommandChangeUserPasswordUsingToken.class.getSimpleName(), uasUrl);
         return null;
     }
 }

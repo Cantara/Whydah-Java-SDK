@@ -35,8 +35,8 @@ public class CommandGetUsertokenByUserticket extends HystrixCommand<String> {
         this.myAppTokenId=myAppTokenId;
         this.userticket=userticket;
         this.myAppTokenXml=myAppTokenXml;
-        if (tokenServiceUri == null || myAppTokenId == null || myAppTokenXml == null || userticket == null ) {
-            log.error("CommandGetUsertokenByUserticket initialized with null-values - will fail");
+        if (tokenServiceUri == null || myAppTokenId == null || myAppTokenXml == null || userticket == null) {
+            log.error("CommandGetUsertokenByUserticket initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, myAppTokenXml:{}, userCredential:*****", tokenServiceUri, myAppTokenId, myAppTokenXml, userticket);
         }
 
     }
