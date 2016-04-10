@@ -156,9 +156,9 @@ public class WhydahApplicationSession {
         applicationName = ApplicationXpathHelper.getAppNameFromAppTokenXml(applicationTokenXML);
     }
 
-    /*
-* @return true is session is active and working
- */
+    /**
+     * @return true is session is active and working
+     */
     public boolean hasActiveSession() {
         if (applicationTokenId == null || applicationTokenId.length() < 4) {
             return false;
@@ -168,9 +168,9 @@ public class WhydahApplicationSession {
         //return true;
     }
 
-    /*
-* @return true if applicationTokenXML seems sensible
-*/
+    /**
+     * @return true if applicationTokenXML seems sensible
+     */
     public boolean isActiveSession(String applicationTokenXML) {
         if (applicationTokenXML.length() > 8) {
             return true;
