@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class WhydahApplicationSession {
 
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
-    private static final int SESSION_CHECK_INTERVAL = 50;
+    private static final int SESSION_CHECK_INTERVAL = 30;  // Check every 30 seconds to adapt quickly
     private String sts;
     private ApplicationCredential myAppCredential;
     private String applicationTokenId;
@@ -163,6 +163,7 @@ public class WhydahApplicationSession {
         if (applicationTokenId == null || applicationTokenId.length() < 4) {
             return false;
         }
+
         return new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId()).execute();
         //return true;
     }
