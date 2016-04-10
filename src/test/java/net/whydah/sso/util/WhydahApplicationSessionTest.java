@@ -15,6 +15,7 @@ public class WhydahApplicationSessionTest {
     private static final Logger log = getLogger(WhydahApplicationSessionTest.class);
 
     @Test
+    @Ignore
     public void testTimecalculations() throws Exception {
         long i = System.currentTimeMillis()+200;
         assertTrue(!WhydahApplicationSession.expiresBeforeNextSchedule(i));
