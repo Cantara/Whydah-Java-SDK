@@ -18,7 +18,7 @@ public class WhydahApplicationSessionTest {
     public void testTimecalculations() throws Exception {
         long i = System.currentTimeMillis()+200;
         assertTrue(!WhydahApplicationSession.expiresBeforeNextSchedule(i));
-         i = System.currentTimeMillis()+30;
+        i = System.currentTimeMillis() + 20;
         assertTrue(WhydahApplicationSession.expiresBeforeNextSchedule(i));
 
     }
