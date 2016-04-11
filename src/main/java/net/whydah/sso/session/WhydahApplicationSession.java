@@ -96,11 +96,11 @@ public class WhydahApplicationSession {
                 applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
                 if (isActiveSession(applicationTokenXML)) {
                     setApplicationSessionParameters(applicationTokenXML);
-                    log.info("Successful renew of applicationsession, applicationTokenId:" + applicationTokenId);
+                    log.info("Successful logon of applicationsession, applicationTokenId:" + applicationTokenId);
                     break;
                 }
-                log.info("Unsuccessful attempt to renew application session, returned applicationtoken: " + applicationTokenXML);
-                log.debug("Retrying renewing application session");
+                log.info("Unsuccessful attempt to logon application session, returned applicationtoken: " + applicationTokenXML);
+                log.debug("Retrying logon application session");
                 try {
                     Thread.sleep(1000 * n);
                 } catch (InterruptedException ie) {
@@ -160,7 +160,7 @@ public class WhydahApplicationSession {
      * @return true is session is active and working
      */
     public boolean hasActiveSession() {
-        if (applicationTokenId == null || applicationTokenId.length() < 4) {
+        if (getActiveApplicationTokenId() == null || getActiveApplicationTokenId().length() < 4) {
             return false;
         }
 
