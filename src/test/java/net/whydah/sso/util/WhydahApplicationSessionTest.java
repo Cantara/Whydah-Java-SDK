@@ -17,10 +17,12 @@ public class WhydahApplicationSessionTest {
     @Test
     @Ignore
     public void testTimecalculations() throws Exception {
+        log.trace("testTimecalculations() - starting test");
         long i = System.currentTimeMillis()+200;
         assertTrue(!WhydahApplicationSession.expiresBeforeNextSchedule(i));
         i = System.currentTimeMillis() + 10;
         assertTrue(WhydahApplicationSession.expiresBeforeNextSchedule(i));
+        log.trace("testTimecalculations() - done");
 
     }
 
