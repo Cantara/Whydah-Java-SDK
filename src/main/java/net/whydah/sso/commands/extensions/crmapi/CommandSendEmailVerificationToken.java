@@ -16,31 +16,31 @@ import java.net.URI;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class CommandVerifyEmailByToken extends HystrixCommand<Boolean> {
-    private static final Logger log = getLogger(CommandVerifyEmailByToken.class);
+public class CommandSendEmailVerificationToken extends HystrixCommand<Boolean> {
+    private static final Logger log = getLogger(CommandSendEmailVerificationToken.class);
     private final String personRef;
     private final String userTokenId;
+    private final String linkurl;
     private URI crmServiceUri;
     private String appTokenXml;
     private String emailaddress;
-    private String token;
 
-    public CommandVerifyEmailByToken(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String emailaddress, String token) {
+    public CommandSendEmailVerificationToken(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String emailaddress, String linkurl) {
         super(HystrixCommandGroupKey.Factory.asKey("CrmExtensionGroup"));
         this.crmServiceUri = crmServiceUri;
         this.appTokenXml = appTokenXml;
         this.userTokenId = userTokenId;
         this.personRef = personRef;
         this.emailaddress = emailaddress;
-        this.token = token;
-        if (this.crmServiceUri == null || this.appTokenXml == null || this.emailaddress == null || this.token == null) {
-            log.error("{} initialized with null-values - will fail", CommandVerifyEmailByToken.class.getSimpleName());
+        this.linkurl = linkurl;
+        if (this.crmServiceUri == null || this.appTokenXml == null || this.emailaddress == null || this.linkurl == null) {
+            log.error("{} initialized with null-values - will fail", CommandSendEmailVerificationToken.class.getSimpleName());
         }
     }
 
     @Override
     protected Boolean run() {
-        log.trace("{} - appTokenXml={}, ", CommandVerifyEmailByToken.class.getSimpleName(), appTokenXml);
+        log.trace("{} - appTokenXml={}, ", CommandSendEmailVerificationToken.class.getSimpleName(), appTokenXml);
 
         String myAppTokenId = UserTokenXpathHelper.getAppTokenIdFromAppToken(appTokenXml);
 
@@ -51,7 +51,7 @@ public class CommandVerifyEmailByToken extends HystrixCommand<Boolean> {
         Form formData = new Form();
         formData.param("appTokenXml", appTokenXml);
         formData.param("email", emailaddress);
-        formData.param("token", token);
+        formData.param("linkurl", linkurl);
 
         Response response = webResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
         if (response.getStatus() == 200) {
@@ -62,7 +62,7 @@ public class CommandVerifyEmailByToken extends HystrixCommand<Boolean> {
 
     @Override
     protected Boolean getFallback() {
-        log.warn("{} - fallback - crmUri={}", CommandVerifyEmailByToken.class.getSimpleName(), crmServiceUri);
+        log.warn("{} - fallback - crmUri={}", CommandSendEmailVerificationToken.class.getSimpleName(), crmServiceUri);
         return Boolean.FALSE;
     }
 }
