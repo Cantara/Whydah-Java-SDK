@@ -47,7 +47,7 @@ public class CommandVerifyPhoneByPin extends HystrixCommand<Boolean> {
         Client crmClient = ClientBuilder.newClient();
         WebTarget sts = crmClient.target(crmServiceUri).path(myAppTokenId).path(userTokenId).path("customer").path(personRef);
 
-        WebTarget webResource = sts.path(myAppTokenId).path("verify").path("phone").queryParam("phoneNo", phoneNo).queryParam("pin", pin);
+        WebTarget webResource = sts.path("verify").path("phone").queryParam("phoneNo", phoneNo).queryParam("pin", pin);
 
         Response response = webResource.request().get(Response.class);
         if (response.getStatus() == 200) {
