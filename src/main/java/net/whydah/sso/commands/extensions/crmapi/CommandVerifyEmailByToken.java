@@ -47,13 +47,9 @@ public class CommandVerifyEmailByToken extends HystrixCommand<Boolean> {
         Client crmClient = ClientBuilder.newClient();
         WebTarget sts = crmClient.target(crmServiceUri).path(myAppTokenId).path(userTokenId).path("customer").path(personRef);
 
-        WebTarget webResource = sts.path("verify").path("email");
-        Form formData = new Form();
-        formData.param("appTokenXml", appTokenXml);
-        formData.param("email", emailaddress);
-        formData.param("token", token);
+        WebTarget webResource = sts.path("verify").path("email").queryParam("token", token).queryParam("email", emailaddress);
 
-        Response response = webResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
+        Response response = webResource.request().get(Response.class);
         if (response.getStatus() == 200) {
             return Boolean.TRUE;
         }
