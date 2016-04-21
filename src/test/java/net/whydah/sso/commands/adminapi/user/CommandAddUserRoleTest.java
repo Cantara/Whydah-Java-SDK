@@ -26,27 +26,27 @@ public class CommandAddUserRoleTest {
     public static String TEMPORARY_APPLICATION_SECRET = "NmHsQDCerVWx5d6aCjug9fyPE";
     public static String userName = "useradmin";
     public static String password = "useradmin42";
-    private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
-    private static boolean systemTest = true;
+    private static URI tokenServiceUri;
     private static URI userAdminServiceUri;
-    private static String userAdminService = "http://localhost:9992/useradminservice";
-    private static String userTokenService = "http://localhost:9998/tokenservice";
+    private static boolean systemTest = true;
 
 
     @BeforeClass
     public static void setup() throws Exception {
         appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
-        tokenServiceUri = UriBuilder.fromUri(userTokenService).build();
         userCredential = new UserCredential(userName, password);
-
-        userAdminServiceUri = UriBuilder.fromUri(userAdminService).build();
 
         if (systemTest) {
             tokenServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
             userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
             SSLTool.disableCertificateValidation();
+        } else {
+            String userAdminService = "http://localhost:9992/useradminservice";
+            String userTokenService = "http://localhost:9998/tokenservice";
+            tokenServiceUri = UriBuilder.fromUri(userTokenService).build();
+            userAdminServiceUri = UriBuilder.fromUri(userAdminService).build();
         }
     }
 
