@@ -28,7 +28,7 @@ public class CommandAddUserRoleTest {
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
-    private static boolean systemTest = false;
+    private static boolean systemTest = true;
     private static URI userAdminServiceUri;
     private static String userAdminService = "http://localhost:9992/useradminservice";
     private static String userTokenService = "http://localhost:9998/tokenservice";
@@ -56,7 +56,7 @@ public class CommandAddUserRoleTest {
     @Test
     public void testAddUserRole() throws Exception {
 
-        if (!SystemTestUtil.noLocalWhydahRunning()) {
+        if (!SystemTestUtil.noLocalWhydahRunning()||systemTest) {
 
             String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);

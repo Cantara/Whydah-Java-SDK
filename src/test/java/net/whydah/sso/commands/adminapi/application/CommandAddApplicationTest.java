@@ -24,15 +24,16 @@ import static org.junit.Assert.assertTrue;
 
 public class CommandAddApplicationTest {
 
-    public static String TEMPORARY_APPLICATION_ID = "11";//"11";
-    public static String TEMPORARY_APPLICATION_NAME = "Funny APp";//"11";
-    public static String TEMPORARY_APPLICATION_SECRET = "LLNmHsQDCerVWx5d6aCjug9fyPE";
+
+	public static String TEMPORARY_APPLICATION_NAME = "Whydah-SSOLoginWebApp";//"Funny APp";//"11";
+	public static String TEMPORARY_APPLICATION_ID = "2215";//"11";
+	public static String TEMPORARY_APPLICATION_SECRET = "33779936R6Jr47D4Hj5R6p9qT";//"LLNmHsQDCerVWx5d6aCjug9fyPE";
     public static String userName = "useradmin";
-    public static String password = "useradmin";
+    public static String password = "useradmin42";//"useradmin";
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
-    private static boolean systemTest = false;
+    private static boolean systemTest = true;
     private static URI userAdminServiceUri;
     private static String userAdminService = "http://localhost:9992/useradminservice";
     private static String userTokenService = "http://localhost:9998/tokenservice";
