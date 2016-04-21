@@ -1,26 +1,11 @@
 package net.whydah.sso.commands.adminapi.application;
 
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+
+import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-
-import net.whydah.sso.util.BaseHttpPostHystrixCommand;
-
-import org.slf4j.Logger;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Used by UAS to autenticate application against UIB.

@@ -20,11 +20,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class CommandAddUserRoleTest {
-    public static String TEMPORARY_APPLICATION_ID = "11";//"11";
+    public static String TEMPORARY_APPLICATION_ID = "2211";//"11";
     public static String TEMPORARY_APPLICATION_NAME = "MyApp";//"11";
-    public static String TEMPORARY_APPLICATION_SECRET = "6r46g3q986Ep6By7B9J46m96D";
-    public static String userName = "admin";
-    public static String password = "whydahadmin";
+    public static String TEMPORARY_APPLICATION_SECRET = "NmHsQDCerVWx5d6aCjug9fyPE";
+    public static String userName = "useradmin";
+    public static String password = "useradmin42";
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
@@ -43,8 +43,8 @@ public class CommandAddUserRoleTest {
         userAdminServiceUri = UriBuilder.fromUri(userAdminService).build();
 
         if (systemTest) {
-            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
-            userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
+            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
+            userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
         }
     }
 

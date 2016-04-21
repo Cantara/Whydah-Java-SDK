@@ -1,25 +1,14 @@
 package net.whydah.sso.commands.appauth;
 
+import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
+import net.whydah.sso.application.types.ApplicationCredential;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
-import net.whydah.sso.application.types.ApplicationCredential;
-import net.whydah.sso.util.BaseHttpPostHystrixCommand;
-import net.whydah.sso.util.SSLTool;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CommandLogonApplication extends BaseHttpPostHystrixCommand<String> {
 

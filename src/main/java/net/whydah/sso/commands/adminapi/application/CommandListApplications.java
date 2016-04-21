@@ -1,24 +1,10 @@
 package net.whydah.sso.commands.adminapi.application;
 
-import com.github.kevinsawicki.http.HttpRequest;
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-
-import net.whydah.sso.util.BaseHttpGetHystrixCommand;
-import net.whydah.sso.util.BaseHttpPostHystrixCommand;
-
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 import org.slf4j.Logger;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-
 import java.net.URI;
-import java.util.Map;
 
-import static javax.ws.rs.core.Response.Status.FORBIDDEN;
-import static javax.ws.rs.core.Response.Status.OK;
 import static org.slf4j.LoggerFactory.getLogger;
 
 
