@@ -33,7 +33,7 @@ public class CommandAddApplicationTest {
     private static URI tokenServiceUri;
     private static ApplicationCredential appCredential;
     private static UserCredential userCredential;
-    private static boolean systemTest = true;
+    private static boolean systemTest = false;
     private static URI userAdminServiceUri;
     private static String userAdminService = "http://localhost:9992/useradminservice";
     private static String userTokenService = "http://localhost:9998/tokenservice";
