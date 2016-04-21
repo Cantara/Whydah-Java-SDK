@@ -30,7 +30,7 @@ public class CommandAddUserRoleTest {
     private static UserCredential userCredential;
     private static URI tokenServiceUri;
     private static URI userAdminServiceUri;
-    private static boolean systemTest = true;
+    private static boolean systemTest = false;
 
 
     @BeforeClass
