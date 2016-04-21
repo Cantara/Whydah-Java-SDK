@@ -17,7 +17,7 @@ import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 
-public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
+public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 
 	protected Logger log;
 	protected URI uri ;
@@ -25,14 +25,14 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 	protected String myAppTokenXml="";
 	protected String TAG="";
 
-	protected BaseHttpPostHystrixCommand(URI serviceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey, int hystrixExecutionTimeOut) {
+	protected BaseHttpGetHystrixCommand(URI serviceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey, int hystrixExecutionTimeOut) {
 		super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(hystrixGroupKey)).
 				andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
 						.withExecutionTimeoutInMilliseconds(hystrixExecutionTimeOut)));
 		init(serviceUri, myAppTokenXml, myAppTokenId, hystrixGroupKey);
 	}
 
-	protected BaseHttpPostHystrixCommand(URI tokenServiceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey) {
+	protected BaseHttpGetHystrixCommand(URI tokenServiceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey) {
 		super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(hystrixGroupKey)));
 		init(tokenServiceUri, myAppTokenXml, myAppTokenId, hystrixGroupKey);
 	}
@@ -64,7 +64,20 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 			} 
 			
 			log.debug("TAG" + " - uri={} myAppTokenId={}", uriString, myAppTokenId);
-			HttpRequest request = HttpRequest.post(uriString);
+		
+			
+			
+			HttpRequest request;
+			if(getQueryParameters()!=null && getQueryParameters().length!=0){
+				request = HttpRequest.get(uriString, true, getQueryParameters());
+			} else {
+				request = HttpRequest.get(uriString);
+			}
+			
+			if(getAcceptHeaderRequestValue()!=null && !getAcceptHeaderRequestValue().equals("")){
+				request = request.accept(getAcceptHeaderRequestValue());
+			}
+			
 			request.trustAllCerts();
 			request.trustAllHosts();
 			
@@ -72,7 +85,7 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 				request.contentType(HttpSender.APPLICATION_FORM_URLENCODED);
 				request.form(getFormParameters());
 			}
-			
+
 			request = dealWithRequestBeforeSend(request);
 			
 			String responseBody = request.body();
@@ -96,6 +109,7 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 	}
 
 	protected HttpRequest dealWithRequestBeforeSend(HttpRequest request) {
+		
 		//CAN USE MULTIPART
 		
 		//JUST EXAMPLE
@@ -106,9 +120,7 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 
 		//OR SEND SOME DATA
 		
-		//request.send("name=huydo")
-		//or something like
-		//request.contentType("application/json").send(applicationJson);
+		//HttpRequest.post("http://google.com").send("name=kevin")
 		
 		return request;
 	}
@@ -127,7 +139,9 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 	protected Map<String, String> getFormParameters(){
 		return new HashMap<String, String>();
 	}
-	
+	protected Object[] getQueryParameters(){
+		return new String[]{};
+	}
 
 
 	@SuppressWarnings("unchecked")
@@ -139,5 +153,12 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 	protected R getFallback() {
 		log.warn( TAG + " - fallback - uri={}", uri.toString() + getTargetPath());
 		return null;
+	}
+	
+	protected String getAcceptHeaderRequestValue(){
+		//CAN RETURN JSON (can be used in derived class)
+		//return "application/json";
+		return "";
+		
 	}
 }

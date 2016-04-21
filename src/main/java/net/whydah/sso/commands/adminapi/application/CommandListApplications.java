@@ -1,8 +1,10 @@
 package net.whydah.sso.commands.adminapi.application;
 
+import com.github.kevinsawicki.http.HttpRequest;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 
+import net.whydah.sso.util.BaseHttpGetHystrixCommand;
 import net.whydah.sso.util.BaseHttpPostHystrixCommand;
 
 import org.slf4j.Logger;
@@ -20,7 +22,7 @@ import static javax.ws.rs.core.Response.Status.OK;
 import static org.slf4j.LoggerFactory.getLogger;
 
 
-public class CommandListApplications extends BaseHttpPostHystrixCommand<String> {
+public class CommandListApplications extends BaseHttpGetHystrixCommand<String> {
     private static final Logger log = getLogger(CommandListApplications.class);
     
     private String adminUserTokenId;
@@ -29,7 +31,6 @@ public class CommandListApplications extends BaseHttpPostHystrixCommand<String> 
 
     public CommandListApplications(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String applicationQuery) {
         super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup", 300000);
-        this.myAppTokenId = myAppTokenId;
         this.adminUserTokenId = adminUserTokenId;
         this.applicationQuery = applicationQuery;
         if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || applicationQuery == null) {
@@ -42,6 +43,7 @@ public class CommandListApplications extends BaseHttpPostHystrixCommand<String> 
 		return myAppTokenId + "/" + adminUserTokenId + "/applications";
 	}
 
+	
 
 //	 @Override
 //	    protected String run() {

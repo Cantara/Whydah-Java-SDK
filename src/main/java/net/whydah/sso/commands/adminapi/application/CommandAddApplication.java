@@ -1,5 +1,6 @@
 package net.whydah.sso.commands.adminapi.application;
 
+import com.github.kevinsawicki.http.HttpRequest;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 
@@ -22,13 +23,13 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class CommandAddApplication extends BaseHttpPostHystrixCommand<String> {
     private static final Logger log = getLogger(CommandAddUser.class);
-    private String myAppTokenId;
+    
     private String adminUserTokenId;
     private String applicationJson;
 
 
     public CommandAddApplication(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String applicationJson) {
-        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
+        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup", 60000);
       
         this.adminUserTokenId = adminUserTokenId;
         this.applicationJson = applicationJson;
@@ -36,6 +37,11 @@ public class CommandAddApplication extends BaseHttpPostHystrixCommand<String> {
             log.error(TAG + " initialized with null-values - will fail");
         }
 
+    }
+    
+    @Override
+    protected HttpRequest dealWithRequestBeforeSend(HttpRequest request) {
+    	return request.contentType("application/json").send(applicationJson);
     }
 
 //    @Override
