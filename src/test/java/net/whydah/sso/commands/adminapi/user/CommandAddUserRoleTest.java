@@ -8,6 +8,7 @@ import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.util.SSLTool;
 import net.whydah.sso.util.SystemTestUtil;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -45,6 +46,7 @@ public class CommandAddUserRoleTest {
         if (systemTest) {
             tokenServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
             userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
+            SSLTool.disableCertificateValidation();
         }
     }
 
