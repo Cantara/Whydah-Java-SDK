@@ -17,26 +17,26 @@ import java.util.Map;
 public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 
 	protected Logger log;
-	protected URI uri ;
+	protected URI whydahServiceURI;
 	protected String myAppTokenId="";
 	protected String myAppTokenXml="";
 	protected String TAG="";
 
-	protected BaseHttpPostHystrixCommand(URI serviceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey, int hystrixExecutionTimeOut) {
+	protected BaseHttpPostHystrixCommand(URI myServiceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey, int hystrixExecutionTimeOut) {
 		super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(hystrixGroupKey)).
 				andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
 						.withExecutionTimeoutInMilliseconds(hystrixExecutionTimeOut)));
-		init(serviceUri, myAppTokenXml, myAppTokenId, hystrixGroupKey);
+		init(myServiceUri, myAppTokenXml, myAppTokenId, hystrixGroupKey);
 	}
 
-	protected BaseHttpPostHystrixCommand(URI tokenServiceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey) {
+	protected BaseHttpPostHystrixCommand(URI myServiceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey) {
 		super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(hystrixGroupKey)));
-		init(tokenServiceUri, myAppTokenXml, myAppTokenId, hystrixGroupKey);
+		init(myServiceUri, myAppTokenXml, myAppTokenId, hystrixGroupKey);
 	}
 
 
-	private void init(URI tokenServiceUri, String myAppTokenXml,String myAppTokenId, String hystrixGroupKey) {
-		this.uri = tokenServiceUri;
+	private void init(URI myServiceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey) {
+		this.whydahServiceURI = myServiceUri;
 		this.myAppTokenXml = myAppTokenXml;
 		if(this.myAppTokenXml!=null && !this.myAppTokenXml.equals("")  &&  (myAppTokenId==null||myAppTokenId.isEmpty())){
 			this.myAppTokenId= ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
@@ -55,12 +55,12 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 	@Override
 	protected R run() {
 		try{
-			String uriString = uri.toString();
+			String uriString = whydahServiceURI.toString();
 			if(getTargetPath()!=null){
 				 uriString += getTargetPath();
-			} 
-			
-			log.debug("TAG" + " - uri={} myAppTokenId={}", uriString, myAppTokenId);
+			}
+
+			log.debug("TAG" + " - whydahServiceURI={} myAppTokenId={}", uriString, myAppTokenId);
 			HttpRequest request = HttpRequest.post(uriString);
 			request.trustAllCerts();
 			request.trustAllHosts();
@@ -134,7 +134,7 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 
 	@Override
 	protected R getFallback() {
-		log.warn( TAG + " - fallback - uri={}", uri.toString() + getTargetPath());
+		log.warn(TAG + " - fallback - whydahServiceURI={}", whydahServiceURI.toString() + getTargetPath());
 		return null;
 	}
 }
