@@ -1,9 +1,10 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import com.github.kevinsawicki.http.HttpRequest;
+import java.net.URI;
+
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
-import java.net.URI;
+import com.github.kevinsawicki.http.HttpRequest;
 
 /**
  * Created by totto on 24.06.15.
@@ -55,8 +56,7 @@ public class CommandAddUserRole extends BaseHttpPostHystrixCommand<String> {
     
     @Override
     protected HttpRequest dealWithRequestBeforeSend(HttpRequest request) {
-    	request = request.send(userRoleJson);
-    	return request;
+    	return request.contentType("application/json").send(userRoleJson);
     }
 
 //    @Override

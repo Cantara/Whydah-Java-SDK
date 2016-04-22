@@ -1,20 +1,20 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import net.whydah.sso.user.helpers.UserTokenXpathHelper;
-import org.slf4j.Logger;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.net.URI;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
 
-import static org.slf4j.LoggerFactory.getLogger;
+import net.whydah.sso.user.helpers.UserTokenXpathHelper;
+
+import org.slf4j.Logger;
+
+import com.netflix.hystrix.HystrixCommand;
+import com.netflix.hystrix.HystrixCommandGroupKey;
 
 public class CommandVerifyPhoneByPin extends HystrixCommand<Boolean> {
     private static final Logger log = getLogger(CommandVerifyPhoneByPin.class);

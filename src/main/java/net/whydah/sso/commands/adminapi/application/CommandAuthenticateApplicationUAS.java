@@ -15,16 +15,15 @@ import java.util.Map;
 public class CommandAuthenticateApplicationUAS extends BaseHttpPostHystrixCommand<Response> {
     public static final String APP_CREDENTIAL_XML = "appCredentialXml";
     private static final String APPLICATION_AUTH_PATH = "application/auth";
- 
-    private String uibUri;
-    private String stsApplicationtokenId;
+
+    
     private String appCredentialXml;
 
 
     public CommandAuthenticateApplicationUAS(String uibUri, String stsApplicationtokenId, String appCredentialXml) {
         super(URI.create(uibUri), "", stsApplicationtokenId, "UIBApplicationAdminGroup");
-        this.uibUri = uibUri;
-        this.stsApplicationtokenId = stsApplicationtokenId;
+
+
         this.appCredentialXml = appCredentialXml;
         if (uibUri == null || stsApplicationtokenId == null || appCredentialXml == null) {
             log.error("{} initialized with null-values - will fail", CommandAuthenticateApplicationUAS.class.getSimpleName());
@@ -54,6 +53,6 @@ public class CommandAuthenticateApplicationUAS extends BaseHttpPostHystrixComman
     
 	@Override
 	protected String getTargetPath() {
-		return null;
+		return myAppTokenId + "/" + APPLICATION_AUTH_PATH;
 	}
 }

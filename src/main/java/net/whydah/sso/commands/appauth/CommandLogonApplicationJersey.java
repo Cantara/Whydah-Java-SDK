@@ -1,15 +1,6 @@
 package net.whydah.sso.commands.appauth;
 
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.netflix.hystrix.HystrixCommandProperties;
-import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
-import net.whydah.sso.application.types.ApplicationCredential;
-import net.whydah.sso.util.SSLTool;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.net.URI;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -18,7 +9,19 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
+
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
+import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
+import net.whydah.sso.application.types.ApplicationCredential;
+import net.whydah.sso.util.SSLTool;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.netflix.hystrix.HystrixCommand;
+import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
+import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 
 public class CommandLogonApplicationJersey extends HystrixCommand<String> {
 

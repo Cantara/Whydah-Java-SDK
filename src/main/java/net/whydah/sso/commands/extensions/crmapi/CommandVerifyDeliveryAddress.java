@@ -1,17 +1,5 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import com.github.kevinsawicki.http.HttpRequest;
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.netflix.hystrix.HystrixCommandProperties;
-import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import net.whydah.sso.commands.appauth.CommandLogonApplication;
-import net.whydah.sso.util.HttpSender;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -19,6 +7,21 @@ import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import net.whydah.sso.commands.appauth.CommandLogonApplication;
+import net.whydah.sso.util.HttpSender;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.kevinsawicki.http.HttpRequest;
+import com.netflix.hystrix.HystrixCommand;
+import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
+import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 
 public class CommandVerifyDeliveryAddress extends HystrixCommand<String> {
 

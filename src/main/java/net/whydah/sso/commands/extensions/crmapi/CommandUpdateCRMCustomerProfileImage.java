@@ -1,25 +1,15 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.netflix.hystrix.HystrixCommandProperties;
-import net.whydah.sso.util.SSLTool;
-import org.slf4j.Logger;
+import static javax.ws.rs.core.Response.Status.ACCEPTED;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
 import java.net.URI;
 
-import static javax.ws.rs.core.Response.Status.ACCEPTED;
-import static org.slf4j.LoggerFactory.getLogger;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
-public class CommandUpdateCRMCustomerProfileImage extends HystrixCommand<String> {
-    private static final Logger log = getLogger(CommandUpdateCRMCustomerProfileImage.class);
-    private URI crmServiceUri;
-    private String myAppTokenId;
+import com.github.kevinsawicki.http.HttpRequest;
+
+public class CommandUpdateCRMCustomerProfileImage extends BaseHttpPostHystrixCommand<String> {
+
     private String userTokenId;
     private String personRef;
     private String contentType;
@@ -27,11 +17,8 @@ public class CommandUpdateCRMCustomerProfileImage extends HystrixCommand<String>
 
 
     public CommandUpdateCRMCustomerProfileImage(URI crmServiceUri, String myAppTokenId, String userTokenId, String personRef, String contentType, byte[] imageData) {
-        super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("CrmExtensionGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
-                .withExecutionTimeoutInMilliseconds(3000)));
-
-        this.crmServiceUri = crmServiceUri;
-        this.myAppTokenId = myAppTokenId;
+    	super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 3000);
+        
         this.userTokenId = userTokenId;
         this.personRef = personRef;
         this.imageData = imageData;
@@ -43,39 +30,65 @@ public class CommandUpdateCRMCustomerProfileImage extends HystrixCommand<String>
 
     }
 
+//    @Override
+//    protected String run() {
+//        log.trace("CommandUpdateCRMCustomerProfileImage - myAppTokenId={}", myAppTokenId);
+//
+//        Client crmClient;
+//        if (!SSLTool.isCertificateCheckDisabled()) {
+//            crmClient = ClientBuilder.newClient();
+//        } else {
+//            crmClient = ClientBuilder.newBuilder().sslContext(SSLTool.sc).hostnameVerifier((s1, s2) -> true).build();
+//        }
+//
+//        WebTarget createProfileImage = crmClient.target(crmServiceUri).path(myAppTokenId).path(userTokenId).path("customer").path(personRef).path("image");
+//
+//        Response response = createProfileImage.request().put(Entity.entity(imageData, contentType));
+//
+//        log.debug("CommandUpdateCRMCustomerProfileImage - Returning status {}", response.getStatus());
+//        if (response.getStatus() == ACCEPTED.getStatusCode()) {
+//            String locationHeader = response.getHeaderString("location");
+//            log.debug("CommandUpdateCRMCustomerProfileImage - Returning ProfileImage url {}", locationHeader);
+//            return locationHeader;
+//        }
+//        String responseJson = response.readEntity(String.class);
+//        log.debug("CommandUpdateCRMCustomerProfileImage - Returning response '{}', status {}", responseJson, response.getStatus());
+//        return null;
+//
+//
+//    }
+    
+    //TODO: Please check this, totto. Does it return null when OK? 
     @Override
-    protected String run() {
-        log.trace("CommandUpdateCRMCustomerProfileImage - myAppTokenId={}", myAppTokenId);
-
-        Client crmClient;
-        if (!SSLTool.isCertificateCheckDisabled()) {
-            crmClient = ClientBuilder.newClient();
-        } else {
-            crmClient = ClientBuilder.newBuilder().sslContext(SSLTool.sc).hostnameVerifier((s1, s2) -> true).build();
-        }
-
-        WebTarget createProfileImage = crmClient.target(crmServiceUri).path(myAppTokenId).path(userTokenId).path("customer").path(personRef).path("image");
-
-        Response response = createProfileImage.request().put(Entity.entity(imageData, contentType));
-
-        log.debug("CommandUpdateCRMCustomerProfileImage - Returning status {}", response.getStatus());
-        if (response.getStatus() == ACCEPTED.getStatusCode()) {
-            String locationHeader = response.getHeaderString("location");
-            log.debug("CommandUpdateCRMCustomerProfileImage - Returning ProfileImage url {}", locationHeader);
+    protected String dealWithResponse(String response) {
+    	return null;
+    }
+    
+    @Override
+    protected String dealWithFailedResponse(String responseBody, int statusCode) {
+    	if (statusCode == ACCEPTED.getStatusCode()) {
+            String locationHeader = request.header("location");
+            log.debug(TAG + " - Returning ProfileImage url {}", locationHeader);
             return locationHeader;
         }
-        String responseJson = response.readEntity(String.class);
-        log.debug("CommandUpdateCRMCustomerProfileImage - Returning response '{}', status {}", responseJson, response.getStatus());
-        return null;
-
-
+    	return super.dealWithFailedResponse(responseBody, statusCode);
     }
-
+    
     @Override
-    protected String getFallback() {
-        log.warn("CommandUpdateCRMCustomerProfileImage - fallback - uri={}", crmServiceUri.toString());
-        return null;
+    protected HttpRequest dealWithRequestBeforeSend(HttpRequest request) {
+    	return request.contentType(contentType).send(imageData);
     }
+
+//    @Override
+//    protected String getFallback() {
+//        log.warn("CommandUpdateCRMCustomerProfileImage - fallback - uri={}", crmServiceUri.toString());
+//        return null;
+//    }
+
+	@Override
+	protected String getTargetPath() {
+		return myAppTokenId + "/" + userTokenId + "/customer/" + personRef + "/image";
+	}
 
 
 }

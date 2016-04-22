@@ -1,31 +1,22 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import org.slf4j.Logger;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 import java.net.URI;
 
-import static org.slf4j.LoggerFactory.getLogger;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 /**
  * Created by totto on 24.06.15.
  */
-public class CommandUpdateUserRole extends HystrixCommand<String> {
-    private static final Logger log = getLogger(CommandAddUser.class);
-    private URI userAdminServiceUri;
-    private String myAppTokenId;
+//TODO: Check, it is unfinished
+public class CommandUpdateUserRole extends BaseHttpPostHystrixCommand<String> {
+
     private String adminUserTokenId;
     private String userRoleJson;
 
 
     public CommandUpdateUserRole(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String userRoleJson) {
-        super(HystrixCommandGroupKey.Factory.asKey("UASUserAdminGroup"));
-        this.userAdminServiceUri = userAdminServiceUri;
-        this.myAppTokenId = myAppTokenId;
+    	super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
+        
         this.adminUserTokenId = adminUserTokenId;
         this.userRoleJson = userRoleJson;
         if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userRoleJson == null) {
@@ -34,24 +25,29 @@ public class CommandUpdateUserRole extends HystrixCommand<String> {
 
     }
 
-    @Override
-    protected String run() {
-        log.trace("CommandUpdateUserRole - myAppTokenId={}", myAppTokenId);
+//    @Override
+//    protected String run() {
+//        log.trace("CommandUpdateUserRole - myAppTokenId={}", myAppTokenId);
+//
+//        Client tokenServiceClient = ClientBuilder.newClient();
+//
+//        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId).path(adminUserTokenId).path("/xxx");
+//        // Response response = addUser.request().post(Entity.xml(userIdentityXml));
+//        throw new UnsupportedOperationException();
+//        //return null;
+//
+//    }
 
-        Client tokenServiceClient = ClientBuilder.newClient();
+//    @Override
+//    protected String getFallback() {
+//        log.warn("CommandUpdateUserRole - fallback - uri={}", userAdminServiceUri.toString());
+//        return null;
+//    }
 
-        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId).path(adminUserTokenId).path("/xxx");
-        // Response response = addUser.request().post(Entity.xml(userIdentityXml));
-        throw new UnsupportedOperationException();
-        //return null;
-
-    }
-
-    @Override
-    protected String getFallback() {
-        log.warn("CommandUpdateUserRole - fallback - uri={}", userAdminServiceUri.toString());
-        return null;
-    }
+	@Override
+	protected String getTargetPath() {
+		return myAppTokenId + "/" + adminUserTokenId + "/xxx";
+	}
 
 
 }

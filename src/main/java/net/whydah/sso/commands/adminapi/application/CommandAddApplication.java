@@ -12,7 +12,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 // TODO:  wait for https://github.com/Cantara/Whydah-UserAdminService/issues/35
 
 public class CommandAddApplication extends BaseHttpPostHystrixCommand<String> {
-    private static final Logger log = getLogger(CommandAddUser.class);
+  
     
     private String adminUserTokenId;
     private String applicationJson;

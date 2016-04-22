@@ -1,9 +1,10 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import com.github.kevinsawicki.http.HttpRequest;
+import java.net.URI;
+
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
-import java.net.URI;
+import com.github.kevinsawicki.http.HttpRequest;
 
 public class CommandAddUserAggregate extends BaseHttpPostHystrixCommand<String> {
 
@@ -16,19 +17,18 @@ public class CommandAddUserAggregate extends BaseHttpPostHystrixCommand<String> 
         this.adminUserTokenId = adminUserTokenId;
         this.userAggregateJson = userAggregateJson;
         if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userAggregateJson == null) {
-            log.error("CommandAddUserAggregate initialized with null-values - will fail - userAdminServiceUri:{}, myAppTokenId:{}, adminUserTokenId:{}, userAggregateJson:{}", userAdminServiceUri, myAppTokenId, adminUserTokenId, userAggregateJson);
+            log.error(TAG + " initialized with null-values - will fail - userAdminServiceUri:{}, myAppTokenId:{}, adminUserTokenId:{}, userAggregateJson:{}", userAdminServiceUri, myAppTokenId, adminUserTokenId, userAggregateJson);
         }
     }
 
 	@Override
 	protected String getTargetPath() {
-		return myAppTokenId + "/" + adminUserTokenId + "useraggregate";
+		return myAppTokenId + "/" + adminUserTokenId + "/useraggregate";
 	}
 	
 	@Override
 	protected HttpRequest dealWithRequestBeforeSend(HttpRequest request) {
-		request.send(userAggregateJson);
-		return request;
+		return request.contentType("application/json").send(userAggregateJson);
 		
 	}
 

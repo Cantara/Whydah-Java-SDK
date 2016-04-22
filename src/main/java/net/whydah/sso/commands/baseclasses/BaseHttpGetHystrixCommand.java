@@ -5,8 +5,10 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
+
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.util.HttpSender;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +23,8 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 	protected String myAppTokenId="";
 	protected String myAppTokenXml="";
 	protected String TAG="";
-
+	protected HttpRequest request;
+	
 	protected BaseHttpGetHystrixCommand(URI serviceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey, int hystrixExecutionTimeOut) {
 		super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(hystrixGroupKey)).
 				andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
@@ -43,7 +46,7 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 		} else {
 			this.myAppTokenId = myAppTokenId;
 		}
-		this.TAG =this.getClass().getName() + ", pool :" + hystrixGroupKey;
+		this.TAG =this.getClass().getSimpleName() + ", pool: " + hystrixGroupKey;
 		this.log =  LoggerFactory.getLogger(TAG);
 		HystrixRequestContext.initializeContext();
 	}
@@ -54,6 +57,11 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 	
 	@Override
 	protected R run() {
+		return doGetCommand();
+
+	}
+
+	protected R doGetCommand() {
 		try{
 			String uriString = uri.toString();
 			if(getTargetPath()!=null){
@@ -64,7 +72,6 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 		
 			
 			
-			HttpRequest request;
 			if(getQueryParameters()!=null && getQueryParameters().length!=0){
 				request = HttpRequest.get(uriString, true, getQueryParameters());
 			} else {
@@ -88,20 +95,22 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 			String responseBody = request.body();
 			int statusCode = request.code();
 			
-
+			
 			switch (statusCode) {
 			case HttpSender.STATUS_OK:
 				onCompleted(responseBody);
 				return dealWithResponse(responseBody);
 			default:
 				onFailed(responseBody, statusCode);
-				
+				return dealWithFailedResponse(responseBody, statusCode);
 			}
 		} catch(Exception ex){
 			ex.printStackTrace();
 			throw new RuntimeException("TAG" +  " - Application authentication failed to execute");
 		}
+	}
 
+	protected R dealWithFailedResponse(String responseBody, int statusCode) {
 		return null;
 	}
 

@@ -1,7 +1,10 @@
 package net.whydah.sso.commands.adminapi.application;
 
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+
 import org.slf4j.Logger;
+
+import com.github.kevinsawicki.http.HttpRequest;
 
 import java.net.URI;
 
@@ -9,7 +12,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 
 public class CommandListApplications extends BaseHttpGetHystrixCommand<String> {
-    private static final Logger log = getLogger(CommandListApplications.class);
+    
     
     private String adminUserTokenId;
     private String applicationQuery;
@@ -29,6 +32,11 @@ public class CommandListApplications extends BaseHttpGetHystrixCommand<String> {
 		return myAppTokenId + "/" + adminUserTokenId + "/applications";
 	}
 
+	@Override
+	protected HttpRequest dealWithRequestBeforeSend(HttpRequest request) {
+		// return request.contentType("application/json").send(applicationQuery);
+		return super.dealWithRequestBeforeSend(request);
+	}
 	
 
 //	 @Override

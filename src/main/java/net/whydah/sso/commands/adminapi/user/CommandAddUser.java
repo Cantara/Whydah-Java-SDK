@@ -1,20 +1,15 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import com.github.kevinsawicki.http.HttpRequest;
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-import net.whydah.sso.user.types.UserCredential;
-import org.slf4j.Logger;
-
 import java.net.URI;
 
-import static org.slf4j.LoggerFactory.getLogger;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+
+import com.github.kevinsawicki.http.HttpRequest;
 
 public class CommandAddUser extends BaseHttpPostHystrixCommand<String> {
-    private static final Logger log = getLogger(CommandAddUser.class);
-    private URI userAdminServiceUri;
-    private String myAppTokenId;
+    
     private String adminUserTokenId;
-    private UserCredential userCredential;
+    //private UserCredential userCredential;
     private String userIdentityJson;
 
     public CommandAddUser(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String userIdentityJson) {
