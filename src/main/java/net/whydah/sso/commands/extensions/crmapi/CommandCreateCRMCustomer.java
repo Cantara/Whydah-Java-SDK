@@ -1,10 +1,9 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import java.net.URI;
-
+import com.github.kevinsawicki.http.HttpRequest;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
-import com.github.kevinsawicki.http.HttpRequest;
+import java.net.URI;
 
 public class CommandCreateCRMCustomer extends BaseHttpPostHystrixCommand<String> {
 
@@ -78,7 +77,7 @@ public class CommandCreateCRMCustomer extends BaseHttpPostHystrixCommand<String>
 
 	//    @Override
 	//    protected String getFallback() {
-	//        log.warn("CommandCreateCRMCustomer - fallback - uri={}", crmServiceUri.toString());
+	//        log.warn("CommandCreateCRMCustomer - fallback - whydahServiceUri={}", crmServiceUri.toString());
 	//        return null;
 	//    }
 

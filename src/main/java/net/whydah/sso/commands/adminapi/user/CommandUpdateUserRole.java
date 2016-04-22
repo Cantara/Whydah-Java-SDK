@@ -1,8 +1,8 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+
+import java.net.URI;
 
 /**
  * Created by totto on 24.06.15.
@@ -40,7 +40,7 @@ public class CommandUpdateUserRole extends BaseHttpPostHystrixCommand<String> {
 
 //    @Override
 //    protected String getFallback() {
-//        log.warn("CommandUpdateUserRole - fallback - uri={}", userAdminServiceUri.toString());
+//        log.warn("CommandUpdateUserRole - fallback - whydahServiceUri={}", userAdminServiceUri.toString());
 //        return null;
 //    }
 

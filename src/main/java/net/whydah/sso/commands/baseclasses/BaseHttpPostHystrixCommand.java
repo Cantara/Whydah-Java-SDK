@@ -5,10 +5,8 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.util.HttpSender;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +17,7 @@ import java.util.Map;
 public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 
 	protected Logger log;
-	protected URI uri ;
+	protected URI whydahServiceUri;
 	protected String myAppTokenId="";
 	protected String myAppTokenXml="";
 	protected String TAG="";
@@ -32,14 +30,14 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 		init(serviceUri, myAppTokenXml, myAppTokenId, hystrixGroupKey);
 	}
 
-	protected BaseHttpPostHystrixCommand(URI tokenServiceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey) {
+	protected BaseHttpPostHystrixCommand(URI serviceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey) {
 		super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(hystrixGroupKey)));
-		init(tokenServiceUri, myAppTokenXml, myAppTokenId, hystrixGroupKey);
+		init(serviceUri, myAppTokenXml, myAppTokenId, hystrixGroupKey);
 	}
 
 
-	private void init(URI tokenServiceUri, String myAppTokenXml,String myAppTokenId, String hystrixGroupKey) {
-		this.uri = tokenServiceUri;
+	private void init(URI serviceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey) {
+		this.whydahServiceUri = serviceUri;
 		this.myAppTokenXml = myAppTokenXml;
 		if(this.myAppTokenXml!=null && !this.myAppTokenXml.equals("")  &&  (myAppTokenId==null||myAppTokenId.isEmpty())){
 			this.myAppTokenId= ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
@@ -63,12 +61,12 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 
 	protected R doPostCommand() {
 		try{
-			String uriString = uri.toString();
+			String uriString = whydahServiceUri.toString();
 			if(getTargetPath()!=null){
 				 uriString += getTargetPath();
-			} 
-			
-			log.debug("TAG" + " - uri={} myAppTokenId={}", uriString, myAppTokenId);
+			}
+
+			log.debug("TAG" + " - whydahServiceUri={} myAppTokenId={}", uriString, myAppTokenId);
 			request = HttpRequest.post(uriString);
 			request.trustAllCerts();
 			request.trustAllHosts();
@@ -121,7 +119,7 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 	}
 
 	protected void onFailed(String responseBody, int statusCode) {
-		log.debug(TAG + " - Unexpected response from STS. Status code is {} content is {} ", String.valueOf(statusCode) + responseBody);
+		log.debug(TAG + " - Unexpected response from {}. Status code is {} content is {} ", whydahServiceUri, String.valueOf(statusCode) + responseBody);
 	}
 
 	protected void onCompleted(String responseBody) {
@@ -141,7 +139,8 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 
 	@Override
 	protected R getFallback() {
-		log.warn( TAG + " - fallback - uri={}", uri.toString() + getTargetPath());
+		log.warn(TAG + " - fallback - whydahServiceUri={}", whydahServiceUri.toString() + getTargetPath());
 		return null;
 	}
 }
+

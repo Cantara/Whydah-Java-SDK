@@ -1,5 +1,17 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
+import com.github.kevinsawicki.http.HttpRequest;
+import com.netflix.hystrix.HystrixCommand;
+import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
+import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
+import net.whydah.sso.commands.appauth.CommandLogonApplication;
+import net.whydah.sso.util.HttpSender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -7,21 +19,6 @@ import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
-import net.whydah.sso.commands.appauth.CommandLogonApplication;
-import net.whydah.sso.util.HttpSender;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.github.kevinsawicki.http.HttpRequest;
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.netflix.hystrix.HystrixCommandProperties;
-import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 
 public class CommandVerifyDeliveryAddress extends HystrixCommand<String> {
 
@@ -52,7 +49,7 @@ public class CommandVerifyDeliveryAddress extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-        log.trace("CommandVerifyDeliveryAddress - uri={}", googleMapsUrl);
+        log.trace("CommandVerifyDeliveryAddress - whydahServiceUri={}", googleMapsUrl);
 
         //   HttpRequest request = HttpRequest.get(signRequest(googleMapsUrl + "?address=" + deliveryAddress+googleMapsUrlParamer+googleMapsClientID)).contentType(HttpSender.APPLICATION_FORM_URLENCODED);
         HttpRequest request = HttpRequest.get("https://maps-api-ssl.google.com/maps/api/geocode/xml?address=Frankfurstein+ring+105a,M%C3%BCnchen,de,80000,&sensor=false&client=gme-kickzag&signature=RD8P7J07rJbfmClUeMEY4adIoTs=").contentType(HttpSender.APPLICATION_FORM_URLENCODED);
@@ -73,7 +70,7 @@ public class CommandVerifyDeliveryAddress extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandVerifyDeliveryAddress - fallback - uri={}", googleMapsUrl.toString());
+        log.warn("CommandVerifyDeliveryAddress - fallback - whydahServiceUri={}", googleMapsUrl.toString());
         return null;
     }
 

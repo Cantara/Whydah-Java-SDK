@@ -46,7 +46,7 @@ public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
     protected String run() {
 
         String responseXML = null;
-        log.trace("CommandGetUsertokenByUsertokenId - uri={} myAppTokenId={}, usertokenId:{}", tokenServiceUri.toString(), myAppTokenId, usertokenId);
+        log.trace("CommandGetUsertokenByUsertokenId - whydahServiceUri={} myAppTokenId={}, usertokenId:{}", tokenServiceUri.toString(), myAppTokenId, usertokenId);
 
 
         Client tokenServiceClient = ClientBuilder.newClient();
@@ -81,7 +81,7 @@ public class CommandGetUsertokenByUsertokenId extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandGetUsertokenByUsertokenId - fallback - uri={} - usertokenId:{} - myAppTokenId: {}", tokenServiceUri.toString(), usertokenId, myAppTokenId);
+        log.warn("CommandGetUsertokenByUsertokenId - fallback - whydahServiceUri={} - usertokenId:{} - myAppTokenId: {}", tokenServiceUri.toString(), usertokenId, myAppTokenId);
         return null;
     }
 

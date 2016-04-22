@@ -63,7 +63,7 @@ public class CommandLogonApplicationIntegrationTest {
     public void testCommandLogic(){
         SSLTool.disableCertificateValidation();
         ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
-        log.trace("CommandLogonApplication - uri={} appCredential={}", tokenServiceUri.toString(), ApplicationCredentialMapper.toXML(appCredential));
+        log.trace("CommandLogonApplication - whydahServiceUri={} appCredential={}", tokenServiceUri.toString(), ApplicationCredentialMapper.toXML(appCredential));
 
 
         Client tokenServiceClient = ClientBuilder.newBuilder()

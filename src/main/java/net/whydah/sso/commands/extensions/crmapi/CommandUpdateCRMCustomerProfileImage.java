@@ -1,12 +1,11 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import static javax.ws.rs.core.Response.Status.ACCEPTED;
+import com.github.kevinsawicki.http.HttpRequest;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 import java.net.URI;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-
-import com.github.kevinsawicki.http.HttpRequest;
+import static javax.ws.rs.core.Response.Status.ACCEPTED;
 
 public class CommandUpdateCRMCustomerProfileImage extends BaseHttpPostHystrixCommand<String> {
 
@@ -81,7 +80,7 @@ public class CommandUpdateCRMCustomerProfileImage extends BaseHttpPostHystrixCom
 
 //    @Override
 //    protected String getFallback() {
-//        log.warn("CommandUpdateCRMCustomerProfileImage - fallback - uri={}", crmServiceUri.toString());
+//        log.warn("CommandUpdateCRMCustomerProfileImage - fallback - whydahServiceUri={}", crmServiceUri.toString());
 //        return null;
 //    }
 

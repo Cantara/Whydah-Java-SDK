@@ -1,10 +1,9 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import java.net.URI;
-
+import com.github.kevinsawicki.http.HttpRequest;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
-import com.github.kevinsawicki.http.HttpRequest;
+import java.net.URI;
 
 public class CommandAddUserAggregate extends BaseHttpPostHystrixCommand<String> {
 
@@ -52,7 +51,7 @@ public class CommandAddUserAggregate extends BaseHttpPostHystrixCommand<String> 
 //
 //    @Override
 //    protected String getFallback() {
-//        log.warn("CommandAddUserAggregate - fallback - uri={}", userAdminServiceUri.toString());
+//        log.warn("CommandAddUserAggregate - fallback - whydahServiceUri={}", userAdminServiceUri.toString());
 //        return null;
 //    }
 

@@ -72,7 +72,7 @@ public class CommandListUserLogins extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandListUserLogins - fallback - uri={}", statisticsServiceUri.toString());
+        log.warn("CommandListUserLogins - fallback - whydahServiceUri={}", statisticsServiceUri.toString());
         return null;
     }
 

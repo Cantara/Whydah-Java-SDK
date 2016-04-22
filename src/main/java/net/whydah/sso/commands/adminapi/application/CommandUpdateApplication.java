@@ -1,11 +1,10 @@
 package net.whydah.sso.commands.adminapi.application;
 
 
+import com.github.kevinsawicki.http.HttpRequest;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 import java.net.URI;
-
-import com.github.kevinsawicki.http.HttpRequest;
 
 // TODO:  wait for https://github.com/Cantara/Whydah-UserAdminService/issues/35
 
@@ -49,7 +48,7 @@ public class CommandUpdateApplication extends BaseHttpPostHystrixCommand<String>
 
 //    @Override
 //    protected String getFallback() {
-//        log.warn("CommandUpdateApplication - fallback - uri={}", userAdminServiceUri.toString());
+//        log.warn("CommandUpdateApplication - fallback - whydahServiceUri={}", userAdminServiceUri.toString());
 //        return null;
 //    }
     

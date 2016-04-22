@@ -1,9 +1,9 @@
 package net.whydah.sso.commands.adminapi.user;
 
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+
+import java.net.URI;
 
 public class CommandGetUserAggregate extends BaseHttpGetHystrixCommand<String> {
     
@@ -42,7 +42,7 @@ public class CommandGetUserAggregate extends BaseHttpGetHystrixCommand<String> {
 
 //    @Override
 //    protected String getFallback() {
-//        log.warn("CommandGetUserAggregate - fallback - uri={}", userAdminServiceUri.toString());
+//        log.warn("CommandGetUserAggregate - fallback - whydahServiceUri={}", userAdminServiceUri.toString());
 //        return null;
 //    }
 

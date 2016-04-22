@@ -40,7 +40,7 @@ public class CommandSendThreatSignal extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-        log.trace("CommandSendThreatSignal - uri={} myAppTokenId={},", tokenServiceUri.toString(), myAppTokenId);
+        log.trace("CommandSendThreatSignal - whydahServiceUri={} myAppTokenId={},", tokenServiceUri.toString(), myAppTokenId);
 
         Client tokenServiceClient = ClientBuilder.newClient();
         WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("threat").path(myAppTokenId).path("signal");
@@ -58,7 +58,7 @@ public class CommandSendThreatSignal extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandSendThreatSignal - fallback - uri={} -  myAppTokenId: {}", tokenServiceUri.toString(), myAppTokenId);
+        log.warn("CommandSendThreatSignal - fallback - whydahServiceUri={} -  myAppTokenId: {}", tokenServiceUri.toString(), myAppTokenId);
         return null;
     }
 

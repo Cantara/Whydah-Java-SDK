@@ -81,7 +81,7 @@ public class CommandGetUsersStats extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandGetUsersStats - fallback - uri={}", statisticsServiceUri.toString());
+        log.warn("CommandGetUsersStats - fallback - whydahServiceUri={}", statisticsServiceUri.toString());
         return null;
     }
 

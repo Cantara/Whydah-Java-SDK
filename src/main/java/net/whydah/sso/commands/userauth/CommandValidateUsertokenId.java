@@ -33,7 +33,7 @@ public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
 
     @Override
     protected Boolean run() {
-        log.trace("CommandValidateUsertokenId - uri={} myAppTokenId={}", tokenServiceUri.toString(), myAppTokenId);
+        log.trace("CommandValidateUsertokenId - whydahServiceUri={} myAppTokenId={}", tokenServiceUri.toString(), myAppTokenId);
 
         if (usertokenid == null || usertokenid.length() < 4) {
             log.warn("CommandValidateUsertokenId - Called with bogus usertokenid={}. return false", usertokenid);
@@ -66,7 +66,7 @@ public class CommandValidateUsertokenId extends HystrixCommand<Boolean> {
 
     @Override
     protected Boolean getFallback() {
-        log.warn("CommandValidateUsertokenId - fallback - uri={}", tokenServiceUri.toString());
+        log.warn("CommandValidateUsertokenId - fallback - whydahServiceUri={}", tokenServiceUri.toString());
         return false;
     }
 

@@ -1,12 +1,12 @@
 package net.whydah.sso.commands.appauth;
 
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-
 import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CommandLogonApplication extends BaseHttpPostHystrixCommand<String> {
 
@@ -21,7 +21,7 @@ public class CommandLogonApplication extends BaseHttpPostHystrixCommand<String> 
 
 	@Override
 	protected String getFallback() {
-		log.warn("CommandLogonApplication - fallback - uri={}", tokenServiceUri.toString());
+		log.warn("CommandLogonApplication - fallback - whydahServiceUri={}", tokenServiceUri.toString());
 		return null;
 	}
 

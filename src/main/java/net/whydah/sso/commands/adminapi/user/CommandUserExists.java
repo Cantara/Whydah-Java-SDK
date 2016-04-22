@@ -1,8 +1,8 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+
+import java.net.URI;
 
 public class CommandUserExists extends BaseHttpGetHystrixCommand<Boolean> {
   
@@ -55,7 +55,7 @@ public class CommandUserExists extends BaseHttpGetHystrixCommand<Boolean> {
 //
 //    @Override
 //    protected Boolean getFallback() {
-//        log.warn("CommandUserExists - fallback - uri={}", userAdminServiceUri.toString());
+//        log.warn("CommandUserExists - fallback - whydahServiceUri={}", userAdminServiceUri.toString());
 //        return false;
 //    }
 

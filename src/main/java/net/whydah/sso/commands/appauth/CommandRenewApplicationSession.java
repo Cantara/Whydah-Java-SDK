@@ -1,13 +1,11 @@
 package net.whydah.sso.commands.appauth;
 
 
-import java.net.URI;
-
-import javax.ws.rs.core.MediaType;
-
+import com.github.kevinsawicki.http.HttpRequest;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
-import com.github.kevinsawicki.http.HttpRequest;
+import javax.ws.rs.core.MediaType;
+import java.net.URI;
 
 public class CommandRenewApplicationSession extends BaseHttpPostHystrixCommand<String> {
 
@@ -33,7 +31,7 @@ public class CommandRenewApplicationSession extends BaseHttpPostHystrixCommand<S
 
 //    @Override
 //    protected String run() {
-//        log.trace("CommandRenewApplicationSession - uri={} applicationtokenid={}", tokenServiceUri.toString(), applicationtokenid);
+//        log.trace("CommandRenewApplicationSession - whydahServiceUri={} applicationtokenid={}", tokenServiceUri.toString(), applicationtokenid);
 //
 //        Client tokenServiceClient = ClientBuilder.newClient();
 //        Form formData = new Form();
@@ -59,7 +57,7 @@ public class CommandRenewApplicationSession extends BaseHttpPostHystrixCommand<S
 
 //    @Override
 //    protected String getFallback() {
-//        log.warn("CommandRenewApplicationSession - fallback - uri={}", tokenServiceUri.toString());
+//        log.warn("CommandRenewApplicationSession - fallback - whydahServiceUri={}", tokenServiceUri.toString());
 //        return null;
 //    }
 

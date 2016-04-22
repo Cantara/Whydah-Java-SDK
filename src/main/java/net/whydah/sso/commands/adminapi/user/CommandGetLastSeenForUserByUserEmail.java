@@ -1,8 +1,8 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+
+import java.net.URI;
 
 
 public class CommandGetLastSeenForUserByUserEmail extends BaseHttpGetHystrixCommand<String> {
@@ -30,7 +30,7 @@ public class CommandGetLastSeenForUserByUserEmail extends BaseHttpGetHystrixComm
 //    protected String run() {
 //
 //        String responseXML = null;
-//        log.trace("CommandGetLastSeenForUserByUserEmail - uri={} myAppTokenId={}, userEmail:{}", tokenServiceUri.toString(), myAppTokenId, userEmail);
+//        log.trace("CommandGetLastSeenForUserByUserEmail - whydahServiceUri={} myAppTokenId={}, userEmail:{}", tokenServiceUri.toString(), myAppTokenId, userEmail);
 //        Client tokenServiceClient = ClientBuilder.newClient();
 //        WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("user").path(myAppTokenId).path(userEmail).path("get_usertoken_by_usertokenid");
 //        log.trace("CommandGetLastSeenForUserByUserEmail  - userEmail: {}", userEmail);
@@ -53,7 +53,7 @@ public class CommandGetLastSeenForUserByUserEmail extends BaseHttpGetHystrixComm
 
 //    @Override
 //    protected String getFallback() {
-//        log.warn("CommandGetLastSeenForUserByUserEmail - fallback - uri={} - myAppTokenId: {} - userEmail:{}  ", tokenServiceUri.toString(), myAppTokenId, userEmail);
+//        log.warn("CommandGetLastSeenForUserByUserEmail - fallback - whydahServiceUri={} - myAppTokenId: {} - userEmail:{}  ", tokenServiceUri.toString(), myAppTokenId, userEmail);
 //        return null;
 //    }
 

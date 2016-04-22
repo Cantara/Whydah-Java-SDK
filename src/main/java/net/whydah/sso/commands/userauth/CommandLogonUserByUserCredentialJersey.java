@@ -58,7 +58,7 @@ public class CommandLogonUserByUserCredentialJersey  extends HystrixCommand<Stri
 
     @Override
     protected String run() {
-        log.trace("CommandLogonUserByUserCredential - uri={} myAppTokenId={}", tokenServiceUri.toString(), myAppTokenId);
+        log.trace("CommandLogonUserByUserCredential - whydahServiceUri={} myAppTokenId={}", tokenServiceUri.toString(), myAppTokenId);
 
         Client tokenServiceClient = ClientBuilder.newClient();
         WebTarget getUserToken = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/" + userticket + "/usertoken");
@@ -98,7 +98,7 @@ public class CommandLogonUserByUserCredentialJersey  extends HystrixCommand<Stri
 
     @Override
     protected String getFallback() {
-        log.warn("CommandLogonUserByUserCredential - fallback - uri={}", tokenServiceUri.toString());
+        log.warn("CommandLogonUserByUserCredential - fallback - whydahServiceUri={}", tokenServiceUri.toString());
         return null;
     }
 

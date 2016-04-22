@@ -1,23 +1,17 @@
 package net.whydah.sso.commands.appauth;
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+
+import java.net.URI;
 
 public class CommandValidateApplicationTokenId extends BaseHttpPostHystrixCommand<Boolean> {
 
 
-    public CommandValidateApplicationTokenId(String tokenServiceUri, String applicationTokenId) {
-    	super(URI.create(tokenServiceUri), "", applicationTokenId,"STSApplicationAdminGroup");
-        
-        if (tokenServiceUri == null || applicationTokenId == null) {
-            log.error("CommandValidateUsertokenId initialized with null-values - will fail", CommandValidateApplicationTokenId.class.getSimpleName());
-        }
-    }
+	int retryCnt = 0;
 
 //    @Override
 //    protected Boolean run() {
-//        log.trace("CommandValidateApplicationTokenId - uri={} applicationTokenId={}", tokenServiceUri.toString(), applicationTokenId);
+//        log.trace("CommandValidateApplicationTokenId - whydahServiceUri={} applicationTokenId={}", tokenServiceUri.toString(), applicationTokenId);
 //
 //        if (applicationTokenId == null || applicationTokenId.length() < 4) {
 //            log.warn("CommandValidateApplicationTokenId - Null or too short applicationTokenId={}. return false", applicationTokenId);
@@ -45,7 +39,14 @@ public class CommandValidateApplicationTokenId extends BaseHttpPostHystrixComman
 //        return bolRes;
 //    }
 
-   int retryCnt=0;
+	public CommandValidateApplicationTokenId(String tokenServiceUri, String applicationTokenId) {
+		super(URI.create(tokenServiceUri), "", applicationTokenId, "STSApplicationAdminGroup");
+
+		if (tokenServiceUri == null || applicationTokenId == null) {
+			log.error("CommandValidateUsertokenId initialized with null-values - will fail", CommandValidateApplicationTokenId.class.getSimpleName());
+		}
+	}
+
    @Override
    protected Boolean dealWithFailedResponse(String responseBody, int statusCode) {
 	   if(statusCode == 409&&retryCnt<1){
@@ -59,7 +60,7 @@ public class CommandValidateApplicationTokenId extends BaseHttpPostHystrixComman
 
 //    @Override
 //    protected Boolean getFallback() {
-//        log.warn("CommandValidateApplicationTokenId - fallback - uri={}", tokenServiceUri.toString());
+//        log.warn("CommandValidateApplicationTokenId - fallback - whydahServiceUri={}", tokenServiceUri.toString());
 //        return false;
 //    }
 

@@ -1,6 +1,15 @@
 package net.whydah.sso.commands.appauth;
 
-import java.net.URI;
+import com.netflix.hystrix.HystrixCommand;
+import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
+import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
+import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
+import net.whydah.sso.application.types.ApplicationCredential;
+import net.whydah.sso.util.SSLTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -9,19 +18,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
-import net.whydah.sso.application.types.ApplicationCredential;
-import net.whydah.sso.util.SSLTool;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.netflix.hystrix.HystrixCommandProperties;
-import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
+import java.net.URI;
 
 public class CommandLogonApplicationJersey extends HystrixCommand<String> {
 
@@ -47,7 +44,7 @@ public class CommandLogonApplicationJersey extends HystrixCommand<String> {
 
     @Override
     protected String run() {
-        log.trace("CommandLogonApplication - uri={} appCredential={}", tokenServiceUri.toString(), ApplicationCredentialMapper.toXML(appCredential));
+        log.trace("CommandLogonApplication - whydahServiceUri={} appCredential={}", tokenServiceUri.toString(), ApplicationCredentialMapper.toXML(appCredential));
 
         Client tokenServiceClient;
         if (!SSLTool.isCertificateCheckDisabled()) {
@@ -89,7 +86,7 @@ public class CommandLogonApplicationJersey extends HystrixCommand<String> {
 
     @Override
     protected String getFallback() {
-        log.warn("CommandLogonApplication - fallback - uri={}", tokenServiceUri.toString());
+        log.warn("CommandLogonApplication - fallback - whydahServiceUri={}", tokenServiceUri.toString());
         return null;
     }
 

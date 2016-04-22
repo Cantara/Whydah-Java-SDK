@@ -1,11 +1,10 @@
 package net.whydah.sso.commands.appauth;
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URI;
 
 public class CommandGetApplicationIdFromApplicationTokenId extends BaseHttpGetHystrixCommand<String> {
     private static final Logger log = LoggerFactory.getLogger(CommandGetApplicationIdFromApplicationTokenId.class);
@@ -22,7 +21,7 @@ public class CommandGetApplicationIdFromApplicationTokenId extends BaseHttpGetHy
 
 //    @Override
 //    protected String run() {
-//        log.trace("ComandGetApplicationIDFromApplicationTokenId - uri={} applicationTokenId={}", tokenServiceUri.toString(), applicationTokenId);
+//        log.trace("ComandGetApplicationIDFromApplicationTokenId - whydahServiceUri={} applicationTokenId={}", tokenServiceUri.toString(), applicationTokenId);
 //
 //        if (applicationTokenId == null || applicationTokenId.length() < 4) {
 //            log.warn("ComandGetApplicationIDFromApplicationTokenId - Null or too short applicationTokenId={}. return false", applicationTokenId);
@@ -47,7 +46,7 @@ public class CommandGetApplicationIdFromApplicationTokenId extends BaseHttpGetHy
 //
 //    @Override
 //    protected String getFallback() {
-//        log.warn("ComandGetApplicationIDFromApplicationTokenId - fallback - uri={}", tokenServiceUri.toString());
+//        log.warn("ComandGetApplicationIDFromApplicationTokenId - fallback - whydahServiceUri={}", tokenServiceUri.toString());
 //        return null;
 //    }
 
