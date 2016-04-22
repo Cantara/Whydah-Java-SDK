@@ -1,9 +1,14 @@
 package net.whydah.sso.commands.threat;
 
 
+import com.github.kevinsawicki.http.HttpRequest;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
+
+import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,11 +19,14 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 import static javax.ws.rs.core.Response.Status.OK;
 
-public class CommandSendThreatSignal extends HystrixCommand<String> {
+public class CommandSendThreatSignal extends BaseHttpPostHystrixCommand<String> {
 
     private static final Logger log = LoggerFactory.getLogger(CommandSendThreatSignal.class);
 
@@ -28,39 +36,59 @@ public class CommandSendThreatSignal extends HystrixCommand<String> {
 
 
     public CommandSendThreatSignal(URI tokenServiceUri, String myAppTokenId, String threatMessage) {
-        super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("WhydahThreat")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
-                .withExecutionTimeoutInMilliseconds(1000)));
-        this.tokenServiceUri = tokenServiceUri;
-        this.myAppTokenId = myAppTokenId;
+    	super(tokenServiceUri, "", myAppTokenId,"WhydahThreat",1000);
+        
+        
         this.threatMessage = threatMessage;
         if (tokenServiceUri == null || myAppTokenId == null) {
-            log.error("CommandSendThreatSignal initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}", tokenServiceUri.toString(), myAppTokenId);
+            log.error(TAG + " initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}", tokenServiceUri.toString(), myAppTokenId);
         }
     }
 
+//    @Override
+//    protected String run() {
+//        log.trace("CommandSendThreatSignal - whydahServiceUri={} myAppTokenId={},", tokenServiceUri.toString(), myAppTokenId);
+//
+//        Client tokenServiceClient = ClientBuilder.newClient();
+//        WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("threat").path(myAppTokenId).path("signal");
+//        log.trace("CommandSendThreatSignal  -  apptoken: {}", myAppTokenId);
+//        Form formData = new Form();
+//        formData.param("signal", threatMessage);
+//        Response response = userTokenResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
+//        if (!(response.getStatus() == OK.getStatusCode())) {
+//            log.debug("CommandSendThreatSignal - Response Code from STS: {}", response.getStatus());
+//        }
+//        return "";
+//
+//
+//    }
     @Override
-    protected String run() {
-        log.trace("CommandSendThreatSignal - whydahServiceUri={} myAppTokenId={},", tokenServiceUri.toString(), myAppTokenId);
-
-        Client tokenServiceClient = ClientBuilder.newClient();
-        WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("threat").path(myAppTokenId).path("signal");
-        log.trace("CommandSendThreatSignal  -  apptoken: {}", myAppTokenId);
-        Form formData = new Form();
-        formData.param("signal", threatMessage);
-        Response response = userTokenResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
-        if (!(response.getStatus() == OK.getStatusCode())) {
-            log.debug("CommandSendThreatSignal - Response Code from STS: {}", response.getStatus());
-        }
-        return "";
-
-
+    protected String dealWithResponse(String response) {
+    	return "";
+    }
+    
+    @Override
+    protected String dealWithFailedResponse(String responseBody, int statusCode) {
+    	return "";
     }
 
-    @Override
-    protected String getFallback() {
-        log.warn("CommandSendThreatSignal - fallback - whydahServiceUri={} -  myAppTokenId: {}", tokenServiceUri.toString(), myAppTokenId);
-        return null;
-    }
+	@Override
+	protected Map<String, String> getFormParameters() {
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("signal", threatMessage);
+		return data;
+	}
+    
+//    @Override
+//    protected String getFallback() {
+//        log.warn("CommandSendThreatSignal - fallback - whydahServiceUri={} -  myAppTokenId: {}", tokenServiceUri.toString(), myAppTokenId);
+//        return null;
+//    }
+
+	@Override
+	protected String getTargetPath() {
+		return "threat/" + myAppTokenId + "/signal";
+	}
 
 
 }

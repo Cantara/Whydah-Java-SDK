@@ -5,8 +5,10 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
+
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.util.HttpSender;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +69,12 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 			}
 
 			log.debug("TAG" + " - whydahServiceUri={} myAppTokenId={}", uriString, myAppTokenId);
-			request = HttpRequest.post(uriString);
+		
+			if(getQueryParameters()!=null && getQueryParameters().length!=0){
+				request = HttpRequest.post(uriString, true, getQueryParameters());
+			} else {
+				request = HttpRequest.post(uriString);
+			}
 			request.trustAllCerts();
 			request.trustAllHosts();
 			
@@ -132,6 +139,10 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 		return new HashMap<String, String>();
 	}
 
+	protected Object[] getQueryParameters(){
+		return new String[]{};
+	}
+	
 	@SuppressWarnings("unchecked")
 	protected R dealWithResponse(String response){
 		return (R)response;

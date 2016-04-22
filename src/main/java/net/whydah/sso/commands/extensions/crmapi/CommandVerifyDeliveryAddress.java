@@ -5,24 +5,30 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
+
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 import net.whydah.sso.util.HttpSender;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-public class CommandVerifyDeliveryAddress extends HystrixCommand<String> {
+public class CommandVerifyDeliveryAddress extends BaseHttpGetHystrixCommand<String> {
 
-    private static final Logger log = LoggerFactory.getLogger(CommandLogonApplication.class);
+    
     private static final String googleMapsUrl = "https://maps-api-ssl.google.com/maps/api/geocode/xml";
     private static final String googleMapsUrlParamer = "&sensor=false&client=";
     private static byte[] key;
@@ -30,49 +36,59 @@ public class CommandVerifyDeliveryAddress extends HystrixCommand<String> {
     private String deliveryAddress;
 
     public CommandVerifyDeliveryAddress(String streetAddress, String googleMapsClientID, byte[] googlemapapikey) {
-        super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("STSApplicationAdminGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
-                .withExecutionTimeoutInMilliseconds(3000)));
-
+    	super(URI.create("https://maps-api-ssl.google.com/maps/api/geocode/xml?address=Frankfurstein+ring+105a,M%C3%BCnchen,de,80000,&sensor=false&client=gme-kickzag&signature=RD8P7J07rJbfmClUeMEY4adIoTs="), "","", "STSApplicationAdminGroup", 3000);
+      
         this.deliveryAddress = streetAddress;
         this.key = googlemapapikey;
         this.googleMapsClientID = googleMapsClientID;
 
 
         if (streetAddress == null) {
-            log.error("CommandVerifyDeliveryAddress initialized with null-values - will fail");
+            log.error(TAG + " initialized with null-values - will fail");
         }
-        HystrixRequestContext.initializeContext();
+
 
     }
 
     //  https://maps-api-ssl.google.com/maps/api/geocode/xml?address=Frankfurstein+ring+105a,M%C3%BCnchen,de,80000,&sensor=false&client=gme-kickzag&signature=RD8P7J07rJbfmClUeMEY4adIoTs=
 
+//    @Override
+//    protected String run() {
+//        log.trace("CommandVerifyDeliveryAddress - whydahServiceUri={}", googleMapsUrl);
+//
+//        //   HttpRequest request = HttpRequest.get(signRequest(googleMapsUrl + "?address=" + deliveryAddress+googleMapsUrlParamer+googleMapsClientID)).contentType(HttpSender.APPLICATION_FORM_URLENCODED);
+//        HttpRequest request = HttpRequest.get("https://maps-api-ssl.google.com/maps/api/geocode/xml?address=Frankfurstein+ring+105a,M%C3%BCnchen,de,80000,&sensor=false&client=gme-kickzag&signature=RD8P7J07rJbfmClUeMEY4adIoTs=").contentType(HttpSender.APPLICATION_FORM_URLENCODED);
+//        int statusCode = request.code();
+//        String responseBody = request.body();
+//        switch (statusCode) {
+//            case HttpSender.STATUS_OK:
+//                log.debug("CommandVerifyDeliveryAddress - Response: {}", responseBody);
+//                return responseBody;
+//            default:
+//                log.warn("Unexpected response from STS. Response is {} ", responseBody);
+//
+//        }
+//        throw new RuntimeException("CommandVerifyDeliveryAddress -  failed");
+//
+//    }
+
     @Override
-    protected String run() {
-        log.trace("CommandVerifyDeliveryAddress - whydahServiceUri={}", googleMapsUrl);
-
-        //   HttpRequest request = HttpRequest.get(signRequest(googleMapsUrl + "?address=" + deliveryAddress+googleMapsUrlParamer+googleMapsClientID)).contentType(HttpSender.APPLICATION_FORM_URLENCODED);
-        HttpRequest request = HttpRequest.get("https://maps-api-ssl.google.com/maps/api/geocode/xml?address=Frankfurstein+ring+105a,M%C3%BCnchen,de,80000,&sensor=false&client=gme-kickzag&signature=RD8P7J07rJbfmClUeMEY4adIoTs=").contentType(HttpSender.APPLICATION_FORM_URLENCODED);
-        int statusCode = request.code();
-        String responseBody = request.body();
-        switch (statusCode) {
-            case HttpSender.STATUS_OK:
-                log.debug("CommandVerifyDeliveryAddress - Response: {}", responseBody);
-                return responseBody;
-            default:
-                log.warn("Unexpected response from STS. Response is {} ", responseBody);
-
-        }
-        throw new RuntimeException("CommandVerifyDeliveryAddress -  failed");
-
+    protected String dealWithFailedResponse(String responseBody, int statusCode) {
+    
+    	 throw new RuntimeException("CommandVerifyDeliveryAddress -  failed");
+    	
+    }
+    
+    @Override
+    protected HttpRequest dealWithRequestBeforeSend(HttpRequest request) {
+    	return request.contentType(HttpSender.APPLICATION_FORM_URLENCODED);
     }
 
-
-    @Override
-    protected String getFallback() {
-        log.warn("CommandVerifyDeliveryAddress - fallback - whydahServiceUri={}", googleMapsUrl.toString());
-        return null;
-    }
+//    @Override
+//    protected String getFallback() {
+//        log.warn("CommandVerifyDeliveryAddress - fallback - whydahServiceUri={}", googleMapsUrl.toString());
+//        return null;
+//    }
 
 
     public String signRequest(String inputUrl) throws NoSuchAlgorithmException,
@@ -102,6 +118,12 @@ public class CommandVerifyDeliveryAddress extends HystrixCommand<String> {
 
         return url + "&signature=" + signature;
     }
+
+	@Override
+	protected String getTargetPath() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
 
 
