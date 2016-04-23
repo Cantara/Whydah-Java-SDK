@@ -79,7 +79,7 @@ public class UserTokenUtilTest {
             String adminUserTokenXml = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, UUID.randomUUID().toString()).execute();
             adminUserTokenId = UserXpathHelper.getUserTokenId(adminUserTokenXml);
 
-            String userTokenXml = UserTokenUtil.findValidUserTokenByUserTokenId(userTokenServiceUri, myApplicationTokenID, "anythihng", adminUserTokenId);
+            String userTokenXml = WhydahUtil.getUserTokenByUserTokenId(userTokenServiceUri, myApplicationTokenID, "anythihng", adminUserTokenId);
             assertNotNull(userTokenXml);
 
             String expression = "/usertoken/uid";

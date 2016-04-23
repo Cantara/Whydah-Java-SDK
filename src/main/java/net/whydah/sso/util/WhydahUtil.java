@@ -212,7 +212,7 @@ public class WhydahUtil {
     }
 
 
-
+    @Deprecated  // Jersey has to go..
     static WebTarget buildBaseTarget(String baseUri, String applicationTokenId, String adminUserTokenId) {
         Client httpClient = ClientBuilder.newClient();
         return httpClient.target(baseUri).path(applicationTokenId + "/" + adminUserTokenId);
