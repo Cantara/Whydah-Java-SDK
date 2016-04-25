@@ -1,10 +1,10 @@
 package net.whydah.sso.commands.appauth;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 
 import java.net.URI;
 
-public class CommandValidateApplicationTokenId extends BaseHttpPostHystrixCommand<Boolean> {
+public class CommandValidateApplicationTokenId extends BaseHttpGetHystrixCommand<Boolean> {
 
 
 	int retryCnt = 0;
@@ -47,16 +47,6 @@ public class CommandValidateApplicationTokenId extends BaseHttpPostHystrixComman
 		}
 	}
 
-   @Override
-   protected Boolean dealWithFailedResponse(String responseBody, int statusCode) {
-	   if(statusCode == 409&&retryCnt<1){
-		   //do retry
-		   retryCnt++;
-		   return doPostCommand();
-	   } else {
-		   return false;
-	   }
-   }
 
 //    @Override
 //    protected Boolean getFallback() {
