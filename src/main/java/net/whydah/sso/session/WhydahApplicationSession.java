@@ -140,7 +140,7 @@ public class WhydahApplicationSession {
     private boolean initializeWhydahApplicationSession() {
         log.info("Initializing new application session");
         applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
-        if (!hasActiveSession()) {
+        if (!isActiveSession(applicationTokenXML)) {
             log.info("Error, unable to initialize new application session, applicationTokenXml:" + applicationTokenXML);
             return false;
         } else {
@@ -172,9 +172,6 @@ public class WhydahApplicationSession {
      * @return true if applicationTokenXML seems sensible
      */
     public boolean isActiveSession(String applicationTokenXML) {
-        if (applicationTokenXML.length() > 8) {
-            return true;
-        }
         try {
             ApplicationToken at = ApplicationTokenMapper.fromXml(applicationTokenXML);
             if (at.getApplicationID().length() > 8) {
