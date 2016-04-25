@@ -2,14 +2,9 @@ package net.whydah.sso.commands.appauth;
 
 import net.whydah.sso.application.BaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.application.types.ApplicationCredential;
-
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
-
-import javax.ws.rs.core.UriBuilder;
-
-import java.net.URI;
 
 import static org.junit.Assert.assertTrue;
 
@@ -33,6 +28,7 @@ public class CommandGetApplicationNameFromApplicationTokenIdTest {
     }
 
 
+    @Ignore
     @Test
     public void testCommandGetApplicationNameFromApplicationTokenId() throws Exception {
         if (config.enableTesting()) {
