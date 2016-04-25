@@ -18,12 +18,12 @@ public class WhydahApplicationSession {
 
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
     private static final int SESSION_CHECK_INTERVAL = 30;  // Check every 30 seconds to adapt quickly
-    private String sts;
-    private ApplicationCredential myAppCredential;
-    private String applicationTokenId;
-    private String applicationName;
-    private String applicationTokenXML;
-    private ApplicationToken applicationToken;
+    private static String sts;
+    private static ApplicationCredential myAppCredential;
+    private static String applicationTokenId;
+    private static String applicationName;
+    private static String applicationTokenXML;
+    private static ApplicationToken applicationToken;
 
 
     public WhydahApplicationSession() {
@@ -93,7 +93,7 @@ public class WhydahApplicationSession {
         if (!hasActiveSession()) {
             log.info("No active application session, applicationTokenId:" + applicationTokenId);
             for (int n = 0; n < 3 || !hasActiveSession(); n++) {
-                applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
+                this.applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
                 if (isActiveSession(applicationTokenXML)) {
                     setApplicationSessionParameters(applicationTokenXML);
                     log.info("Successful logon of applicationsession, applicationTokenId:" + applicationTokenId);
