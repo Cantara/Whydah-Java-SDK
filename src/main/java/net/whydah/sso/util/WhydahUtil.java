@@ -44,7 +44,7 @@ public class WhydahUtil {
      * for further operations.
      */
     public static String logOnApplication(String stsURI, String applicationID, String applicationSecret) {
-        URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
+        URI tokenServiceUri = URI.create(stsURI);
         ApplicationCredential appCredential = new ApplicationCredential(applicationID, "", applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         if (myAppTokenXml == null || myAppTokenXml.length() < 10) {
@@ -56,7 +56,7 @@ public class WhydahUtil {
     }
 
     public static String logOnApplication(String stsURI, ApplicationCredential myAppcredential) {
-        URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
+        URI tokenServiceUri = URI.create(stsURI);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, myAppcredential).execute();
         if (myAppTokenXml == null || myAppTokenXml.length() < 10) {
             log.error("logOnApplication - unable to create application session on " + stsURI + " for appCredentials: " + ApplicationCredentialMapper.toXML(myAppcredential));
@@ -78,7 +78,7 @@ public class WhydahUtil {
      * TODO   Use extend session not new logon...
      */
     public static String extendApplicationSession(String stsURI, String applicationID, String applicationName, String applicationSecret) {
-        URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
+        URI tokenServiceUri = URI.create(stsURI);
         ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationName, applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         return myAppTokenXml;
@@ -86,14 +86,14 @@ public class WhydahUtil {
     }
 
     public static String extendApplicationSession(String stsURI, String applicationTokenId) {
-        URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
+        URI tokenServiceUri = URI.create(stsURI);
         String myAppTokenXml = new CommandRenewApplicationSession(tokenServiceUri, applicationTokenId).execute();
         return myAppTokenXml;
 
     }
 
     public static String logOnApplicationAndUser(String stsURI, String applicationID, String applicationName, String applicationSecret, String username, String password) {
-        URI tokenServiceUri = UriBuilder.fromUri(stsURI).build();
+        URI tokenServiceUri = URI.create(stsURI);
         ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationName, applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
@@ -105,7 +105,7 @@ public class WhydahUtil {
 
 
     public static String logOnUser(WhydahApplicationSession was, UserCredential userCredential) {
-        URI tokenServiceUri = UriBuilder.fromUri(was.getSTS()).build();
+        URI tokenServiceUri = URI.create(was.getSTS());
         if (was.getActiveApplicationTokenId() == null || was.getActiveApplicationTokenId().length() < 8) {
             log.warn("Illegal application session from WhydahApplicationSession, applicationTokenId:" + was.getActiveApplicationTokenId());
 
@@ -117,7 +117,7 @@ public class WhydahUtil {
 
 
     public static String extendUserSession(WhydahApplicationSession was, UserCredential userCredential) {
-        URI tokenServiceUri = UriBuilder.fromUri(was.getSTS()).build();
+        URI tokenServiceUri = URI.create(was.getSTS());
         String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userCredential, UUID.randomUUID().toString()).execute();
         return userToken;
 
@@ -188,6 +188,7 @@ public class WhydahUtil {
     }
 
     public static List<UserApplicationRoleEntry> listUserRoles(String uasUri, String adminAppTokenId, String adminUserTokenId, String applicationId, String userId) {
+
 
         List<UserApplicationRoleEntry> userRoles = new ArrayList<>();
         WebTarget userTarget = buildBaseTarget(uasUri, adminAppTokenId, adminUserTokenId).path("/user");
