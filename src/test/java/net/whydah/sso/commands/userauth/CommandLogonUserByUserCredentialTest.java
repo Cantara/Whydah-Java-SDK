@@ -1,24 +1,16 @@
 package net.whydah.sso.commands.userauth;
 
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-
 import net.whydah.sso.application.BaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.user.helpers.UserXpathHelper;
-import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.util.SystemTestUtil;
 import net.whydah.sso.util.WhydahUtil;
-
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.ws.rs.core.UriBuilder;
-
-import java.net.URI;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -77,6 +69,7 @@ public class CommandLogonUserByUserCredentialTest {
 
     }
 
+    @Ignore
     @Test
     public void tesLogOnApplicationAndUser() throws Exception {
 
