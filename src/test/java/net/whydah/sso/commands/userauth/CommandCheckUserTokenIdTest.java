@@ -20,7 +20,7 @@ public class CommandCheckUserTokenIdTest {
 
 
     @Test
-    public void testApplicationLoginCommand() throws Exception {
+    public void testCommandValidateUsertokenId() throws Exception {
 
         if (config.isSystemTestEnabled()) {
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
@@ -31,10 +31,10 @@ public class CommandCheckUserTokenIdTest {
             assertTrue(myApplicationTokenID.length() > 6);
 
 
-            String userToken = new CommandLogonUserByUserCredentialWithStubbedFallback(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential).execute();
+            String userToken = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential).execute();
 
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-            boolean isvalidToken = new CommandValidateUsertokenIdWithStubbedFallback(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
+            boolean isvalidToken = new CommandValidateUsertokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
             assertTrue("Error: usertokenid NOT verified successfully", isvalidToken);
 
         }

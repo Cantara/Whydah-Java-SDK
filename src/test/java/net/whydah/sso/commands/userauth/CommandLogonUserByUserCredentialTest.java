@@ -29,7 +29,7 @@ public class CommandLogonUserByUserCredentialTest {
 
 
     @Test
-    public void testApplicationLoginCommand() throws Exception {
+    public void testCommandGetUsertokenByUserticket() throws Exception {
 
         if (config.isSystemTestEnabled()) {
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();

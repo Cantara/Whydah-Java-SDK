@@ -3,7 +3,8 @@ package net.whydah.sso.commands.userauth;
 import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
-import net.whydah.sso.user.helpers.UserXpathHelper;
+import net.whydah.sso.user.mappers.UserTokenMapper;
+import net.whydah.sso.user.types.UserToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ public class CommandGetUsertokenByUsertokenIdTest {
 
 
     @Test
-    public void testApplicationLoginCommand() throws Exception {
+    public void testCommandGetUsertokenByUsertokenId() throws Exception {
 
         if (config.isSystemTestEnabled()) {
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
@@ -31,12 +32,14 @@ public class CommandGetUsertokenByUsertokenIdTest {
             assertTrue(myApplicationTokenID.length() > 6);
 
 
-            String userToken = new CommandLogonUserByUserCredentialWithStubbedFallback(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential).execute();
+            String userTokenXml = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential).execute();
+            UserToken userToken = UserTokenMapper.fromUserTokenXml(userTokenXml);
 
-            String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-            String userToken2 = new CommandGetUsertokenByUsertokenIdWithStubbedFallback(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userTokenId).execute();
+            String userTokenXml2 = new CommandGetUsertokenByUsertokenId(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userToken.getTokenid()).execute();
 
-            assertTrue(userToken.equalsIgnoreCase(userToken2));
+            UserToken ut2 = UserTokenMapper.fromUserTokenXml(userTokenXml2);
+            assertTrue(userToken.getFirstName().equalsIgnoreCase(ut2.getFirstName()));
+            assertTrue(userToken.getCellPhone().equalsIgnoreCase(ut2.getCellPhone()));
 
         }
 
