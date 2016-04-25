@@ -9,9 +9,9 @@ import java.net.URI;
 
 public class BaseConfig {
 
-    public String TEMPORARY_APPLICATION_ID = "2215";//"11";
-    public String TEMPORARY_APPLICATION_NAME = "Whydah-SSOLoginWebApp";//"Funny APp";//"11";
-    public String TEMPORARY_APPLICATION_SECRET = "33779936R6Jr47D4Hj5R6p9qT";//"LLNmHsQDCerVWx5d6aCjug9fyPE";
+    public String TEMPORARY_APPLICATION_ID = "100";//"11";
+    public String TEMPORARY_APPLICATION_NAME = "Whydah-SystemTests";//"Funny APp";//"11";
+    public String TEMPORARY_APPLICATION_SECRET = "45fhRM6nbKZ2wfC6RMmMuzXpk";//"LLNmHsQDCerVWx5d6aCjug9fyPE";
     public String userName = "useradmin";
     public String password = "useradmin42";
     public URI tokenServiceUri;
