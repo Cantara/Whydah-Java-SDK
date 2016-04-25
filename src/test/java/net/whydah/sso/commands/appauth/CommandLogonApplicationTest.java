@@ -33,6 +33,7 @@ public class CommandLogonApplicationTest {
     }
 
 
+    @Ignore
     @Test
     public void testApplicationLoginCommandFallback() throws Exception {
 
