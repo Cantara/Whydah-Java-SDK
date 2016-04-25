@@ -9,7 +9,6 @@ import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredentialWithStub
 import net.whydah.sso.user.helpers.UserHelper;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.UUID;
@@ -81,7 +80,6 @@ public class CommandListUsersTest  {
 //
 //    }
 
-    @Ignore
     @Test
     public void testListUsersCommandWithFallback() throws Exception {
 
@@ -117,7 +115,6 @@ public class CommandListUsersTest  {
 
     }
 
-	@Ignore
 	@Test
     public void testUserExists() throws Exception {
 

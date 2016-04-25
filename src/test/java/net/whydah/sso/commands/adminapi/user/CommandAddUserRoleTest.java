@@ -8,7 +8,6 @@ import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.UUID;
@@ -55,7 +54,6 @@ public class CommandAddUserRoleTest {
      * @throws Exception
      */
     
-    @Ignore
     @Test
     public void testAddUserRole() throws Exception {
 

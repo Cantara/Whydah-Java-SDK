@@ -10,7 +10,6 @@ import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredentialWithStubbedFallback;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -47,7 +46,6 @@ public class CommandListApplicationsTest {
     }
 
 
-    @Ignore // temp ignore
     @Test
     public void testListApplicationsCommand2() throws Exception {
 
@@ -66,7 +64,6 @@ public class CommandListApplicationsTest {
         assertTrue(!applicationsJsonl.isEmpty());
     }
 
-    @Ignore // temp ignore
     @Test
     public void testListApplicationsCommand() throws Exception {
         if (config.enableTesting()) {
