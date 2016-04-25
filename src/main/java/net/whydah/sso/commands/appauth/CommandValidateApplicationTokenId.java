@@ -48,11 +48,11 @@ public class CommandValidateApplicationTokenId extends BaseHttpGetHystrixCommand
 	}
 
 
-//    @Override
-//    protected Boolean getFallback() {
-//        log.warn("CommandValidateApplicationTokenId - fallback - whydahServiceUri={}", tokenServiceUri.toString());
-//        return false;
-//    }
+	@Override
+	protected Boolean getFallback() {
+		log.warn("CommandValidateApplicationTokenId - fallback ");
+		return false;
+	}
 
 	@Override
 	protected String getTargetPath() {
