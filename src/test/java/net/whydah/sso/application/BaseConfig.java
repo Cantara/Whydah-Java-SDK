@@ -33,13 +33,13 @@ public class BaseConfig {
         userAdminServiceUri = URI.create(userAdminService);
 
          if (systemTest) {
+             SSLTool.disableCertificateValidation();
              tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/");
              userAdminServiceUri = URI.create("https://whydahdev.cantara.no/useradminservice/");
 
              crmServiceUri = URI.create("https://whydahdev.cantara.no/crmservice/");
              statisticsServiceUri = URI.create("https://whydahdev.cantara.no/reporter/");
              
-             SSLTool.disableCertificateValidation();
          }
     }
     
