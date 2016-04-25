@@ -24,8 +24,8 @@ public class CommandGetUsertokenByUsertokenId extends BaseHttpPostHystrixCommand
         this.usertokenId = usertokenId;
         
         if (tokenServiceUri == null || myAppTokenId == null || myAppTokenXml == null || usertokenId == null) {
-            log.error("CommandGetUsertokenByUsertokenId initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, usertokenId:{}", tokenServiceUri.toString(), myAppTokenId, usertokenId);
-        }
+			log.error("CommandGetUsertokenByUsertokenId initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, myAppTokenXml:{}  usertokenId:{}", tokenServiceUri.toString(), myAppTokenId, myAppTokenXml, usertokenId);
+		}
 
     }
 
