@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.appauth;
 
-import net.whydah.sso.application.SystemtestBaseConfig;
+import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -13,11 +13,11 @@ public class CommandGetApplicationNameFromApplicationTokenIdTest {
 //    private static ApplicationCredential appCredential;
 //    private static boolean systemTest = false;
 
-    static SystemtestBaseConfig config;
+    static SystemTestBaseConfig config;
 
     @BeforeClass
     public static void setup() throws Exception {
-        config = new SystemtestBaseConfig();
+        config = new SystemTestBaseConfig();
 //        appCredential = new ApplicationCredential("2215", "Whydah-SSOLoginWebApp", "FF779936R6Jr47D4Hj5R6p9qT");
 //        tokenServiceUri = URI.create("https://no_host").build();
 //
@@ -31,7 +31,7 @@ public class CommandGetApplicationNameFromApplicationTokenIdTest {
     @Ignore
     @Test
     public void testCommandGetApplicationNameFromApplicationTokenId() throws Exception {
-        if (config.enableTesting()) {
+        if (config.isSystemTestEnabled()) {
             
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);

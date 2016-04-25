@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.extensions.statistics;
 
-import net.whydah.sso.application.SystemtestBaseConfig;
+import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.util.SSLTool;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class CommandGetUsersStatsTest {
 //    private static UserCredential userCredential;
 //    private static boolean systemTest = true;
 
-    static SystemtestBaseConfig config;
+    static SystemTestBaseConfig config;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -28,7 +28,7 @@ public class CommandGetUsersStatsTest {
 //        statisticsServiceUri = URI.create("https://no_host").build();
 //        userCredential = new UserCredential(userName, password);
 
-        config = new SystemtestBaseConfig();
+        config = new SystemTestBaseConfig();
 //        if (systemTest) {
 //            statisticsServiceUri = URI.create("https://whydahdev.cantara.no/reporter/").build();
 //        }
@@ -37,7 +37,7 @@ public class CommandGetUsersStatsTest {
     @Test
     public void testGetUsersStatsCommand() throws Exception {
 
-        if (config.enableTesting()) {
+        if (config.isSystemTestEnabled()) {
 
             String myApplicationTokenID = "";
             String adminUserTokenId = "";

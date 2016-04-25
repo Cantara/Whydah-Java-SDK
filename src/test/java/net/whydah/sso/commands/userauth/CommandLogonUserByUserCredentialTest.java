@@ -1,7 +1,7 @@
 package net.whydah.sso.commands.userauth;
 
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import net.whydah.sso.application.SystemtestBaseConfig;
+import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.user.helpers.UserXpathHelper;
@@ -18,12 +18,12 @@ import static org.junit.Assert.*;
 public class CommandLogonUserByUserCredentialTest {
 
 
-    static SystemtestBaseConfig config;
+    static SystemTestBaseConfig config;
 
     @BeforeClass
     public static void setup() throws Exception {
 
-        config = new SystemtestBaseConfig();
+        config = new SystemTestBaseConfig();
 
     }
 
@@ -31,7 +31,7 @@ public class CommandLogonUserByUserCredentialTest {
     @Test
     public void testApplicationLoginCommand() throws Exception {
 
-        if (config.enableTesting()) {
+        if (config.isSystemTestEnabled()) {
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             System.out.println(myAppTokenXml);
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
@@ -45,9 +45,8 @@ public class CommandLogonUserByUserCredentialTest {
             myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             String userToken = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential, userticket).execute();
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-            if (config.systemTest) {
-                assertTrue(new CommandValidateUsertokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute());
-            }
+
+            assertTrue(new CommandValidateUsertokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute());
 
             myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
@@ -62,7 +61,7 @@ public class CommandLogonUserByUserCredentialTest {
     @Test
     public void tesLogOnApplicationAndUser() throws Exception {
 
-        if (config.enableTesting()) {
+        if (config.isSystemTestEnabled()) {
             String userToken = WhydahUtil.logOnApplicationAndUser(config.tokenServiceUri.toString(), config.appCredential.getApplicationID(), "", config.appCredential.getApplicationSecret(), config.userCredential.getUserName(), config.userCredential.getPassword());
             assertNotNull(userToken);
             assertTrue(userToken.contains("usertoken"));
@@ -72,7 +71,7 @@ public class CommandLogonUserByUserCredentialTest {
 
     @Test
     public void testFullCircleWithContextTest() {
-        if (config.enableTesting()) {
+        if (config.isSystemTestEnabled()) {
 
             HystrixRequestContext context = HystrixRequestContext.initializeContext();
             try {
@@ -115,7 +114,7 @@ public class CommandLogonUserByUserCredentialTest {
     @Ignore   // This is a longlivity test, so set as Ignore to be run manually from time to time
     @Test
     public void testRegressionFullCircleWithContext() {
-        if (config.enableTesting()) {
+        if (config.isSystemTestEnabled()) {
             int successFull = 0;
             int nonSuccessFull = 0;
             for (int n = 0; n < 100; n++) {

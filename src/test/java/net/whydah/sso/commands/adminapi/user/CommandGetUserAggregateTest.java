@@ -1,7 +1,7 @@
 package net.whydah.sso.commands.adminapi.user;
 
 
-import net.whydah.sso.application.SystemtestBaseConfig;
+import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
@@ -22,11 +22,11 @@ public class CommandGetUserAggregateTest {
 //    private static UserCredential userCredential;
 //    private static boolean systemtest = false;
 //    private static URI userAdminServiceUri;
-static SystemtestBaseConfig config;
+static SystemTestBaseConfig config;
 
     @BeforeClass
     public static void setup() throws Exception {
-        config = new SystemtestBaseConfig();
+        config = new SystemTestBaseConfig();
 //        appCredential = new ApplicationCredential("15", "MyApp", "HK8fGpWmK66ckWaEVn3tF9fRK");
 //        tokenServiceUri = URI.create("https://no_host").build();
 //        userCredential = new UserCredential("useradmin", "useradmin42");
@@ -75,7 +75,7 @@ static SystemtestBaseConfig config;
     @Test
     public void testGetUserAggregate() throws Exception {
 
-      boolean systemtest = config.enableTesting();
+        boolean systemtest = config.isSystemTestEnabled();
       String myAppTokenXml;
       if (systemtest) {
           myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();

@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.appauth;
 
-import net.whydah.sso.application.SystemtestBaseConfig;
+import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.util.SSLTool;
@@ -14,7 +14,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class CommandLogonApplicationIntegrationTest {
     private static final Logger log = getLogger(CommandLogonApplicationIntegrationTest.class);
-    SystemtestBaseConfig config;
+    SystemTestBaseConfig config;
     //    public static final String TEMPORARY_APPLICATION_ID = "201";//"11";
 //    public static final String TEMPORARY_APPLICATION_SECRET = "33779936R6Jr47D4Hj5R6p9qT";
 //    public static String TEMPORARY_APPLICATION_ID = "2215";//"11";
@@ -29,7 +29,7 @@ private String myAppTokenXml = null;
     @Before
     public void setUp() throws Exception {
         //tokenServiceUri = URI.create(userTokenServiceUri).build();
-        config = new SystemtestBaseConfig();
+        config = new SystemTestBaseConfig();
 
     }
 

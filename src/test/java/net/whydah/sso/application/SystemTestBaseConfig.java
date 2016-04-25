@@ -7,7 +7,7 @@ import net.whydah.sso.util.SystemTestUtil;
 
 import java.net.URI;
 
-public class SystemtestBaseConfig {
+public class SystemTestBaseConfig {
 
     public String TEMPORARY_APPLICATION_ID = "100";//"11";
     public String TEMPORARY_APPLICATION_NAME = "Whydah-SystemTests";//"Funny APp";//"11";
@@ -26,7 +26,7 @@ public class SystemtestBaseConfig {
     public URI statisticsServiceUri;
     public URI crmServiceUri;
 
-    public SystemtestBaseConfig() {
+    public SystemTestBaseConfig() {
         appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
         tokenServiceUri = URI.create(userTokenService);
          userCredential = new UserCredential(userName, password);
@@ -42,9 +42,9 @@ public class SystemtestBaseConfig {
              
          }
     }
-    
-    public boolean enableTesting(){
-    	return !SystemTestUtil.noLocalWhydahRunning() || systemTest;
+
+    public boolean isSystemTestEnabled() {
+        return !SystemTestUtil.noLocalWhydahRunning() || systemTest;
     }
     
 }

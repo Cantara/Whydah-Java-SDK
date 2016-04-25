@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import net.whydah.sso.application.SystemtestBaseConfig;
+import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
@@ -25,7 +25,7 @@ public class CommandListUsersTest  {
 //    private static boolean systemtest = false;
 //    private static URI userAdminServiceUri;
 
-	static SystemtestBaseConfig config;
+	static SystemTestBaseConfig config;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -41,7 +41,7 @@ public class CommandListUsersTest  {
 //        }
 //        SSLTool.disableCertificateValidation();
 
-		config = new SystemtestBaseConfig();
+		config = new SystemTestBaseConfig();
 	}
 
 
@@ -83,7 +83,7 @@ public class CommandListUsersTest  {
     @Test
     public void testListUsersCommandWithFallback() throws Exception {
 
-    	boolean systemtest = config.enableTesting();
+		boolean systemtest = config.isSystemTestEnabled();
 		String myAppTokenXml;
 		if (systemtest) {
 			myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
@@ -118,7 +118,7 @@ public class CommandListUsersTest  {
 	@Test
     public void testUserExists() throws Exception {
 
-    	boolean systemtest = config.enableTesting();
+		boolean systemtest = config.isSystemTestEnabled();
 		String myAppTokenXml;
 		if (systemtest) {
 			myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();

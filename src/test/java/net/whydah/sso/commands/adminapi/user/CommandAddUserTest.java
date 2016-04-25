@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import net.whydah.sso.application.SystemtestBaseConfig;
+import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
@@ -30,11 +30,11 @@ public class CommandAddUserTest {
 //    private static String userAdminService = "http://localhost:9992/useradminservice";
 //    private static String userTokenService = "http://localhost:9998/tokenservice";
 
-    static SystemtestBaseConfig config;
+    static SystemTestBaseConfig config;
 
     @BeforeClass
     public static void setup() throws Exception {
-        config = new SystemtestBaseConfig();
+        config = new SystemTestBaseConfig();
 //        appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
 //        tokenServiceUri = URI.create(userTokenService).build();
 //        userCredential = new UserCredential(userName, password);
@@ -81,7 +81,7 @@ public class CommandAddUserTest {
     @Test
     public void testAddUser() throws Exception {
 
-        if (config.enableTesting()) {
+        if (config.isSystemTestEnabled()) {
 
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);

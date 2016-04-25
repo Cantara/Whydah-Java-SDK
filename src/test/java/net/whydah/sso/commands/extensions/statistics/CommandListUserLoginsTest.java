@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.extensions.statistics;
 
-import net.whydah.sso.application.SystemtestBaseConfig;
+import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.util.SSLTool;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -17,14 +17,14 @@ public class CommandListUserLoginsTest {
     //private static ApplicationCredential appCredential;
     //private static UserCredential userCredential;
     //private static boolean systemTest = false;
-    static SystemtestBaseConfig config;
+    static SystemTestBaseConfig config;
     //public static String userName = "admin";
     //public static String password = "whydahadmin";
     private static URI statisticsServiceUri;
     
     @BeforeClass
     public static void setup() throws Exception {
-        config = new SystemtestBaseConfig();
+        config = new SystemTestBaseConfig();
         //appCredential = new ApplicationCredential("15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
         //statisticsServiceUri = URI.create("https://no_host").build();
         //userCredential = new UserCredential(userName, password);

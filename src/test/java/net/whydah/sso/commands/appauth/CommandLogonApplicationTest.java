@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.appauth;
 
-import net.whydah.sso.application.SystemtestBaseConfig;
+import net.whydah.sso.application.SystemTestBaseConfig;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,12 +13,12 @@ import static org.junit.Assert.assertTrue;
 
 public class CommandLogonApplicationTest {
 
-    static SystemtestBaseConfig config;
+    static SystemTestBaseConfig config;
     private static boolean integrationMode = false;
 
     @BeforeClass
     public static void setup() throws Exception {
-        config = new SystemtestBaseConfig();
+        config = new SystemTestBaseConfig();
 //        appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
 //        tokenServiceUri = URI.create(userTokenService).build();
 //        userCredential = new UserCredential(userName, password);
@@ -37,7 +37,7 @@ public class CommandLogonApplicationTest {
     @Test
     public void testApplicationLoginCommandFallback() throws Exception {
 
-        if (config.enableTesting()) {
+        if (config.isSystemTestEnabled()) {
 
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             // System.out.println("ApplicationTokenID=" + myApplicationTokenID);
@@ -57,7 +57,7 @@ public class CommandLogonApplicationTest {
     @Test
     public void testApplicationLoginCommand() throws Exception {
 
-        if (config.enableTesting()) {
+        if (config.isSystemTestEnabled()) {
 
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             // System.out.println("ApplicationTokenID=" + myApplicationTokenID);

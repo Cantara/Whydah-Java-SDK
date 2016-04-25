@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import net.whydah.sso.application.SystemtestBaseConfig;
+import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 public class CommandAddUserRoleTest {
 
-    public static SystemtestBaseConfig config;
+    public static SystemTestBaseConfig config;
 //    public static String TEMPORARY_APPLICATION_ID = "2211";//"11";
 //    public static String TEMPORARY_APPLICATION_NAME = "MyApp";//"11";
 //    public static String TEMPORARY_APPLICATION_SECRET = "NmHsQDCerVWx5d6aCjug9fyPE";
@@ -32,7 +32,7 @@ public class CommandAddUserRoleTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        config = new SystemtestBaseConfig();
+        config = new SystemTestBaseConfig();
 //        appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
 //        userCredential = new UserCredential(userName, password);
 //
@@ -57,7 +57,7 @@ public class CommandAddUserRoleTest {
     @Test
     public void testAddUserRole() throws Exception {
 
-        if (config.enableTesting()) {
+        if (config.isSystemTestEnabled()) {
 
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);

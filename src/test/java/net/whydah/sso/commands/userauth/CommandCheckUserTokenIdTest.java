@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.userauth;
 
-import net.whydah.sso.application.SystemtestBaseConfig;
+import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.user.helpers.UserXpathHelper;
@@ -11,18 +11,18 @@ import static org.junit.Assert.assertTrue;
 
 public class CommandCheckUserTokenIdTest {
 
-    static SystemtestBaseConfig config;
+    static SystemTestBaseConfig config;
 
     @BeforeClass
     public static void setup() throws Exception {
-        config = new SystemtestBaseConfig();
+        config = new SystemTestBaseConfig();
     }
 
 
     @Test
     public void testApplicationLoginCommand() throws Exception {
 
-        if (config.enableTesting()) {
+        if (config.isSystemTestEnabled()) {
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             System.out.println(myAppTokenXml);
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);

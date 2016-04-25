@@ -1,7 +1,7 @@
 package net.whydah.sso.commands.adminapi.application;
 
 
-import net.whydah.sso.application.SystemtestBaseConfig;
+import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.application.helpers.ApplicationHelper;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationMapper;
@@ -19,12 +19,12 @@ import static org.junit.Assert.assertTrue;
 
 public class CommandAddApplicationTest {
 
-    static SystemtestBaseConfig config;
+    static SystemTestBaseConfig config;
 
 
     @BeforeClass
     public static void setup() throws Exception {
-        config = new SystemtestBaseConfig();
+        config = new SystemTestBaseConfig();
     }
 
     public static String getDummyApplicationJson() {
@@ -34,7 +34,7 @@ public class CommandAddApplicationTest {
     @Test
     public void testAddApplication() throws Exception {
 
-        if (config.enableTesting()) {
+        if (config.isSystemTestEnabled()) {
 
 
             System.out.printf("Adding application:\n" + ApplicationMapper.toPrettyJson(ApplicationMapper.fromJson(getDummyApplicationJson())));
