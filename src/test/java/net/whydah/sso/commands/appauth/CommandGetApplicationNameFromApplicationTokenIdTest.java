@@ -3,32 +3,20 @@ package net.whydah.sso.commands.appauth;
 import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
 public class CommandGetApplicationNameFromApplicationTokenIdTest {
-//    private static URI tokenServiceUri;
-//    private static ApplicationCredential appCredential;
-//    private static boolean systemTest = false;
 
     static SystemTestBaseConfig config;
 
     @BeforeClass
     public static void setup() throws Exception {
         config = new SystemTestBaseConfig();
-//        appCredential = new ApplicationCredential("2215", "Whydah-SSOLoginWebApp", "FF779936R6Jr47D4Hj5R6p9qT");
-//        tokenServiceUri = URI.create("https://no_host").build();
-//
-//
-//        if (systemTest) {
-//            tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/").build();
-//        }
     }
 
 
-    @Ignore
     @Test
     public void testCommandGetApplicationNameFromApplicationTokenId() throws Exception {
         if (config.isSystemTestEnabled()) {

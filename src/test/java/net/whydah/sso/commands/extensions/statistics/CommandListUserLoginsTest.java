@@ -39,15 +39,18 @@ public class CommandListUserLoginsTest {
     @Ignore
     @Test
     public void testUserLoginsCustomerCommand() throws Exception {
+        if (config.isSystemTestEnabled()) {
+            String myApplicationTokenID = "";
+            String adminUserTokenId = "";
+            String userid = "useradmin";
+            SSLTool.disableCertificateValidation();
+            String userLogins = new CommandListUserLogins(config.statisticsServiceUri, myApplicationTokenID, adminUserTokenId, userid).execute();
+            System.out.println("Returned list of userlogins: " + userLogins);
+            assertTrue(userLogins != null);
+            assertTrue(userLogins.length() > 10);
 
-        String myApplicationTokenID = "";
-        String adminUserTokenId = "";
-        String userid = "useradmin";
-        SSLTool.disableCertificateValidation();
-        String userLogins = new CommandListUserLogins(statisticsServiceUri, myApplicationTokenID, adminUserTokenId, userid).execute();
-        System.out.println("Returned list of userlogins: " + userLogins);
-        assertTrue(userLogins != null);
-        assertTrue(userLogins.length() > 10);
+        }
+
 
     }
 }
