@@ -98,7 +98,7 @@ public class CommandAddUserTest {
             String userAddRoleResult = new CommandAddUser(config.userAdminServiceUri, myApplicationTokenID, userTokenId, userIdentityJson).execute();
             System.out.println("testAddUser:" + userAddRoleResult);
 
-            String usersListJson = new CommandListUsers(config.userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
+            String usersListJson = new CommandListUsers(config.userAdminServiceUri, myApplicationTokenID, userTokenId, "*").execute();
             System.out.println("usersListJson=" + usersListJson);
             assertTrue(usersListJson.indexOf(uir.getUsername()) > 0);
         }
