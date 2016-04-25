@@ -1,23 +1,8 @@
 package net.whydah.sso.commands.extensions.statistics;
 
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.netflix.hystrix.HystrixCommandProperties;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-import net.whydah.sso.util.SSLTool;
-
-import org.slf4j.Logger;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-
 import java.net.URI;
 
-import static javax.ws.rs.core.Response.Status.OK;
-import static org.slf4j.LoggerFactory.getLogger;
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 
 /**
  * https://whydahdev.cantara.no/reporter/observe/statistics/useradmin/usersession

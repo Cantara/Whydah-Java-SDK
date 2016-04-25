@@ -1,18 +1,19 @@
 package net.whydah.sso.util;
 
 
-import com.netflix.hystrix.exception.HystrixRuntimeException;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.net.URI;
+
 import net.whydah.sso.commands.threat.CommandSendThreatSignal;
 import net.whydah.sso.util.backoff.BackOff;
 import net.whydah.sso.util.backoff.BackOffExecution;
 import net.whydah.sso.util.backoff.ExponentialBackOff;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
-
-import static org.slf4j.LoggerFactory.getLogger;
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 
 public class ExpBackOfTest {
 
@@ -23,7 +24,7 @@ public class ExpBackOfTest {
         BackOff exponentialBackOff = new ExponentialBackOff();
         BackOffExecution backOffExecution = exponentialBackOff.start();
 
-        URI dummyTokerServiceURL = UriBuilder.fromUri("https://no_host").build();
+        URI dummyTokerServiceURL = URI.create("https://no_host");
 
         int i = 0;
         while (i < 5) {

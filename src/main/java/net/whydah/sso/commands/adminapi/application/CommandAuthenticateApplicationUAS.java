@@ -1,18 +1,17 @@
 package net.whydah.sso.commands.adminapi.application;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-
-import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 /**
  * Used by UAS to autenticate application against UIB.
  *
  * @author <a href="mailto:erik-dev@fjas.no">Erik Drolshammer</a> 2015-11-21.
  */
-public class CommandAuthenticateApplicationUAS extends BaseHttpPostHystrixCommand<Response> {
+public class CommandAuthenticateApplicationUAS extends BaseHttpPostHystrixCommand<String> {
     public static final String APP_CREDENTIAL_XML = "appCredentialXml";
     private static final String APPLICATION_AUTH_PATH = "application/auth";
 

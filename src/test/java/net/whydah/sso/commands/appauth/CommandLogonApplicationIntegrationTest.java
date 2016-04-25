@@ -28,7 +28,7 @@ private String myAppTokenXml = null;
 
     @Before
     public void setUp() throws Exception {
-        //tokenServiceUri = UriBuilder.fromUri(userTokenServiceUri).build();
+        //tokenServiceUri = URI.create(userTokenServiceUri).build();
     	config = new BaseConfig();
 
     }

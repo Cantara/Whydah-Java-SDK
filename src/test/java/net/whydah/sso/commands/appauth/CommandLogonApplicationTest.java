@@ -20,14 +20,14 @@ public class CommandLogonApplicationTest {
     public static void setup() throws Exception {
         config = new BaseConfig();
 //        appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
-//        tokenServiceUri = UriBuilder.fromUri(userTokenService).build();
+//        tokenServiceUri = URI.create(userTokenService).build();
 //        userCredential = new UserCredential(userName, password);
 //
-//        userAdminServiceUri = UriBuilder.fromUri(userAdminService).build();
+//        userAdminServiceUri = URI.create(userAdminService).build();
 //
 //        if (systemTest) {
-//            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
-//            userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
+//            tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/").build();
+//            userAdminServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/").build();
 //        }
 //        SSLTool.disableCertificateValidation();
     }

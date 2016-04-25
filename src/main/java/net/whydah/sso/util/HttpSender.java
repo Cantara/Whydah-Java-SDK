@@ -16,6 +16,6 @@ public class HttpSender {
 
     public static final int STATUS_OK = 200; //Response.Status.OK.getStatusCode();
     public static final int STATUS_FORBIDDEN = 403;
-
+    
 
 }

@@ -89,7 +89,7 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 			int statusCode = request.code();
 			
 			switch (statusCode) {
-			case HttpSender.STATUS_OK:
+			case java.net.HttpURLConnection.HTTP_OK:
 				onCompleted(responseBody);
 				return dealWithResponse(responseBody);
 			default:

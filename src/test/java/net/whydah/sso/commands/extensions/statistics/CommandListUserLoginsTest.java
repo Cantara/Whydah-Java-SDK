@@ -1,19 +1,15 @@
 package net.whydah.sso.commands.extensions.statistics;
 
+import static org.junit.Assert.assertTrue;
+
+import java.net.URI;
+
 import net.whydah.sso.application.BaseConfig;
-import net.whydah.sso.application.types.ApplicationCredential;
-import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.SSLTool;
 
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import javax.ws.rs.core.UriBuilder;
-
-import java.net.URI;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by baardl on 05.03.16.
@@ -31,12 +27,12 @@ public class CommandListUserLoginsTest {
     public static void setup() throws Exception {
     	config = new BaseConfig();
         //appCredential = new ApplicationCredential("15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
-        //statisticsServiceUri = UriBuilder.fromUri("https://no_host").build();
+        //statisticsServiceUri = URI.create("https://no_host").build();
         //userCredential = new UserCredential(userName, password);
 
 
 //        if (systemTest) {
-//            statisticsServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/reporter/").build();
+//            statisticsServiceUri = URI.create("https://whydahdev.cantara.no/reporter/").build();
 //        }
     }
 

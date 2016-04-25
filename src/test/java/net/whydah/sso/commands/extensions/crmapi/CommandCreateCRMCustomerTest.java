@@ -1,16 +1,16 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
+import static org.junit.Assert.assertTrue;
+
+import java.net.URI;
+
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.SSLTool;
+
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
-
-import static org.junit.Assert.assertTrue;
 
 public class CommandCreateCRMCustomerTest {
     public static String userName = "crmadmin";
@@ -23,12 +23,12 @@ public class CommandCreateCRMCustomerTest {
     @BeforeClass
     public static void setup() throws Exception {
         appCredential = new ApplicationCredential("2299", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
-        crmServiceUri = UriBuilder.fromUri("https:/nohost/crmservice").build();
+        crmServiceUri = URI.create("https:/nohost/crmservice");
         userCredential = new UserCredential(userName, password);
 
 
         if (systemTest) {
-            crmServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/crmservice/").build();
+            crmServiceUri = URI.create("https://whydahdev.cantara.no/crmservice/");
         }
     }
 

@@ -1,7 +1,5 @@
 package net.whydah.sso.commands.userauth;
 
-import static javax.ws.rs.core.Response.Status.FORBIDDEN;
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -86,7 +84,7 @@ public class CommandGetUsertokenByUserticket extends BaseHttpPostHystrixCommand<
     int retryCnt = 0;
     @Override
     protected String dealWithFailedResponse(String responseBody, int statusCode) {
-    	if (statusCode == FORBIDDEN.getStatusCode()) {
+    	if (statusCode == java.net.HttpURLConnection.HTTP_FORBIDDEN) {
             log.warn("CommandGetUsertokenByUserticket - getUserTokenByUserTicket failed");
             throw new IllegalArgumentException(TAG + " - getUserTokenByUserTicket failed.");
         } else if (retryCnt<1){

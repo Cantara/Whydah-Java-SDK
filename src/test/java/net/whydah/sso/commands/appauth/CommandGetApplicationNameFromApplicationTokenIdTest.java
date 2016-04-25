@@ -19,11 +19,11 @@ public class CommandGetApplicationNameFromApplicationTokenIdTest {
     public static void setup() throws Exception {
     	config = new BaseConfig();
 //        appCredential = new ApplicationCredential("2215", "Whydah-SSOLoginWebApp", "FF779936R6Jr47D4Hj5R6p9qT");
-//        tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
+//        tokenServiceUri = URI.create("https://no_host").build();
 //
 //
 //        if (systemTest) {
-//            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
+//            tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/").build();
 //        }
     }
 

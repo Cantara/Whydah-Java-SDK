@@ -13,7 +13,7 @@ public class CommandListUsers extends BaseHttpGetHystrixCommand<String> {
 
 
     public CommandListUsers(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String userQuery) {
-        super(userAdminServiceUri, myAppTokenId, myAppTokenId, "UASUserAdminGroup", 3000);
+        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup", 3000);
     
         this.adminUserTokenId = adminUserTokenId;
         if (userQuery == null || userQuery.length() < 1) {

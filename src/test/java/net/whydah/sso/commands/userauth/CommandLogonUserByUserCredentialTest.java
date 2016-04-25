@@ -27,9 +27,9 @@ public class CommandLogonUserByUserCredentialTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-//        tokenServiceUri = UriBuilder.fromUri("http://localhost:9998/tokenservice").build();
+//        tokenServiceUri = URI.create("http://localhost:9998/tokenservice").build();
 //        if (integrationMode) {
-//            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
+//            tokenServiceUri = URI.create("https://whydahdev.altrancloud.com/tokenservice/").build();
 //        }
 //        appCredential = new ApplicationCredential("11", "my app", "6r46g3q986Ep6By7B9J46m96D");
 //        userCredential = new UserCredential("admin", "whydahadmin");

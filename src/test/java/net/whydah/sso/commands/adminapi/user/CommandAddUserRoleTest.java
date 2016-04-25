@@ -38,14 +38,14 @@ public class CommandAddUserRoleTest {
 //        userCredential = new UserCredential(userName, password);
 //
 //        if (systemTest) {
-//            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
-//            userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
+//            tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/").build();
+//            userAdminServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/").build();
 //            SSLTool.disableCertificateValidation();
 //        } else {
 //            String userAdminService = "http://localhost:9992/useradminservice";
 //            String userTokenService = "http://localhost:9998/tokenservice";
-//            tokenServiceUri = UriBuilder.fromUri(userTokenService).build();
-//            userAdminServiceUri = UriBuilder.fromUri(userAdminService).build();
+//            tokenServiceUri = URI.create(userTokenService).build();
+//            userAdminServiceUri = URI.create(userAdminService).build();
 //        }
     }
 

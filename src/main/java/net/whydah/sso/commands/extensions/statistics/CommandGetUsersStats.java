@@ -1,26 +1,9 @@
 package net.whydah.sso.commands.extensions.statistics;
 
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.netflix.hystrix.HystrixCommandProperties;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-import net.whydah.sso.util.SSLTool;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.slf4j.Logger;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-
 import java.net.URI;
 import java.time.Instant;
-import java.util.Arrays;
 
-import static javax.ws.rs.core.Response.Status.OK;
-import static org.slf4j.LoggerFactory.getLogger;
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 
 public class CommandGetUsersStats extends BaseHttpGetHystrixCommand<String> {
 	

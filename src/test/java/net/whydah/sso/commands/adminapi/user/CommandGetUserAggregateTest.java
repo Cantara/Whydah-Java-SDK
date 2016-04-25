@@ -29,14 +29,14 @@ public class CommandGetUserAggregateTest {
     public static void setup() throws Exception {
     	 config = new BaseConfig();
 //        appCredential = new ApplicationCredential("15", "MyApp", "HK8fGpWmK66ckWaEVn3tF9fRK");
-//        tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
+//        tokenServiceUri = URI.create("https://no_host").build();
 //        userCredential = new UserCredential("useradmin", "useradmin42");
 //
-//        userAdminServiceUri = UriBuilder.fromUri("https://no_host").build();
+//        userAdminServiceUri = URI.create("https://no_host").build();
 //
 //        if (systemtest) {
-//            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
-//            userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/useradminservice/").build();
+//            tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/").build();
+//            userAdminServiceUri = URI.create("https://whydahdev.cantara.no/useradminservice/").build();
 //        }
 //        SSLTool.disableCertificateValidation();
     }

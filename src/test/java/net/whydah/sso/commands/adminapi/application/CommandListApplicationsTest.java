@@ -35,14 +35,14 @@ public class CommandListApplicationsTest {
     public static void setup() throws Exception {
     	config = new BaseConfig();
 //        appCredential = new ApplicationCredential("15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
-//        tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
+//        tokenServiceUri = URI.create("https://no_host").build();
 //        userCredential = new UserCredential(userName, password);
 //
-//        userAdminServiceUri = UriBuilder.fromUri("https://no_host").build();
+//        userAdminServiceUri = URI.create("https://no_host").build();
 //
 //        if (systemTest) {
-//            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
-//            userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/useradminservice/").build();
+//            tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/").build();
+//            userAdminServiceUri = URI.create("https://whydahdev.cantara.no/useradminservice/").build();
 //        }
     }
 
@@ -70,8 +70,8 @@ public class CommandListApplicationsTest {
     @Test
     public void testListApplicationsCommand() throws Exception {
         if (config.enableTesting()) {
-//            tokenServiceUri = UriBuilder.fromUri("http://localhost:9998/tokenservice/").build();
-//            userAdminServiceUri =  UriBuilder.fromUri("http://localhost:9992/useradminservice").build();
+//            tokenServiceUri = URI.create("http://localhost:9998/tokenservice/").build();
+//            userAdminServiceUri =  URI.create("http://localhost:9992/useradminservice").build();
 
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);

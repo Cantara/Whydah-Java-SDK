@@ -1,11 +1,10 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import com.github.kevinsawicki.http.HttpRequest;
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-
 import java.net.URI;
 
-import static javax.ws.rs.core.Response.Status.CREATED;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+
+import com.github.kevinsawicki.http.HttpRequest;
 
 public class CommandCreateCRMCustomerProfileImage extends BaseHttpPostHystrixCommand<String> {
     
@@ -61,7 +60,7 @@ public class CommandCreateCRMCustomerProfileImage extends BaseHttpPostHystrixCom
     
     @Override
     protected String dealWithFailedResponse(String responseBody, int statusCode) {
-    	if (statusCode == CREATED.getStatusCode()) {
+    	if (statusCode == java.net.HttpURLConnection.HTTP_CREATED) {
     		String locationHeader = request.header("location");
     		log.debug(TAG + " - Returning ProfileImage url {}", locationHeader);
     		return locationHeader;

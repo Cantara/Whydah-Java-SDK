@@ -1,21 +1,8 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 import java.net.URI;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-import net.whydah.sso.user.helpers.UserTokenXpathHelper;
-
-import org.slf4j.Logger;
-
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
 
 public class CommandVerifyEmailByToken extends BaseHttpGetHystrixCommand<Boolean> {
    

@@ -2,27 +2,14 @@ package net.whydah.sso.commands.userauth;
 
 import java.net.URI;
 
-import com.github.kevinsawicki.http.HttpRequest;
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
-import org.slf4j.Logger;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-
-import static org.slf4j.LoggerFactory.getLogger;
+import com.github.kevinsawicki.http.HttpRequest;
 
 /**
  * @author <a href="mailto:erik-dev@fjas.no">Erik Drolshammer</a> 2015-11-21.
  */
-public class CommandChangeUserPasswordUsingToken extends BaseHttpPostHystrixCommand<Response> {
+public class CommandChangeUserPasswordUsingToken extends BaseHttpPostHystrixCommand<String> {
     static final String CHANGE_PASSWORD_TOKEN_KEY = "changePasswordToken";
     //public static final String NEW_PASSWORD_KEY = "newpassword";
     

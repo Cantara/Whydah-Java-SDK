@@ -25,12 +25,12 @@ public class CommandGetUsersStatsTest {
     @BeforeClass
     public static void setup() throws Exception {
 //        appCredential = new ApplicationCredential("15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
-//        statisticsServiceUri = UriBuilder.fromUri("https://no_host").build();
+//        statisticsServiceUri = URI.create("https://no_host").build();
 //        userCredential = new UserCredential(userName, password);
 
         config = new BaseConfig();
 //        if (systemTest) {
-//            statisticsServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/reporter/").build();
+//            statisticsServiceUri = URI.create("https://whydahdev.cantara.no/reporter/").build();
 //        }
     }
 

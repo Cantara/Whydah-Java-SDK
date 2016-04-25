@@ -6,13 +6,11 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.core.Response;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 import org.slf4j.Logger;
 
-public class CommandSendSmsPin extends BaseHttpPostHystrixCommand<Response> {
+public class CommandSendSmsPin extends BaseHttpPostHystrixCommand<String> {
     
     
     private String phoneNo;
