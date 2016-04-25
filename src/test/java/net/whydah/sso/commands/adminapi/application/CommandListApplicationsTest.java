@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.adminapi.application;
 
-import net.whydah.sso.application.BaseConfig;
+import net.whydah.sso.application.SystemtestBaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationMapper;
 import net.whydah.sso.application.types.Application;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 
 public class CommandListApplicationsTest {
 
-	static BaseConfig config;
+    static SystemtestBaseConfig config;
 //    public static String userName = "admin";
 //    public static String password = "whydahadmin";
 //    private static URI tokenServiceUri;
@@ -32,7 +32,7 @@ public class CommandListApplicationsTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-    	config = new BaseConfig();
+        config = new SystemtestBaseConfig();
 //        appCredential = new ApplicationCredential("15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
 //        tokenServiceUri = URI.create("https://no_host").build();
 //        userCredential = new UserCredential(userName, password);

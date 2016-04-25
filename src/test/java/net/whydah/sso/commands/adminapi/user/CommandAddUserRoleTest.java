@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import net.whydah.sso.application.BaseConfig;
+import net.whydah.sso.application.SystemtestBaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
@@ -16,8 +16,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class CommandAddUserRoleTest {
-	
-	 public static BaseConfig config;
+
+    public static SystemtestBaseConfig config;
 //    public static String TEMPORARY_APPLICATION_ID = "2211";//"11";
 //    public static String TEMPORARY_APPLICATION_NAME = "MyApp";//"11";
 //    public static String TEMPORARY_APPLICATION_SECRET = "NmHsQDCerVWx5d6aCjug9fyPE";
@@ -32,7 +32,7 @@ public class CommandAddUserRoleTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-    	config = new BaseConfig();
+        config = new SystemtestBaseConfig();
 //        appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
 //        userCredential = new UserCredential(userName, password);
 //

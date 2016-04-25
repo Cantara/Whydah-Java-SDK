@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.appauth;
 
-import net.whydah.sso.application.BaseConfig;
+import net.whydah.sso.application.SystemtestBaseConfig;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,12 +13,12 @@ import static org.junit.Assert.assertTrue;
 
 public class CommandLogonApplicationTest {
 
-    static BaseConfig config;
+    static SystemtestBaseConfig config;
     private static boolean integrationMode = false;
 
     @BeforeClass
     public static void setup() throws Exception {
-        config = new BaseConfig();
+        config = new SystemtestBaseConfig();
 //        appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
 //        tokenServiceUri = URI.create(userTokenService).build();
 //        userCredential = new UserCredential(userName, password);

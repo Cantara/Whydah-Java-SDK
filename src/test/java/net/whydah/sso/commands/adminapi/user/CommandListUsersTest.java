@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import net.whydah.sso.application.BaseConfig;
+import net.whydah.sso.application.SystemtestBaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
@@ -25,7 +25,7 @@ public class CommandListUsersTest  {
 //    private static boolean systemtest = false;
 //    private static URI userAdminServiceUri;
 
-	static BaseConfig config;
+	static SystemtestBaseConfig config;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -40,9 +40,9 @@ public class CommandListUsersTest  {
 //            userAdminServiceUri = URI.create("https://whydahdev.cantara.no/useradminservice/").build();
 //        }
 //        SSLTool.disableCertificateValidation();
-    	
-    	config = new BaseConfig();
-    }
+
+		config = new SystemtestBaseConfig();
+	}
 
 
 //    @Test

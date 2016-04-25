@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.extensions.statistics;
 
-import net.whydah.sso.application.BaseConfig;
+import net.whydah.sso.application.SystemtestBaseConfig;
 import net.whydah.sso.util.SSLTool;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class CommandGetUsersStatsTest {
 //    private static UserCredential userCredential;
 //    private static boolean systemTest = true;
 
-    static BaseConfig config;
+    static SystemtestBaseConfig config;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -28,7 +28,7 @@ public class CommandGetUsersStatsTest {
 //        statisticsServiceUri = URI.create("https://no_host").build();
 //        userCredential = new UserCredential(userName, password);
 
-        config = new BaseConfig();
+        config = new SystemtestBaseConfig();
 //        if (systemTest) {
 //            statisticsServiceUri = URI.create("https://whydahdev.cantara.no/reporter/").build();
 //        }
