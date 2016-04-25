@@ -81,6 +81,7 @@ public class CommandListUsersTest  {
 //
 //    }
 
+    @Ignore
     @Test
     public void testListUsersCommandWithFallback() throws Exception {
 
