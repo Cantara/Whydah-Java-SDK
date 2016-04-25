@@ -9,8 +9,6 @@ import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserIdentity;
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 import org.slf4j.Logger;
 
 import javax.ws.rs.core.UriBuilder;
@@ -82,20 +80,6 @@ public class WhydaUtilUserRolesJacksonHelperTest {
 
     }
 
-
-     // TODO Baard - should this work on jenkins? -BLI: YES. Though an dependency on environment, or mock.
-    @Ignore
-    @Test
-    public void listRolesForUserAndApplication() throws Exception {
-        log.trace("List roles for user {} in application {}", addedUser,TEMPORARY_APPLICATION_ID);
-        List<UserApplicationRoleEntry> roles = WhydahUtil.listUserRoles(userAdminServiceUri, myApplicationTokenID, adminUserTokenId, TEMPORARY_APPLICATION_ID, addedUser);
-        assertNotNull(roles);
-        assertTrue("Size of roles should be > 0",roles.size() > 0);
-        for (UserApplicationRoleEntry role : roles) {
-            log.debug("Role found {}", role);
-            assertEquals(TEMPORARY_APPLICATION_ID, role.getApplicationId());
-        }
-    }
 
 
 }
