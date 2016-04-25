@@ -3,32 +3,26 @@ package net.whydah.sso.util;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
+import net.whydah.sso.commands.adminapi.user.CommandAddUser;
+import net.whydah.sso.commands.adminapi.user.CommandAddUserRole;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandRenewApplicationSession;
 import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.session.WhydahApplicationSession;
-import net.whydah.sso.user.helpers.UserRoleXpathHelper;
 import net.whydah.sso.user.mappers.UserIdentityMapper;
+import net.whydah.sso.user.mappers.UserRoleMapper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserIdentity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static javax.ws.rs.core.Response.Status.FORBIDDEN;
-import static javax.ws.rs.core.Response.Status.OK;
 
 public class WhydahUtil {
     private static final Logger log = LoggerFactory.getLogger(WhydahUtil.class);
@@ -133,20 +127,13 @@ public class WhydahUtil {
     public static String addUser(String uasUri, String applicationTokenId, String adminUserTokenId, UserIdentity userIdentity) {
         String userId = null;
 
+        String userIdentityJson = UserIdentityMapper.toJsonWithoutUID(userIdentity);
+        // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
+        String userAddRoleResult = new CommandAddUser(URI.create(uasUri), applicationTokenId, adminUserTokenId, userIdentityJson).execute();
 
-        WebTarget addUser = buildBaseTarget(uasUri, applicationTokenId, adminUserTokenId).path("/user");
-        String userIdentityJson = UserIdentityMapper.toJson(userIdentity);
-        System.out.println(userIdentityJson);
-        Response response = addUser.request().accept(HttpSender.APPLICATION_JSON).post(Entity.entity(userIdentityJson, HttpSender.APPLICATION_JSON));
-        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
-            log.info("CommandAddUser - addUser - User authentication failed with status code " + response.getStatus());
-            return null;
-            //throw new IllegalArgumentException("Log on failed. " + ClientResponse.Status.FORBIDDEN);
-        }
-        if (response.getStatus() == OK.getStatusCode()) {
-            String responseXML = response.readEntity(String.class);
-            log.debug("CommandAddUser - addUser - Log on OK with response {}", responseXML);
-            return responseXML;
+        if (userAddRoleResult != null && userAddRoleResult.length() > 10) {
+            log.debug("CommandAddUser - addUser - Log on OK with response {}", userAddRoleResult);
+            return userAddRoleResult;
         }
         throw new IllegalArgumentException("Not found");
     }
@@ -163,21 +150,20 @@ public class WhydahUtil {
 
         List<String> createdRolesXml = new ArrayList<>();
         List<UserApplicationRoleEntry> createdRoles = new ArrayList<>();
-        WebTarget userTarget = buildBaseTarget(uasUri, applicationTokenId, adminUserTokenId).path("/user");
-        Response response;
+
         String userName = "";
         for (UserApplicationRoleEntry role : roles) {
             String roleXml = role.toXML();
             log.trace("Try to add role {}", roleXml);
             userName = role.getUserName();
-            response = userTarget.path(userName).path("/role").request().accept(HttpSender.APPLICATION_XML).post(Entity.entity(roleXml, HttpSender.APPLICATION_XML));
-            if (response.getStatus() == OK.getStatusCode()) {
-                String responseXML = response.readEntity(String.class);
-                log.debug("CommandAddRole - addRoles - Created role ok {}", responseXML);
-                createdRolesXml.add(responseXML);
+            String userAddRoleResult = new CommandAddUserRole(URI.create(uasUri), applicationTokenId, adminUserTokenId, role.getUserId(), UserRoleMapper.toJson(role)).execute();
+
+            if (userAddRoleResult != null && userAddRoleResult.length() > 5) {
+                log.debug("CommandAddRole - addRoles - Created role ok {}", userAddRoleResult);
+                createdRolesXml.add(userAddRoleResult);
             } else {
                 //createdRolesXml.add("Failed to add role " + role.getRoleName() + ", reason: " + response.toString());
-                log.trace("Failed to add role {}, response status {}", role.toString(), response.getStatus());
+                log.trace("Failed to add role {}, {}", role.toString(), userAddRoleResult);
             }
         }
         for (String createdRoleXml : createdRolesXml) {
@@ -187,34 +173,13 @@ public class WhydahUtil {
         return createdRoles;
     }
 
-    public static List<UserApplicationRoleEntry> listUserRoles(String uasUri, String adminAppTokenId, String adminUserTokenId, String applicationId, String userId) {
-
-
-        List<UserApplicationRoleEntry> userRoles = new ArrayList<>();
-        WebTarget userTarget = buildBaseTarget(uasUri, adminAppTokenId, adminUserTokenId).path("/user");
-        Response response;
-        response = userTarget.path(userId).path("roles").request().accept(HttpSender.APPLICATION_XML).get();
-        if (response.getStatus() == OK.getStatusCode()) {
-            String rolesXml = response.readEntity(String.class);
-            log.debug("CommandListRoles - listUserRoles - Created role ok {}", rolesXml);
-            userRoles = UserRoleXpathHelper.getUserRoleFromUserAggregateXml(rolesXml);  // ).rolesViaJackson
-        } else {
-            log.trace("Failed to find roles for user {}, response status {}", userId, response.getStatus());
-        }
-        return userRoles;
-    }
 
     public static String getUserTokenByUserTokenId(String stsUri, String myAppTokenId, String myAppTokenXml ,String userTokenId) {
-        URI tokenServiceUri = UriBuilder.fromUri(stsUri).build();
+        URI tokenServiceUri = URI.create(stsUri);
         CommandGetUsertokenByUsertokenId command = new CommandGetUsertokenByUsertokenId(tokenServiceUri,myAppTokenId,myAppTokenXml, userTokenId);
         String userTokenXml = command.execute();
         return userTokenXml;
     }
 
 
-    @Deprecated  // Jersey has to go..
-    static WebTarget buildBaseTarget(String baseUri, String applicationTokenId, String adminUserTokenId) {
-        Client httpClient = ClientBuilder.newClient();
-        return httpClient.target(baseUri).path(applicationTokenId + "/" + adminUserTokenId);
-    }
 }
