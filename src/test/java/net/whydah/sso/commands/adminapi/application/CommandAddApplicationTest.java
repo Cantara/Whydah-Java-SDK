@@ -6,20 +6,13 @@ import net.whydah.sso.application.helpers.ApplicationHelper;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationMapper;
 import net.whydah.sso.application.types.Application;
-import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.helpers.UserXpathHelper;
-import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.util.SSLTool;
-import net.whydah.sso.util.SystemTestUtil;
-
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.ws.rs.core.UriBuilder;
-
-import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,6 +32,7 @@ public class CommandAddApplicationTest {
         return ApplicationHelper.getDummyApplicationJson();
     }
 
+    @Ignore
     @Test
     public void testAddApplication() throws Exception {
 
