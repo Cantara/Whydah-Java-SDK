@@ -78,7 +78,6 @@ public class CommandAddUserTest {
     
     
 
-    //TODO:totto, failed on CommandAddUSer -> 	//Error 500 Internal Server Error
     @Test
     public void testAddUser() throws Exception {
 
