@@ -1,30 +1,14 @@
 package net.whydah.sso.commands.threat;
 
 
-import com.github.kevinsawicki.http.HttpRequest;
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.netflix.hystrix.HystrixCommandProperties;
-
-import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import static javax.ws.rs.core.Response.Status.OK;
 
 public class CommandSendThreatSignal extends BaseHttpPostHystrixCommand<String> {
 

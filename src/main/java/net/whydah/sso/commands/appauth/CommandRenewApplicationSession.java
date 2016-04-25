@@ -3,8 +3,8 @@ package net.whydah.sso.commands.appauth;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.util.HttpSender;
 
-import javax.ws.rs.core.MediaType;
 import java.net.URI;
 
 public class CommandRenewApplicationSession extends BaseHttpPostHystrixCommand<String> {
@@ -26,7 +26,7 @@ public class CommandRenewApplicationSession extends BaseHttpPostHystrixCommand<S
 
     @Override
     protected HttpRequest dealWithRequestBeforeSend(HttpRequest request) {
-    	return request.contentType(MediaType.APPLICATION_FORM_URLENCODED);
+        return request.contentType(HttpSender.APPLICATION_FORM_URLENCODED);
     }
 
 //    @Override

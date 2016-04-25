@@ -5,10 +5,8 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.util.HttpSender;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +14,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.core.MediaType;
 
 public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 
@@ -81,7 +78,7 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 			request.trustAllHosts();
 			
 			if(getFormParameters()!=null && !getFormParameters().isEmpty()){
-				request.contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE.toString());
+				request.contentType(HttpSender.APPLICATION_FORM_URLENCODED);
 				request.form(getFormParameters());
 			}
 			

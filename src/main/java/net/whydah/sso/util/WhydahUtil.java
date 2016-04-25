@@ -20,7 +20,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
@@ -138,7 +137,7 @@ public class WhydahUtil {
         WebTarget addUser = buildBaseTarget(uasUri, applicationTokenId, adminUserTokenId).path("/user");
         String userIdentityJson = UserIdentityMapper.toJson(userIdentity);
         System.out.println(userIdentityJson);
-        Response response = addUser.request().accept(MediaType.APPLICATION_JSON).post(Entity.entity(userIdentityJson, MediaType.APPLICATION_JSON));
+        Response response = addUser.request().accept(HttpSender.APPLICATION_JSON).post(Entity.entity(userIdentityJson, HttpSender.APPLICATION_JSON));
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
             log.info("CommandAddUser - addUser - User authentication failed with status code " + response.getStatus());
             return null;
@@ -171,7 +170,7 @@ public class WhydahUtil {
             String roleXml = role.toXML();
             log.trace("Try to add role {}", roleXml);
             userName = role.getUserName();
-            response = userTarget.path(userName).path("/role").request().accept(MediaType.APPLICATION_XML).post(Entity.entity(roleXml, MediaType.APPLICATION_XML));
+            response = userTarget.path(userName).path("/role").request().accept(HttpSender.APPLICATION_XML).post(Entity.entity(roleXml, HttpSender.APPLICATION_XML));
             if (response.getStatus() == OK.getStatusCode()) {
                 String responseXML = response.readEntity(String.class);
                 log.debug("CommandAddRole - addRoles - Created role ok {}", responseXML);
@@ -193,7 +192,7 @@ public class WhydahUtil {
         List<UserApplicationRoleEntry> userRoles = new ArrayList<>();
         WebTarget userTarget = buildBaseTarget(uasUri, adminAppTokenId, adminUserTokenId).path("/user");
         Response response;
-        response = userTarget.path(userId).path("roles").request().accept(MediaType.APPLICATION_XML).get();
+        response = userTarget.path(userId).path("roles").request().accept(HttpSender.APPLICATION_XML).get();
         if (response.getStatus() == OK.getStatusCode()) {
             String rolesXml = response.readEntity(String.class);
             log.debug("CommandListRoles - listUserRoles - Created role ok {}", rolesXml);

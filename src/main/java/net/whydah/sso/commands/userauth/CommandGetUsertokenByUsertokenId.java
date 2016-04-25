@@ -1,20 +1,14 @@
 package net.whydah.sso.commands.userauth;
 
-import static javax.ws.rs.core.Response.Status.FORBIDDEN;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.util.ExceptionUtil;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.core.MediaType;
+import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-import net.whydah.sso.util.ExceptionUtil;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.github.kevinsawicki.http.HttpRequest;
 
 public class CommandGetUsertokenByUsertokenId extends BaseHttpPostHystrixCommand<String> {
 

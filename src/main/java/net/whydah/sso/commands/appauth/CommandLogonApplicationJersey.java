@@ -1,31 +1,19 @@
 package net.whydah.sso.commands.appauth;
 
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.netflix.hystrix.HystrixCommandProperties;
-import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
-import net.whydah.sso.util.SSLTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.net.URI;
 
-public class CommandLogonApplicationJersey extends HystrixCommand<String> {
+public class CommandLogonApplicationJersey /**extends HystrixCommand<String> */
+{
 
     private static final Logger log = LoggerFactory.getLogger(CommandLogonApplication.class);
     private URI tokenServiceUri;
     private ApplicationCredential appCredential;
 
+    /**
     public CommandLogonApplicationJersey(URI tokenServiceUri, ApplicationCredential appCredential) {
         super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("STSApplicationAdminGroup")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
                 .withExecutionTimeoutInMilliseconds(3000)));
@@ -61,7 +49,7 @@ public class CommandLogonApplicationJersey extends HystrixCommand<String> {
         Response response;
         WebTarget logonResource = tokenServiceClient.target(tokenServiceUri).path("logon");
         try {
-            response = logonResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
+    response = logonResource.request().post(Entity.entity(formData, HttpSender.APPLICATION_FORM_URLENCODED), Response.class);
 //            response = postForm(formData, logonResource);
         } catch (RuntimeException e) {
             log.error("CommandLogonApplication - logonApplication - Problem connecting to {}", logonResource.toString());
@@ -81,7 +69,7 @@ public class CommandLogonApplicationJersey extends HystrixCommand<String> {
     }
 
     private Response postForm(Form formData, WebTarget logonResource) {
-        return logonResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
+    return logonResource.request().post(Entity.entity(formData, HttpSender.APPLICATION_FORM_URLENCODED), Response.class);
     }
 
     @Override
@@ -89,5 +77,6 @@ public class CommandLogonApplicationJersey extends HystrixCommand<String> {
         log.warn("CommandLogonApplication - fallback - whydahServiceUri={}", tokenServiceUri.toString());
         return null;
     }
+     */
 
 }

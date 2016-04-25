@@ -2,33 +2,19 @@ package net.whydah.sso.commands.appauth;
 
 import net.whydah.sso.application.BaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.util.SSLTool;
 import net.whydah.sso.util.SystemTestUtil;
-
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-
-import java.net.URI;
 
 import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class CommandLogonApplicationIntegrationTest {
     private static final Logger log = getLogger(CommandLogonApplicationIntegrationTest.class);
-
+    BaseConfig config;
     //    public static final String TEMPORARY_APPLICATION_ID = "201";//"11";
 //    public static final String TEMPORARY_APPLICATION_SECRET = "33779936R6Jr47D4Hj5R6p9qT";
 //    public static String TEMPORARY_APPLICATION_ID = "2215";//"11";
@@ -37,10 +23,8 @@ public class CommandLogonApplicationIntegrationTest {
 //
 //    private final String userTokenServiceUri = "https://whydahdev.cantara.no/tokenservice/";
     private String myApplicationTokenID = null;
-    private String myAppTokenXml = null;
 //    private URI tokenServiceUri = null;
-
-    BaseConfig config;
+private String myAppTokenXml = null;
 
     @Before
     public void setUp() throws Exception {
