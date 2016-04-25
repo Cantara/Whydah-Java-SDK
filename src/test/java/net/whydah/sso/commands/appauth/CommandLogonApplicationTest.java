@@ -2,6 +2,7 @@ package net.whydah.sso.commands.appauth;
 
 import net.whydah.sso.application.BaseConfig;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import rx.Observable;
 
@@ -51,6 +52,7 @@ public class CommandLogonApplicationTest {
         }
     }
 
+    @Ignore  // temp ignore
     @Test
     public void testApplicationLoginCommand() throws Exception {
 

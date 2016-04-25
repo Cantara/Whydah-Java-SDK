@@ -1,25 +1,18 @@
 package net.whydah.sso.commands.adminapi.application;
 
 import net.whydah.sso.application.BaseConfig;
-import net.whydah.sso.application.helpers.ApplicationHelper;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationMapper;
 import net.whydah.sso.application.types.Application;
-import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredentialWithStubbedFallback;
 import net.whydah.sso.user.helpers.UserXpathHelper;
-import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.util.SystemTestUtil;
-
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.ws.rs.core.UriBuilder;
-
-import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,6 +65,7 @@ public class CommandListApplicationsTest {
         assertTrue(!applicationsJsonl.isEmpty());
     }
 
+    @Ignore // temp ignore
     @Test
     public void testListApplicationsCommand() throws Exception {
         if (config.enableTesting()) {
