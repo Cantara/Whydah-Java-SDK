@@ -156,9 +156,11 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 	@Override
 	protected R getFallback() {
 		log.warn(TAG + " - fallback - whydahServiceUri={}", whydahServiceUri.toString() + getTargetPath());
+		// TODO - this should return false for Boolean commands
 		return null;
 	}
-	
+
+
 	protected String getAcceptHeaderRequestValue(){
 		//CAN RETURN JSON (can be used in derived class)
 		//return "application/json";

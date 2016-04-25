@@ -1,8 +1,8 @@
 package net.whydah.sso.commands.userauth;
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+
+import java.net.URI;
 
 public class CommandValidateUsertokenId extends BaseHttpGetHystrixCommand<Boolean> {
 
@@ -59,11 +59,11 @@ public class CommandValidateUsertokenId extends BaseHttpGetHystrixCommand<Boolea
     	return true;
     }
 //
-//    @Override
-//    protected Boolean getFallback() {
-//        log.warn("CommandValidateUsertokenId - fallback - whydahServiceUri={}", tokenServiceUri.toString());
-//        return false;
-//    }
+@Override
+protected Boolean getFallback() {
+    log.warn("CommandValidateUsertokenId - fallback - whydahServiceUri={}");
+    return false;
+}
 
 	@Override
 	protected String getTargetPath() {
