@@ -3,7 +3,6 @@ package net.whydah.sso.application;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.SSLTool;
-import net.whydah.sso.util.SystemTestUtil;
 
 import java.net.URI;
 
@@ -49,7 +48,7 @@ public class SystemTestBaseConfig {
         } catch (InterruptedException ie) {
 
         }
-        return !SystemTestUtil.noLocalWhydahRunning() || systemTest;
+        return systemTest;
     }
     
 }
