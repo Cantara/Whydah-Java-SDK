@@ -2,22 +2,14 @@ package net.whydah.sso.commands.adminapi.user;
 
 import net.whydah.sso.application.BaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.mappers.UserIdentityMapper;
-import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserIdentity;
-import net.whydah.sso.util.SSLTool;
-import net.whydah.sso.util.SystemTestUtil;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.ws.rs.core.UriBuilder;
-
-import java.net.URI;
 import java.util.Random;
 import java.util.UUID;
 
@@ -101,7 +93,7 @@ public class CommandAddUserTest {
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
             UserIdentity uir = getTestNewUserIdentity(UserXpathHelper.getUserIdFromUserTokenXml(userToken), myApplicationTokenID);
-            String userIdentityJson = UserIdentityMapper.toJson(uir);
+            String userIdentityJson = UserIdentityMapper.toJsonWithoutUID(uir);
             // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
             String userAddRoleResult = new CommandAddUser(config.userAdminServiceUri, myApplicationTokenID, userTokenId, userIdentityJson).execute();
             System.out.println("testAddUser:" + userAddRoleResult);
