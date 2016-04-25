@@ -9,7 +9,7 @@ import java.net.URI;
 
 public class CommandLogonUserByUserCredentialWithStubbedFallback extends CommandLogonUserByUserCredential {
 
-    private static final Logger log = LoggerFactory.getLogger(CommandLogonUserByUserCredentialWithStubbedFallback.class);
+   // private static final Logger log = LoggerFactory.getLogger(CommandLogonUserByUserCredentialWithStubbedFallback.class);
 
 
     public CommandLogonUserByUserCredentialWithStubbedFallback(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, UserCredential userCredential) {

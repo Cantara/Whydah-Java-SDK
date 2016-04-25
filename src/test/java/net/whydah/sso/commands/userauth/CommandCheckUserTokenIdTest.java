@@ -1,45 +1,50 @@
 package net.whydah.sso.commands.userauth;
 
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
+
+import net.whydah.sso.application.BaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.ws.rs.core.UriBuilder;
+
 import java.net.URI;
 
 import static org.junit.Assert.assertTrue;
 
 public class CommandCheckUserTokenIdTest {
-    private static URI tokenServiceUri;
-    private static ApplicationCredential appCredential;
-    private static UserCredential userCredential;
-    private static boolean integrationMode = false;
+//    private static URI tokenServiceUri;
+//    private static ApplicationCredential appCredential;
+//    private static UserCredential userCredential;
+//    private static boolean integrationMode = true;
 
+	static BaseConfig config;
 
     @BeforeClass
     public static void setup() throws Exception {
-        tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
-        if (integrationMode) {
-            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
-        }
-        appCredential = new ApplicationCredential("15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
-        userCredential = new UserCredential("useradmin", "useradmin42");
-
-        // HystrixCommandProperties.Setter().withFallbackEnabled(!integrationMode);
-        HystrixRequestContext context = HystrixRequestContext.initializeContext();
-
+//        tokenServiceUri = UriBuilder.fromUri("https://no_host").build();
+//        if (integrationMode) {
+//            tokenServiceUri = UriBuilder.fromUri("https://whydahdev.altrancloud.com/tokenservice/").build();
+//        }
+//        appCredential = new ApplicationCredential("15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
+//        userCredential = new UserCredential("useradmin", "useradmin42");
+//
+//        // HystrixCommandProperties.Setter().withFallbackEnabled(!integrationMode);
+//        HystrixRequestContext context = HystrixRequestContext.initializeContext();
+    	config = new BaseConfig();
     }
 
 
     @Test
     public void testApplicationLoginCommand() throws Exception {
 
-        String myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(tokenServiceUri, appCredential).execute();
+        String myAppTokenXml = new CommandLogonApplicationWithStubbedFallback(config.tokenServiceUri, config.appCredential).execute();
         System.out.println(myAppTokenXml);
         String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         System.out.println(myApplicationTokenID);
@@ -47,10 +52,10 @@ public class CommandCheckUserTokenIdTest {
         assertTrue(myApplicationTokenID.length() > 6);
 
 
-        String userToken = new CommandLogonUserByUserCredentialWithStubbedFallback(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential).execute();
+        String userToken = new CommandLogonUserByUserCredentialWithStubbedFallback(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential).execute();
 
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-        boolean isvalidToken = new CommandValidateUsertokenIdWithStubbedFallback(tokenServiceUri, myApplicationTokenID, userTokenId).execute();
+        boolean isvalidToken = new CommandValidateUsertokenIdWithStubbedFallback(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
         assertTrue("Error: usertokenid NOT verified successfully", isvalidToken);
     }
 

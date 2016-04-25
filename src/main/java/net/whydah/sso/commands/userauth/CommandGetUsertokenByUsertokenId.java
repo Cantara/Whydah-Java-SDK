@@ -6,17 +6,20 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.ws.rs.core.MediaType;
+
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 import net.whydah.sso.util.ExceptionUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kevinsawicki.http.HttpRequest;
+
 public class CommandGetUsertokenByUsertokenId extends BaseHttpPostHystrixCommand<String> {
 
-    private static final Logger log = LoggerFactory.getLogger(CommandGetUsertokenByUsertokenId.class);
+   // private static final Logger log = LoggerFactory.getLogger(CommandGetUsertokenByUsertokenId.class);
 
-    
     private String usertokenId;
     
 
@@ -69,6 +72,7 @@ public class CommandGetUsertokenByUsertokenId extends BaseHttpPostHystrixCommand
 //
 //    }
     
+    
     @Override
     protected String dealWithFailedResponse(String responseBody, int statusCode) {
     	if (statusCode == FORBIDDEN.getStatusCode()) {
@@ -91,7 +95,7 @@ public class CommandGetUsertokenByUsertokenId extends BaseHttpPostHystrixCommand
 	protected Map<String, String> getFormParameters() {
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("apptoken", myAppTokenXml);
-		data.put("userticket", usertokenId);
+		data.put("usertokenid", usertokenId);
 		return data;
 	}
     

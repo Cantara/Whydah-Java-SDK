@@ -42,8 +42,8 @@ public class CommandAddUser extends BaseHttpPostHystrixCommand<String> {
     @Override
     protected HttpRequest dealWithRequestBeforeSend(HttpRequest request) {
     
-    	request.send(userIdentityJson);
-    	return request;
+    	return request.contentType("application/json").send(userIdentityJson);
+    	
     }
 
 //    @Override

@@ -49,6 +49,64 @@ public class CommandLogonUserByUserCredential  extends BaseHttpPostHystrixComman
 		return data;
 	}
 
+	int retryCnt=0;
+	@Override
+	protected String dealWithFailedResponse(String responseBody, int statusCode) {
+		if(statusCode == java.net.HttpURLConnection.HTTP_FORBIDDEN &&retryCnt<1){
+			//do retry
+			retryCnt++;
+			return doPostCommand();
+		} else {
+			return null;
+		}
+	}
+
+//
+//	 @Override
+//	    protected String run() {
+//	        log.trace("CommandLogonUserByUserCredential - uri={} myAppTokenId={}", tokenServiceUri.toString(), myAppTokenId);
+//
+//	        Client tokenServiceClient = ClientBuilder.newClient();
+//	        WebTarget getUserToken = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/" + userticket + "/usertoken");
+//	        Form formData = new Form();
+//	        formData.param("apptoken", myAppTokenXml);
+//	        formData.param("usercredential", UserCredentialMapper.toXML(userCredential));
+//	        Response response = postForm(formData,getUserToken);
+//	        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
+//	            log.warn("CommandLogonUserByUserCredential - getUserToken - User authentication failed with status code " + response.getStatus());
+//	            return null;
+//	        }
+//	        if (response.getStatus() == OK.getStatusCode()) {
+//	            String responseXML = response.readEntity(String.class);
+//	            log.trace("CommandLogonUserByUserCredential - getUserToken - Log on OK with response {}", responseXML);
+//	            return responseXML;
+//	        }
+//
+//	        //retry once for other statuses
+//	        log.info("CommandLogonUserByUserCredential - getUserToken - retry once for other statuses");
+//	        response = postForm(formData,getUserToken);
+//	        if (response.getStatus() == OK.getStatusCode()) {
+//	            String responseXML = response.readEntity(String.class);
+//	            log.trace("CommandLogonUserByUserCredential - getUserToken - Log on OK with response {}", responseXML);
+//	            return responseXML;
+//	        } else if (response.getStatus() == NOT_FOUND.getStatusCode()) {
+//	            log.error(ExceptionUtil.printableUrlErrorMessage("CommandLogonUserByUserCredential - getUserToken - Auth failed - Problems connecting with TokenService", getUserToken, response));
+//	        } else {
+//	            log.info(ExceptionUtil.printableUrlErrorMessage("CommandLogonUserByUserCredential - getUserToken - User authentication failed", getUserToken, response));
+//	        }
+//	        return null;
+//
+//	    }
+//
+//	    private Response postForm(Form formData, WebTarget logonResource) {
+//	        return logonResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE),Response.class);
+//	    }
+//
+//	    @Override
+//	    protected String getFallback() {
+//	        log.warn("CommandLogonUserByUserCredential - fallback - uri={}", tokenServiceUri.toString());
+//	        return null;
+//	    }
 
 
 }

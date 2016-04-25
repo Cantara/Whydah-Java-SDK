@@ -16,6 +16,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.ws.rs.core.MediaType;
+
 public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 
 	protected Logger log;
@@ -79,7 +81,7 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 			request.trustAllHosts();
 			
 			if(getFormParameters()!=null && !getFormParameters().isEmpty()){
-				request.contentType(HttpSender.APPLICATION_FORM_URLENCODED);
+				request.contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE.toString());
 				request.form(getFormParameters());
 			}
 			
