@@ -15,7 +15,6 @@ public class WhydahApplicationSessionTest {
     private static final Logger log = getLogger(WhydahApplicationSessionTest.class);
 
     @Test
-    @Ignore
     public void testTimecalculations() throws Exception {
         log.trace("testTimecalculations() - starting test");
         long i = System.currentTimeMillis()+200;
