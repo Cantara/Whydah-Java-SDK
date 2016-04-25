@@ -5,14 +5,13 @@ import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.SSLTool;
 import net.whydah.sso.util.SystemTestUtil;
 
-import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 public class BaseConfig {
-	
-	public String TEMPORARY_APPLICATION_NAME = "Whydah-SSOLoginWebApp";//"Funny APp";//"11";
-    public String TEMPORARY_APPLICATION_ID = "9001";//"11";
-    public String TEMPORARY_APPLICATION_SECRET = "YKHH54bNpnvQEF2vCJSWtctB";//"LLNmHsQDCerVWx5d6aCjug9fyPE";
+
+    public String TEMPORARY_APPLICATION_ID = "2215";//"11";
+    public String TEMPORARY_APPLICATION_NAME = "Whydah-SSOLoginWebApp";//"Funny APp";//"11";
+    public String TEMPORARY_APPLICATION_SECRET = "33779936R6Jr47D4Hj5R6p9qT";//"LLNmHsQDCerVWx5d6aCjug9fyPE";
     public String userName = "useradmin";
     public String password = "useradmin42";
     public URI tokenServiceUri;
@@ -29,16 +28,16 @@ public class BaseConfig {
     
     public BaseConfig(){
     	 appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
-         tokenServiceUri = UriBuilder.fromUri(userTokenService).build();
+        tokenServiceUri = URI.create(userTokenService);
          userCredential = new UserCredential(userName, password);
-         userAdminServiceUri = UriBuilder.fromUri(userAdminService).build();
+        userAdminServiceUri = URI.create(userAdminService);
 
          if (systemTest) {
-             tokenServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/tokenservice/").build();
-             userAdminServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/useradminservice/").build();
-             
-             crmServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/crmservice/").build();
-             statisticsServiceUri = UriBuilder.fromUri("https://whydahdev.cantara.no/reporter/").build();
+             tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/");
+             userAdminServiceUri = URI.create("https://whydahdev.cantara.no/useradminservice/");
+
+             crmServiceUri = URI.create("https://whydahdev.cantara.no/crmservice/");
+             statisticsServiceUri = URI.create("https://whydahdev.cantara.no/reporter/");
              
              SSLTool.disableCertificateValidation();
          }
