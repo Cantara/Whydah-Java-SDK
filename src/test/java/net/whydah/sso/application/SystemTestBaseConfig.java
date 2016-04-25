@@ -44,6 +44,11 @@ public class SystemTestBaseConfig {
     }
 
     public boolean isSystemTestEnabled() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ie) {
+
+        }
         return !SystemTestUtil.noLocalWhydahRunning() || systemTest;
     }
     
