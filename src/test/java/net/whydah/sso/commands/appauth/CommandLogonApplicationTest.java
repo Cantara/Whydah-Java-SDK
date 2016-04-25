@@ -1,6 +1,5 @@
 package net.whydah.sso.commands.appauth;
 
-import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import net.whydah.sso.application.BaseConfig;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -8,12 +7,9 @@ import rx.Observable;
 
 import java.util.concurrent.Future;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by totto on 12/2/14.
- */
+
 public class CommandLogonApplicationTest {
 
     static BaseConfig config;
@@ -74,40 +70,5 @@ public class CommandLogonApplicationTest {
         }
     }
 
-    @Test
-    public void testWithCacheHits() {
-        if (integrationMode){
-            HystrixRequestContext context = HystrixRequestContext.initializeContext();
-            try {
-                CommandLogonApplication command2a = new CommandLogonApplication(config.tokenServiceUri, config.appCredential);
-                CommandLogonApplication command2b = new CommandLogonApplication(config.tokenServiceUri, config.appCredential);
-
-                assertTrue(command2a.execute()!=null);
-                // this is the first time we've executed this command with
-                // the value of "2" so it should not be from cache
-                assertFalse(command2a.isResponseFromCache());
-
-                assertTrue(command2b.execute()!=null);
-                // this is the second time we've executed this command with
-                // the same value so it should return from cache
-                assertTrue(command2b.isResponseFromCache());
-            } finally {
-                context.shutdown();
-            }
-
-            // start a new request context
-            context = HystrixRequestContext.initializeContext();
-            try {
-                CommandLogonApplication command3b = new CommandLogonApplication(config.tokenServiceUri, config.appCredential);
-                assertTrue(command3b.execute()!=null);
-                // this is a new request context so this
-                // should not come from cache
-                assertFalse(command3b.isResponseFromCache());
-            } finally {
-                context.shutdown();
-            }
-
-        }
-    }
 
 }
