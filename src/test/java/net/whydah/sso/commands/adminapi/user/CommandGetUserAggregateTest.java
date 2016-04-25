@@ -3,21 +3,15 @@ package net.whydah.sso.commands.adminapi.user;
 
 import net.whydah.sso.application.BaseConfig;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandLogonApplicationWithStubbedFallback;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredentialWithStubbedFallback;
 import net.whydah.sso.user.helpers.UserXpathHelper;
-import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.util.SSLTool;
-
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.ws.rs.core.UriBuilder;
-
-import java.net.URI;
 import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
@@ -79,6 +73,7 @@ public class CommandGetUserAggregateTest {
 //
 //    }
 
+    @Ignore
     @Test
     public void testGetUserAggregate() throws Exception {
 
