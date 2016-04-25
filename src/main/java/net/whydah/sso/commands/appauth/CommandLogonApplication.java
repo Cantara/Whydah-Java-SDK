@@ -15,7 +15,7 @@ public class CommandLogonApplication extends BaseHttpPostHystrixCommand<String> 
 	private ApplicationCredential appCredential;
 
 	public CommandLogonApplication(URI tokenServiceUri, ApplicationCredential appCredential) {
-		super(tokenServiceUri, "", "", "STSApplicationAdminGroup", 3000);
+		super(tokenServiceUri, "", "", "STSApplicationAdminGroup", 6000);
 		this.appCredential = appCredential;
 	}
 
