@@ -58,12 +58,6 @@ public class CommandValidateUsertokenId extends BaseHttpGetHystrixCommand<Boolea
     protected Boolean dealWithResponse(String response) {
     	return true;
     }
-//
-@Override
-protected Boolean getFallback() {
-    log.warn("CommandValidateUsertokenId - fallback - whydahServiceUri={}");
-    return false;
-}
 
 	@Override
 	protected String getTargetPath() {
