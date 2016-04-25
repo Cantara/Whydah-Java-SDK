@@ -1,19 +1,18 @@
 package net.whydah.sso.application;
 
-import java.net.URI;
-
-import javax.ws.rs.core.UriBuilder;
-
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.SSLTool;
 import net.whydah.sso.util.SystemTestUtil;
 
+import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
+
 public class BaseConfig {
 	
 	public String TEMPORARY_APPLICATION_NAME = "Whydah-SSOLoginWebApp";//"Funny APp";//"11";
-	public String TEMPORARY_APPLICATION_ID = "2215";//"11";
-	public String TEMPORARY_APPLICATION_SECRET = "33779936R6Jr47D4Hj5R6p9qT";//"LLNmHsQDCerVWx5d6aCjug9fyPE";
+    public String TEMPORARY_APPLICATION_ID = "9001";//"11";
+    public String TEMPORARY_APPLICATION_SECRET = "YKHH54bNpnvQEF2vCJSWtctB";//"LLNmHsQDCerVWx5d6aCjug9fyPE";
     public String userName = "useradmin";
     public String password = "useradmin42";
     public URI tokenServiceUri;
