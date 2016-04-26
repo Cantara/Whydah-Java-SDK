@@ -17,7 +17,7 @@ public class SystemTestBaseConfig {
     public URI userAdminServiceUri;
     public String userAdminService = "http://localhost:9992/useradminservice";
     public String userTokenService = "http://localhost:9998/tokenservice";
-    public boolean systemTest = true;
+    public boolean systemTest = false;
     public ApplicationCredential appCredential;
     public UserCredential userCredential;
     
