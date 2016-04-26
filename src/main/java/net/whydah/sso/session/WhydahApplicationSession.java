@@ -93,14 +93,10 @@ public class WhydahApplicationSession {
         if (!checkActiveSession()) {
             log.info("No active application session, applicationTokenId:" + applicationTokenId);
             for (int n = 0; n < 3 || !checkActiveSession(); n++) {
-                this.applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
-                if (checkApplicationToken(applicationTokenXML)) {
-                    setApplicationSessionParameters(applicationTokenXML);
-                    log.info("Successful logon of applicationsession, applicationTokenId:" + applicationTokenId);
+                if (initializeWhydahApplicationSession()) {
                     break;
                 }
                 log.info("Unsuccessful attempt to logon application session, returned applicationtoken: " + applicationTokenXML);
-                log.debug("Retrying logon application session");
                 try {
                     Thread.sleep(1000 * n);
                 } catch (InterruptedException ie) {
@@ -123,8 +119,9 @@ public class WhydahApplicationSession {
                         log.info("Fail to renew applicationsession");
                         if (n > 3) {
                             // OK, we wont get a renewed session, so we start a new one
-                            initializeWhydahApplicationSession();
-                            n = 1;
+                            if (initializeWhydahApplicationSession()) {
+                                break;
+                            }
                         }
                     }
                     try {
