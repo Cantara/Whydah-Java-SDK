@@ -84,7 +84,7 @@ public class CommandCreateCRMCustomer extends BaseHttpPostHystrixCommand<String>
 	@Override
 	protected String getTargetPath() {
 
-		String path = myAppTokenId + "/" + userTokenId + "/customer";
+		String path = myAppTokenId + "/" + userTokenId + "/customer/";
 		if (personRef != null) {
 			path += personRef;
 		}
