@@ -60,24 +60,6 @@ public class WhydahUtil {
 
     }
 
-    /**
-     * Extend the application's's logon expiry period.
-     *
-     * @param stsURI            URI to the Security Token Service, where you do logon
-     * @param applicationID     The registered ID of your application's.
-     * @param applicationSecret Current, updatet secret of your application's.
-     * @return XML Representing the application's. In this you will find the applicationtokenId used as application's session
-     * for further operations.
-     * <p>
-     * TODO   Use extend session not new logon...
-     */
-    public static String extendApplicationSession(String stsURI, String applicationID, String applicationName, String applicationSecret) {
-        URI tokenServiceUri = URI.create(stsURI);
-        ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationName, applicationSecret);
-        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
-        return myAppTokenXml;
-
-    }
 
     public static String extendApplicationSession(String stsURI, String applicationTokenId) {
         URI tokenServiceUri = URI.create(stsURI);
