@@ -17,6 +17,8 @@ public class SystemTestBaseConfig {
     public URI userAdminServiceUri;
     public String userAdminService = "http://localhost:9992/useradminservice";
     public String userTokenService = "http://localhost:9998/tokenservice";
+    public boolean statisticsExtensionSystemTest = true;
+    public boolean CRMCustomerExtensionSystemTest = true;
     public boolean systemTest = true;
     public ApplicationCredential appCredential;
     public UserCredential userCredential;
@@ -50,5 +52,12 @@ public class SystemTestBaseConfig {
         }
         return systemTest;
     }
-    
+
+    public boolean isStatisticsExtensionSystemtestEnabled() {
+        return statisticsExtensionSystemTest;
+    }
+
+    public boolean isCRMCustomerExtensionSystemTestEnabled() {
+        return CRMCustomerExtensionSystemTest;
+    }
 }

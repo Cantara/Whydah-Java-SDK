@@ -82,7 +82,7 @@ public class MapAndFilterUserStatsTest {
 
     @Test
     public void testUserLoginsCustomerCommand() throws Exception {
-        if (config.isSystemTestEnabled()) {
+        if (config.isStatisticsExtensionSystemtestEnabled()) {
             String myApplicationTokenID = "";
             SSLTool.disableCertificateValidation();
             ApplicationCredential appCredential = new ApplicationCredential(config.TEMPORARY_APPLICATION_ID, config.TEMPORARY_APPLICATION_NAME, config.TEMPORARY_APPLICATION_SECRET);
@@ -104,4 +104,5 @@ public class MapAndFilterUserStatsTest {
 
         }
     }
+
 }
