@@ -30,7 +30,7 @@ public class SystemTestBaseConfig {
     public String userAdminService = "http://localhost:9992/useradminservice";
     public String userTokenService = "http://localhost:9998/tokenservice";
     public boolean statisticsExtensionSystemTest = true;
-    public boolean CRMCustomerExtensionSystemTest = true;
+    public boolean CRMCustomerExtensionSystemTest = false;
     public boolean systemTest = true;
     public ApplicationCredential appCredential;
     public UserCredential userCredential;
