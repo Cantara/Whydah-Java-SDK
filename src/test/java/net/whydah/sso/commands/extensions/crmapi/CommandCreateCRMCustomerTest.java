@@ -77,7 +77,7 @@ public class CommandCreateCRMCustomerTest {
                     "    }\n" +
                     "  }\n" +
                     "}";
-            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationID(), myUserToken.getTokenid(), personRef, personJson).execute();
+            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), myUserToken.getTokenid(), personRef, personJson).execute();
             System.out.println("Returned CRM customer id: " + crmCustomerId);
             assertTrue(crmCustomerId != null);
             assertTrue(crmCustomerId.equals(personRef));
@@ -135,7 +135,7 @@ public class CommandCreateCRMCustomerTest {
                     "    }\n" +
                     "  }\n" +
                     "}";
-            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationID(), myUserToken.getTokenid(), personRef, personJson).execute();
+            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), myUserToken.getTokenid(), personRef, personJson).execute();
             System.out.println("Returned CRM customer id: " + crmCustomerId);
             assertTrue(crmCustomerId != null);
             assertTrue(crmCustomerId.length() > 0);

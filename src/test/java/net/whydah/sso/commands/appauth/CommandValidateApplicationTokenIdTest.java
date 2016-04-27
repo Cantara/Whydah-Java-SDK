@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class CommandValidateApoplicationTokenTest {
+public class CommandValidateApplicationTokenIdTest {
 
 
     static SystemTestBaseConfig config;
@@ -20,7 +20,7 @@ public class CommandValidateApoplicationTokenTest {
 
 
     @Test
-    public void testCommandValidateApoplicationTokenTest() throws Exception {
+    public void testCommandValidateApplicationTokenIdTest() throws Exception {
 
         if (config.isSystemTestEnabled()) {
 

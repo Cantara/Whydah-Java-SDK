@@ -26,39 +26,7 @@ public class CommandCreateCRMCustomer extends BaseHttpPostHystrixCommand<String>
 
 	}
 
-//	@Override
-//	protected String run() {
-//		log.trace("CommandCreateCRMCustomer - myAppTokenId={}", myAppTokenId);
-//
-//		Client crmClient;
-//		if (!SSLTool.isCertificateCheckDisabled()) {
-//			crmClient = ClientBuilder.newClient();
-//		} else {
-//			crmClient = ClientBuilder.newBuilder().sslContext(SSLTool.sc).hostnameVerifier((s1, s2) -> true).build();
-//		}
-//
-//		WebTarget createCustomer = crmClient.target(crmServiceUri).path(myAppTokenId).path(userTokenId).path("customer");
-//
-//		if (personRef != null) {
-//			createCustomer = createCustomer.path(personRef);
-//		}
-//
-//		Response response = createCustomer.request().post(Entity.entity(customerJson, MediaType.APPLICATION_JSON_TYPE));
-//		
-//		log.debug("CommandCreateCRMCustomer - Returning status {}", response.getStatus());
-//		if (response.getStatus() == CREATED.getStatusCode()) {
-//			String locationHeader = response.getHeaderString("location");
-//			String crmCustomerId = locationHeader.substring(locationHeader.lastIndexOf("/")+1);
-//			log.debug("CommandCreateCRMCustomer - Returning CRM Id {}", crmCustomerId);
-//			return crmCustomerId;
-//		}
-//		String responseJson = response.readEntity(String.class);
-//		log.debug("CommandCreateCRMCustomer - Returning response '{}', status {}", responseJson, response.getStatus());
-//		return null;
-//
-//
-//	}
-	
+
 	@Override
 	protected String dealWithFailedResponse(String responseBody, int statusCode) {
 		if(statusCode == 201){//CREATED.getStatusCode()
@@ -75,11 +43,6 @@ public class CommandCreateCRMCustomer extends BaseHttpPostHystrixCommand<String>
 		return request.contentType("application/json").send(customerJson);
 	}
 
-	//    @Override
-	//    protected String getFallback() {
-	//        log.warn("CommandCreateCRMCustomer - fallback - whydahServiceUri={}", crmServiceUri.toString());
-	//        return null;
-	//    }
 
 	@Override
 	protected String getTargetPath() {
