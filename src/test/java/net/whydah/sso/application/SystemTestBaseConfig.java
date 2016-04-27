@@ -1,10 +1,22 @@
 package net.whydah.sso.application;
 
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
+import net.whydah.sso.application.mappers.ApplicationTokenMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
+import net.whydah.sso.application.types.ApplicationToken;
+import net.whydah.sso.commands.appauth.CommandLogonApplication;
+import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
+import net.whydah.sso.user.helpers.UserXpathHelper;
+import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.user.types.UserToken;
 import net.whydah.sso.util.SSLTool;
 
 import java.net.URI;
+import java.util.UUID;
+
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class SystemTestBaseConfig {
 
@@ -60,4 +72,43 @@ public class SystemTestBaseConfig {
     public boolean isCRMCustomerExtensionSystemTestEnabled() {
         return CRMCustomerExtensionSystemTest;
     }
+
+
+    public ApplicationToken logOnSystemTestApplication() {
+        if (isCRMCustomerExtensionSystemTestEnabled()) {
+            String myApplicationTokenID = "";
+            SSLTool.disableCertificateValidation();
+            ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
+            String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+            myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
+            assertTrue("Unable to log on application ", myApplicationTokenID.length() > 10);
+
+            ApplicationToken appToken = ApplicationTokenMapper.fromXml(myAppTokenXml);
+            assertNotNull(appToken);
+
+            return appToken;
+        }
+        return null;
+    }
+
+    public UserToken logOnSystemTestApplicationAndSystemTestUser() {
+        if (isCRMCustomerExtensionSystemTestEnabled()) {
+            String myApplicationTokenID = "";
+            SSLTool.disableCertificateValidation();
+            ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
+            String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+            myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
+            assertTrue("Unable to log on application ", myApplicationTokenID.length() > 10);
+
+            String userticket = UUID.randomUUID().toString();
+            String userTokenXML = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
+            String userTokenId = UserXpathHelper.getUserTokenId(userTokenXML);
+            assertTrue("Unable to log on user", userTokenId.length() > 10);
+            UserToken userToken = UserTokenMapper.fromUserTokenXml(userTokenXML);
+            assertNotNull(userToken);
+            return userToken;
+        }
+        return null;
+    }
+
 }
