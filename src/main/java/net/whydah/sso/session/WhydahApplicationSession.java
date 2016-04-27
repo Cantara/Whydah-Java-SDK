@@ -18,6 +18,7 @@ public class WhydahApplicationSession {
 
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
     private static final int SESSION_CHECK_INTERVAL = 30;  // Check every 30 seconds to adapt quickly
+    private static WhydahApplicationSession instance = null;
     private  String sts;
     private  ApplicationCredential myAppCredential;
     private  String applicationTokenId;
@@ -26,17 +27,16 @@ public class WhydahApplicationSession {
     private  ApplicationToken applicationToken;
 
 
-    public WhydahApplicationSession() {
+    protected WhydahApplicationSession() {
         this("https://whydahdev.cantara.no/tokenservice/", "99", "TestApp", "33879936R6Jr47D4Hj5R6p9qT");
 
     }
 
-
-    public WhydahApplicationSession(String sts, ApplicationCredential appCred) {
+    protected WhydahApplicationSession(String sts, ApplicationCredential appCred) {
         this(sts, appCred.getApplicationID(), appCred.getApplicationName(), appCred.getApplicationSecret());
     }
 
-    public WhydahApplicationSession(String sts, String appId, String appName, String appSecret) {
+    protected WhydahApplicationSession(String sts, String appId, String appName, String appSecret) {
         this.sts = sts;
         myAppCredential = new ApplicationCredential(appId, appName, appSecret);
         initializeWhydahApplicationSession();
@@ -48,6 +48,42 @@ public class WhydahApplicationSession {
                     }
                 },
                 1, SESSION_CHECK_INTERVAL, TimeUnit.SECONDS);
+    }
+
+    public static WhydahApplicationSession getInstance() {
+        if (instance == null) {
+            // Thread Safe. Might be costly operation in some case
+            synchronized (WhydahApplicationSession.class) {
+                if (instance == null) {
+                    instance = new WhydahApplicationSession();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public static WhydahApplicationSession getInstance(String sts, ApplicationCredential appCred) {
+        if (instance == null) {
+            // Thread Safe. Might be costly operation in some case
+            synchronized (WhydahApplicationSession.class) {
+                if (instance == null) {
+                    instance = new WhydahApplicationSession(sts, appCred.getApplicationID(), appCred.getApplicationName(), appCred.getApplicationSecret());
+                }
+            }
+        }
+        return instance;
+    }
+
+    public static WhydahApplicationSession getInstance(String sts, String appId, String appName, String appSecret) {
+        if (instance == null) {
+            // Thread Safe. Might be costly operation in some case
+            synchronized (WhydahApplicationSession.class) {
+                if (instance == null) {
+                    instance = new WhydahApplicationSession(sts, appId, appName, appSecret);
+                }
+            }
+        }
+        return instance;
     }
 
     public static boolean expiresBeforeNextSchedule(Long timestamp) {
