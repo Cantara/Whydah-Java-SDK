@@ -18,10 +18,8 @@ public class CommandUpdateCRMCustomerTest {
 
 
     @Test
-    public void testGetCRMCustomerCommand() throws Exception {
+    public void testCommandUpdateCRMCustomerTest() throws Exception {
         if (config.isCRMCustomerExtensionSystemTestEnabled()) {
-
-
             UserToken adminUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
 
             String personRef = "12345678";
