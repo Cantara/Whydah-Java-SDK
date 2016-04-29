@@ -58,7 +58,7 @@ public class BaseTokenServiceClient {
 		this.applicationname = applicationname;
 		this.applicationsecret = applicationsecret;
 
-		was = new WhydahApplicationSession(securitytokenserviceurl, activeApplicationId, applicationname, applicationsecret);
+		was = WhydahApplicationSession.getInstance(securitytokenserviceurl, activeApplicationId, applicationname, applicationsecret);
 
 		this.TAG =this.getClass().getName();
 		this.log =  LoggerFactory.getLogger(TAG);
