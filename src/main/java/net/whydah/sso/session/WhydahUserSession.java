@@ -1,6 +1,7 @@
 package net.whydah.sso.session;
 
 import net.whydah.sso.commands.userauth.CommandValidateUsertokenId;
+import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.WhydahUtil;
@@ -48,6 +49,19 @@ public class WhydahUserSession {
                     }
                 },
                 1, SESSION_CHECK_INTERVAL, TimeUnit.SECONDS);
+    }
+
+    public static Integer calculateTokenRemainingLifetimeInSeconds(String userTokenXml) {
+        Integer tokenLifespanMs = UserTokenXpathHelper.getLifespan(userTokenXml);
+        Long tokenTimestampMsSinceEpoch = UserTokenXpathHelper.getTimestamp(userTokenXml);
+
+        if (tokenLifespanMs == null || tokenTimestampMsSinceEpoch == null) {
+            return null;
+        }
+
+        long endOfTokenLifeMs = tokenTimestampMsSinceEpoch + tokenLifespanMs;
+        long remainingLifeMs = endOfTokenLifeMs - System.currentTimeMillis();
+        return (int) (remainingLifeMs / 1000);
     }
 
     public static boolean expiresBeforeNextSchedule(Long timestamp) {

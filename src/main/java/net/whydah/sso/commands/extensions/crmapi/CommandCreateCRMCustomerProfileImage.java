@@ -1,10 +1,9 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import java.net.URI;
-
+import com.github.kevinsawicki.http.HttpRequest;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
-import com.github.kevinsawicki.http.HttpRequest;
+import java.net.URI;
 
 public class CommandCreateCRMCustomerProfileImage extends BaseHttpPostHystrixCommand<String> {
     
@@ -81,9 +80,9 @@ public class CommandCreateCRMCustomerProfileImage extends BaseHttpPostHystrixCom
 
 
 	@Override
-	protected String getTargetPath() {		
-		return myAppTokenId + "/" + userTokenId + "/customer/" + personRef + "/image";
-	}
+	protected String getTargetPath() {
+        return myAppTokenId + "/" + userTokenId + "/customer/" + personRef + "/image/";
+    }
 
 
 }

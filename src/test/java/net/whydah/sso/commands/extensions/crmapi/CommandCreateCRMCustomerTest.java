@@ -1,17 +1,11 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
 import net.whydah.sso.application.SystemTestBaseConfig;
-import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.application.types.ApplicationCredential;
-import net.whydah.sso.commands.appauth.CommandLogonApplication;
-import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.user.helpers.UserXpathHelper;
-import net.whydah.sso.util.SSLTool;
+import net.whydah.sso.user.types.UserToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Random;
-import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
 
@@ -35,17 +29,7 @@ public class CommandCreateCRMCustomerTest {
     @Test
     public void testCreateCRMCustomerCommand() throws Exception {
         if (config.isCRMCustomerExtensionSystemTestEnabled()) {
-            String myApplicationTokenID = "";
-            SSLTool.disableCertificateValidation();
-            ApplicationCredential appCredential = new ApplicationCredential(config.TEMPORARY_APPLICATION_ID, config.TEMPORARY_APPLICATION_NAME, config.TEMPORARY_APPLICATION_SECRET);
-            String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, appCredential).execute();
-            myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-            assertTrue("Unable to log on application ", myApplicationTokenID.length() > 10);
-
-            String userticket = UUID.randomUUID().toString();
-            String userToken = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential, userticket).execute();
-            String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-            assertTrue("Unable to logon user ", userTokenId.length() > 10);
+            UserToken myUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
 
 
             String personRef = getUniqueuePersonRef(); //Must be unique for test to pass
@@ -93,7 +77,7 @@ public class CommandCreateCRMCustomerTest {
                     "    }\n" +
                     "  }\n" +
                     "}";
-            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, myApplicationTokenID, userTokenId, personRef, personJson).execute();
+            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), myUserToken.getTokenid(), personRef, personJson).execute();
             System.out.println("Returned CRM customer id: " + crmCustomerId);
             assertTrue(crmCustomerId != null);
             assertTrue(crmCustomerId.equals(personRef));
@@ -105,17 +89,7 @@ public class CommandCreateCRMCustomerTest {
     public void testCreateCRMCustomerCommand_NoId() throws Exception {
 
         if (config.isCRMCustomerExtensionSystemTestEnabled()) {
-            String myApplicationTokenID = "";
-            SSLTool.disableCertificateValidation();
-            ApplicationCredential appCredential = new ApplicationCredential(config.TEMPORARY_APPLICATION_ID, config.TEMPORARY_APPLICATION_NAME, config.TEMPORARY_APPLICATION_SECRET);
-            String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, appCredential).execute();
-            myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-            assertTrue("Unable to log on application ", myApplicationTokenID.length() > 10);
-
-            String userticket = UUID.randomUUID().toString();
-            String userToken = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential, userticket).execute();
-            String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-            assertTrue("Unable to log on user", userTokenId.length() > 10);
+            UserToken myUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
             String personRef = null;
             String personJson = "{\n" +
                     "  \"id\" : \"123456\",\n" +
@@ -161,7 +135,7 @@ public class CommandCreateCRMCustomerTest {
                     "    }\n" +
                     "  }\n" +
                     "}";
-            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, myApplicationTokenID, userTokenId, personRef, personJson).execute();
+            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), myUserToken.getTokenid(), personRef, personJson).execute();
             System.out.println("Returned CRM customer id: " + crmCustomerId);
             assertTrue(crmCustomerId != null);
             assertTrue(crmCustomerId.length() > 0);
