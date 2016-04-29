@@ -1,12 +1,11 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
+import com.github.kevinsawicki.http.HttpRequest;
+import net.whydah.sso.commands.baseclasses.BaseHttpPutHystrixCommand;
+
 import java.net.URI;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-
-import com.github.kevinsawicki.http.HttpRequest;
-
-public class CommandUpdateCRMCustomer extends BaseHttpPostHystrixCommand<String> {
+public class CommandUpdateCRMCustomer extends BaseHttpPutHystrixCommand<String> {
     
     private String userTokenId;
     private String personRef;

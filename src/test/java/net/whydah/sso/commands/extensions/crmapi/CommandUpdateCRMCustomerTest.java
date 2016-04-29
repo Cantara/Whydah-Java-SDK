@@ -1,52 +1,35 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import static org.junit.Assert.assertTrue;
-
-import java.net.URI;
-
-import net.whydah.sso.application.types.ApplicationCredential;
-import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.util.SSLTool;
-
+import net.whydah.sso.application.SystemTestBaseConfig;
+import net.whydah.sso.user.types.UserToken;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
+
 public class CommandUpdateCRMCustomerTest {
-    public static String userName = "admin";
-    public static String password = "whydahadmin";
-    private static URI crmServiceUri;
-    private static ApplicationCredential appCredential;
-    private static UserCredential userCredential;
-    private static boolean systemTest = true;
+    static SystemTestBaseConfig config;
 
     @BeforeClass
     public static void setup() throws Exception {
-        appCredential = new ApplicationCredential("15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
-        crmServiceUri = URI.create("https://no_host");
-        userCredential = new UserCredential(userName, password);
-
-
-        if (systemTest) {
-            crmServiceUri = URI.create("https://whydahdev.cantara.no/crmservice/");
-        }
+        config = new SystemTestBaseConfig();
     }
 
 
-    @Ignore
+
     @Test
-    public void testUpdateCRMCustomerCommand() throws Exception {
+    public void testGetCRMCustomerCommand() throws Exception {
+        if (config.isCRMCustomerExtensionSystemTestEnabled()) {
 
-        String myApplicationTokenID = "dummyAppTokenId";
-        String adminUserTokenId = "dummyAdminUserToken";
 
-        String personRef = "12345678";
-        String personJson = "{\"id\":\"12345678\",\"firstname\":\"First\",\"lastname\":\"Lastname\",\"emailaddresses\":null,\"phonenumbers\":null,\"defaultAddressLabel\":null,\"deliveryaddresses\":{\"work\":{\"addressLine1\":\"Karl Johansgate 6\",\"addressLine2\":null,\"postalcode\":\"0160\",\"postalcity\":\"Oslo\"}}}";
-        SSLTool.disableCertificateValidation();
-        String customerJsonLocation = new CommandUpdateCRMCustomer(crmServiceUri, myApplicationTokenID, adminUserTokenId, personRef, personJson).execute();
-        System.out.println("Returned CRM customer location: " + customerJsonLocation);
-        assertTrue(customerJsonLocation != null);
-        assertTrue(customerJsonLocation.endsWith(personRef));
+            UserToken adminUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
 
+            String personRef = "12345678";
+            String personJson = "{\"id\":\"12345678\",\"firstname\":\"First\",\"lastname\":\"Lastname\",\"emailaddresses\":null,\"phonenumbers\":null,\"defaultAddressLabel\":null,\"deliveryaddresses\":{\"work\":{\"addressLine1\":\"Karl Johansgate 6\",\"addressLine2\":null,\"postalcode\":\"0160\",\"postalcity\":\"Oslo\"}}}";
+            String customerJsonLocation = new CommandUpdateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getTokenid(), personRef, personJson).execute();
+            System.out.println("Returned CRM customer location: " + customerJsonLocation);
+            assertTrue(customerJsonLocation != null);
+            assertTrue(customerJsonLocation.endsWith(personRef));
+        }
     }
 }
