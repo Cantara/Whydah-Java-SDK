@@ -2,6 +2,7 @@ package net.whydah.sso.commands.userauth;
 
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 
+import java.net.HttpURLConnection;
 import java.net.URI;
 
 public class CommandValidateUsertokenId extends BaseHttpGetHystrixCommand<Boolean> {
@@ -49,9 +50,22 @@ public class CommandValidateUsertokenId extends BaseHttpGetHystrixCommand<Boolea
 //        return verifyResource.request().get(Response.class);
 //    }
     
+    int retryCnt=0;
+    
     @Override
     protected Boolean dealWithFailedResponse(String responseBody, int statusCode) {
-    	return false;
+    	if(statusCode == HttpURLConnection.HTTP_CONFLICT){
+    		return false;
+    	} else {
+    		
+    		if(retryCnt<1){
+    			retryCnt++;
+    			return doGetCommand();
+    		} else {
+    			return false;
+    		}
+    		
+    	}
     }
     
     @Override

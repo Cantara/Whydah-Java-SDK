@@ -3,6 +3,7 @@ package net.whydah.sso.commands.userauth;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 import net.whydah.sso.user.mappers.UserCredentialMapper;
 import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.util.ExceptionUtil;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -52,11 +53,13 @@ public class CommandLogonUserByUserCredential  extends BaseHttpPostHystrixComman
 	int retryCnt=0;
 	@Override
 	protected String dealWithFailedResponse(String responseBody, int statusCode) {
-		if(statusCode == java.net.HttpURLConnection.HTTP_FORBIDDEN &&retryCnt<1){
+		if(statusCode != java.net.HttpURLConnection.HTTP_FORBIDDEN &&retryCnt<1){
 			//do retry
 			retryCnt++;
 			return doPostCommand();
 		} else {
+			String authenticationFailedMessage = ExceptionUtil.printableUrlErrorMessage("User session failed", request, statusCode);
+    		log.warn(authenticationFailedMessage);
 			return null;
 		}
 	}

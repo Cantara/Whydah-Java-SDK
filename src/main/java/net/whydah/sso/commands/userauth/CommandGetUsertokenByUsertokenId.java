@@ -65,23 +65,22 @@ public class CommandGetUsertokenByUsertokenId extends BaseHttpPostHystrixCommand
 //    }
     
     
-    @Override
-    protected String dealWithFailedResponse(String responseBody, int statusCode) {
-    	if (statusCode == java.net.HttpURLConnection.HTTP_FORBIDDEN) {
-            log.debug("CommandGetUsertokenByUsertokenId - Response Code from STS: {}", statusCode);
-            throw new IllegalArgumentException("CommandGetUsertokenByUsertokenId failed.");
-    	} else {
-    		String authenticationFailedMessage = ExceptionUtil.printableUrlErrorMessage("User session failed", request, statusCode);
+    
+    int retryCnt=0;
+	@Override
+	protected String dealWithFailedResponse(String responseBody, int statusCode) {
+		if(statusCode != java.net.HttpURLConnection.HTTP_FORBIDDEN &&retryCnt<1){
+			//do retry
+			retryCnt++;
+			return doPostCommand();
+		} else {
+			String authenticationFailedMessage = ExceptionUtil.printableUrlErrorMessage("User session failed", request, statusCode);
     		log.warn(authenticationFailedMessage);
     		throw new RuntimeException(authenticationFailedMessage);
-        }
-    }
+		}
+	}
 
-//    @Override
-//    protected String getFallback() {
-//        log.warn("CommandGetUsertokenByUsertokenId - fallback - whydahServiceUri={} - usertokenId:{} - myAppTokenId: {}", tokenServiceUri.toString(), usertokenId, myAppTokenId);
-//        return null;
-//    }
+    
     
     @Override
 	protected Map<String, String> getFormParameters() {

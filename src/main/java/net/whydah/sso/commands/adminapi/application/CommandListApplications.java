@@ -14,7 +14,7 @@ public class CommandListApplications extends BaseHttpGetHystrixCommand<String> {
 
 
     public CommandListApplications(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String applicationQuery) {
-        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup", 300000);
+        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
         this.adminUserTokenId = adminUserTokenId;
         this.applicationQuery = applicationQuery;
         if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || applicationQuery == null) {

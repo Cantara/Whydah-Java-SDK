@@ -23,7 +23,7 @@ public class CommandGetLastSeenForUserByUserEmail extends BaseHttpGetHystrixComm
 	@Override
 	protected String getTargetPath() {
 		// TODO Auto-generated method stub
-		return "user/" + myAppTokenId + "/" + userEmail + "get_usertoken_by_usertokenid";
+		return "user/" + myAppTokenId + "/" + userEmail + "/get_usertoken_by_usertokenid";
 	}
 
 //    @Override

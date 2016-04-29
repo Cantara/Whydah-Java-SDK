@@ -2,6 +2,7 @@ package net.whydah.sso.commands.appauth;
 
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 
+import java.net.HttpURLConnection;
 import java.net.URI;
 
 public class CommandValidateApplicationTokenId extends BaseHttpGetHystrixCommand<Boolean> {
@@ -49,7 +50,12 @@ public class CommandValidateApplicationTokenId extends BaseHttpGetHystrixCommand
 
 	@Override
 	protected Boolean dealWithFailedResponse(String responseBody, int statusCode) {
-		return false;
+		if(statusCode != HttpURLConnection.HTTP_CONFLICT && retryCnt<1){
+			retryCnt++;
+			return doGetCommand();
+		} else {
+			return false;
+		}
 	}
 
 	@Override
