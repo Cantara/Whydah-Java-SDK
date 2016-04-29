@@ -18,34 +18,11 @@ import static org.junit.Assert.assertTrue;
 public class CommandAddUserRoleTest {
 
     public static SystemTestBaseConfig config;
-//    public static String TEMPORARY_APPLICATION_ID = "2211";//"11";
-//    public static String TEMPORARY_APPLICATION_NAME = "MyApp";//"11";
-//    public static String TEMPORARY_APPLICATION_SECRET = "NmHsQDCerVWx5d6aCjug9fyPE";
-//    public static String userName = "useradmin";
-//    public static String password = "useradmin42";
-//    private static ApplicationCredential appCredential;
-//    private static UserCredential userCredential;
-//    private static URI tokenServiceUri;
-//    private static URI userAdminServiceUri;
-//    private static boolean systemTest = false;
 
 
     @BeforeClass
     public static void setup() throws Exception {
         config = new SystemTestBaseConfig();
-//        appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
-//        userCredential = new UserCredential(userName, password);
-//
-//        if (systemTest) {
-//            tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/").build();
-//            userAdminServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/").build();
-//            SSLTool.disableCertificateValidation();
-//        } else {
-//            String userAdminService = "http://localhost:9992/useradminservice";
-//            String userTokenService = "http://localhost:9998/tokenservice";
-//            tokenServiceUri = URI.create(userTokenService).build();
-//            userAdminServiceUri = URI.create(userAdminService).build();
-//        }
     }
 
 
@@ -83,8 +60,6 @@ public class CommandAddUserRoleTest {
             String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
             System.out.println("applicationsJson=" + applicationsJson);
             assertNotNull(applicationsJson);
-//        assertNotNull(applicationsJson);
-//        assertTrue(applicationsJson.equalsIgnoreCase(ApplicationHelper.getDummyAppllicationListJson()));
         }
 
     }

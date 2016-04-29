@@ -17,66 +17,15 @@ import static org.junit.Assert.assertTrue;
 
 public class CommandAddUserTest {
 
-//    public static String TEMPORARY_APPLICATION_ID = "11";//"11";
-//    public static String TEMPORARY_APPLICATION_NAME = "MyApp";//"11";
-//    public static String TEMPORARY_APPLICATION_SECRET = "6r46g3q986Ep6By7B9J46m96D";
-//    public static String userName = "admin";
-//    public static String password = "whydahadmin";
-//    private static URI tokenServiceUri;
-//    private static ApplicationCredential appCredential;
-//    private static UserCredential userCredential;
-//    private static boolean systemTest = false;
-//    private static URI userAdminServiceUri;
-//    private static String userAdminService = "http://localhost:9992/useradminservice";
-//    private static String userTokenService = "http://localhost:9998/tokenservice";
-
     static SystemTestBaseConfig config;
 
     @BeforeClass
     public static void setup() throws Exception {
         config = new SystemTestBaseConfig();
-//        appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
-//        tokenServiceUri = URI.create(userTokenService).build();
-//        userCredential = new UserCredential(userName, password);
-//
-//        userAdminServiceUri = URI.create(userAdminService).build();
-//
-//        if (systemTest) {
-//            tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/").build();
-//            userAdminServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/").build();
-//        }
-//        SSLTool.disableCertificateValidation();
     }
 
 
 
-//    @Test
-//    public void testAddUser() throws Exception {
-//
-//        if (!SystemTestUtil.noLocalWhydahRunning()) {
-//
-//            String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
-//            String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-//            assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
-//            String userticket = UUID.randomUUID().toString();
-//            String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
-//            String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-//            assertTrue(userTokenId != null && userTokenId.length() > 5);
-//
-//            UserIdentity uir = getTestNewUserIdentity(UserXpathHelper.getUserIdFromUserTokenXml(userToken), myApplicationTokenID);
-//            String userIdentityJson = UserIdentityMapper.toJson(uir);
-//            // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
-//            String userAddRoleResult = new CommandAddUser(userAdminServiceUri, myApplicationTokenID, userTokenId, userIdentityJson).execute();
-//            System.out.println("testAddUser:" + userAddRoleResult);
-//
-//            String usersListJson = new CommandListUsers(userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
-//            System.out.println("usersListJson=" + usersListJson);
-//            assertTrue(usersListJson.indexOf(uir.getUsername()) > 0);
-//        }
-//
-//    }
-    
-    
 
     @Test
     public void testAddUser() throws Exception {
