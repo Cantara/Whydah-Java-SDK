@@ -6,7 +6,6 @@ import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.util.HttpSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

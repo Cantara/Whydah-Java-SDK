@@ -1,22 +1,11 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
 import com.github.kevinsawicki.http.HttpRequest;
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.netflix.hystrix.HystrixCommandProperties;
-import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-
-import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-import net.whydah.sso.util.HttpSender;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.whydah.sso.commands.baseclasses.HttpSender;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;

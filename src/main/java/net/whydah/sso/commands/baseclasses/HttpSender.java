@@ -1,4 +1,4 @@
-package net.whydah.sso.util;
+package net.whydah.sso.commands.baseclasses;
 
 public class HttpSender {
 

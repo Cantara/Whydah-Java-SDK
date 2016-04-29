@@ -1,9 +1,7 @@
 package net.whydah.sso.commands.adminapi.user;
 
 import com.github.kevinsawicki.http.HttpRequest;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-import net.whydah.sso.util.HttpSender;
 
 import java.net.URI;
 

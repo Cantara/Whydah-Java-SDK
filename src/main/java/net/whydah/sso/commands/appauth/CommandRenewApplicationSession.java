@@ -3,7 +3,7 @@ package net.whydah.sso.commands.appauth;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-import net.whydah.sso.util.HttpSender;
+import net.whydah.sso.commands.baseclasses.HttpSender;
 
 import java.net.URI;
 
