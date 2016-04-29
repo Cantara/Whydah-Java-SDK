@@ -1,6 +1,5 @@
 package net.whydah.sso.session.baseclasses;
 
-import com.github.kevinsawicki.http.HttpRequest;
 import net.whydah.sso.commands.adminapi.application.CommandCreatePinVerifiedUser;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.userauth.*;
@@ -24,7 +23,6 @@ public class BaseSecurityTokenServiceClient {
     protected URI uri_crm_service;
     protected URI uri_report_service;
     protected String TAG = "";
-    protected HttpRequest request;
     WhydahApplicationSession was;
 
 
@@ -84,6 +82,7 @@ public class BaseSecurityTokenServiceClient {
         long remainingLifeMs = endOfTokenLifeMs - System.currentTimeMillis();
         return (int) (remainingLifeMs / 1000);
     }
+
 
     public static String getDummyToken() {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +

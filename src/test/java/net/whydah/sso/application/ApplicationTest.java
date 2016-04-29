@@ -8,9 +8,7 @@ import org.slf4j.Logger;
 import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
-/**
- * Created by totto on 30.06.15.
- */
+
 public class ApplicationTest {
 
     private static final Logger log = getLogger(ApplicationTest.class);
