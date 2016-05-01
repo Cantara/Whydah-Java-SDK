@@ -1,11 +1,11 @@
 package net.whydah.sso.commands.adminapi.user;
 
 import com.github.kevinsawicki.http.HttpRequest;
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.commands.baseclasses.BaseHttpPutHystrixCommand;
 
 import java.net.URI;
 
-public class CommandUpdateUser extends BaseHttpPostHystrixCommand<String> {
+public class CommandUpdateUser extends BaseHttpPutHystrixCommand<String> {
   
     private String adminUserTokenId;
     private String userJson;
