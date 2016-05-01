@@ -155,7 +155,53 @@ public class BaseSecurityTokenServiceClient {
         return new CommandGetUsertokenByUserticket(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userticket).execute();
     }
 
+    /**
+     * Logon for existing user.
+     *
+     * @param phoneNo    phone number entered by the user
+     * @param pin        pin entered by the user
+     * @param userTicket
+     * @return userAggregateXML for the user represented by phoneNo
+     */
     public String getUserTokenByPin(String phoneNo, String pin, String userTicket) {
+        log.debug("getUserTokenByPin() called with " + "phoneNo = [" + phoneNo + "], pin = [" + pin + "], userTicket = [" + userTicket + "]");
+        if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
+            return getDummyToken();
+        }
+        log.debug("getUserTokenByPin() - Application logon OK. applicationTokenId={}. Log on with user phoneno {}.", getMyAppTokenID());
+        // 	public CommandLogonUserByPhoneNumberPin(URI serviceUri, String myAppTokenId, String myAppTokenXml, String phoneNo, String pin, String userTicket) {
+
+        String userTokenXML = new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), phoneNo, pin, userTicket).execute();
+        /**
+         WebResource tokenService = tokenServiceClient.resource(tokenServiceUri).path("user/" + applicationSession.getActiveApplicationTokenId() + "/" + userTicket + "/get_usertoken_by_pin_and_logon_user");
+
+         MultivaluedMap<String,String> formData = new MultivaluedMapImpl();
+         formData.add("apptoken", applicationSession.getActiveApplicationTokenXML());
+         formData.add("pin", pin);
+         formData.add("phoneno", phoneNo);
+         ClientResponse response = tokenService.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(ClientResponse.class, formData);
+         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
+         log.info("getUserTokenByPin() - User authentication failed with status code " + response.getStatus());
+         return null;
+         //throw new IllegalArgumentException("Log on failed. " + ClientResponse.Status.FORBIDDEN);
+         }
+         if (response.getStatus() == 500 ) {
+         log.info("getUserTokenByPin() - User authentication failed with status code " + response.getStatus());
+         return null;
+         //throw new IllegalArgumentException("Log on failed. " + ClientResponse.Status.FORBIDDEN);
+         }
+         if (response.getStatus() == OK.getStatusCode()) {
+         String userAggregateXML = response.getEntity(String.class);
+         log.debug("getUserTokenByPin() - Log on OK with response {}", userAggregateXML);
+         return userAggregateXML;
+         }
+
+         throw new RuntimeException("User authentication failed with status code " + response.getStatus());
+         */
+        return userTokenXML;
+    }
+
+    public String getUserTokenByPin2(String phoneNo, String pin, String userTicket) {
         log.debug("getUserTokenByPin() called with " + "phoneNo = [" + phoneNo + "], pin = [" + pin + "], userTicket = [" + userTicket + "]");
         if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
             return getDummyToken();
