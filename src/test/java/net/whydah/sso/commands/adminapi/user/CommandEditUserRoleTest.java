@@ -59,12 +59,26 @@ public class CommandEditUserRoleTest {
                 }
 
             }
-            role.setRoleValue("newRolevalue" + UUID.randomUUID());
+            role.setRoleValue("newRolevalue-" + UUID.randomUUID());
             assertTrue(role.getId() != null);
             String editedUserRoleResult = new CommandUpdateUserRole(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUser.getTokenid(), adminUser.getUid(), role.getId(), userRoleJson).execute();
             System.out.println("returned: " + editedUserRoleResult);
-            assertTrue(editedUserRoleResult.contains(role.getRoleName()));
-            assertTrue(editedUserRoleResult.contains(role.getRoleValue()));
+
+            String newRolesJson = new CommandGetUserRoles(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUser.getTokenid(), adminUser.getUid()).execute();
+            System.out.println("Roles returned:" + userRolesJson);
+            assertTrue(newRolesJson.contains(role.getRoleName()));
+            assertTrue(newRolesJson.contains(role.getRoleValue()));
+            List<UserApplicationRoleEntry> roles2 = UserRoleMapper.fromJsonAsList(newRolesJson);
+            for (UserApplicationRoleEntry irole2 : roles2) {
+                if (irole2.getRoleName().equalsIgnoreCase(role.getRoleName())) {
+                    assertTrue(role.getRoleValue().equalsIgnoreCase(irole2.getRoleValue()));
+//                    System.out.println("=====================>  match for "+role.getRoleName()+" in "+irole.getRoleName() +" - "+irole.getId());
+
+                } else {
+//                    System.out.println("No match for "+role.getRoleName()+" in "+irole.getRoleName() +" - "+UserRoleMapper.toJson(irole));
+                }
+
+            }
         }
 
     }
