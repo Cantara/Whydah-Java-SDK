@@ -23,7 +23,7 @@ public class CommandAddUserRole extends BaseHttpPostHystrixCommand<String> {
         this.adminUserTokenId = adminUserTokenId;
         this.userRoleJson = roleJson;
         this.uId=uId;
-        if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || roleJson == null) {
+        if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || uId == null || roleJson == null) {
             log.error(TAG + " initialized with null-values - will fail");
         }
 

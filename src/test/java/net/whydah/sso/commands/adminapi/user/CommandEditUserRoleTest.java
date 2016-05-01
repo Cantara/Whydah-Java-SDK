@@ -6,6 +6,7 @@ import net.whydah.sso.user.types.UserAggregate;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserToken;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.UUID;
@@ -13,9 +14,9 @@ import java.util.UUID;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class CommandAddUserTest {
+public class CommandEditUserRoleTest {
+    public static SystemTestBaseConfig config;
 
-    static SystemTestBaseConfig config;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -23,10 +24,16 @@ public class CommandAddUserTest {
     }
 
 
+    /**
+     * Fails because no rebuild of active STS cache when new roles are added
+     *
+     * @throws Exception
+     */
 
-
+    @Ignore   // Not working yet... some trouble with parsing/missing roleid it seems
     @Test
-    public void testAddUser() throws Exception {
+    public void testEditUserRole() throws Exception {
+
         if (config.isSystemTestEnabled()) {
 
             UserToken adminUser = config.logOnSystemTestApplicationAndSystemTestUser();
@@ -44,6 +51,12 @@ public class CommandAddUserTest {
             // Force update with new role
             System.out.println("userAggregate:" + UserAggregateMapper.toJson(userAggregate));
             assertTrue(userAggregateJson.contains(role.getRoleName()));
+            assertTrue(userAggregateJson.contains(role.getRoleValue()));
+
+            role.setRoleValue("newRolevalue" + UUID.randomUUID());
+            String editedUserRoleResult = new CommandUpdateUserRole(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUser.getTokenid(), adminUser.getUid(), role.getId(), userRoleJson).execute();
+            assertTrue(editedUserRoleResult.contains(role.getRoleName()));
+            assertTrue(editedUserRoleResult.contains(role.getRoleValue()));
         }
 
     }

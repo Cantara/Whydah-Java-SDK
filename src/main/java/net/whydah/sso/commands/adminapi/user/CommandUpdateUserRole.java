@@ -1,53 +1,47 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import com.github.kevinsawicki.http.HttpRequest;
+import net.whydah.sso.commands.baseclasses.BaseHttpPutHystrixCommand;
 
 import java.net.URI;
 
-/**
- * Created by totto on 24.06.15.
- */
+
 //TODO: Check, it is unfinished
-public class CommandUpdateUserRole extends BaseHttpPostHystrixCommand<String> {
+public class CommandUpdateUserRole extends BaseHttpPutHystrixCommand<String> {
 
     private String adminUserTokenId;
     private String userRoleJson;
+    private String uId;
+    private String roleId;
 
 
-    public CommandUpdateUserRole(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String userRoleJson) {
-    	super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
-        
+    public CommandUpdateUserRole(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String uId, String roleId, String roleJson) {
+        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
+
         this.adminUserTokenId = adminUserTokenId;
-        this.userRoleJson = userRoleJson;
-        if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userRoleJson == null) {
-            log.error("CommandUpdateUserRole initialized with null-values - will fail");
+        this.userRoleJson = roleJson;
+        this.uId = uId;
+        this.roleId = roleId;
+        if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || uId == null || roleId == null || roleJson == null) {
+            log.error(TAG + " initialized with null-values - will fail");
         }
+
 
     }
 
-//    @Override
-//    protected String run() {
-//        log.trace("CommandUpdateUserRole - myAppTokenId={}", myAppTokenId);
-//
-//        Client tokenServiceClient = ClientBuilder.newClient();
-//
-//        WebTarget addUser = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId).path(adminUserTokenId).path("/xxx");
-//        // Response response = addUser.request().post(Entity.xml(userIdentityXml));
-//        throw new UnsupportedOperationException();
-//        //return null;
-//
-//    }
 
-//    @Override
-//    protected String getFallback() {
-//        log.warn("CommandUpdateUserRole - fallback - whydahServiceUri={}", userAdminServiceUri.toString());
-//        return null;
-//    }
+    @Override
+    protected HttpRequest dealWithRequestBeforeSend(HttpRequest request) {
+        return request.contentType("application/json").send(userRoleJson);
+    }
 
-	@Override
-	protected String getTargetPath() {
-		return myAppTokenId + "/" + adminUserTokenId + "/xxx";
-	}
+
+    //     @Path("/{uid}/role/{roleid}")
+    @Override
+    protected String getTargetPath() {
+        // TODO Auto-generated method stub
+        return myAppTokenId + "/" + adminUserTokenId + "/user/" + uId + "/role/" + roleId;
+    }
 
 
 }
