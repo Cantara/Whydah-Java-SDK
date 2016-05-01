@@ -1,6 +1,6 @@
 package net.whydah.sso.commands.userauth;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -8,7 +8,7 @@ import java.util.Map;
 
 
 //TODO:make test
-public class CommandSendSmsPin extends BaseHttpGetHystrixCommand<Boolean> {
+public class CommandSendSmsPin extends BaseHttpPostHystrixCommand<Boolean> {
 
 
     private String phoneNo;
@@ -26,7 +26,6 @@ public class CommandSendSmsPin extends BaseHttpGetHystrixCommand<Boolean> {
             log.error("{} initialized with null-values - will fail", CommandSendSmsPin.class.getSimpleName());
         }
     }
-
 
 	@Override
     protected Boolean dealWithFailedResponse(String responseBody, int statusCode) {
@@ -51,6 +50,6 @@ public class CommandSendSmsPin extends BaseHttpGetHystrixCommand<Boolean> {
     // return myAppTokenId + "/" + adminUserTokenId + "/useraggregate" + "/" + userID;
     @Override
     protected String getTargetPath() {
-        return myAppTokenId + "/send_sms_pin";
+        return "user/" + myAppTokenId + "/send_sms_pin";
     }
 }

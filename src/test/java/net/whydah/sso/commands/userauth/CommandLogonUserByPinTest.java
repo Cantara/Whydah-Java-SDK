@@ -28,13 +28,14 @@ public class CommandLogonUserByPinTest {
     }
 
     @Test
-    public void testCCommandLogonUserByPinTest() throws Exception {
+    public void testCommandLogonUserByPinTest() throws Exception {
 
         if (config.isSystemTestEnabled()) {
             UserToken adminUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
             String myAppTokenXml = ApplicationTokenMapper.toXML(config.myApplicationToken);
             String phoneNo = "12345678";
             String pin = generatePin();
+            System.out.println("Pin:" + pin);
             String ticket = "734985984325";
             new CommandSendSmsPin(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, phoneNo, pin).execute();
             String userTokenXML = new CommandLogonUserByPhoneNumberPin(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, phoneNo, pin, ticket).execute();
