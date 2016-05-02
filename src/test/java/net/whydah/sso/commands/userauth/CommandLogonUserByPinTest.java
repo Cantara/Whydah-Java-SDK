@@ -33,7 +33,7 @@ public class CommandLogonUserByPinTest {
         if (config.isSystemTestEnabled()) {
             UserToken adminUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
             String myAppTokenXml = ApplicationTokenMapper.toXML(config.myApplicationToken);
-            String phoneNo = "12345678";
+            String phoneNo = "87654321";
             String pin = generatePin();
             System.out.println("Pin:" + pin);
             String ticket = "734985984325";

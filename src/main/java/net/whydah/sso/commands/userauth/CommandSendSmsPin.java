@@ -12,17 +12,17 @@ public class CommandSendSmsPin extends BaseHttpPostHystrixCommand<Boolean> {
 
 
     private String phoneNo;
-    private String msg;
+    private String pin;
     private String appTokenXml;
 
-    public CommandSendSmsPin(URI tokenServiceUri, String appTokenId, String appTokenXml, String phoneNo, String msg) {
+    public CommandSendSmsPin(URI tokenServiceUri, String appTokenId, String appTokenXml, String phoneNo, String pin) {
         super(tokenServiceUri, appTokenXml, appTokenId, "SSOAUserAuthGroup");
 
 
         this.phoneNo = phoneNo;
-        this.msg = msg;
+        this.pin = pin;
         this.appTokenXml = appTokenXml;
-        if (tokenServiceUri == null || appTokenXml == null || this.appTokenXml == null || this.phoneNo == null || this.msg == null) {
+        if (tokenServiceUri == null || appTokenXml == null || this.appTokenXml == null || this.phoneNo == null || this.pin == null) {
             log.error("{} initialized with null-values - will fail", CommandSendSmsPin.class.getSimpleName());
         }
     }
@@ -40,9 +40,8 @@ public class CommandSendSmsPin extends BaseHttpPostHystrixCommand<Boolean> {
     @Override
     protected Map<String, String> getFormParameters() {
         Map<String, String> data = new HashMap<String, String>();
-        data.put("apptoken", appTokenXml);
         data.put("phoneNo", phoneNo);
-        data.put("smsPin", msg);
+        data.put("smsPin", pin);
         return data;
     }
 
