@@ -33,12 +33,12 @@ public class CommandLogonUserByPinTest {
         if (config.isSystemTestEnabled()) {
             UserToken adminUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
             String myAppTokenXml = ApplicationTokenMapper.toXML(config.myApplicationToken);
-            String phoneNo = "87654321";
+            String phoneNo = "98765432";
             String pin = generatePin();
             System.out.println("Pin:" + pin);
             String ticket = "734985984325";
             new CommandSendSmsPin(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, phoneNo, pin).execute();
-            String userTokenXML = new CommandLogonUserByPhoneNumberPin(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, phoneNo, pin, ticket).execute();
+            String userTokenXML = new CommandLogonUserByPhoneNumberPin(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, adminUserToken.getTokenid(), phoneNo, pin, ticket).execute();
 
         }
     }

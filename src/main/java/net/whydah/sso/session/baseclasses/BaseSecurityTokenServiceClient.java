@@ -163,7 +163,7 @@ public class BaseSecurityTokenServiceClient {
      * @param userTicket
      * @return userAggregateXML for the user represented by phoneNo
      */
-    public String getUserTokenByPin(String phoneNo, String pin, String userTicket) {
+    public String getUserTokenByPin(String adminUserTokenId, String phoneNo, String pin, String userTicket) {
         log.debug("getUserTokenByPin() called with " + "phoneNo = [" + phoneNo + "], pin = [" + pin + "], userTicket = [" + userTicket + "]");
         if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
             return getDummyToken();
@@ -171,7 +171,7 @@ public class BaseSecurityTokenServiceClient {
         log.debug("getUserTokenByPin() - Application logon OK. applicationTokenId={}. Log on with user phoneno {}.", getMyAppTokenID());
         // 	public CommandLogonUserByPhoneNumberPin(URI serviceUri, String myAppTokenId, String myAppTokenXml, String phoneNo, String pin, String userTicket) {
 
-        String userTokenXML = new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), phoneNo, pin, userTicket).execute();
+        String userTokenXML = new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), adminUserTokenId, phoneNo, pin, userTicket).execute();
         /**
          WebResource tokenService = tokenServiceClient.resource(tokenServiceUri).path("user/" + applicationSession.getActiveApplicationTokenId() + "/" + userTicket + "/get_usertoken_by_pin_and_logon_user");
 
@@ -201,13 +201,13 @@ public class BaseSecurityTokenServiceClient {
         return userTokenXML;
     }
 
-    public String getUserTokenByPin2(String phoneNo, String pin, String userTicket) {
+    public String getUserTokenByPin2(String adminUserTokenId, String phoneNo, String pin, String userTicket) {
         log.debug("getUserTokenByPin() called with " + "phoneNo = [" + phoneNo + "], pin = [" + pin + "], userTicket = [" + userTicket + "]");
         if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
             return getDummyToken();
         }
         log.debug("getUserTokenByPin() - Application logon OK. applicationTokenId={}. Log on with user phoneno {}.", was.getActiveApplicationTokenId(), phoneNo);
-        return new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), phoneNo, pin, userTicket).execute();
+        return new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenId, phoneNo, pin, userTicket).execute();
     }
 
     public String getUserToken(UserCredential user, String userticket) {
