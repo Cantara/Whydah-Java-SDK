@@ -6,6 +6,9 @@ import net.whydah.sso.user.types.UserToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
+
 public class CommandLogonUserByPinTest {
     static SystemTestBaseConfig config;
     private static java.util.Random generator = new java.util.Random();
@@ -39,6 +42,8 @@ public class CommandLogonUserByPinTest {
             String ticket = "734985984325";
             new CommandSendSmsPin(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, phoneNo, pin).execute();
             String userTokenXML = new CommandLogonUserByPhoneNumberPin(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, adminUserToken.getTokenid(), phoneNo, pin, ticket).execute();
+            assertNotNull(userTokenXML);
+            assertTrue(userTokenXML.contains(phoneNo));
 
         }
     }
