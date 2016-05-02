@@ -24,8 +24,8 @@ public class SystemTestBaseConfig {
     public boolean systemTest = false;
 
     // Run SystemTests for Whydah Extensions?
-    public boolean statisticsExtensionSystemTest = true;
-    public boolean CRMCustomerExtensionSystemTest = true;
+    public boolean statisticsExtensionSystemTest = false;
+    public boolean CRMCustomerExtensionSystemTest = false;
 
 
     public String TEMPORARY_APPLICATION_ID = "100";//"11";
