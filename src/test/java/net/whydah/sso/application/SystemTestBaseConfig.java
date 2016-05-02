@@ -20,6 +20,14 @@ import static org.junit.Assert.assertTrue;
 
 public class SystemTestBaseConfig {
 
+    // Run the Whydah SystemTests?
+    public boolean systemTest = false;
+
+    // Run SystemTests for Whydah Extensions?
+    public boolean statisticsExtensionSystemTest = false;
+    public boolean CRMCustomerExtensionSystemTest = false;
+
+
     public String TEMPORARY_APPLICATION_ID = "100";//"11";
     public String TEMPORARY_APPLICATION_NAME = "Whydah-SystemTests";//"Funny APp";//"11";
     public String TEMPORARY_APPLICATION_SECRET = "45fhRM6nbKZ2wfC6RMmMuzXpk";//"LLNmHsQDCerVWx5d6aCjug9fyPE";
@@ -29,9 +37,6 @@ public class SystemTestBaseConfig {
     public URI userAdminServiceUri;
     public String userAdminService = "http://localhost:9992/useradminservice";
     public String userTokenService = "http://localhost:9998/tokenservice";
-    public boolean statisticsExtensionSystemTest = true;
-    public boolean CRMCustomerExtensionSystemTest = true;
-    public boolean systemTest = true;
     public ApplicationCredential appCredential;
     public UserCredential userCredential;
     
