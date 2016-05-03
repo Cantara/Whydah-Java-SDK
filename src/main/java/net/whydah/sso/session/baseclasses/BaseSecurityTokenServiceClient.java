@@ -277,8 +277,9 @@ public class BaseSecurityTokenServiceClient {
     }
 
 
-    public String createPinVerifiedUser(String adminUserToken, String userTicket, String phoneNo, String pin, String json) {
-        return new CommandCreatePinVerifiedUser(uri_securitytoken_service, getMyAppTokenXml(), getMyAppTokenID(), adminUserToken, userTicket, phoneNo, pin, json).execute();
+    public String createPinVerifiedUser(String adminUserTokenXml, String userTicket, String phoneNo, String pin, String json) {
+
+        return new CommandCreatePinVerifiedUser(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), adminUserTokenXml, userTicket, phoneNo, pin, json).execute();
     }
 
 
