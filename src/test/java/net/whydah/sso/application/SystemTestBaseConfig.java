@@ -64,7 +64,7 @@ public class SystemTestBaseConfig {
     }
 
     public boolean isSystemTestEnabled() {
-        
+
         try {
             if (systemTest) {
                 Thread.sleep(2000);

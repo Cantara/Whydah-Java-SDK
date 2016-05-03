@@ -1,6 +1,6 @@
 package net.whydah.sso.session.baseclasses;
 
-import net.whydah.sso.commands.adminapi.application.CommandCreatePinVerifiedUser;
+import net.whydah.sso.commands.adminapi.user.CommandCreatePinVerifiedUser;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.userauth.*;
 import net.whydah.sso.config.ApplicationMode;
