@@ -1,16 +1,15 @@
 package net.whydah.sso.commands.adminapi.user;
 
 import net.whydah.sso.application.SystemTestBaseConfig;
-import net.whydah.sso.user.mappers.UserAggregateMapper;
-import net.whydah.sso.user.types.UserAggregate;
-import net.whydah.sso.user.types.UserApplicationRoleEntry;
+import net.whydah.sso.user.mappers.UserIdentityMapper;
+import net.whydah.sso.user.types.UserIdentity;
 import net.whydah.sso.user.types.UserToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.Random;
 import java.util.UUID;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class CommandAddUserTest {
@@ -31,27 +30,25 @@ public class CommandAddUserTest {
 
             UserToken adminUser = config.logOnSystemTestApplicationAndSystemTestUser();
 
-            UserApplicationRoleEntry role = getTestNewUserRole(adminUser.getUid(), config.TEMPORARY_APPLICATION_ID);
-            String userRoleJson = role.toJson();
+            UserIdentity uir = getTestNewUserIdentity();
+            String userIdentityJson = UserIdentityMapper.toJsonWithoutUID(uir);
             // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
-            String userAddRoleResult = new CommandAddUserRole(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUser.getTokenid(), adminUser.getUid(), userRoleJson).execute();
-            System.out.println("userAddRoleResult:" + userAddRoleResult);
-            assertNotNull(userAddRoleResult);
+            String userAddRoleResult = new CommandAddUser(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUser.getTokenid(), userIdentityJson).execute();
+            System.out.println("testAddUser:" + userAddRoleResult);
 
-            //     public CommandGetUserAggregate(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String userID) {
-            String userAggregateJson = new CommandGetUserAggregate(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUser.getTokenid(), adminUser.getUid()).execute();
-            UserAggregate userAggregate = UserAggregateMapper.fromUserAggregateNoIdentityJson(userAggregateJson);
-            // Force update with new role
-            System.out.println("userAggregate:" + UserAggregateMapper.toJson(userAggregate));
-            assertTrue(userAggregateJson.contains(role.getRoleName()));
+            String usersListJson = new CommandListUsers(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUser.getTokenid(), "*").execute();
+            System.out.println("usersListJson=" + usersListJson);
+            assertTrue(usersListJson.indexOf(uir.getUsername()) > 0);
+
         }
 
     }
 
-    private UserApplicationRoleEntry getTestNewUserRole(String userTokenId, String applicationId) {
-        UserApplicationRoleEntry role = new UserApplicationRoleEntry(userTokenId, applicationId, "TestOrg" + UUID.randomUUID(), "TestRolename" + UUID.randomUUID(), "testRoleValue");
-
-        return role;
+    private UserIdentity getTestNewUserIdentity() {
+        Random rand = new Random();
+        rand.setSeed(new java.util.Date().getTime());
+        UserIdentity user = new UserIdentity("TestUser-" + UUID.randomUUID().toString().replace("-", "").replace("_", "").substring(1, 10), "Mt Test", "Testesen", "0", UUID.randomUUID().toString().replace("-", "").replace("_", "").substring(1, 10) + "@getwhydah.com", "47" + Integer.toString(rand.nextInt(100000000)));
+        return user;
 
     }
 }
