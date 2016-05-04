@@ -9,18 +9,18 @@ public class CommandCreateCRMCustomer extends BaseHttpPostHystrixCommand<String>
 
 
 	private String userTokenId;
-	private String personRef;
+	private String customerRefId;
 	private String customerJson;
 
 
-	public CommandCreateCRMCustomer(URI crmServiceUri, String myAppTokenId, String userTokenId, String personRef, String customerJson) {
-		super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 3000);
+	public CommandCreateCRMCustomer(URI crmServiceUri, String myAppTokenId, String userTokenId, String customerRefId, String customerJson) {
+		super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 6000);
 
 		this.userTokenId = userTokenId;
-		this.personRef = personRef;
+		this.customerRefId = customerRefId;
 		this.customerJson = customerJson;
 
-		if (crmServiceUri == null || myAppTokenId == null || userTokenId == null || personRef == null) {
+		if (crmServiceUri == null || myAppTokenId == null || userTokenId == null) {
 			log.error(TAG + " initialized with null-values - will fail");
 		}
 
@@ -48,8 +48,8 @@ public class CommandCreateCRMCustomer extends BaseHttpPostHystrixCommand<String>
 	protected String getTargetPath() {
 
 		String path = myAppTokenId + "/" + userTokenId + "/customer/";
-		if (personRef != null) {
-			path += personRef;
+		if (customerRefId != null) {
+			path += customerRefId;
 		}
 		return path;
 	}

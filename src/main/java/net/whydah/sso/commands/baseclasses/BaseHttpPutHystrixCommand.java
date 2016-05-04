@@ -5,7 +5,10 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
+
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
+import net.whydah.sso.util.StringConv;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,18 +82,20 @@ public abstract class BaseHttpPutHystrixCommand<R> extends HystrixCommand<R> {
 
             request = dealWithRequestBeforeSend(request);
 
-            String responseBody = request.body();
-
-            int statusCode = request.code();
-
-            switch (statusCode) {
-                case java.net.HttpURLConnection.HTTP_OK:
-                    onCompleted(responseBody);
-                    return dealWithResponse(responseBody);
-                default:
-                    onFailed(responseBody, statusCode);
-                    return dealWithFailedResponse(responseBody, statusCode);
-            }
+            responseBody = request.bytes();
+			int statusCode = request.code();
+			String responseAsText = StringConv.UTF8(responseBody);
+			
+			switch (statusCode) {
+			case java.net.HttpURLConnection.HTTP_OK:
+				onCompleted(responseAsText);
+				return dealWithResponse(responseAsText);
+			default:
+				onFailed(responseAsText, statusCode);
+				return dealWithFailedResponse(responseAsText, statusCode);
+			}
+			
+			
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new RuntimeException("TAG" + " - Application authentication failed to execute");
@@ -147,5 +152,9 @@ public abstract class BaseHttpPutHystrixCommand<R> extends HystrixCommand<R> {
         log.warn(TAG + " - fallback - whydahServiceUri={}", whydahServiceUri.toString() + getTargetPath());
         return null;
     }
+    private byte[] responseBody;
+	public byte[] getResponseBodyAsByteArray(){
+		return responseBody;
+	}
 }
 

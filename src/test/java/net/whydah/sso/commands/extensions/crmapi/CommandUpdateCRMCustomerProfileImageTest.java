@@ -4,57 +4,40 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
 
+import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.user.types.UserToken;
 import net.whydah.sso.util.SSLTool;
 
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class CommandUpdateCRMCustomerProfileImageTest {
-    public static String userName = "admin";
-    public static String password = "whydahadmin";
-    private static URI crmServiceUri;
-    private static ApplicationCredential appCredential;
-    private static UserCredential userCredential;
-    private static boolean systemTest = true;
+public class CommandUpdateCRMCustomerProfileImageTest extends BaseCRMCustomerTest {
 
-    @BeforeClass
-    public static void setup() throws Exception {
-        appCredential = new ApplicationCredential("15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
-        crmServiceUri = URI.create("https://no_host");
-        userCredential = new UserCredential(userName, password);
-
-
-        if (systemTest) {
-            crmServiceUri = URI.create("https://whydahdev.cantara.no/crmservice/");
-        }
-    }
-
-
-    @Ignore
+   
     @Test
     public void testUpdateCRMCustomerProfileImageCommand() throws Exception {
-
-        String myApplicationTokenID = "dummyAppTokenId";
-        String adminUserTokenId = "dummyAdminUserToken";
-        String personRef = "1234567890";
-        byte[] data = {-119, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82,
-                0, 0, 0, 15, 0, 0, 0, 15, 8, 6, 0, 0, 0, 59, -42, -107,
-                74, 0, 0, 0, 64, 73, 68, 65, 84, 120, -38, 99, 96, -64, 14, -2,
-                99, -63, 68, 1, 100, -59, -1, -79, -120, 17, -44, -8, 31, -121, 28, 81,
-                26, -1, -29, 113, 13, 78, -51, 100, -125, -1, -108, 24, 64, 86, -24, -30,
-                11, 101, -6, -37, 76, -106, -97, 25, 104, 17, 96, -76, 77, 97, 20, -89,
-                109, -110, 114, 21, 0, -82, -127, 56, -56, 56, 76, -17, -42, 0, 0, 0,
-                0, 73, 69, 78, 68, -82, 66, 96, -126};
-        String contenttype = "image/jpeg";
-
-        SSLTool.disableCertificateValidation();
-        String customerJsonLocation = new CommandUpdateCRMCustomerProfileImage(crmServiceUri, myApplicationTokenID, adminUserTokenId, personRef, contenttype, data).execute();
-        System.out.println("Returned CRM profileImage location: " + customerJsonLocation);
-        assertTrue(customerJsonLocation != null);
-        assertTrue(customerJsonLocation.endsWith(personRef + "/image"));
+    	if(config.isCRMCustomerExtensionSystemTestEnabled()){
+    		
+    		UserToken adminUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
+    		//create dummy customer
+            String personJson = generateDummyCustomerData("123456");
+            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getTokenid(), null, personJson).execute();
+            
+           //create some dummy image with [crmCustomerId]
+            byte[] image1 = generateDummyCustomerPhoto();
+            String imageLocation = new CommandCreateCRMCustomerProfileImage(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getTokenid(), crmCustomerId, contenttype, image1).execute();
+    		
+    		byte[] image2 = generateDummyCustomerPhoto();
+    		String customerJsonLocation = new CommandUpdateCRMCustomerProfileImage(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getTokenid(), crmCustomerId, contenttype, image2).execute();
+    		
+    		
+    		System.out.println("Returned CRM profileImage location: " + customerJsonLocation);
+    		assertTrue(customerJsonLocation != null);
+    		assertTrue(customerJsonLocation.endsWith(crmCustomerId + "/image"));
+    	}
 
     }
 }

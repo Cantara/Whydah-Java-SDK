@@ -11,7 +11,7 @@ public class CommandGetCRMCustomer extends BaseHttpGetHystrixCommand<String> {
 
 
     public CommandGetCRMCustomer(URI crmServiceUri, String myAppTokenId, String userTokenId, String personRef) {
-    	super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 3000);
+    	super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup",6000);
         
     	this.userTokenId = userTokenId;
         this.personRef = personRef;

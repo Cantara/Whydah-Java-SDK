@@ -9,20 +9,20 @@ public class CommandCreateCRMCustomerProfileImage extends BaseHttpPostHystrixCom
     
     
     private String userTokenId;
-    private String personRef;
+    private String customerRefId;
     private String contentType;
     private byte[] imageData;
 
 
-    public CommandCreateCRMCustomerProfileImage(URI crmServiceUri, String myAppTokenId, String userTokenId, String personRef, String contentType, byte[] imageData) {
+    public CommandCreateCRMCustomerProfileImage(URI crmServiceUri, String myAppTokenId, String userTokenId, String customerRefId, String contentType, byte[] imageData) {
     	super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 3000);
         
         this.userTokenId = userTokenId;
-        this.personRef = personRef;
+        this.customerRefId = customerRefId;
         this.imageData = imageData;
         this.contentType = contentType;
 
-        if (crmServiceUri == null || personRef == null || imageData == null || contentType == null) {
+        if (crmServiceUri == null || customerRefId == null || imageData == null || contentType == null) {
             log.error(TAG + " initialized with null-values - will fail");
         }
 
@@ -81,7 +81,7 @@ public class CommandCreateCRMCustomerProfileImage extends BaseHttpPostHystrixCom
 
 	@Override
 	protected String getTargetPath() {
-        return myAppTokenId + "/" + userTokenId + "/customer/" + personRef + "/image/";
+        return myAppTokenId + "/" + userTokenId + "/customer/" + customerRefId + "/image";
     }
 
 

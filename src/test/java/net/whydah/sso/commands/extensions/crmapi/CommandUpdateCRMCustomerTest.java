@@ -2,32 +2,32 @@ package net.whydah.sso.commands.extensions.crmapi;
 
 import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.user.types.UserToken;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class CommandUpdateCRMCustomerTest {
-    static SystemTestBaseConfig config;
-
-    @BeforeClass
-    public static void setup() throws Exception {
-        config = new SystemTestBaseConfig();
-    }
-
-
+public class CommandUpdateCRMCustomerTest extends BaseCRMCustomerTest{
+   
 
     @Test
     public void testCommandUpdateCRMCustomerTest() throws Exception {
         if (config.isCRMCustomerExtensionSystemTestEnabled()) {
             UserToken adminUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
 
-            String personRef = "12345678";
-            String personJson = "{\"id\":\"12345678\",\"firstname\":\"First\",\"lastname\":\"Lastname\",\"emailaddresses\":null,\"phonenumbers\":null,\"defaultAddressLabel\":null,\"deliveryaddresses\":{\"work\":{\"addressLine1\":\"Karl Johansgate 6\",\"addressLine2\":null,\"postalcode\":\"0160\",\"postalcity\":\"Oslo\"}}}";
-            String customerJsonLocation = new CommandUpdateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getTokenid(), personRef, personJson).execute();
+            //create a dummy customer
+            String personJson1 = generateDummyCustomerData("123456");
+            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getTokenid(), null, personJson1).execute();
+            
+            //update id in the jsondata
+            String personJson2 = generateDummyCustomerData(generateUniqueuePersonRef());
+            String customerJsonLocation = new CommandUpdateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getTokenid(), crmCustomerId, personJson2).execute();
             System.out.println("Returned CRM customer location: " + customerJsonLocation);
+            
+            
             assertTrue(customerJsonLocation != null);
-            assertTrue(customerJsonLocation.endsWith(personRef));
+            assertTrue(customerJsonLocation.endsWith(crmCustomerId));
         }
     }
 }

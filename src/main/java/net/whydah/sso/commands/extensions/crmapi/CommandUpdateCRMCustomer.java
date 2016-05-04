@@ -13,7 +13,7 @@ public class CommandUpdateCRMCustomer extends BaseHttpPutHystrixCommand<String> 
 
 
     public CommandUpdateCRMCustomer(URI crmServiceUri, String myAppTokenId, String userTokenId, String personRef, String customerJson) {
-    	super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 3000);
+    	super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 6000);
         
         this.userTokenId = userTokenId;
         this.personRef = personRef;

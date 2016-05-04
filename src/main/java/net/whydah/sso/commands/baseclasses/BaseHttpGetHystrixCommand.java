@@ -5,7 +5,10 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
+
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
+import net.whydah.sso.util.StringConv;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,17 +92,18 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 
 			request = dealWithRequestBeforeSend(request);
 			
-			String responseBody = request.body();
-			int statusCode = request.code();
 			
+			responseBody = request.bytes();
+			int statusCode = request.code();
+			String responseAsText = StringConv.UTF8(responseBody);
 			
 			switch (statusCode) {
 			case java.net.HttpURLConnection.HTTP_OK:
-				onCompleted(responseBody);
-				return dealWithResponse(responseBody);
+				onCompleted(responseAsText);
+				return dealWithResponse(responseAsText);
 			default:
-				onFailed(responseBody, statusCode);
-				return dealWithFailedResponse(responseBody, statusCode);
+				onFailed(responseAsText, statusCode);
+				return dealWithFailedResponse(responseAsText, statusCode);
 			}
 		} catch(Exception ex){
 			ex.printStackTrace();
@@ -165,5 +169,10 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 		//return "application/json";
 		return "";
 		
+	}
+	
+	private byte[] responseBody;
+	public byte[] getResponseBodyAsByteArray(){
+		return responseBody;
 	}
 }

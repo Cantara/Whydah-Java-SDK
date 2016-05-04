@@ -7,14 +7,14 @@ import java.net.URI;
 public class CommandGetCRMCustomerProfileImage extends BaseHttpGetHystrixCommand<byte[]> {
 
     private String userTokenId;
-    private String personRef;
+    private String customerRefId;
 
 
     public CommandGetCRMCustomerProfileImage(URI crmServiceUri, String myAppTokenId, String userTokenId, String personRef) {
-    	super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 3000);
+    	super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 6000);
         
         this.userTokenId = userTokenId;
-        this.personRef = personRef;
+        this.customerRefId = personRef;
 
         if (crmServiceUri == null || personRef == null) {
             log.error(TAG + " initialized with null-values - will fail");
@@ -52,20 +52,14 @@ public class CommandGetCRMCustomerProfileImage extends BaseHttpGetHystrixCommand
     
     @Override
     protected byte[] dealWithResponse(String response) {
-    	return request.bytes();
+    	return getResponseBodyAsByteArray();
     }
     
-   
 
-//    @Override
-//    protected byte[] getFallback() {
-//        log.warn("CommandGetCRMCustomerProfileImage - fallback - whydahServiceUri={}", crmServiceUri.toString());
-//        return null;
-//    }
 
 	@Override
 	protected String getTargetPath() {
-		return myAppTokenId + "/" + userTokenId + "/customer/" + personRef + "/image";
+		return myAppTokenId + "/" + userTokenId + "/customer/" + customerRefId + "/image";
 	}
 
 

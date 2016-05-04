@@ -9,7 +9,6 @@ public class CommandVerifyDeliveryAddressTest {
 
 
     @Test
-    @Ignore
     public void testCommandVerifyDeliveryAddress() throws Exception {
 
         String clientid = "";
