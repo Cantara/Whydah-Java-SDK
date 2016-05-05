@@ -11,7 +11,7 @@ import static junit.framework.TestCase.assertTrue;
 
 public class CommandLogonUserByPinTest {
     static SystemTestBaseConfig config;
-    private static java.util.Random generator = new java.util.Random();
+    
 
 
     @BeforeClass
@@ -21,14 +21,7 @@ public class CommandLogonUserByPinTest {
 
     }
 
-    public static String generatePin() {
-        generator.setSeed(System.currentTimeMillis());
-        int i = generator.nextInt(10000) % 10000;
-
-        java.text.DecimalFormat f = new java.text.DecimalFormat("0000");
-        return f.format(i);
-
-    }
+    
 
     @Test
     public void testCommandLogonUserByPinTest() throws Exception {
@@ -37,7 +30,7 @@ public class CommandLogonUserByPinTest {
             UserToken adminUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
             String myAppTokenXml = ApplicationTokenMapper.toXML(config.myApplicationToken);
             String phoneNo = "98765432";
-            String pin = generatePin();
+            String pin = config.generatePin();
             System.out.println("Pin:" + pin);
             String ticket = "734985984325";
             new CommandSendSmsPin(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, phoneNo, pin).execute();

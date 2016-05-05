@@ -6,7 +6,6 @@ import java.util.Map;
 
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
-//TODO:make test
 public class CommandReleaseUserToken extends BaseHttpPostHystrixCommand<Boolean>{
 
 	String userTokenId;

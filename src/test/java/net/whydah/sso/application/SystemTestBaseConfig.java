@@ -45,6 +45,8 @@ public class SystemTestBaseConfig {
     public URI crmServiceUri;
 
     public ApplicationToken myApplicationToken;
+    public String myAppTokenXml;
+    public String myApplicationTokenID;
 
     public SystemTestBaseConfig() {
         appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
@@ -86,10 +88,10 @@ public class SystemTestBaseConfig {
 
     public ApplicationToken logOnSystemTestApplication() {
         if (isCRMCustomerExtensionSystemTestEnabled()) {
-            String myApplicationTokenID = "";
+            
             SSLTool.disableCertificateValidation();
             ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
-            String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+            myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
             myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue("Unable to log on application ", myApplicationTokenID.length() > 10);
 
@@ -107,7 +109,7 @@ public class SystemTestBaseConfig {
             String myApplicationTokenID = "";
             SSLTool.disableCertificateValidation();
             ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
-            String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+            myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
             myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue("Unable to log on application ", myApplicationTokenID.length() > 10);
 
@@ -124,6 +126,16 @@ public class SystemTestBaseConfig {
             return userToken;
         }
         return null;
+    }
+    
+    public String generatePin() {
+    	java.util.Random generator = new java.util.Random();
+        generator.setSeed(System.currentTimeMillis());
+        int i = generator.nextInt(10000) % 10000;
+
+        java.text.DecimalFormat f = new java.text.DecimalFormat("0000");
+        return f.format(i);
+
     }
 
 }

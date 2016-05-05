@@ -32,7 +32,7 @@ public class CommandCreatePinVerifiedUserTest {
             UserIdentity uir = getTestNewUserIdentity();
             String userIdentityJson = UserIdentityMapper.toJsonWithoutUID(uir);
             String ticket = "67678687";
-            String phoneNo = "98765432";
+            String phoneNo = "98765433";
             String pin = "3434";
             new CommandSendSmsPin(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), ApplicationTokenMapper.toXML(config.myApplicationToken), phoneNo, pin).execute();
             String userAddRoleResult = new CommandCreatePinVerifiedUser(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), ApplicationTokenMapper.toXML(config.myApplicationToken), adminUser.getTokenid(), ticket, phoneNo, pin, userIdentityJson).execute();

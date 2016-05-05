@@ -7,7 +7,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO:make test
+
 public class CommandLogonUserByPhoneNumberPin extends BaseHttpPostHystrixCommand<String> {
 
 	int retryCnt = 0;
@@ -35,8 +35,7 @@ public class CommandLogonUserByPhoneNumberPin extends BaseHttpPostHystrixCommand
 
 	@Override
 	protected Map<String, String> getFormParameters() {
-		//                                                              @FormParam("adminUserTokenId") String adminUserTokenId,
-
+	
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("apptoken", myAppTokenXml);
 		data.put("adminUserTokenId", adminUserTokenId);

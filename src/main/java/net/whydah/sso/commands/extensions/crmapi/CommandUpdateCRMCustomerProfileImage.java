@@ -55,7 +55,6 @@ public class CommandUpdateCRMCustomerProfileImage extends BaseHttpPutHystrixComm
 //
 //    }
     
-    //TODO: Please check this, totto. Does it return null when OK? 
     @Override
     protected String dealWithResponse(String response) {
     	return response;
