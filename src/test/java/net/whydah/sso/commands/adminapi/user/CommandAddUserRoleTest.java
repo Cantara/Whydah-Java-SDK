@@ -55,9 +55,10 @@ public class CommandAddUserRoleTest {
             // Force update with new role
             String userToken2 = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential, userticket).execute();
             System.out.println("userToken2:" + userToken2);
+            String userTokenId2 = UserXpathHelper.getUserTokenId(userToken2);
             assertTrue(userToken2.length() >= userToken.length());
 
-            String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
+            String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID, userTokenId2, "").execute();
             System.out.println("applicationsJson=" + applicationsJson);
             assertNotNull(applicationsJson);
         }
