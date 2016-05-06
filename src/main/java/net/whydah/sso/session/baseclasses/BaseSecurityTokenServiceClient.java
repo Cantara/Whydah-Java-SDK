@@ -16,6 +16,7 @@ import java.util.Properties;
 
 public class BaseSecurityTokenServiceClient {
 
+    static WhydahApplicationSession was = null;
     protected Logger log;
     protected URI uri_securitytoken_service;
     protected URI uri_useradmin_service;
@@ -23,7 +24,6 @@ public class BaseSecurityTokenServiceClient {
     protected URI uri_crm_service;
     protected URI uri_report_service;
     protected String TAG = "";
-    WhydahApplicationSession was;
 
 
     public BaseSecurityTokenServiceClient(String securitytokenserviceurl,
@@ -31,7 +31,9 @@ public class BaseSecurityTokenServiceClient {
                                           String applicationname,
                                           String applicationsecret) throws URISyntaxException {
 
-        was = WhydahApplicationSession.getInstance(securitytokenserviceurl, activeApplicationId, applicationname, applicationsecret);
+        if (was != null) {
+            was = WhydahApplicationSession.getInstance(securitytokenserviceurl, activeApplicationId, applicationname, applicationsecret);
+        }
 
         this.TAG = this.getClass().getName();
         this.log = LoggerFactory.getLogger(TAG);
@@ -60,8 +62,9 @@ public class BaseSecurityTokenServiceClient {
             String applicationid = properties.getProperty("applicationid");
             String applicationname = properties.getProperty("applicationname");
             String applicationsecret = properties.getProperty("applicationsecret");
-            was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), applicationid, applicationname, applicationsecret);
-
+            if (was != null) {
+                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), applicationid, applicationname, applicationsecret);
+            }
             this.TAG = this.getClass().getName();
             this.log = LoggerFactory.getLogger(TAG);
         } catch (Exception ex) {
