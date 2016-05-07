@@ -34,7 +34,7 @@ public class WhydahApplicationSession {
 
     protected WhydahApplicationSession(String sts, String appId, String appName, String appSecret) {
         this.sts = sts;
-        myAppCredential = new ApplicationCredential(appId, appName, appSecret);
+        this.myAppCredential = new ApplicationCredential(appId, appName, appSecret);
         initializeWhydahApplicationSession();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
@@ -121,8 +121,11 @@ public class WhydahApplicationSession {
 
 
     private void renewWhydahApplicationSession() {
+        if (applicationToken == null) {
+            initializeWhydahApplicationSession();
+        }
         if (!checkActiveSession()) {
-            log.info("No active application session, applicationTokenId:" + applicationToken.getApplicationID());
+            log.info("No active application session for applicationTokenId: {} getApplicationID: {}", applicationToken.getApplicationID(), applicationToken.getApplicationID());
             for (int n = 0; n < 3 || !checkActiveSession(); n++) {
                 if (initializeWhydahApplicationSession()) {
                     break;
@@ -134,7 +137,7 @@ public class WhydahApplicationSession {
                 }
             }
         } else {
-            log.info("Active session found, applicationTokenId:" + applicationToken.getApplicationTokenId());
+            log.info("Active application session found, applicationTokenId:" + applicationToken.getApplicationTokenId());
             Long expires = Long.parseLong(applicationToken.getExpires());
             if (expiresBeforeNextSchedule(expires)) {
                 log.info("Active session expires before next check, re-new");
