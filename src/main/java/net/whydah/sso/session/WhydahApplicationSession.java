@@ -149,7 +149,8 @@ public class WhydahApplicationSession {
                 }
             }
         } else {
-            log.info("Active application session found, applicationTokenId: {}  applicationID: {}  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpires());
+            log.info("Active application session found, applicationTokenId: {}  applicationID: {}  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted()))
+            ;
             Long expires = Long.parseLong(applicationToken.getExpires());
             if (expiresBeforeNextSchedule(expires)) {
                 log.info("Active session expires before next check, re-new");
