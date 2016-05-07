@@ -95,18 +95,30 @@ public class WhydahApplicationSession {
     }
 
     public ApplicationToken getActiveApplicationToken() {
+        if (applicationToken == null) {
+            initializeWhydahApplicationSession();
+        }
         return applicationToken;
     }
 
     public String getActiveApplicationTokenId() {
+        if (applicationToken == null) {
+            initializeWhydahApplicationSession();
+        }
         return applicationToken.getApplicationTokenId();
     }
 
     public String getActiveApplicationName() {
+        if (applicationToken == null) {
+            initializeWhydahApplicationSession();
+        }
         return applicationToken.getApplicationName();
     }
 
     public String getActiveApplicationTokenXML() {
+        if (applicationToken == null) {
+            initializeWhydahApplicationSession();
+        }
         return ApplicationTokenMapper.toXML(applicationToken);
     }
 
@@ -189,7 +201,7 @@ public class WhydahApplicationSession {
      * @return true is session is active and working
      */
     public boolean checkActiveSession() {
-        if (getActiveApplicationTokenId() == null || getActiveApplicationTokenId().length() < 4) {
+        if (applicationToken == null || getActiveApplicationTokenId() == null || getActiveApplicationTokenId().length() < 4) {
             return false;
         }
 
