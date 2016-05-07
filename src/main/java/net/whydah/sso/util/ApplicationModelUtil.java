@@ -25,6 +25,14 @@ public class ApplicationModelUtil {
         return applications;
     }
 
+    public static Application getApplication(String applicationID) {
+        for (Application application : applications) {
+            return application;
+        }
+        return null;
+    }
+
+
     // JsonPath query against Application.json to find value, empty string if not found
     public static String getParameterForApplication(String param, String applicationID) {
         if (applications == null) {
