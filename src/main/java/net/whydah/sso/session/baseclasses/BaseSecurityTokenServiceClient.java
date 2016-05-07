@@ -171,10 +171,10 @@ public class BaseSecurityTokenServiceClient {
         if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
             return getDummyToken();
         }
-        log.debug("getUserTokenByPin() - Application logon OK. applicationTokenId={}. Log on with user phoneno {}.", getMyAppTokenID());
+        log.debug("getUserTokenByPin() - Application logon OK. applicationTokenId={}. Log on with user adminUserTokenId {}.", getMyAppTokenID(), adminUserTokenId);
         // 	public CommandLogonUserByPhoneNumberPin(URI serviceUri, String myAppTokenId, String myAppTokenXml, String phoneNo, String pin, String userTicket) {
 
-        String userTokenXML = new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), adminUserTokenId, phoneNo, pin, userTicket).execute();
+        String userTokenXML = new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenId, phoneNo, pin, userTicket).execute();
         /**
          WebResource tokenService = tokenServiceClient.resource(tokenServiceUri).path("user/" + applicationSession.getActiveApplicationTokenId() + "/" + userTicket + "/get_usertoken_by_pin_and_logon_user");
 

@@ -1,13 +1,7 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.user.types.UserToken;
-
-import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.net.URI;
-import java.util.Random;
 
 import static org.junit.Assert.assertTrue;
 
@@ -26,6 +20,7 @@ public class CommandCreateCRMCustomerTest extends BaseCRMCustomerTest {
             System.out.println("Returned CRM customer id: " + crmCustomerId);
             assertTrue(crmCustomerId != null);
             assertTrue(crmCustomerId.equals(personRef));
+            System.out.println(personJson);
         }
 
     }

@@ -19,7 +19,7 @@ public class CommandCreatePinVerifiedUser extends BaseHttpPostHystrixCommand<Str
 
 
     public CommandCreatePinVerifiedUser(URI serviceUri, String myAppTokenId, String myAppTokenXml, String adminUserToken, String userTicket, String phoneNo, String pin, String userIdentityJson) {
-        super(serviceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup");
+        super(serviceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", 6000);  // 600 ms as this is a slow command
         this.myAppTokenId = myAppTokenId;
         this.myAppTokenXml = myAppTokenXml;
         this.adminUserTokenId = adminUserToken;
