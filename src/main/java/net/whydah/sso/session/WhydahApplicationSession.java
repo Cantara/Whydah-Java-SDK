@@ -181,7 +181,7 @@ public class WhydahApplicationSession {
 
 
     private boolean initializeWhydahApplicationSession() {
-        log.info("Initializing new application session");
+        log.info("Initializing new application session with applicationCredential: {}", myAppCredential);
         String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
         if (!checkApplicationToken(applicationTokenXML)) {
             log.info("Error, unable to initialize new application session, applicationTokenXml:" + applicationTokenXML);
