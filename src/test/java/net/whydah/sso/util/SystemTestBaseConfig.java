@@ -1,4 +1,4 @@
-package net.whydah.sso.application;
+package net.whydah.sso.util;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationTokenMapper;
@@ -10,7 +10,6 @@ import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserToken;
-import net.whydah.sso.util.SSLTool;
 
 import java.net.URI;
 import java.util.UUID;
@@ -21,11 +20,11 @@ import static org.junit.Assert.assertTrue;
 public class SystemTestBaseConfig {
 
     // Run the Whydah SystemTests?
-    public boolean systemTest = true;
+    public boolean systemTest = false;
 
     // Run SystemTests for Whydah Extensions?
-    public boolean statisticsExtensionSystemTest = true;
-    public boolean CRMCustomerExtensionSystemTest = true;
+    public boolean statisticsExtensionSystemTest = false;
+    public boolean CRMCustomerExtensionSystemTest = false;
 
 
     public String TEMPORARY_APPLICATION_ID = "101";//"11";

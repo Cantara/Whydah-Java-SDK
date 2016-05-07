@@ -1,12 +1,10 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import java.net.URI;
-import java.util.Random;
-
-import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.util.SSLTool;
-
+import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.BeforeClass;
+
+import java.util.Random;
 
 public class BaseCRMCustomerTest {
 	protected static SystemTestBaseConfig config;

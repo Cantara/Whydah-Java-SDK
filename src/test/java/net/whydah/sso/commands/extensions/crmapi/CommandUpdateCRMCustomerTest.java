@@ -1,9 +1,6 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.user.types.UserToken;
-
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;

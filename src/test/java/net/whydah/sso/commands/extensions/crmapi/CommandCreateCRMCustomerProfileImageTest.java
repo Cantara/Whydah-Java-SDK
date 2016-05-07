@@ -1,15 +1,6 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import java.io.File;
-import java.net.URI;
-import java.util.Random;
-
-import net.whydah.sso.application.SystemTestBaseConfig;
 import net.whydah.sso.user.types.UserToken;
-import net.whydah.sso.util.FileUtil;
-
-import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
