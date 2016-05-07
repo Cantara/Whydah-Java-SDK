@@ -27,7 +27,9 @@ public class ApplicationModelUtil {
 
     public static Application getApplication(String applicationID) {
         for (Application application : applications) {
-            return application;
+            if (application.getId().equalsIgnoreCase(applicationID)) {
+                return application;
+            }
         }
         return null;
     }
