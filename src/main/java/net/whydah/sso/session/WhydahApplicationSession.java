@@ -162,7 +162,7 @@ public class WhydahApplicationSession {
                             break;
                         }
                     } else {
-                        log.info("Fail to renew applicationsession");
+                        log.info("Failed to renew applicationsession, returned response from STS: {}", applicationTokenXML);
                         if (n > 3) {
                             // OK, we wont get a renewed session, so we start a new one
                             if (initializeWhydahApplicationSession()) {
