@@ -31,7 +31,7 @@ public class BaseSecurityTokenServiceClient {
                                           String applicationname,
                                           String applicationsecret) throws URISyntaxException {
 
-        if (was != null) {
+        if (was == null) {
             was = WhydahApplicationSession.getInstance(securitytokenserviceurl, activeApplicationId, applicationname, applicationsecret);
         }
 
@@ -62,7 +62,7 @@ public class BaseSecurityTokenServiceClient {
             String applicationid = properties.getProperty("applicationid");
             String applicationname = properties.getProperty("applicationname");
             String applicationsecret = properties.getProperty("applicationsecret");
-            if (was != null) {
+            if (was == null) {
                 was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), applicationid, applicationname, applicationsecret);
             }
             this.TAG = this.getClass().getName();
