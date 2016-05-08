@@ -31,7 +31,6 @@ public class CommandLogonUserByPinTest {
             String myAppTokenXml = ApplicationTokenMapper.toXML(config.myApplicationToken);
             String phoneNo = "98765432";
             String pin = config.generatePin();
-            System.out.println("Pin:" + pin);
             String ticket = "734985984325";
             new CommandSendSmsPin(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, phoneNo, pin).execute();
             String userTokenXML = new CommandLogonUserByPhoneNumberPin(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, adminUserToken.getTokenid(), phoneNo, pin, ticket).execute();
