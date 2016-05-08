@@ -20,11 +20,11 @@ import static org.junit.Assert.assertTrue;
 public class SystemTestBaseConfig {
 
     // Run the Whydah SystemTests?
-    public boolean systemTest = true;
+    public boolean systemTest = false;
 
     // Run SystemTests for Whydah Extensions?
-    public boolean statisticsExtensionSystemTest = true;
-    public boolean CRMCustomerExtensionSystemTest = true;
+    public boolean statisticsExtensionSystemTest = false;
+    public boolean CRMCustomerExtensionSystemTest = false;
 
 
     public String TEMPORARY_APPLICATION_ID = "101";//"11";

@@ -282,9 +282,13 @@ public class BaseSecurityTokenServiceClient {
     }
 
 
-    public String createPinVerifiedUser(String adminUserTokenXml, String userTicket, String phoneNo, String pin, String json) {
+    public String createPinVerifiedUser(String adminUserTokenXml, String userTicket, String phoneNo, String pin, String userIdentityJson) {
+        if (was.getActiveApplicationToken() == null) {
+            was.renewWhydahApplicationSession();
+        }
+//    public CommandCreatePinVerifiedUser(URI serviceUri, String myAppTokenId, String myAppTokenXml, String adminUserToken, String userTicket, String phoneNo, String pin, String userIdentityJson) {
 
-        return new CommandCreatePinVerifiedUser(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), adminUserTokenXml, userTicket, phoneNo, pin, json).execute();
+        return new CommandCreatePinVerifiedUser(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenXml, userTicket, phoneNo, pin, userIdentityJson).execute();
     }
 
 
