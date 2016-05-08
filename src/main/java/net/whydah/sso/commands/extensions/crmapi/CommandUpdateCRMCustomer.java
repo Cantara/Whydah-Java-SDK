@@ -20,7 +20,7 @@ public class CommandUpdateCRMCustomer extends BaseHttpPutHystrixCommand<String> 
         this.customerJson = customerJson;
 
         if (crmServiceUri == null || myAppTokenId == null || userTokenId == null || personRef == null || customerJson == null) {
-            log.error("CommandUpdateCRMCustomer initialized with null-values - will fail");
+            log.error("CommandUpdateCRMCustomer initialized with null-values - will fail - crmServiceUri:{} myAppTokenId:{} userTokenId:{} personRef:{}", crmServiceUri, myAppTokenId, userTokenId, personRef);
         }
 
     }
@@ -42,42 +42,8 @@ public class CommandUpdateCRMCustomer extends BaseHttpPutHystrixCommand<String> 
     		log.debug(TAG + " - Returning CRM location {}", locationHeader);
     		return locationHeader;
     	}
-    	return super.dealWithFailedResponse(responseBody, statusCode); //null
+        return super.dealWithFailedResponse(responseBody, statusCode);
     }
     
-//    @Override
-//    protected String run() {
-//        log.trace("CommandUpdateCRMCustomer - myAppTokenId={}", myAppTokenId);
-//
-//        Client crmClient;
-//        if (!SSLTool.isCertificateCheckDisabled()) {
-//            crmClient = ClientBuilder.newClient();
-//        } else {
-//            crmClient = ClientBuilder.newBuilder().sslContext(SSLTool.sc).hostnameVerifier((s1, s2) -> true).build();
-//        }
-//
-//        WebTarget updateCustomer = crmClient.target(crmServiceUri).path(myAppTokenId).path(userTokenId).path("customer").path(personRef);
-//
-//        Response response = updateCustomer.request().put(Entity.entity(customerJson, MediaType.APPLICATION_JSON_TYPE));
-//
-//        log.debug("CommandUpdateCRMCustomer - Returning CRM location {}", response.getStatus());
-//        if (response.getStatus() == ACCEPTED.getStatusCode()) {
-//            String locationHeader = response.getHeaderString("location");
-//            log.debug("CommandUpdateCRMCustomer - Returning CRM location {}", locationHeader);
-//            return locationHeader;
-//        }
-//        String responseJson = response.readEntity(String.class);
-//        log.debug("CommandUpdateCRMCustomer - Returning CRM location '{}', status {}", responseJson, response.getStatus());
-//        return null;
-//
-//
-//    }
-//
-//    @Override
-//    protected String getFallback() {
-//        log.warn("CommandUpdateCRMCustomer - fallback - whydahServiceUri={}", crmServiceUri.toString());
-//        return null;
-//    }
-
 
 }
