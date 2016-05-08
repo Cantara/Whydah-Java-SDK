@@ -1,15 +1,10 @@
 package net.whydah.sso.commands.adminapi.application;
 
 import com.github.kevinsawicki.http.HttpRequest;
-import net.whydah.sso.commands.adminapi.user.CommandAddUser;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-import org.slf4j.Logger;
 
 import java.net.URI;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
-// TODO:  wait for https://github.com/Cantara/Whydah-UserAdminService/issues/35
 
 public class CommandAddApplication extends BaseHttpPostHystrixCommand<String> {
   
@@ -34,16 +29,6 @@ public class CommandAddApplication extends BaseHttpPostHystrixCommand<String> {
     	return request.contentType("application/json").send(applicationJson);
     }
 
-//    @Override
-//    protected String run() {
-//        log.trace("CommandAddApplication - myAppTokenId={} - \n\n adding applicationJson={}", myAppTokenId, applicationJson);
-//
-//        Client tokenServiceClient = ClientBuilder.newClient();
-//
-//        WebTarget addApplication = tokenServiceClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/application");
-//        Response response = addApplication.request().post(Entity.json(applicationJson));
-//        return response.getEntity().toString();
-//    }
 
 
 	@Override

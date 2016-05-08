@@ -17,7 +17,12 @@ public class CommandLogonApplication extends BaseHttpPostHystrixCommand<String> 
 	public CommandLogonApplication(URI tokenServiceUri, ApplicationCredential appCredential) {
 		super(tokenServiceUri, "", "", "STSApplicationAdminGroup", 6000);
 		this.appCredential = appCredential;
-	}
+        this.tokenServiceUri = tokenServiceUri;
+        if (tokenServiceUri == null || appCredential == null) {
+            log.error(TAG + " initialized with null-values - will fail. tokenServiceUri:{}, appCredential:{} ", tokenServiceUri, appCredential);
+        }
+
+    }
 
 	@Override
 	protected String getFallback() {
