@@ -68,6 +68,13 @@ public class WhydahUtil {
 
     }
 
+    public static String extendApplicationSession(String stsURI, String applicationTokenId, int millisecondswait) {
+        URI tokenServiceUri = URI.create(stsURI);
+        String myAppTokenXml = new CommandRenewApplicationSession(tokenServiceUri, applicationTokenId, millisecondswait).execute();
+        return myAppTokenXml;
+
+    }
+
     public static String logOnApplicationAndUser(String stsURI, String applicationID, String applicationName, String applicationSecret, String username, String password) {
         URI tokenServiceUri = URI.create(stsURI);
         ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationName, applicationSecret);

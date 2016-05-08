@@ -9,7 +9,19 @@ import java.net.URI;
 
 public class CommandRenewApplicationSession extends BaseHttpPostHystrixCommand<String> {
 
-  
+
+    public CommandRenewApplicationSession(URI tokenServiceUri, String applicationtokenid, int millisecondwait) {
+        super(tokenServiceUri, "", applicationtokenid, "STSApplicationAdminGroup", millisecondwait);
+
+
+        if (tokenServiceUri == null || applicationtokenid == null) {
+            log.error("CommandRenewApplicationSession initialized with null-values - will fail");
+            throw new IllegalArgumentException("Missing parameters for \n" +
+                    "\ttokenServiceUri [" + tokenServiceUri + "], \n" +
+                    "\tapplicationtokenid [" + applicationtokenid + "]");
+        }
+
+    }
 
     public CommandRenewApplicationSession(URI tokenServiceUri, String applicationtokenid) {
     	super(tokenServiceUri, "", applicationtokenid, "STSApplicationAdminGroup", 3000);
