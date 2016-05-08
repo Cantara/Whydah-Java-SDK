@@ -17,7 +17,7 @@ public class CommandLogonUserByPhoneNumberPin extends BaseHttpPostHystrixCommand
 	private String userticket;
 
 	public CommandLogonUserByPhoneNumberPin(URI serviceUri, String myAppTokenId, String myAppTokenXml, String adminUserTokenId, String phoneNo, String pin, String userTicket) {
-		super(serviceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup");
+		super(serviceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", 8000);
 		this.phoneNo = phoneNo;
 		this.pin = pin;
 		this.userticket = userTicket;
