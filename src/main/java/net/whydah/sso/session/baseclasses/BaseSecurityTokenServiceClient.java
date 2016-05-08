@@ -138,17 +138,26 @@ public class BaseSecurityTokenServiceClient {
     }
 
 
-    //USER ADMIN SERVICE
-
     public String getMyAppTokenID() {
+        if (was.getActiveApplicationToken() == null) {
+            was.renewWhydahApplicationSession();
+        }
         return was.getActiveApplicationTokenId();
     }
 
     public String getMyAppTokenXml() {
+
+        if (was.getActiveApplicationToken() == null) {
+            was.renewWhydahApplicationSession();
+        }
         return was.getActiveApplicationTokenXML();
     }
 
     public String getUserTokenFromUserTokenId(String userTokenId) {
+        if (was.getActiveApplicationToken() == null) {
+            was.renewWhydahApplicationSession();
+        }
+
         return new CommandGetUsertokenByUsertokenId(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userTokenId).execute();
     }
 
@@ -171,36 +180,11 @@ public class BaseSecurityTokenServiceClient {
         if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
             return getDummyToken();
         }
+        if (was.getActiveApplicationToken() == null) {
+            was.renewWhydahApplicationSession();
+        }
         log.debug("getUserTokenByPin() - Application logon OK. applicationTokenId={}. Log on with user adminUserTokenId {}.", getMyAppTokenID(), adminUserTokenId);
-        // 	public CommandLogonUserByPhoneNumberPin(URI serviceUri, String myAppTokenId, String myAppTokenXml, String phoneNo, String pin, String userTicket) {
-
         String userTokenXML = new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenId, phoneNo, pin, userTicket).execute();
-        /**
-         WebResource tokenService = tokenServiceClient.resource(tokenServiceUri).path("user/" + applicationSession.getActiveApplicationTokenId() + "/" + userTicket + "/get_usertoken_by_pin_and_logon_user");
-
-         MultivaluedMap<String,String> formData = new MultivaluedMapImpl();
-         formData.add("apptoken", applicationSession.getActiveApplicationTokenXML());
-         formData.add("pin", pin);
-         formData.add("phoneno", phoneNo);
-         ClientResponse response = tokenService.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(ClientResponse.class, formData);
-         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
-         log.info("getUserTokenByPin() - User authentication failed with status code " + response.getStatus());
-         return null;
-         //throw new IllegalArgumentException("Log on failed. " + ClientResponse.Status.FORBIDDEN);
-         }
-         if (response.getStatus() == 500 ) {
-         log.info("getUserTokenByPin() - User authentication failed with status code " + response.getStatus());
-         return null;
-         //throw new IllegalArgumentException("Log on failed. " + ClientResponse.Status.FORBIDDEN);
-         }
-         if (response.getStatus() == OK.getStatusCode()) {
-         String userAggregateXML = response.getEntity(String.class);
-         log.debug("getUserTokenByPin() - Log on OK with response {}", userAggregateXML);
-         return userAggregateXML;
-         }
-
-         throw new RuntimeException("User authentication failed with status code " + response.getStatus());
-         */
         return userTokenXML;
     }
 
@@ -208,6 +192,9 @@ public class BaseSecurityTokenServiceClient {
         log.debug("getUserTokenByPin() called with " + "phoneNo = [" + phoneNo + "], pin = [" + pin + "], userTicket = [" + userTicket + "]");
         if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
             return getDummyToken();
+        }
+        if (was.getActiveApplicationToken() == null) {
+            was.renewWhydahApplicationSession();
         }
         log.debug("getUserTokenByPin() - Application logon OK. applicationTokenId={}. Log on with user phoneno {}.", was.getActiveApplicationTokenId(), phoneNo);
         return new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenId, phoneNo, pin, userTicket).execute();
@@ -217,6 +204,9 @@ public class BaseSecurityTokenServiceClient {
         if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
             return getDummyToken();
         }
+        if (was.getActiveApplicationToken() == null) {
+            was.renewWhydahApplicationSession();
+        }
         log.debug("getUserToken - Application logon OK. applicationTokenId={}. Log on with user credentials {}.", was.getActiveApplicationTokenId(), user.toString());
         return new CommandLogonUserByUserCredential(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), user, userticket).execute();
     }
@@ -224,6 +214,9 @@ public class BaseSecurityTokenServiceClient {
     public boolean createTicketForUserTokenID(String userTicket, String userTokenID) {
         log.debug("createTicketForUserTokenID - apptokenid: {}", was.getActiveApplicationTokenId());
         log.debug("createTicketForUserTokenID - userticket: {} userTokenID: {}", userTicket, userTokenID);
+        if (was.getActiveApplicationToken() == null) {
+            was.renewWhydahApplicationSession();
+        }
         return new CommandCreateTicketForUserTokenID(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userTicket, userTokenID).execute();
     }
 
@@ -231,7 +224,9 @@ public class BaseSecurityTokenServiceClient {
         if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
             return getDummyToken();
         }
-
+        if (was.getActiveApplicationToken() == null) {
+            was.renewWhydahApplicationSession();
+        }
         return new CommandGetUsertokenByUsertokenId(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), usertokenId).execute();
     }
 
@@ -254,6 +249,9 @@ public class BaseSecurityTokenServiceClient {
     }
 
     public boolean sendUserSMSPin(String phoneNo, String smsPin) {
+        if (was.getActiveApplicationToken() == null) {
+            was.renewWhydahApplicationSession();
+        }
         if (phoneNo == null || smsPin == null) {
             return false;
         }
@@ -264,6 +262,10 @@ public class BaseSecurityTokenServiceClient {
     }
 
     public boolean sendSMSMessage(String phoneNo, String msg) {
+        if (was.getActiveApplicationToken() == null) {
+            was.renewWhydahApplicationSession();
+        }
+
         if (phoneNo == null || msg == null) {
             return false;
         }

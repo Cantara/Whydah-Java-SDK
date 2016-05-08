@@ -132,7 +132,7 @@ public class WhydahApplicationSession {
     }
 
 
-    private void renewWhydahApplicationSession() {
+    public void renewWhydahApplicationSession() {
         if (applicationToken == null) {
             initializeWhydahApplicationSession();
         }
