@@ -21,43 +21,9 @@ public class CommandGetCRMCustomer extends BaseHttpGetHystrixCommand<String> {
 
     }
 
-//    @Override
-//    protected String run() {
-//        log.trace("CommandGetCRMCustomer - myAppTokenId={}", myAppTokenId);
-//
-////        Client crmClient = ClientBuilder.newClient();
-//        Client crmClient;
-//        if (!SSLTool.isCertificateCheckDisabled()) {
-//            crmClient = ClientBuilder.newClient();
-//        } else {
-//            crmClient = ClientBuilder.newBuilder().sslContext(SSLTool.sc).hostnameVerifier((s1, s2) -> true).build();
-//        }
-//
-//        WebTarget getCustomer = crmClient.target(crmServiceUri).path(myAppTokenId).path(userTokenId).path("customer").path(personRef);
-//
-//        Response response = getCustomer.request().get();
-//        log.debug("CommandGetCRMCustomer - Returning CRM customer {}", response.getStatus());
-//        if (response.getStatus() == OK.getStatusCode()) {
-//            String responseJson = response.readEntity(String.class);
-//            log.debug("CommandGetCRMCustomer - Returning CRM customer {}", responseJson);
-//            return responseJson;
-//        }
-//        String responseJson = response.readEntity(String.class);
-//        log.debug("CommandGetCRMCustomer - Returning CRM customer {}", responseJson);
-//        return null;
-//
-//
-//    }
-
-//    @Override
-//    protected String getFallback() {
-//        log.warn("CommandGetCRMCustomer - fallback - whydahServiceUri={}", crmServiceUri.toString());
-//        return null;
-//    }
 
 	@Override
 	protected String getTargetPath() {
-		// TODO Auto-generated method stub
 		return myAppTokenId + "/" + userTokenId + "/customer/" + personRef;
 	}
 
