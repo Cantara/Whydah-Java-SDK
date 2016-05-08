@@ -16,7 +16,7 @@ public class CommandGetCRMCustomer extends BaseHttpGetHystrixCommand<String> {
     	this.userTokenId = userTokenId;
         this.personRef = personRef;
         if (crmServiceUri == null || myAppTokenId == null || userTokenId == null || personRef == null) {
-            log.error("CommandGetCRMCustomer initialized with null-values - will fail");
+            log.error("CommandGetCRMCustomer initialized with null-values - will fail - crmServiceUri:{} myAppTokenId:{} userTokenId:{} personRef:{}", crmServiceUri, myAppTokenId, userTokenId, personRef);
         }
 
     }

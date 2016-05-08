@@ -22,6 +22,8 @@ public class CommandCreateCRMCustomer extends BaseHttpPostHystrixCommand<String>
 
 		if (crmServiceUri == null || myAppTokenId == null || userTokenId == null) {
 			log.error(TAG + " initialized with null-values - will fail");
+			log.error("CommandCreateCRMCustomer initialized with null-values - will fail - crmServiceUri:{} myAppTokenId:{} userTokenId:{} personRef:{}", crmServiceUri, myAppTokenId, userTokenId, customerRefId);
+
 		}
 
 	}
