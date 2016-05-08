@@ -68,7 +68,7 @@ public class SystemTestBaseConfig {
 
         try {
             if (systemTest) {
-                Thread.sleep(2000);
+                Thread.sleep(500);
             }
         } catch (InterruptedException ie) {
 
