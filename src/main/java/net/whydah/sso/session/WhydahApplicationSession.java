@@ -189,7 +189,7 @@ public class WhydahApplicationSession {
             return false;
         }
         setApplicationSessionParameters(applicationTokenXML);
-        log.debug("Initializing new application session, applicationTokenId:" + applicationToken.getApplicationTokenId());
+        log.info("Initialized new application session, applicationTokenId:{}, applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
         return true;
     }
 
