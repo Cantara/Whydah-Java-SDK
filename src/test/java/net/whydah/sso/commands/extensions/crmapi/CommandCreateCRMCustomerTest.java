@@ -31,7 +31,7 @@ public class CommandCreateCRMCustomerTest extends BaseCRMCustomerTest {
         if (config.isCRMCustomerExtensionSystemTestEnabled()) {
             UserToken myUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
             String personRef = null;
-            String personJson = generateDummyCustomerData("123456");
+            String personJson = generateDummyCustomerData("1234");//length should be less than 4 or empty
             String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), myUserToken.getTokenid(), personRef, personJson).execute();
             System.out.println("Returned CRM customer id: " + crmCustomerId);
             assertTrue(crmCustomerId != null);

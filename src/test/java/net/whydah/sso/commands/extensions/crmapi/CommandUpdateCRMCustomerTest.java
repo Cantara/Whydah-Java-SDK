@@ -14,7 +14,7 @@ public class CommandUpdateCRMCustomerTest extends BaseCRMCustomerTest{
             UserToken adminUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
 
             //create a dummy customer
-            String personJson1 = generateDummyCustomerData("123456");
+            String personJson1 = generateDummyCustomerData("");
             String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getTokenid(), null, personJson1).execute();
             
             //update id in the jsondata

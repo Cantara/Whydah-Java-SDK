@@ -2,8 +2,10 @@ package net.whydah.sso.commands.extensions.crmapi;
 
 import net.whydah.sso.util.SSLTool;
 import net.whydah.sso.util.SystemTestBaseConfig;
+
 import org.junit.BeforeClass;
 
+import java.net.URI;
 import java.util.Random;
 
 public class BaseCRMCustomerTest {
@@ -18,8 +20,7 @@ public class BaseCRMCustomerTest {
 	public static void setup() throws Exception {
 		config = new SystemTestBaseConfig();
 		SSLTool.disableCertificateValidation();
-		//HUY test
-        //config.crmServiceUri = URI.create("http://localhost:12121/crmservice/");
+		//config.setSystemTest(false);
 	}
 	
 	protected byte[] generateDummyCustomerPhoto(){

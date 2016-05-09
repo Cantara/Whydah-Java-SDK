@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 public class SystemTestBaseConfig {
 
     // Run the Whydah SystemTests?
-    public boolean systemTest = true;
+    boolean systemTest = true;
 
     // Run SystemTests for Whydah Extensions?
     public boolean statisticsExtensionSystemTest = true;
@@ -34,8 +34,10 @@ public class SystemTestBaseConfig {
     public String password = "useradmin42";
     public URI tokenServiceUri;
     public URI userAdminServiceUri;
-    public String userAdminService = "http://localhost:9992/useradminservice";
-    public String userTokenService = "http://localhost:9998/tokenservice";
+    public String userAdminService = "http://localhost:9992/useradminservice/";
+    public String userTokenService = "http://localhost:9998/tokenservice/";
+    public String crmService = "http://localhost:12121/crmservice/";
+    public String statisticsService = "https://whydahdev.cantara.no/reporter/";
     public ApplicationCredential appCredential;
     public UserCredential userCredential;
     
@@ -49,19 +51,27 @@ public class SystemTestBaseConfig {
 
     public SystemTestBaseConfig() {
         appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
-        tokenServiceUri = URI.create(userTokenService);
-         userCredential = new UserCredential(userName, password);
-        userAdminServiceUri = URI.create(userAdminService);
+        userCredential = new UserCredential(userName, password);
+        SSLTool.disableCertificateValidation();
+        setSystemTest(true);
+    }
 
-         if (systemTest) {
-             SSLTool.disableCertificateValidation();
-             tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/");
-             userAdminServiceUri = URI.create("https://whydahdev.cantara.no/useradminservice/");
-
-             crmServiceUri = URI.create("https://whydahdev.cantara.no/crmservice/");
-             statisticsServiceUri = URI.create("https://whydahdev.cantara.no/reporter/");
-             
-         }
+    public void setSystemTest(boolean isSystemTest){
+    	this.systemTest = isSystemTest;  
+    	
+    	if (this.systemTest) {
+           
+            tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/");
+            userAdminServiceUri = URI.create("https://whydahdev.cantara.no/useradminservice/");
+            crmServiceUri = URI.create("https://whydahdev.cantara.no/crmservice/");
+            statisticsServiceUri = URI.create("https://whydahdev.cantara.no/reporter/");
+        } else {
+        	
+            tokenServiceUri = URI.create(userTokenService);
+            userAdminServiceUri = URI.create(userAdminService);
+            crmServiceUri = URI.create(crmService);
+            statisticsServiceUri = URI.create(statisticsService);
+        }
     }
 
     public boolean isSystemTestEnabled() {

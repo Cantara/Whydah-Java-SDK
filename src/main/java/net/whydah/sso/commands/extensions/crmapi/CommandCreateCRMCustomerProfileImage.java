@@ -15,7 +15,7 @@ public class CommandCreateCRMCustomerProfileImage extends BaseHttpPostHystrixCom
 
 
     public CommandCreateCRMCustomerProfileImage(URI crmServiceUri, String myAppTokenId, String userTokenId, String customerRefId, String contentType, byte[] imageData) {
-    	super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 3000);
+    	super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 6000);
         
         this.userTokenId = userTokenId;
         this.customerRefId = customerRefId;
