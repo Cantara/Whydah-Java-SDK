@@ -1,10 +1,9 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import java.net.URI;
-
+import com.github.kevinsawicki.http.HttpRequest;
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 
-import com.github.kevinsawicki.http.HttpRequest;
+import java.net.URI;
 
 
 public class CommandSendSMSToUser extends BaseHttpGetHystrixCommand<String> {
@@ -36,24 +35,6 @@ public class CommandSendSMSToUser extends BaseHttpGetHystrixCommand<String> {
     	return request.contentType("application/json");
     }
 
-//    @Override
-//    protected String run() {
-//
-//        log.trace("CommandSendSMSToUser {}, using service {} and query template {} message {}", cellNo, serviceUrl, queryparam, smsMessage);
-//        HttpRequest request = HttpRequest.get(serviceUrl + "?" + queryparam).contentType(HttpSender.APPLICATION_JSON);
-//        int statusCode = request.code();
-//        String responseBody = request.body();
-//        switch (statusCode) {
-//            case HttpSender.STATUS_OK:
-//                log.debug("CommandSendSMSToUser -  ok: result: {}", responseBody);
-//                return responseBody;
-//            default:
-//                log.warn("Unexpected response from STS. Response is {} content is {}", responseBody, responseBody);
-//        }
-//        log.warn("CommandSendSMSToUser - failed");
-//        throw new RuntimeException("CommandSendSMSToUser - failed");
-//
-//    }
 
     
 	@Override
