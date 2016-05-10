@@ -19,9 +19,17 @@ public class CommandListApplications extends BaseHttpGetHystrixCommand<String> {
             log.error(TAG + " initialized with null-values - will fail");
         }
     }
-    
-	@Override
-	protected String getTargetPath() {
+
+    public CommandListApplications(URI userAdminServiceUri, String myAppTokenId, String applicationQuery) {
+        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
+        this.applicationQuery = applicationQuery;
+        if (userAdminServiceUri == null || myAppTokenId == null || applicationQuery == null) {
+            log.error(TAG + " initialized with null-values - will fail");
+        }
+    }
+
+    @Override
+    protected String getTargetPath() {
         return myAppTokenId + "/applications/" + applicationQuery;
     }
 
