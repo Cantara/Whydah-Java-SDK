@@ -42,7 +42,7 @@ public class CommandListApplicationsTest {
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
             String applicationsJsonl = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
-            System.out.println("applicationsJson=" + applicationsJsonl);
+            log.debug("applicationsJson=" + applicationsJsonl);
             assertTrue(!applicationsJsonl.isEmpty());
 
         }
@@ -62,7 +62,7 @@ public class CommandListApplicationsTest {
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
             String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
-            System.out.println("applicationsJson=" + applicationsJson);
+            log.debug("applicationsJson=" + applicationsJson);
             assertTrue(applicationsJson.length() > 100);
             List<Application> applications = ApplicationMapper.fromJsonList(applicationsJson);
             assertTrue(applications.size() > 6);
@@ -83,7 +83,7 @@ public class CommandListApplicationsTest {
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
             String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
-            System.out.println("applicationsJson=" + applicationsJson);
+            log.debug("applicationsJson=" + applicationsJson);
             assertTrue(applicationsJson.length() > 100);
             List<Application> applications = ApplicationMapper.fromJsonList(applicationsJson);
             assertTrue(applications.size() > 6);
