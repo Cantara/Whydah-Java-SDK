@@ -20,8 +20,8 @@ import static org.junit.Assert.assertTrue;
 public class SystemTestBaseConfig {
 
     // Run SystemTests for Whydah Extensions?
-    public boolean statisticsExtensionSystemTest = true;
-    public boolean CRMCustomerExtensionSystemTest = true;
+    public boolean statisticsExtensionSystemTest = false;
+    public boolean CRMCustomerExtensionSystemTest = false;
     public String TEMPORARY_APPLICATION_ID = "101";//"11";
     public String TEMPORARY_APPLICATION_NAME = "Whydah-SystemTests";//"Funny APp";//"11";
     public String TEMPORARY_APPLICATION_SECRET = "55fhRM6nbKZ2wfC6RMmMuzXpk";//"LLNmHsQDCerVWx5d6aCjug9fyPE";
@@ -41,7 +41,7 @@ public class SystemTestBaseConfig {
     public String myAppTokenXml;
     public String myApplicationTokenID;
     // Run the Whydah SystemTests?
-    boolean systemTest = true;
+    boolean systemTest = false;
 
     public SystemTestBaseConfig() {
         appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
