@@ -2,8 +2,8 @@ package net.whydah.sso.commands.appauth;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
+import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import net.whydah.sso.util.SSLTool;
-import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;

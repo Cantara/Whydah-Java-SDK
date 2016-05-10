@@ -1,4 +1,4 @@
-package net.whydah.sso.util;
+package net.whydah.sso.commands.systemtestbase;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationTokenMapper;
@@ -10,6 +10,7 @@ import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserToken;
+import net.whydah.sso.util.SSLTool;
 
 import java.net.URI;
 import java.util.UUID;
@@ -51,9 +52,9 @@ public class SystemTestBaseConfig {
     }
 
     public void setSystemTest(boolean isSystemTest){
-    	this.systemTest = isSystemTest;  
-    	
-    	if (this.systemTest) {
+        this.systemTest = isSystemTest;
+
+        if (this.systemTest) {
            
             tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/");
             userAdminServiceUri = URI.create("https://whydahdev.cantara.no/useradminservice/");
@@ -77,7 +78,7 @@ public class SystemTestBaseConfig {
         } catch (InterruptedException ie) {
 
         }
-        return systemTest;
+        return false;
     }
 
     public boolean isStatisticsExtensionSystemtestEnabled() {
