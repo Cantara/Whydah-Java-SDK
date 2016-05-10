@@ -269,8 +269,8 @@ public class BaseSecurityTokenServiceClient {
         if (phoneNo == null || msg == null) {
             return false;
         }
-        log.debug("sendUserSMSPin - apptokenid: {}", was.getActiveApplicationTokenId());
-        log.debug("sendUserSMSPin - phoneNo: {} smsPin: {}", phoneNo, msg);
+        log.debug("sendSMSMessage - apptokenid: {}", was.getActiveApplicationTokenId());
+        log.debug("sendSMSMessage - phoneNo: {} msg: {}", phoneNo, msg);
 
         return new CommandSendSms(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), phoneNo, msg).execute();
     }
