@@ -78,7 +78,7 @@ public class SystemTestBaseConfig {
         } catch (InterruptedException ie) {
 
         }
-        return false;
+        return systemTest;
     }
 
     public boolean isStatisticsExtensionSystemtestEnabled() {
