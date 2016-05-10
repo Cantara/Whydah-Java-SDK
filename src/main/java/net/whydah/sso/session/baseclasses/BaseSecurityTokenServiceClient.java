@@ -248,17 +248,17 @@ public class BaseSecurityTokenServiceClient {
         return new CommandValidateUsertokenId(uri_securitytoken_service, was.getActiveApplicationTokenId(), usertokenid).execute();
     }
 
-    public boolean sendUserSMSPin(String phoneNo, String smsPin) {
+    public boolean sendUserSMSPin(String phoneNo) {
         if (was.getActiveApplicationToken() == null) {
             was.renewWhydahApplicationSession();
         }
-        if (phoneNo == null || smsPin == null) {
+        if (phoneNo == null) {
             return false;
         }
         log.debug("sendUserSMSPin - apptokenid: {}", was.getActiveApplicationTokenId());
-        log.debug("sendUserSMSPin - phoneNo: {} smsPin: {}", phoneNo, smsPin);
+        log.debug("sendUserSMSPin - phoneNo: {} ", phoneNo);
 
-        return new CommandSendSmsPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), phoneNo, smsPin).execute();
+        return new CommandGenerateAndSendSmsPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), phoneNo).execute();
     }
 
     public boolean sendSMSMessage(String phoneNo, String msg) {
