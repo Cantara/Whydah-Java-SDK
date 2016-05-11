@@ -2,6 +2,7 @@ package net.whydah.sso.session;
 
 import net.whydah.sso.application.mappers.ApplicationMapper;
 import net.whydah.sso.application.mappers.ApplicationTokenMapper;
+import net.whydah.sso.application.types.Application;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.application.types.ApplicationToken;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
@@ -12,13 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.util.List;
 import java.util.concurrent.*;
 
 public class WhydahApplicationSession {
 
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
     private static final int SESSION_CHECK_INTERVAL = 50;  // Check every 30 seconds to adapt quickly
-    private static String myAppLinks = "[{}]";
+    private static List<Application> applications;
     private static WhydahApplicationSession instance = null;
     private String sts;
     private String uas;
@@ -234,6 +236,30 @@ public class WhydahApplicationSession {
     }
 
 
+    /**
+     * Application cache section - keep a cache of configured applications
+     */
+
+    public static List<Application> getApplicationList() {
+        return applications;
+    }
+
+    private static void setAppLinks(List<Application> newapplications) {
+        applications = newapplications;
+    }
+
+    private static void updateApplinks(URI userAdminServiceUri, String myAppTokenId) {
+        if (ApplicationModelUtil.shouldUpdate(5) || getApplicationList() == null || getApplicationList().size() < 2) {
+            String applicationsJson = new CommandListApplications(userAdminServiceUri, myAppTokenId).execute();
+            log.debug("AppLications returned:" + applicationsJson);
+            if (applicationsJson != null) {
+                if (applicationsJson.length() > 20) {
+                    setAppLinks(ApplicationMapper.fromJsonList(applicationsJson));
+                }
+            }
+        }
+    }
+
     private void startThreadAndUpdateAppLinks() {
         if (uas == null || uas.length() < 8) {
             log.info("Started WAS without UAS configuration, wont keep an updated applicationlist");
@@ -246,32 +272,7 @@ public class WhydahApplicationSession {
                 log.debug("Asynchronous startThreadAndUpdateAppLinks task");
             }
         });
-
         executorService.shutdown();
-    }
-
-    public static String getAppLinks() {
-        if (myAppLinks.length() < 10) {
-
-        }
-        return myAppLinks;
-    }
-
-    private static void setAppLinks(String appLinks) {
-        myAppLinks = appLinks;
-    }
-
-    public static void updateApplinks(URI userAdminServiceUri, String myAppTokenId) {
-        if (ApplicationModelUtil.shouldUpdate(5) || getAppLinks() == null || myAppLinks.length() < 6) {
-            String applicationsJson = new CommandListApplications(userAdminServiceUri, myAppTokenId).execute();
-            log.debug("AppLications returned:" + applicationsJson);
-            if (applicationsJson != null) {
-                if (applicationsJson.length() > 20) {
-                    setAppLinks(ApplicationMapper.toShortListJson(ApplicationMapper.fromJsonList(applicationsJson)));
-
-                }
-            }
-        }
     }
 
 }
