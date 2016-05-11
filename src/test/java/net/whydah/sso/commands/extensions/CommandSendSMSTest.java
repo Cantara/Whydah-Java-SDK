@@ -1,25 +1,37 @@
 package net.whydah.sso.commands.extensions;
 
-import net.whydah.sso.commands.adminapi.user.CommandSendSMSToUser;
-import org.junit.Ignore;
+import net.whydah.sso.commands.appauth.CommandLogonApplication;
+import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
+import net.whydah.sso.commands.userauth.CommandGenerateAndSendSmsPin;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static junit.framework.TestCase.assertTrue;
 
 
 public class CommandSendSMSTest {
 
+    private static final Logger log = LoggerFactory.getLogger(CommandSendSMSTest.class);
+    public static SystemTestBaseConfig config;
 
-    @Ignore
-    @Test
-    public void testSendSMS() {
-        String serviceURL = "https://smsgw.somewhere/../sendMessages/";
-        String serviceAccount = "serviceAccount";
-        String username = "smsserviceusername";
-        String password = "smsservicepassword";
-        String cellNo = "smsrecepient";
-        String smsMessage = "testmessage til Totto2";
-        String queryParam = "serviceId=serviceAccount&message[0].recipient=smsrecepient&message[0].content=smscontent&username=smsserviceusername&password=smsservicepassword";
-        new CommandSendSMSToUser(serviceURL, serviceAccount, username, password, queryParam, cellNo, smsMessage).execute();
+    @BeforeClass
+    public static void setup() throws Exception {
+        config = new SystemTestBaseConfig();
     }
 
+
+    @Test
+    public void testSendSMSPin() throws Exception {
+
+        if (config.isSystemTestEnabled()) {
+
+            String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
+            //     public CommandGenerateAndSendSmsPin(URI tokenServiceUri, String appTokenId, String appTokenXml, String phoneNo) {
+            assertTrue(new CommandGenerateAndSendSmsPin(config.tokenServiceUri, config.myApplicationTokenID, myAppTokenXml, "91905054").execute());
+        }
+
+    }
 
 }
