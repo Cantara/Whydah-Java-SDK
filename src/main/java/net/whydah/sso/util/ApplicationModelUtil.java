@@ -82,4 +82,9 @@ public class ApplicationModelUtil {
         return (5 >= ((int) (Math.random() * max)));  // update on 5 percent of requests
     }
 
+    public static boolean shouldUpdate(int percentage) {
+        int max = 100;
+        return (percentage >= ((int) (Math.random() * max)));  // update on 5 percent of requests
+    }
+
 }
