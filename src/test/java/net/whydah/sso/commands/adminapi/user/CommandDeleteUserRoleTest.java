@@ -1,6 +1,9 @@
 package net.whydah.sso.commands.adminapi.user;
 
 import net.whydah.sso.application.mappers.ApplicationTokenMapper;
+import net.whydah.sso.commands.adminapi.user.role.CommandAddUserRole;
+import net.whydah.sso.commands.adminapi.user.role.CommandDeleteUserRole;
+import net.whydah.sso.commands.adminapi.user.role.CommandGetUserRoles;
 import net.whydah.sso.commands.extensions.crmapi.CommandGetCRMCustomerTest;
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;

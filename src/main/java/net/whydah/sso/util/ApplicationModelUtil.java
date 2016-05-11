@@ -57,7 +57,7 @@ public class ApplicationModelUtil {
 
     public static void updateApplicationList(URI userAdminServiceUri, String myAppTokenId, String userTokenId) {
         if (shouldUpdate() || getApplicationList() == null || userAdminServiceUri != null || applications.size() < 6) {
-            String applicationsJson = new net.whydah.sso.commands.adminapi.application.CommandListApplications(userAdminServiceUri, myAppTokenId, userTokenId, "").execute();
+            String applicationsJson = new net.whydah.sso.commands.adminapi.application.CommandSearchForApplications(userAdminServiceUri, myAppTokenId, userTokenId, "").execute();
             log.debug("AppLications returned:" + applicationsJson);
             if (applicationsJson != null) {
                 if (applicationsJson.length() > 20) {
@@ -68,7 +68,7 @@ public class ApplicationModelUtil {
     }
 
     public static void forcedUpdateApplicationList(URI userAdminServiceUri, String myAppTokenId, String userTokenId) {
-        String applicationsJson = new net.whydah.sso.commands.adminapi.application.CommandListApplications(userAdminServiceUri, myAppTokenId, userTokenId, "").execute();
+        String applicationsJson = new net.whydah.sso.commands.adminapi.application.CommandListApplications(userAdminServiceUri, myAppTokenId).execute();
         log.debug("AppLications returned:" + applicationsJson);
         if (applicationsJson != null) {
             if (applicationsJson.length() > 20) {

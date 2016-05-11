@@ -37,7 +37,7 @@ public class WhydahAdminUtil {
         String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
 
-        return new CommandListApplications(userAdminServiceUri, myApplicationTokenID,userTokenId,"").execute();
+        return new CommandListApplications(userAdminServiceUri, myApplicationTokenID).execute();
     }
 
 }

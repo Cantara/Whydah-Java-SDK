@@ -1,6 +1,7 @@
 package net.whydah.sso.commands.adminapi.user;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
+import net.whydah.sso.commands.adminapi.user.role.CommandAddUserRole;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.extensions.crmapi.CommandGetCRMCustomerTest;
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;

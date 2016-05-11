@@ -41,7 +41,7 @@ public class CommandListApplicationsTest {
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
-            String applicationsJsonl = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
+            String applicationsJsonl = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID).execute();
             log.debug("applicationsJson=" + applicationsJsonl);
             assertTrue(!applicationsJsonl.isEmpty());
 
@@ -61,7 +61,7 @@ public class CommandListApplicationsTest {
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
-            String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
+            String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID).execute();
             log.debug("applicationsJson=" + applicationsJson);
             assertTrue(applicationsJson.length() > 100);
             List<Application> applications = ApplicationMapper.fromJsonList(applicationsJson);
@@ -82,7 +82,7 @@ public class CommandListApplicationsTest {
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
-            String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
+            String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID).execute();
             log.debug("applicationsJson=" + applicationsJson);
             assertTrue(applicationsJson.length() > 100);
             List<Application> applications = ApplicationMapper.fromJsonList(applicationsJson);

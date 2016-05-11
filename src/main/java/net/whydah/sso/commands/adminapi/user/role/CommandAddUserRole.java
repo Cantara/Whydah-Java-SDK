@@ -1,4 +1,4 @@
-package net.whydah.sso.commands.adminapi.user;
+package net.whydah.sso.commands.adminapi.user.role;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;

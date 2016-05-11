@@ -4,7 +4,7 @@ import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.adminapi.user.CommandAddUser;
-import net.whydah.sso.commands.adminapi.user.CommandAddUserRole;
+import net.whydah.sso.commands.adminapi.user.role.CommandAddUserRole;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandRenewApplicationSession;
 import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;

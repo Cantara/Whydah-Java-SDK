@@ -60,7 +60,7 @@ public class CommandAddApplicationTest {
     }
 
     private int countApplications(String myApplicationTokenID, String userTokenId) {
-        String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID, userTokenId, "").execute();
+        String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID).execute();
         System.out.println("applicationsJson=" + applicationsJson);
         assertTrue(applicationsJson.length() > 100);
         List<Application> applications = ApplicationMapper.fromJsonList(applicationsJson);

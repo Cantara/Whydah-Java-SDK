@@ -7,30 +7,19 @@ import java.net.URI;
 
 
 public class CommandListApplications extends BaseHttpGetHystrixCommand<String> {
-    
-    
-    private String applicationQuery;
 
 
-    public CommandListApplications(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String applicationQuery) {
+    public CommandListApplications(URI userAdminServiceUri, String myAppTokenId) {
         super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
-        this.applicationQuery = applicationQuery;
-        if (userAdminServiceUri == null || myAppTokenId == null || applicationQuery == null) {
+        if (userAdminServiceUri == null || myAppTokenId == null) {
             log.error(TAG + " initialized with null-values - will fail");
         }
     }
 
-    public CommandListApplications(URI userAdminServiceUri, String myAppTokenId, String applicationQuery) {
-        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
-        this.applicationQuery = applicationQuery;
-        if (userAdminServiceUri == null || myAppTokenId == null || applicationQuery == null) {
-            log.error(TAG + " initialized with null-values - will fail");
-        }
-    }
 
     @Override
     protected String getTargetPath() {
-        return myAppTokenId + "/applications/" + applicationQuery;
+        return myAppTokenId + "/applications";
     }
 
 	@Override
