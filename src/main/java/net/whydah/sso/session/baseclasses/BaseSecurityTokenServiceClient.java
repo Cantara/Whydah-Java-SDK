@@ -1,6 +1,5 @@
 package net.whydah.sso.session.baseclasses;
 
-import static org.junit.Assert.assertTrue;
 import net.whydah.sso.commands.adminapi.user.CommandCreatePinVerifiedUser;
 import net.whydah.sso.commands.adminapi.user.role.CommandAddUserRole;
 import net.whydah.sso.commands.adminapi.user.role.CommandGetUserRoles;
@@ -10,13 +9,11 @@ import net.whydah.sso.commands.userauth.*;
 import net.whydah.sso.config.ApplicationMode;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
-import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.mappers.UserRoleMapper;
 import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserToken;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +21,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Properties;
-import java.util.UUID;
 
 public class BaseSecurityTokenServiceClient {
 
