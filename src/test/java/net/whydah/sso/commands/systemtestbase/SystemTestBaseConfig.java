@@ -48,7 +48,7 @@ public class SystemTestBaseConfig {
         appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
         userCredential = new UserCredential(userName, password);
         SSLTool.disableCertificateValidation();
-        setSystemTest(true);
+        //setSystemTest(true);
     }
 
     public void setSystemTest(boolean isSystemTest){
