@@ -299,61 +299,6 @@ public class BaseSecurityTokenServiceClient {
         return new CommandCreatePinVerifiedUser(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenXml, userTicket, phoneNo, pin, userIdentityJson).execute();
     }
 
-	public boolean updateOrCreateUserApplicationRoleEntry(String applicationId, String applicationName, String roleValue, String userTokenXml) {
-		try{
-//    	a) find the correct application/website the customer shall return to (redirectURI/from view)
-//		b) lookup and find the userRole the user have for this application with roleName="INNData" (UAS)
-//		c) update the roleValue for this particular role (UAS)
-//		d) call the "non-existing" updateUserToken method in STS
-		
-		
-		 //implement
-		//step a
-		 UserToken userToken = UserTokenMapper.fromUserTokenXml(userTokenXml);
-		 String rolesJson = new CommandGetUserRoles(uri_useradmin_service, getMyAppTokenID(), userToken.getTokenid(), userToken.getUid()).execute();
-         List<UserApplicationRoleEntry> appRoleEntryList = UserRoleMapper.fromJsonAsList(rolesJson);
-         UserApplicationRoleEntry selectApplicationEntry=null;
-         for(UserApplicationRoleEntry appRoleEntry : appRoleEntryList){
-        	 if(applicationId!=null && !applicationId.isEmpty()){
-        		 if(appRoleEntry.getApplicationId().equals(applicationId)){
-        			 selectApplicationEntry = appRoleEntry;
-        			 break;
-        		 }
-        	 } else {
-        		 if(appRoleEntry.getApplicationName().equalsIgnoreCase(applicationName)){
-        			 selectApplicationEntry = appRoleEntry;
-        			 break;
-        		 }
-        		 
-        	 }
-         }
-         
-         //step b, c
-         if(selectApplicationEntry==null){
-        	 //create new application, this command is already tested
-        	 UserApplicationRoleEntry userRole = new UserApplicationRoleEntry(userToken.getTokenid(), applicationId, applicationName, "INNData", roleValue);
-        	 String userAddRoleResult = new CommandAddUserRole(uri_useradmin_service, getMyAppTokenID(), userToken.getTokenid(), userToken.getUid(), userRole.toJson()).execute();
-        	 log.debug("userAddRoleResult:{}", userAddRoleResult);
-         } else {
-        	 
-        	 //update roleValue, this command is not tested yet
-        	 selectApplicationEntry.setRoleName("INNData");
-        	 selectApplicationEntry.setRoleValue(roleValue);
-        	 String editedUserRoleResult = new CommandUpdateUserRole(uri_useradmin_service, getMyAppTokenID(), userToken.getTokenid(), userToken.getUid(), selectApplicationEntry.getId(), selectApplicationEntry.toJson()).execute();
-        	 log.debug("userUpdateRoleResult:{}", editedUserRoleResult);
-         }
-         //step d
-         //call the "non-existing" updateUserToken method in STS
-         //do later, need to add command and unittested
-         
-         
-         
-		} catch(Exception ex){
-			
-			log.error("updateOrCreateUserApplicationRoleEntry failed: " + ex.getMessage());
-			return false;
-		}
-		 return true;
-	}
+	
     
 }
