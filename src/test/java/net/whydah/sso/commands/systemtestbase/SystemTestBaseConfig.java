@@ -98,7 +98,6 @@ public class SystemTestBaseConfig {
             myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
             myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue("Unable to log on application ", myApplicationTokenID.length() > 10);
-
             ApplicationToken appToken = ApplicationTokenMapper.fromXml(myAppTokenXml);
             assertNotNull(appToken);
             myApplicationToken = appToken;
