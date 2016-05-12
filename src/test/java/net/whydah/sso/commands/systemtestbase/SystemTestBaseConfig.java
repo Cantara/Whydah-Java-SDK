@@ -48,25 +48,24 @@ public class SystemTestBaseConfig {
         appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
         userCredential = new UserCredential(userName, password);
         SSLTool.disableCertificateValidation();
-        //setSystemTest(true);
+        setRemoteTest();
     }
 
-    public void setSystemTest(boolean isSystemTest){
-        this.systemTest = isSystemTest;
+    public void setRemoteTest(){
+       
+    	tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/");
+    	userAdminServiceUri = URI.create("https://whydahdev.cantara.no/useradminservice/");
+    	crmServiceUri = URI.create("https://whydahdev.cantara.no/crmservice/");
+    	statisticsServiceUri = URI.create("https://whydahdev.cantara.no/reporter/");
 
-        if (this.systemTest) {
-           
-            tokenServiceUri = URI.create("https://whydahdev.cantara.no/tokenservice/");
-            userAdminServiceUri = URI.create("https://whydahdev.cantara.no/useradminservice/");
-            crmServiceUri = URI.create("https://whydahdev.cantara.no/crmservice/");
-            statisticsServiceUri = URI.create("https://whydahdev.cantara.no/reporter/");
-        } else {
-        	
-            tokenServiceUri = URI.create(userTokenService);
-            userAdminServiceUri = URI.create(userAdminService);
-            crmServiceUri = URI.create(crmService);
-            statisticsServiceUri = URI.create(statisticsService);
-        }
+    }
+    
+    public void setLocalTest(){
+    	tokenServiceUri = URI.create("http://localhost:9998/tokenservice/");
+        userAdminServiceUri = URI.create("http://localhost:9992/useradminservice/");
+        crmServiceUri = URI.create("http://localhost:12121/crmservice/");
+        statisticsServiceUri = URI.create(statisticsService);
+
     }
 
     public boolean isSystemTestEnabled() {
