@@ -1,4 +1,4 @@
-package net.whydah.sso.commands.userauth;
+package net.whydah.sso.commands.extras;
 
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 

@@ -5,6 +5,7 @@ import net.whydah.sso.commands.adminapi.user.role.CommandAddUserRole;
 import net.whydah.sso.commands.adminapi.user.role.CommandGetUserRoles;
 import net.whydah.sso.commands.adminapi.user.role.CommandUpdateUserRole;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
+import net.whydah.sso.commands.extras.CommandSendSms;
 import net.whydah.sso.commands.userauth.*;
 import net.whydah.sso.config.ApplicationMode;
 import net.whydah.sso.session.WhydahApplicationSession;
