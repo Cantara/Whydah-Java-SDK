@@ -53,7 +53,7 @@ public class SystemTestBaseConfig {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
             //setLocalTest();
         }
-        setLocalTest();
+        //setLocalTest();
     }
 
     public void setRemoteTest(){
