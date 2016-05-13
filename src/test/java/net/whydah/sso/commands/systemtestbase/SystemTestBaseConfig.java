@@ -68,7 +68,7 @@ public class SystemTestBaseConfig {
     	tokenServiceUri = URI.create("http://localhost:9998/tokenservice/");
         userAdminServiceUri = URI.create("http://localhost:9992/useradminservice/");
         crmServiceUri = URI.create("http://localhost:12121/crmservice/");
-        statisticsServiceUri = URI.create("https://whydahdev.cantara.no/reporter/");
+        statisticsServiceUri = URI.create("http://localhost:4901/reporter/");
         password = "useradmin"; //"useradmin567";
 
     }
