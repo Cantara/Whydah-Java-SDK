@@ -53,6 +53,7 @@ public class SystemTestBaseConfig {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
             //setLocalTest();
         }
+        setLocalTest();
     }
 
     public void setRemoteTest(){
@@ -69,7 +70,8 @@ public class SystemTestBaseConfig {
         userAdminServiceUri = URI.create("http://localhost:9992/useradminservice/");
         crmServiceUri = URI.create("http://localhost:12121/crmservice/");
         statisticsServiceUri = URI.create("http://localhost:4901/reporter/");
-        password = "useradmin"; //"useradmin567";
+        password = "useradmin"; //
+        //password = "useradmin567";
 
     }
 
