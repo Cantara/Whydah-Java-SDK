@@ -11,6 +11,7 @@ import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserToken;
 import net.whydah.sso.util.SSLTool;
+import net.whydah.sso.util.SystemTestUtil;
 
 import java.net.URI;
 import java.util.UUID;
@@ -25,6 +26,9 @@ public class SystemTestBaseConfig {
     // Run SystemTests for Whydah Extensions?
     public boolean statisticsExtensionSystemTest = true;
     public boolean CRMCustomerExtensionSystemTest = true;
+    //
+    //
+    //
     public String TEMPORARY_APPLICATION_ID = "101";//"11";
     public String TEMPORARY_APPLICATION_NAME = "Whydah-SystemTests";//"Funny APp";//"11";
     public String TEMPORARY_APPLICATION_SECRET = "55fhRM6nbKZ2wfC6RMmMuzXpk";//"LLNmHsQDCerVWx5d6aCjug9fyPE";
@@ -32,10 +36,6 @@ public class SystemTestBaseConfig {
     public String password = "useradmin42";
     public URI tokenServiceUri;
     public URI userAdminServiceUri;
-    public String userAdminService = "https://whydahdev.cantara.no/useradminservice/";
-    public String userTokenService = "https://whydahdev.cantara.no/tokenservice/";
-    public String crmService = "https://whydahdev.cantara.no/crmservice/";
-    public String statisticsService = "https://whydahdev.cantara.no/reporter/";
     public ApplicationCredential appCredential;
     public UserCredential userCredential;
     public URI statisticsServiceUri;
@@ -48,7 +48,11 @@ public class SystemTestBaseConfig {
         appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
         userCredential = new UserCredential(userName, password);
         SSLTool.disableCertificateValidation();
+        //
         setRemoteTest();
+        if (!SystemTestUtil.noLocalWhydahRunning()) {
+            //setLocalTest();
+        }
     }
 
     public void setRemoteTest(){
@@ -64,7 +68,8 @@ public class SystemTestBaseConfig {
     	tokenServiceUri = URI.create("http://localhost:9998/tokenservice/");
         userAdminServiceUri = URI.create("http://localhost:9992/useradminservice/");
         crmServiceUri = URI.create("http://localhost:12121/crmservice/");
-        statisticsServiceUri = URI.create(statisticsService);
+        statisticsServiceUri = URI.create("https://whydahdev.cantara.no/reporter/");
+        password = "useradmin"; //"useradmin567";
 
     }
 
