@@ -29,7 +29,7 @@ public class CommandSendSMSTest {
 
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             //     public CommandGenerateAndSendSmsPin(URI tokenServiceUri, String appTokenId, String appTokenXml, String phoneNo) {
-            assertTrue(new CommandGenerateAndSendSmsPin(config.tokenServiceUri, config.myApplicationTokenID, myAppTokenXml, "91905054").execute());
+            assertTrue(new CommandGenerateAndSendSmsPin(config.tokenServiceUri, config.myApplicationTokenID, myAppTokenXml, SystemTestBaseConfig.SYSTEMTEST_USER_CELLPHONE).execute());
         }
 
     }

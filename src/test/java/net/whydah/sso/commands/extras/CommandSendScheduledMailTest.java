@@ -30,7 +30,7 @@ public class CommandSendScheduledMailTest {
             String myAppTokenXml = ApplicationTokenMapper.toXML(config.myApplicationToken);
 
             long timestamp = new Date().getTime() + 50 * 1000;  // 50 seconds
-            assertTrue(new CommandSendScheduledMail(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, Long.toString(timestamp), "totto@totto.org", "inn-email-passwordlogin-subject", "inn-email-passwordlogin-body").execute());
+            assertTrue(new CommandSendScheduledMail(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, Long.toString(timestamp), SystemTestBaseConfig.SYSTEMTEST_USER_EMAIL, "inn-email-passwordlogin-subject", "inn-email-passwordlogin-body").execute());
         }
     }
 }

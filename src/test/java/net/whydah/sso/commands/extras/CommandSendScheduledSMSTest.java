@@ -29,7 +29,7 @@ public class CommandSendScheduledSMSTest {
             UserToken adminUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
             String myAppTokenXml = ApplicationTokenMapper.toXML(config.myApplicationToken);
             long timestamp = new Date().getTime() + 20 * 1000;  // 20 seconds
-            assertTrue(new CommandSendScheduledSms(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, Long.toString(timestamp), "91905054", "Scheduled SMS test").execute());
+            assertTrue(new CommandSendScheduledSms(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, Long.toString(timestamp), SystemTestBaseConfig.SYSTEMTEST_USER_CELLPHONE, "Scheduled SMS test").execute());
 
         }
     }

@@ -27,6 +27,10 @@ public class SystemTestBaseConfig {
     public boolean statisticsExtensionSystemTest = true;
     public boolean CRMCustomerExtensionSystemTest = true;
     //
+    public static String SYSTEMTEST_USER_CELLPHONE = "91905054";
+    ;
+    public static String SYSTEMTEST_USER_EMAIL = "totto@totto.org";
+
     //
     //
     public String TEMPORARY_APPLICATION_ID = "101";//"11";
