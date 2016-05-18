@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import java.util.Date;
 
+import static org.junit.Assert.assertTrue;
+
 public class CommandSendScheduledSMSTest {
     static SystemTestBaseConfig config;
 
@@ -27,7 +29,7 @@ public class CommandSendScheduledSMSTest {
             UserToken adminUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
             String myAppTokenXml = ApplicationTokenMapper.toXML(config.myApplicationToken);
             long timestamp = new Date().getTime() + 20 * 1000;  // 20 seconds
-            new CommandSendScheduledSms(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, Long.toString(timestamp), "91905054", "Scheduled SMS test").execute();
+            assertTrue(new CommandSendScheduledSms(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, Long.toString(timestamp), "91905054", "Scheduled SMS test").execute());
 
         }
     }
