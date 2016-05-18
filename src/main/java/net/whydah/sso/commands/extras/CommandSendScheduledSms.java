@@ -47,6 +47,6 @@ public class CommandSendScheduledSms extends BaseHttpPostHystrixCommand<Boolean>
 
     @Override
     protected String getTargetPath() {
-        return myAppTokenId + "/send_scheduled_sms";
+        return "user/" + myAppTokenId + "/send_scheduled_sms";
     }
 }
