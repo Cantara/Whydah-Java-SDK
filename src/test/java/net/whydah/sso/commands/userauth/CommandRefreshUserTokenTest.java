@@ -1,27 +1,21 @@
 package net.whydah.sso.commands.userauth;
 
-import static org.junit.Assert.assertTrue;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-
-import net.whydah.sso.application.mappers.ApplicationTokenMapper;
-import net.whydah.sso.commands.adminapi.user.CommandCreatePinVerifiedUser;
 import net.whydah.sso.commands.adminapi.user.role.CommandAddUserRole;
 import net.whydah.sso.commands.adminapi.user.role.CommandGetUserRoles;
 import net.whydah.sso.commands.adminapi.user.role.CommandUpdateUserRole;
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
-import net.whydah.sso.user.mappers.UserIdentityMapper;
 import net.whydah.sso.user.mappers.UserRoleMapper;
-import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserIdentity;
 import net.whydah.sso.user.types.UserToken;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+
+import static org.junit.Assert.assertTrue;
 
 public class CommandRefreshUserTokenTest {
 
@@ -70,10 +64,9 @@ public class CommandRefreshUserTokenTest {
 			roleUpdateResult = new CommandUpdateUserRole(config.userAdminServiceUri, config.myApplicationTokenID, userToken.getTokenid(), userToken.getUid(), foundEntry.getId(), foundEntry.toJson()).execute();
 			
 		}
-		assertTrue(roleUpdateResult!=null);
-    	
-		
-		
+		//assertTrue(roleUpdateResult!=null);
+
+
 		//have a new role?
 		String rolesJson2 = new CommandGetUserRoles(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), userToken.getTokenid(), userToken.getUid()).execute();
 		List<UserApplicationRoleEntry> appRoleEntryList2 = UserRoleMapper.fromJsonAsList(rolesJson2);
@@ -90,7 +83,7 @@ public class CommandRefreshUserTokenTest {
 
 		//refresh failed here
 		String tokenXml = new CommandRefreshUserToken(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), config.myApplicationTokenID, userToken.getTokenid()).execute();
-		//assertTrue(tokenXml!=null);
+		assertTrue(tokenXml != null);
 		//UserToken refreshUserToken = UserTokenMapper.fromUserTokenXml(tokenXml);
 		//assertTrue(refreshUserToken!=null);
 		
