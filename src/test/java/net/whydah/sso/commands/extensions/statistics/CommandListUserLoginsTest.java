@@ -9,6 +9,8 @@ import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.util.SSLTool;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
@@ -16,6 +18,8 @@ import static org.junit.Assert.assertTrue;
 
 public class CommandListUserLoginsTest {
     static SystemTestBaseConfig config;
+    private final static Logger log = LoggerFactory.getLogger(SystemTestBaseConfig.class);
+
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -39,7 +43,7 @@ public class CommandListUserLoginsTest {
             assertTrue(userTokenId.length() > 10);
 
             String userLogins = new CommandListUserLogins(config.statisticsServiceUri, myApplicationTokenID, userTokenId, config.userName).execute();
-            System.out.println("Returned list of userlogins: " + userLogins);
+            log.debug("Returned list of userlogins: " + userLogins);
             assertTrue(userLogins != null);
             assertTrue(userLogins.length() > 10);
 

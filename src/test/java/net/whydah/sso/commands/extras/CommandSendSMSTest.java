@@ -1,4 +1,4 @@
-package net.whydah.sso.commands.extensions;
+package net.whydah.sso.commands.extras;
 
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;

@@ -83,11 +83,10 @@ public class MapAndFilterUserStatsTest {
     @Test
     public void testUserLoginsCustomerCommand() throws Exception {
         if (config.isStatisticsExtensionSystemtestEnabled()) {
-            String myApplicationTokenID = "";
             SSLTool.disableCertificateValidation();
             ApplicationCredential appCredential = new ApplicationCredential(config.TEMPORARY_APPLICATION_ID, config.TEMPORARY_APPLICATION_NAME, config.TEMPORARY_APPLICATION_SECRET);
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, appCredential).execute();
-            myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
+            String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue(myApplicationTokenID.length() > 10);
 
             String userticket = UUID.randomUUID().toString();
@@ -96,11 +95,11 @@ public class MapAndFilterUserStatsTest {
             assertTrue(userTokenId.length() > 10);
 
             String userLogins = new CommandListUserActivities(config.statisticsServiceUri, myApplicationTokenID, userTokenId, config.userName).execute();
-            System.out.printf("Returned list {} of userlogins: {}", userLogins.length(), userLogins);
+            log.debug("Returned list {} of userlogins: {}", userLogins.length(), userLogins);
             assertTrue(userLogins != null);
             assertTrue(userLogins.length() > 10);
             String mappedUL = getUserSessionsJsonFromUserActivityJson(userLogins, config.userName);
-            System.out.printf("Mapped:  {} getUserSessionsJsonFromUserActivityJson: {}", mappedUL.length(), mappedUL);
+            log.debug("Mapped:  {} getUserSessionsJsonFromUserActivityJson: {}", mappedUL.length(), mappedUL);
 
         }
     }

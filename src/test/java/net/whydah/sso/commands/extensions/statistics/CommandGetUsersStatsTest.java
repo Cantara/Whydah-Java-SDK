@@ -9,6 +9,8 @@ import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.util.SSLTool;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -18,6 +20,8 @@ import static org.junit.Assert.assertTrue;
 public class CommandGetUsersStatsTest {
 
     static SystemTestBaseConfig config;
+    private final static Logger log = LoggerFactory.getLogger(CommandGetUsersStatsTest.class);
+
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -29,11 +33,10 @@ public class CommandGetUsersStatsTest {
 
         if (config.isStatisticsExtensionSystemtestEnabled()) {
 
-            String myApplicationTokenID = "";
             SSLTool.disableCertificateValidation();
             ApplicationCredential appCredential = new ApplicationCredential(config.TEMPORARY_APPLICATION_ID, config.TEMPORARY_APPLICATION_NAME, config.TEMPORARY_APPLICATION_SECRET);
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, appCredential).execute();
-            myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
+            String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue(myApplicationTokenID.length() > 10);
 
             String userticket = UUID.randomUUID().toString();
@@ -44,7 +47,7 @@ public class CommandGetUsersStatsTest {
             Instant now = Instant.now();
             Instant lessOneHour = now.minusSeconds(60 * 60);
             String userStats = new CommandGetUsersStats(config.statisticsServiceUri, myApplicationTokenID, userTokenId, lessOneHour, now).execute();
-            System.out.println("Returned list of userlogins: " + userStats);
+            log.debug("Returned list of userlogins: " + userStats);
             assertTrue(userStats != null);
             assertTrue(userStats.length() > 10);
         }
