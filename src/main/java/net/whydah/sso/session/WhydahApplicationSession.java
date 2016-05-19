@@ -20,7 +20,7 @@ public class WhydahApplicationSession {
 
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
     private static final int SESSION_CHECK_INTERVAL = 50;  // Check every 30 seconds to adapt quickly
-    private static List<Application> applications;
+    private List<Application> applications; //DONT USE STATIC
     private static WhydahApplicationSession instance = null;
     private String sts;
     private String uas;
@@ -85,7 +85,19 @@ public class WhydahApplicationSession {
             // Thread Safe. Might be costly operation in some case
             synchronized (WhydahApplicationSession.class) {
                 if (instance == null) {
-                    instance = new WhydahApplicationSession(sts, appId, appName, appSecret);
+                    instance = new WhydahApplicationSession(sts, null, appId, appName, appSecret);
+                }
+            }
+        }
+        return instance;
+    }
+    
+    public static WhydahApplicationSession getInstance(String sts, String uas, String appId, String appName, String appSecret) {
+        if (instance == null) {
+            // Thread Safe. Might be costly operation in some case
+            synchronized (WhydahApplicationSession.class) {
+                if (instance == null) {
+                    instance = new WhydahApplicationSession(sts, uas, appId, appName, appSecret);
                 }
             }
         }
@@ -240,15 +252,15 @@ public class WhydahApplicationSession {
      * Application cache section - keep a cache of configured applications
      */
 
-    public static List<Application> getApplicationList() {
+    public List<Application> getApplicationList() {
         return applications;
     }
 
-    private static void setAppLinks(List<Application> newapplications) {
+    private void setAppLinks(List<Application> newapplications) {
         applications = newapplications;
     }
 
-    private static void updateApplinks(URI userAdminServiceUri, String myAppTokenId) {
+    private void updateApplinks(URI userAdminServiceUri, String myAppTokenId) {
         if (ApplicationModelUtil.shouldUpdate(5) || getApplicationList() == null || getApplicationList().size() < 2) {
             String applicationsJson = new CommandListApplications(userAdminServiceUri, myAppTokenId).execute();
             log.debug("AppLications returned:" + applicationsJson);
