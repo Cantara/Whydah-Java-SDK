@@ -17,7 +17,6 @@ import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserToken;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +25,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Properties;
 
-public class BaseWhyDahServiceClient {
+public class BaseWhydahServiceClient {
 
     static WhydahApplicationSession was = null;
     protected Logger log;
@@ -38,21 +37,21 @@ public class BaseWhyDahServiceClient {
     protected String TAG = "";
 
 
-    public BaseWhyDahServiceClient(String securitytokenserviceurl,
-    									  String uas,
-                                          String activeApplicationId,
-                                          String applicationname,
-                                          String applicationsecret) throws URISyntaxException {
+    public BaseWhydahServiceClient(String securitytokenserviceurl,
+                                   String useradminserviceurl,
+                                   String activeApplicationId,
+                                   String applicationname,
+                                   String applicationsecret) throws URISyntaxException {
 
         if (was == null) {
-            was = WhydahApplicationSession.getInstance(securitytokenserviceurl, uas, activeApplicationId, applicationname, applicationsecret);
+            was = WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, activeApplicationId, applicationname, applicationsecret);
         }
 
         this.TAG = this.getClass().getName();
         this.log = LoggerFactory.getLogger(TAG);
     }
 
-    public BaseWhyDahServiceClient(Properties properties) {
+    public BaseWhydahServiceClient(Properties properties) {
 
         try {
             if (properties.getProperty("securitytokenservice", null) != null) {
