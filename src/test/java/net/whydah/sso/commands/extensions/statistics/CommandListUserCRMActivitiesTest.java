@@ -16,7 +16,8 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
 
-public class CommandListUserActivitiesTest {
+
+public class CommandListUserCRMActivitiesTest {
     static SystemTestBaseConfig config;
     private final static Logger log = LoggerFactory.getLogger(CommandGetUsersStatsTest.class);
 
@@ -43,8 +44,8 @@ public class CommandListUserActivitiesTest {
             String userId = UserXpathHelper.getUserIdFromUserTokenXml(userToken);
             assertTrue(userTokenId.length() > 10);
 
-            String userStats = new CommandListUserActivities(config.statisticsServiceUri, myApplicationTokenID, userTokenId, userId).execute();
-            log.debug("Returned list of usersessions: " + userStats);
+            String userStats = new CommandListUserCRMActivities(config.statisticsServiceUri, myApplicationTokenID, userTokenId, userId).execute();
+            log.debug("Returned list of crmactivities: " + userStats);
             assertTrue(userStats != null);
             assertTrue(userStats.length() > 10);
         }
