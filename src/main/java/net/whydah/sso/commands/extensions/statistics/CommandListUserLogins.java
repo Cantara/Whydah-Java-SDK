@@ -1,8 +1,8 @@
 package net.whydah.sso.commands.extensions.statistics;
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+
+import java.net.URI;
 
 public class CommandListUserLogins extends BaseHttpGetHystrixCommand<String> {
     
@@ -17,48 +17,12 @@ public class CommandListUserLogins extends BaseHttpGetHystrixCommand<String> {
         this.adminUserTokenId = adminUserTokenId;
         this.userid = userid;
         this.prefix = "whydah";
-//        if (statisticsServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userid == null) {
-        if (statisticsServiceUri == null || userid == null) {
+        if (statisticsServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userid == null) {
             log.error(TAG + " initialized with null-values - will fail");
         }
 
     }
 
-//    @Override
-//    protected String run() {
-//        log.trace("CommandListUserLogins - myAppTokenId={}", myAppTokenId);
-//
-////        Client statisticsClient = ClientBuilder.newClient();
-//        Client statisticsClient;
-//        if (!SSLTool.isCertificateCheckDisabled()) {
-//            statisticsClient = ClientBuilder.newClient();
-//        } else {
-//            statisticsClient = ClientBuilder.newBuilder().sslContext(SSLTool.sc).hostnameVerifier((s1, s2) -> true).build();
-//        }
-//
-//
-////        WebTarget updateUser = statisticsClient.target(statisticsServiceUri).path(myAppTokenId).path(adminUserTokenId).path("customer").path(userid);
-//        WebTarget findUserLogons = statisticsClient.target(statisticsServiceUri)
-//                .path("observe").path("activities").path(prefix).path("logon").path("user").path(userid);
-//        Response response = findUserLogons.request().get();
-//        log.debug("CommandListUserLogins - Returning list of user logons {}", response.getStatus());
-//        if (response.getStatus() == OK.getStatusCode()) {
-//            String responseJson = response.readEntity(String.class);
-//            log.debug("CommandListUserLogins - Returning list of user logons  {}", responseJson);
-//            return responseJson;
-//        }
-//        String responseJson = response.readEntity(String.class);
-//        log.debug("CommandListUserLogins - Returning list of user logons  {}", responseJson);
-//        return null;
-//
-//
-//    }
-//
-//    @Override
-//    protected String getFallback() {
-//        log.warn("CommandListUserLogins - fallback - whydahServiceUri={}", statisticsServiceUri.toString());
-//        return null;
-//    }
 
 	@Override
 	protected String getTargetPath() {

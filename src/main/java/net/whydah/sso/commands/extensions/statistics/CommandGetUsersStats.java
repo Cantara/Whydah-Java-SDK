@@ -1,9 +1,9 @@
 package net.whydah.sso.commands.extensions.statistics;
 
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+
 import java.net.URI;
 import java.time.Instant;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 
 public class CommandGetUsersStats extends BaseHttpGetHystrixCommand<String> {
 	
@@ -58,48 +58,6 @@ public class CommandGetUsersStats extends BaseHttpGetHystrixCommand<String> {
 		
 		return list.toArray(new String[size]);
 	}
-
-//	@Override
-//	protected String run() {
-//		log.trace("CommandGetUsersStats - myAppTokenId={}", myAppTokenId);
-//
-//		//        Client statisticsClient = ClientBuilder.newClient();
-//		Client statisticsClient;
-//		if (!SSLTool.isCertificateCheckDisabled()) {
-//			statisticsClient = ClientBuilder.newClient();
-//		} else {
-//			statisticsClient = ClientBuilder.newBuilder().sslContext(SSLTool.sc).hostnameVerifier((s1, s2) -> true).build();
-//		}
-//
-//
-//		//        WebTarget updateUser = statisticsClient.target(statisticsServiceUri).path(myAppTokenId).path(adminUserTokenId).path("customer").path(userid);
-//		WebTarget findUserLogons = statisticsClient.target(statisticsServiceUri)
-//				.path("observe").path("statistics").path(prefix).path("userlogon");
-//		if (startTime != null){
-//			findUserLogons = findUserLogons.queryParam("startTime", startTime.toEpochMilli());
-//		}
-//		if (endTime != null) {
-//			findUserLogons = findUserLogons.queryParam("endTime", endTime.toEpochMilli());
-//		}
-//		Response response = findUserLogons.request().get();
-//		log.debug("CommandGetUsersStats - Returning list of user logons {}", response.getStatus());
-//		if (response.getStatus() == OK.getStatusCode()) {
-//			String responseJson = response.readEntity(String.class);
-//			log.debug("CommandGetUsersStats - Returning list of user logons  {}", responseJson);
-//			return responseJson;
-//		}
-//		String responseJson = response.readEntity(String.class);
-//		log.debug("CommandGetUsersStats - Returning list of user logons  {}", responseJson);
-//		return null;
-//
-//
-//	}
-//
-//	@Override
-//	protected String getFallback() {
-//		log.warn("CommandGetUsersStats - fallback - whydahServiceUri={}", statisticsServiceUri.toString());
-//		return null;
-//	}
 
 	@Override
 	protected String getTargetPath() {
