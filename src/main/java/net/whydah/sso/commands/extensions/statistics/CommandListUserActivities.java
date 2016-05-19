@@ -1,8 +1,8 @@
 package net.whydah.sso.commands.extensions.statistics;
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+
+import java.net.URI;
 
 /**
  * https://whydahdev.cantara.no/reporter/observe/statistics/useradmin/usersession
@@ -16,7 +16,7 @@ public class CommandListUserActivities extends BaseHttpGetHystrixCommand<String>
 
 
     public CommandListUserActivities(URI statisticsServiceUri, String myAppTokenId, String userTokenId, String userid) {
-    	super(statisticsServiceUri, "", myAppTokenId, "StatisticsExtensionGroup", 3000);
+        super(statisticsServiceUri, "", myAppTokenId, "StatisticsExtensionGroup", 9000);
         
         this.userTokenId = userTokenId;
         this.userid = userid;
