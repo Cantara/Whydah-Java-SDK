@@ -1,10 +1,9 @@
-package net.whydah.sso.commands.userauth;
-
-import java.net.URI;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+package net.whydah.sso.internal.commands.uib.userauth;
 
 import com.github.kevinsawicki.http.HttpRequest;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+
+import java.net.URI;
 
 /**
  * @author <a href="mailto:erik-dev@fjas.no">Erik Drolshammer</a> 2015-11-21.
@@ -34,23 +33,7 @@ public class CommandChangeUserPasswordUsingToken extends BaseHttpPostHystrixComm
         }
     }
 
-//    @Override
-//    protected Response run() {
-//        log.trace("{} - applicationtokenId={}, ", CommandChangeUserPasswordUsingToken.class.getSimpleName(), applicationtokenId);
-//        Client client = ClientBuilder.newClient();
-//        WebTarget uib = client.target(uasUrl);
-//        WebTarget webResource = uib.path(applicationtokenId).path("user").path(uid).path("change_password");
-//        return webResource.queryParam(CHANGE_PASSWORD_TOKEN_KEY, changePasswordToken).request().post(Entity.json(json));
-//    }
-//    
-//    
-//
-//    @Override
-//    protected Response getFallback() {
-//        log.warn("{} - fallback - uasUrl={}", CommandChangeUserPasswordUsingToken.class.getSimpleName(), uasUrl);
-//        return null;
-//    }
-    
+
     @Override
     protected HttpRequest dealWithRequestBeforeSend(HttpRequest request) {
     	return request.contentType("application/json").send(json);

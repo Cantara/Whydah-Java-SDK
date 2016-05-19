@@ -1,10 +1,10 @@
-package net.whydah.sso.commands.adminapi.application;
+package net.whydah.sso.internal.commands.uib.adminapi.application;
+
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 /**
  * Used by UAS to autenticate application against UIB.
@@ -29,17 +29,6 @@ public class CommandAuthenticateApplicationUAS extends BaseHttpPostHystrixComman
         }
     }
 
-//    @Override
-//    protected Response run() {
-//        log.trace("{} - stsApplicationtokenId={}, ", CommandAuthenticateApplicationUAS.class.getSimpleName(), stsApplicationtokenId);
-//        Client client = ClientBuilder.newClient();
-//        WebTarget uib = client.target(uibUri);
-//        WebTarget webResource = uib.path(stsApplicationtokenId).path(APPLICATION_AUTH_PATH);
-//        MultivaluedMap<String,String> formData = new MultivaluedHashMap<>(2);
-//        formData.add(APP_CREDENTIAL_XML, appCredentialXml);
-//        return webResource.request(MediaType.APPLICATION_FORM_URLENCODED)
-//                          .post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED));
-//    }
 
 
 
