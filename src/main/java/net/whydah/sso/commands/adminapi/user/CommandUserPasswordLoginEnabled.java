@@ -14,7 +14,7 @@ public class CommandUserPasswordLoginEnabled extends BaseHttpGetHystrixCommand<B
 
         this.userName = userName;
         if (userAdminServiceUri == null || myAppTokenId == null || userName == null) {
-            log.error("CommandUserExists initialized with null-values - will fail - userAdminServiceUri:{}, myAppTokenId:{}, userName:{}", userAdminServiceUri, myAppTokenId, userName);
+            log.error("CommandUserPasswordLoginEnabled initialized with null-values - will fail - userAdminServiceUri:{}, myAppTokenId:{}, userName:{}", userAdminServiceUri, myAppTokenId, userName);
 
         }
 
