@@ -141,6 +141,27 @@ public class SystemTestBaseConfig {
         return null;
     }
     
+    
+    public String logOnSystemTestApplicationAndSystemTestUser_getTokenXML() {
+        if (isCRMCustomerExtensionSystemTestEnabled()) {
+            String myApplicationTokenID = "";
+            SSLTool.disableCertificateValidation();
+            ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
+            myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+            myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
+            assertTrue("Unable to log on application ", myApplicationTokenID.length() > 10);
+
+            ApplicationToken appToken = ApplicationTokenMapper.fromXml(myAppTokenXml);
+            assertNotNull(appToken);
+            myApplicationToken = appToken;
+
+            String userticket = UUID.randomUUID().toString();
+            String userTokenXML = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
+            return userTokenXML;
+        }
+        return null;
+    }
+    
     public String generatePin() {
     	java.util.Random generator = new java.util.Random();
         generator.setSeed(System.currentTimeMillis());

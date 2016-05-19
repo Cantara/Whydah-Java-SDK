@@ -46,7 +46,10 @@ public class BaseWhydahServiceClient {
         if (was == null) {
             was = WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, activeApplicationId, applicationname, applicationsecret);
         }
-
+        
+        this.uri_securitytoken_service = URI.create(securitytokenserviceurl);
+        this.uri_useradmin_service = URI.create(useradminserviceurl);
+        
         this.TAG = this.getClass().getName();
         this.log = LoggerFactory.getLogger(TAG);
     }
@@ -324,6 +327,10 @@ public class BaseWhydahServiceClient {
 			//step a -> find correct app
 			UserToken userToken = UserTokenMapper.fromUserTokenXml(userTokenXml);
 			List<Application> apps = getApplicationList();
+			if(apps==null){
+				was.updateApplinks();
+				apps = getApplicationList();
+			} 
 			log.debug("application_list's size: {} apps", apps.size());
 			Application appFound=null;
 			for(Application app:apps){

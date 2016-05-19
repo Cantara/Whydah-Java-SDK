@@ -260,9 +260,11 @@ public class WhydahApplicationSession {
         applications = newapplications;
     }
 
-    private void updateApplinks(URI userAdminServiceUri, String myAppTokenId) {
+    public void updateApplinks() {
+    	 URI userAdminServiceUri= URI.create(uas);
+    	
         if (ApplicationModelUtil.shouldUpdate(5) || getApplicationList() == null || getApplicationList().size() < 2) {
-            String applicationsJson = new CommandListApplications(userAdminServiceUri, myAppTokenId).execute();
+            String applicationsJson = new CommandListApplications(userAdminServiceUri,  applicationToken.getApplicationTokenId()).execute();
             log.debug("AppLications returned:" + applicationsJson);
             if (applicationsJson != null) {
                 if (applicationsJson.length() > 20) {
@@ -280,7 +282,7 @@ public class WhydahApplicationSession {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(new Runnable() {
             public void run() {
-                updateApplinks(URI.create(uas), applicationToken.getApplicationTokenId());
+                updateApplinks();
                 log.debug("Asynchronous startThreadAndUpdateAppLinks task");
             }
         });
