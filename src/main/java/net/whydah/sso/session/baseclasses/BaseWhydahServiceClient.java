@@ -310,6 +310,9 @@ public class BaseWhydahServiceClient {
     }
 
 	public List<Application> getApplicationList(){
+		if(was.getApplicationList()==null){
+				was.updateApplinks();
+		}
 		return was.getApplicationList();
 	}
 	
