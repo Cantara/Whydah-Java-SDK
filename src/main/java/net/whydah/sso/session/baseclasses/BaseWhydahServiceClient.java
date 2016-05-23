@@ -51,8 +51,10 @@ public class BaseWhydahServiceClient {
         }
         
         this.uri_securitytoken_service = URI.create(securitytokenserviceurl);
-        this.uri_useradmin_service = URI.create(useradminserviceurl);
-        
+        if (useradminserviceurl != null && useradminserviceurl.length() > 8) {  // UAS is optinal
+            this.uri_useradmin_service = URI.create(useradminserviceurl);
+        }
+
         this.TAG = this.getClass().getName();
         this.log = LoggerFactory.getLogger(TAG);
     }
