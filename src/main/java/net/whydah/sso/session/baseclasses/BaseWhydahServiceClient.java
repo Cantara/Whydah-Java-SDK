@@ -59,19 +59,19 @@ public class BaseWhydahServiceClient {
 
     public BaseWhydahServiceClient(ConstrettoConfiguration configuration) {
         try {
-            if (configuration.evaluateToString("securitytokenservice") != null) {
+            if (configuration.hasValue("securitytokenservice")) {
                 this.uri_securitytoken_service = URI.create(configuration.evaluateToString("securitytokenservice"));
             }
-            if (configuration.evaluateToString("useradminservice") != null) {
+            if (configuration.hasValue("useradminservice")) {
                 this.uri_useradmin_service = URI.create(configuration.evaluateToString("useradminservice"));
             }
-            if (configuration.evaluateToString("crmservice") != null) {
+            if (configuration.hasValue("crmservice")) {
                 this.uri_crm_service = URI.create(configuration.evaluateToString("crmservice"));
             }
-            if (configuration.evaluateToString("reportservice") != null) {
+            if (configuration.hasValue("reportservice")) {
                 this.uri_report_service = URI.create(configuration.evaluateToString("reportservice"));
             }
-            if (configuration.evaluateToString("useridentitybackend") != null) {
+            if (configuration.hasValue("useridentitybackend")) {
                 this.uri_useridentitybackend_service = URI.create(configuration.evaluateToString("useridentitybackend"));
             }
 
