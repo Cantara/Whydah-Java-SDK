@@ -58,6 +58,8 @@ public class BaseWhydahServiceClient {
     }
 
     public BaseWhydahServiceClient(ConstrettoConfiguration configuration) {
+        this.TAG = this.getClass().getName();
+        this.log = LoggerFactory.getLogger(TAG);
         try {
             if (configuration.hasValue("securitytokenservice")) {
                 this.uri_securitytoken_service = URI.create(configuration.evaluateToString("securitytokenservice"));
@@ -82,8 +84,6 @@ public class BaseWhydahServiceClient {
             if (was == null) {
                 was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uri_useradmin_service.toString(), applicationid, applicationname, applicationsecret);
             }
-            this.TAG = this.getClass().getName();
-            this.log = LoggerFactory.getLogger(TAG);
 
         } catch (ConstrettoExpressionException constrettoExpressionException) {
             log.debug("Some parameters where not found");
@@ -97,6 +97,8 @@ public class BaseWhydahServiceClient {
 
 
     public BaseWhydahServiceClient(Properties properties) {
+        this.TAG = this.getClass().getName();
+        this.log = LoggerFactory.getLogger(TAG);
 
         try {
             if (properties.getProperty("securitytokenservice", null) != null) {
@@ -122,8 +124,6 @@ public class BaseWhydahServiceClient {
             if (was == null) {
                 was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uri_useradmin_service.toString(), applicationid, applicationname, applicationsecret);
             }
-            this.TAG = this.getClass().getName();
-            this.log = LoggerFactory.getLogger(TAG);
         } catch (Exception ex) {
             throw ex;
         }
