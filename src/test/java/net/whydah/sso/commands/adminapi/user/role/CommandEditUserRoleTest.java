@@ -46,7 +46,9 @@ public class CommandEditUserRoleTest {
             List<UserApplicationRoleEntry> roles = UserRoleMapper.fromJsonAsList(userRolesJson);
             for (UserApplicationRoleEntry irole : roles) {
                 if (irole.getRoleName().equalsIgnoreCase(role.getRoleName())) {
-                    role.setId(irole.getId());
+                    if (role.getRoleName().toLowerCase().indexOf("admin") < 0) {  // Do not change UserAdmin roles
+                        role.setId(irole.getId());
+                    }
 //                    System.out.println("=====================>  match for "+role.getRoleName()+" in "+irole.getRoleName() +" - "+irole.getId());
 
                 } else {
