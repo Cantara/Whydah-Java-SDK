@@ -25,11 +25,14 @@ public class CommandSendScheduledSMSTest {
     @Test
     public void testCommandSendScheduledSMSTest() throws Exception {
 
-        ApplicationToken applicationTokenToken = config.logOnSystemTestApplication();
-        String myAppTokenXml = ApplicationTokenMapper.toXML(applicationTokenToken);
-        long timestamp = new Date().getTime() + 20 * 1000;  // 20 seconds
-        assertTrue(new CommandSendScheduledSms(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, Long.toString(timestamp), SystemTestBaseConfig.SYSTEMTEST_USER_CELLPHONE, "Scheduled SMS test").execute());
+        if (config.isSystemTestEnabled()) {
 
+
+            ApplicationToken applicationTokenToken = config.logOnSystemTestApplication();
+            String myAppTokenXml = ApplicationTokenMapper.toXML(applicationTokenToken);
+            long timestamp = new Date().getTime() + 20 * 1000;  // 20 seconds
+            assertTrue(new CommandSendScheduledSms(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, Long.toString(timestamp), SystemTestBaseConfig.SYSTEMTEST_USER_CELLPHONE, "Scheduled SMS test").execute());
+        }
 
     }
 }

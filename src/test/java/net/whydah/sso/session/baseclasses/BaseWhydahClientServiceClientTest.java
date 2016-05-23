@@ -14,14 +14,17 @@ public class BaseWhydahClientServiceClientTest {
     @BeforeClass
     public static void setup() throws Exception {
         config = new SystemTestBaseConfig();
-        client = new BaseWhydahServiceClient(config.tokenServiceUri.toString(), config.userAdminServiceUri.toString(), config.TEMPORARY_APPLICATION_ID, config.TEMPORARY_APPLICATION_NAME, config.TEMPORARY_APPLICATION_SECRET);
-        
+        if (config.isSystemTestEnabled()) {
+
+            client = new BaseWhydahServiceClient(config.tokenServiceUri.toString(), config.userAdminServiceUri.toString(), config.TEMPORARY_APPLICATION_ID, config.TEMPORARY_APPLICATION_NAME, config.TEMPORARY_APPLICATION_SECRET);
+        }
     }
 
     @Test
     public void testUpdateRoleAndRefreshUserToken(){
-    	
-    	assertTrue(client.updateOrCreateUserApplicationRoleEntry("", "ACSResource", "WhyDah", "INNData", "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
-    	
+        if (config.isSystemTestEnabled()) {
+
+            assertTrue(client.updateOrCreateUserApplicationRoleEntry("", "ACSResource", "WhyDah", "INNData", "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
+        }
     }
 }
