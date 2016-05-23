@@ -83,8 +83,13 @@ public class BaseWhydahServiceClient {
             String applicationid = configuration.evaluateToString("applicationid");
             String applicationname = configuration.evaluateToString("applicationname");
             String applicationsecret = configuration.evaluateToString("applicationsecret");
+            String uasUrl = null;
+            if (uri_useradmin_service != null) {
+                uasUrl = uri_useradmin_service.toString();
+
+            }
             if (was == null) {
-                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uri_useradmin_service.toString(), applicationid, applicationname, applicationsecret);
+                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, applicationid, applicationname, applicationsecret);
             }
 
         } catch (ConstrettoExpressionException constrettoExpressionException) {
@@ -123,8 +128,13 @@ public class BaseWhydahServiceClient {
             String applicationid = properties.getProperty("applicationid");
             String applicationname = properties.getProperty("applicationname");
             String applicationsecret = properties.getProperty("applicationsecret");
+            String uasUrl = null;
+            if (uri_useradmin_service != null) {
+                uasUrl = uri_useradmin_service.toString();
+
+            }
             if (was == null) {
-                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uri_useradmin_service.toString(), applicationid, applicationname, applicationsecret);
+                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, applicationid, applicationname, applicationsecret);
             }
         } catch (Exception ex) {
             throw ex;

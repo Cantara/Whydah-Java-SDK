@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -20,7 +21,7 @@ public class WhydahApplicationSession {
 
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
     private static final int SESSION_CHECK_INTERVAL = 50;  // Check every 30 seconds to adapt quickly
-    private List<Application> applications;
+    private List<Application> applications = new LinkedList<Application>();
     private static WhydahApplicationSession instance = null;
     private String sts;
     private String uas;
@@ -42,6 +43,7 @@ public class WhydahApplicationSession {
     }
 
     protected WhydahApplicationSession(String sts, String uas, String appId, String appName, String appSecret) {
+        log.info("WhydahApplicationSession initialized: sts:{},  uas:{}, appId:{}, appName:{}, appSecret:{}", sts, uas, appId, appName, appSecret);
         this.sts = sts;
         this.uas = uas;
         this.myAppCredential = new ApplicationCredential(appId, appName, appSecret);
@@ -285,15 +287,16 @@ public class WhydahApplicationSession {
         if (uas == null || uas.length() < 8) {
             log.info("Started WAS without UAS configuration, wont keep an updated applicationlist");
             return;
+        } else {
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.execute(new Runnable() {
+                public void run() {
+                    updateApplinks();
+                    log.debug("Asynchronous startThreadAndUpdateAppLinks task");
+                }
+            });
+            executorService.shutdown();
         }
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        executorService.execute(new Runnable() {
-            public void run() {
-                updateApplinks();
-                log.debug("Asynchronous startThreadAndUpdateAppLinks task");
-            }
-        });
-        executorService.shutdown();
     }
 
 }
