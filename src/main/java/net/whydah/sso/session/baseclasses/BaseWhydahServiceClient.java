@@ -18,6 +18,8 @@ import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserToken;
 import org.constretto.ConstrettoConfiguration;
+import org.constretto.exception.ConstrettoConversionException;
+import org.constretto.exception.ConstrettoExpressionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,6 +84,12 @@ public class BaseWhydahServiceClient {
             }
             this.TAG = this.getClass().getName();
             this.log = LoggerFactory.getLogger(TAG);
+
+        } catch (ConstrettoExpressionException constrettoExpressionException) {
+            log.debug("Some parameters where not found");
+        } catch (ConstrettoConversionException cce) {
+            log.debug("Some parameters where not found");
+
         } catch (Exception ex) {
             throw ex;
         }
