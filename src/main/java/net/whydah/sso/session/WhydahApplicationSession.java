@@ -20,7 +20,7 @@ public class WhydahApplicationSession {
 
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
     private static final int SESSION_CHECK_INTERVAL = 50;  // Check every 30 seconds to adapt quickly
-    private List<Application> applications; //DONT USE STATIC
+    private List<Application> applications;
     private static WhydahApplicationSession instance = null;
     private String sts;
     private String uas;
@@ -261,7 +261,10 @@ public class WhydahApplicationSession {
     }
 
     public void updateApplinks() {
-    	 URI userAdminServiceUri= URI.create(uas);
+        if (uas == null || uas.length() < 8) {
+            return;
+        }
+        URI userAdminServiceUri= URI.create(uas);
     	
         if (ApplicationModelUtil.shouldUpdate(5) || getApplicationList() == null || getApplicationList().size() < 2) {
             String applicationsJson = new CommandListApplications(userAdminServiceUri,  applicationToken.getApplicationTokenId()).execute();
