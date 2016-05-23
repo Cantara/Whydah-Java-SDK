@@ -157,6 +157,8 @@ public class WhydahApplicationSession {
     public void renewWhydahApplicationSession() {
         if (applicationToken == null) {
             initializeWhydahApplicationSession();
+            Runtime.getRuntime().removeShutdownHook(Thread.currentThread());
+
         }
         if (!checkActiveSession()) {
             log.info("No active application session for applicationTokenId: {}, getApplicationID: {},   expires: {}", applicationToken.getApplicationID(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
@@ -200,7 +202,9 @@ public class WhydahApplicationSession {
                 }
             }
         }
-        startThreadAndUpdateAppLinks();
+        if (uas != null || uas.length() > 8) {
+            startThreadAndUpdateAppLinks();
+        }
     }
 
 
