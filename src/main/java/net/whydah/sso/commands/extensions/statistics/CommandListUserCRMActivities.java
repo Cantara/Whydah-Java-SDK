@@ -27,7 +27,7 @@ public class CommandListUserCRMActivities extends BaseHttpGetHystrixCommand<Stri
 
     @Override
     protected String getTargetPath() {
-        return "observe/statistics/" + userid + "/crmSession";
+        return "observe/statistics/" + userid + "/crmsession";
     }
 
 

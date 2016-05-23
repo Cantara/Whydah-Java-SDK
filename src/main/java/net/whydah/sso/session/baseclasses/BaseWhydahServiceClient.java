@@ -17,6 +17,7 @@ import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserToken;
+import org.constretto.ConstrettoConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +54,39 @@ public class BaseWhydahServiceClient {
         this.TAG = this.getClass().getName();
         this.log = LoggerFactory.getLogger(TAG);
     }
+
+    public BaseWhydahServiceClient(ConstrettoConfiguration configuration) {
+        try {
+            if (configuration.evaluateToString("securitytokenservice") != null) {
+                this.uri_securitytoken_service = URI.create(configuration.evaluateToString("securitytokenservice"));
+            }
+            if (configuration.evaluateToString("useradminservice") != null) {
+                this.uri_useradmin_service = URI.create(configuration.evaluateToString("useradminservice"));
+            }
+            if (configuration.evaluateToString("crmservice") != null) {
+                this.uri_crm_service = URI.create(configuration.evaluateToString("crmservice"));
+            }
+            if (configuration.evaluateToString("reportservice") != null) {
+                this.uri_report_service = URI.create(configuration.evaluateToString("reportservice"));
+            }
+            if (configuration.evaluateToString("useridentitybackend") != null) {
+                this.uri_useridentitybackend_service = URI.create(configuration.evaluateToString("useridentitybackend"));
+            }
+
+
+            String applicationid = configuration.evaluateToString("applicationid");
+            String applicationname = configuration.evaluateToString("applicationname");
+            String applicationsecret = configuration.evaluateToString("applicationsecret");
+            if (was == null) {
+                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uri_useradmin_service.toString(), applicationid, applicationname, applicationsecret);
+            }
+            this.TAG = this.getClass().getName();
+            this.log = LoggerFactory.getLogger(TAG);
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
+
 
     public BaseWhydahServiceClient(Properties properties) {
 
