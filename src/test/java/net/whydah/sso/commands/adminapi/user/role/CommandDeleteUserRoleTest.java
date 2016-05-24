@@ -53,17 +53,17 @@ public class CommandDeleteUserRoleTest {
             log.debug("Roles returned:" + userRolesJson);
             List<UserApplicationRoleEntry> roles = UserRoleMapper.fromJsonAsList(userRolesJson);
             int noRoles = roles.size();
-            for (UserApplicationRoleEntry role : roles) {
-                if (addedRole.getId() == role.getId()) {
-                    log.debug("Last role" + UserRoleMapper.toJson(role));
-                    String userDeleteRoleResult = new CommandDeleteUserRole(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), userTokenId, uId, role.getId()).execute();
-                    String userRolesJson2 = new CommandGetUserRoles(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUser.getTokenid(), adminUser.getUid()).execute();
-                    log.debug("Roles returned2:" + userRolesJson2);
-                    List<UserApplicationRoleEntry> roles2 = UserRoleMapper.fromJsonAsList(userRolesJson2);
-                    int noRoles2 = roles2.size();
-                    assertTrue(noRoles == noRoles2 + 1);  // One role less
-                }
-            }
+
+            UserApplicationRoleEntry role = roles.listIterator().next();
+            log.debug("Last role" + UserRoleMapper.toJson(role));
+            boolean userDeleteRoleResult = new CommandDeleteUserRole(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), userTokenId, uId, role.getId()).execute();
+            assertTrue(userDeleteRoleResult);
+            String userRolesJson2 = new CommandGetUserRoles(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUser.getTokenid(), adminUser.getUid()).execute();
+            log.debug("Roles returned2:" + userRolesJson2);
+            List<UserApplicationRoleEntry> roles2 = UserRoleMapper.fromJsonAsList(userRolesJson2);
+            int noRoles2 = roles2.size();
+            assertTrue(noRoles == noRoles2 + 1);  // One role less
+
         }
 
     }
