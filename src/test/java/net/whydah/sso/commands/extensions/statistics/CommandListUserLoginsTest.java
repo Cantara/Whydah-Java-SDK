@@ -8,6 +8,7 @@ import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.util.SSLTool;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class CommandListUserLoginsTest {
     }
 
 
+    @Ignore  // we currently do not register login-events, we have expanded to UserActivity events
     @Test
     public void testUserLoginsCustomerCommand() throws Exception {
         if (config.isStatisticsExtensionSystemtestEnabled()) {
