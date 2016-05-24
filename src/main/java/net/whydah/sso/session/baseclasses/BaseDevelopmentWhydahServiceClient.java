@@ -1,6 +1,5 @@
 package net.whydah.sso.session.baseclasses;
 
-
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.commands.adminapi.user.CommandCreatePinVerifiedUser;
 import net.whydah.sso.commands.adminapi.user.role.CommandAddUserRole;
@@ -9,6 +8,7 @@ import net.whydah.sso.commands.adminapi.user.role.CommandUpdateUserRole;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.extras.CommandSendSms;
 import net.whydah.sso.commands.userauth.*;
+import net.whydah.sso.config.ApplicationMode;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.user.mappers.UserRoleMapper;
@@ -27,7 +27,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Properties;
 
-public class BaseWhydahServiceClient {
+public class BaseDevelopmentWhydahServiceClient {
 
     static WhydahApplicationSession was = null;
     protected Logger log;
@@ -39,16 +39,16 @@ public class BaseWhydahServiceClient {
     protected String TAG = "";
 
 
-    public BaseWhydahServiceClient(String securitytokenserviceurl,
-                                   String useradminserviceurl,
-                                   String activeApplicationId,
-                                   String applicationname,
-                                   String applicationsecret) throws URISyntaxException {
+    public BaseDevelopmentWhydahServiceClient(String securitytokenserviceurl,
+                                              String useradminserviceurl,
+                                              String activeApplicationId,
+                                              String applicationname,
+                                              String applicationsecret) throws URISyntaxException {
 
         if (was == null) {
             was = WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, activeApplicationId, applicationname, applicationsecret);
         }
-        
+
         this.uri_securitytoken_service = URI.create(securitytokenserviceurl);
         if (useradminserviceurl != null && useradminserviceurl.length() > 8) {  // UAS is optinal
             this.uri_useradmin_service = URI.create(useradminserviceurl);
@@ -58,7 +58,7 @@ public class BaseWhydahServiceClient {
         this.log = LoggerFactory.getLogger(TAG);
     }
 
-    public BaseWhydahServiceClient(ConstrettoConfiguration configuration) {
+    public BaseDevelopmentWhydahServiceClient(ConstrettoConfiguration configuration) {
         this.TAG = this.getClass().getName();
         this.log = LoggerFactory.getLogger(TAG);
         try {
@@ -102,7 +102,7 @@ public class BaseWhydahServiceClient {
     }
 
 
-    public BaseWhydahServiceClient(Properties properties) {
+    public BaseDevelopmentWhydahServiceClient(Properties properties) {
         this.TAG = this.getClass().getName();
         this.log = LoggerFactory.getLogger(TAG);
 
@@ -141,10 +141,10 @@ public class BaseWhydahServiceClient {
     }
 
     //GENERAL
-    
-    public WhydahApplicationSession getWAS(){
-		return was;
-	}
+
+    public WhydahApplicationSession getWAS() {
+        return was;
+    }
 
     public static Integer calculateTokenRemainingLifetimeInSeconds(String userTokenXml) {
         Integer tokenLifespanMs = UserTokenXpathHelper.getLifespan(userTokenXml);
@@ -157,7 +157,6 @@ public class BaseWhydahServiceClient {
         long remainingLifeMs = endOfTokenLifeMs - System.currentTimeMillis();
         return (int) (remainingLifeMs / 1000);
     }
-
 
 
     public Boolean isApplicationTokenIdValid(String applicationTokenId) {
@@ -212,6 +211,9 @@ public class BaseWhydahServiceClient {
      */
     public String getUserTokenByPin(String adminUserTokenId, String phoneNo, String pin, String userTicket) {
         log.debug("getUserTokenByPin() called with " + "phoneNo = [" + phoneNo + "], pin = [" + pin + "], userTicket = [" + userTicket + "]");
+        if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
+            return getDummyToken();
+        }
         if (was.getActiveApplicationToken() == null) {
             was.renewWhydahApplicationSession();
         }
@@ -222,6 +224,9 @@ public class BaseWhydahServiceClient {
 
     public String getUserTokenByPin2(String adminUserTokenId, String phoneNo, String pin, String userTicket) {
         log.debug("getUserTokenByPin() called with " + "phoneNo = [" + phoneNo + "], pin = [" + pin + "], userTicket = [" + userTicket + "]");
+        if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
+            return getDummyToken();
+        }
         if (was.getActiveApplicationToken() == null) {
             was.renewWhydahApplicationSession();
         }
@@ -230,6 +235,9 @@ public class BaseWhydahServiceClient {
     }
 
     public String getUserToken(UserCredential user, String userticket) {
+        if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
+            return getDummyToken();
+        }
         if (was.getActiveApplicationToken() == null) {
             was.renewWhydahApplicationSession();
         }
@@ -247,6 +255,9 @@ public class BaseWhydahServiceClient {
     }
 
     public String getUserTokenByUserTokenID(String usertokenId) {
+        if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
+            return getDummyToken();
+        }
         if (was.getActiveApplicationToken() == null) {
             was.renewWhydahApplicationSession();
         }
@@ -313,86 +324,123 @@ public class BaseWhydahServiceClient {
         return new CommandCreatePinVerifiedUser(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenXml, userTicket, phoneNo, pin, userIdentityJson).execute();
     }
 
-	public List<Application> getApplicationList(){
-		if(was.getApplicationList()==null){
-				was.updateApplinks();
-		}
-		return was.getApplicationList();
-	}
-	
-	//UPDATE OR CREATE ROLE ENTRY
-	public boolean updateOrCreateUserApplicationRoleEntry(String applicationId, String applicationName, String organization, String roleName, String roleValue, String userTokenXml) {
+    public List<Application> getApplicationList() {
+        if (was.getApplicationList() == null) {
+            was.updateApplinks();
+        }
+        return was.getApplicationList();
+    }
 
-		boolean result = false;
-		try {
-			//    	a) find the correct application/website the customer shall return to (redirectURI/from view)
-			//		b) lookup and find the userRole the user have for this application with roleName="INNData" (UAS)
-			//		c) update the roleValue for this particular role (UAS)
-			//		d) call the "non-existing" updateUserToken method in STS
+    //UPDATE OR CREATE ROLE ENTRY
+    public boolean updateOrCreateUserApplicationRoleEntry(String applicationId, String applicationName, String organization, String roleName, String roleValue, String userTokenXml) {
 
-			//implement
-			//step a -> find correct app
-			UserToken userToken = UserTokenMapper.fromUserTokenXml(userTokenXml);
-			List<Application> apps = getApplicationList();
-			if(apps==null){
-				was.updateApplinks();
-				apps = getApplicationList();
-			} 
-			log.debug("application_list's size: {} apps", apps.size());
-			Application appFound=null;
-			for(Application app:apps){
-				if(app.getId().equalsIgnoreCase(applicationId) || app.getName().equalsIgnoreCase(applicationName)){
-					appFound = app;
-					break;
-				}
-			}
-			
-			if(appFound==null){
-				log.debug("find app: app is not found, appId {} or appName {}", applicationId, applicationName);
-				result = false;
-			} else {
-				String rolesJson = new CommandGetUserRoles(uri_useradmin_service, getMyAppTokenID(), userToken.getTokenid(), userToken.getUid()).execute();
-				//step b -> find userRole
-				List<UserApplicationRoleEntry> appRoleEntryList = UserRoleMapper.fromJsonAsList(rolesJson);
-				UserApplicationRoleEntry selectApplicationEntry = null;
-				for (UserApplicationRoleEntry appRoleEntry : appRoleEntryList) {
-					if (appFound.getId().equals(appRoleEntry.getApplicationId())){
-						if (appRoleEntry.getRoleName().equalsIgnoreCase(roleName)) {
-							selectApplicationEntry = appRoleEntry;
-							break;
-						}
-					}
-				}
-				
-				//step c
-				if (selectApplicationEntry == null) {
-					//create new application, this command is already tested
-					UserApplicationRoleEntry userRole = new UserApplicationRoleEntry(userToken.getTokenid(), appFound.getId(), appFound.getName(), organization, roleName, roleValue);
-					String userAddRoleResult = new CommandAddUserRole(uri_useradmin_service, getMyAppTokenID(), userToken.getTokenid(), userToken.getUid(), userRole.toJson()).execute();
-					log.debug("new: userAddRoleResult:{}", userAddRoleResult);
-				} else {
+        boolean result = false;
+        try {
+            //    	a) find the correct application/website the customer shall return to (redirectURI/from view)
+            //		b) lookup and find the userRole the user have for this application with roleName="INNData" (UAS)
+            //		c) update the roleValue for this particular role (UAS)
+            //		d) call the "non-existing" updateUserToken method in STS
 
-					selectApplicationEntry.setRoleValue(roleValue);
-					String editedUserRoleResult = new CommandUpdateUserRole(uri_useradmin_service, getMyAppTokenID(), userToken.getTokenid(), userToken.getUid(), selectApplicationEntry.getId(), selectApplicationEntry.toJson()).execute();
-					log.debug("update: userUpdateRoleResult:{}", editedUserRoleResult);
-				}
-				//step d
-				//call the "non-existing" updateUserToken method in STS
-				String updatedUserTokenXML = (new CommandRefreshUserToken(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userToken.getTokenid()).execute());
-				log.debug("Updated UserToken: {}", updatedUserTokenXML);
-				if (updatedUserTokenXML != null == updatedUserTokenXML.length() > 10) {
-					result = true;
-				}
-			}
+            //implement
+            //step a -> find correct app
+            UserToken userToken = UserTokenMapper.fromUserTokenXml(userTokenXml);
+            List<Application> apps = getApplicationList();
+            if (apps == null) {
+                was.updateApplinks();
+                apps = getApplicationList();
+            }
+            log.debug("application_list's size: {} apps", apps.size());
+            Application appFound = null;
+            for (Application app : apps) {
+                if (app.getId().equalsIgnoreCase(applicationId) || app.getName().equalsIgnoreCase(applicationName)) {
+                    appFound = app;
+                    break;
+                }
+            }
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			log.error("updateOrCreateUserApplicationRoleEntry failed: " + ex.getMessage());
-			result = false;
-		}
-		
-		return result;
-	}
+            if (appFound == null) {
+                log.debug("find app: app is not found, appId {} or appName {}", applicationId, applicationName);
+                result = false;
+            } else {
+                String rolesJson = new CommandGetUserRoles(uri_useradmin_service, getMyAppTokenID(), userToken.getTokenid(), userToken.getUid()).execute();
+                //step b -> find userRole
+                List<UserApplicationRoleEntry> appRoleEntryList = UserRoleMapper.fromJsonAsList(rolesJson);
+                UserApplicationRoleEntry selectApplicationEntry = null;
+                for (UserApplicationRoleEntry appRoleEntry : appRoleEntryList) {
+                    if (appFound.getId().equals(appRoleEntry.getApplicationId())) {
+                        if (appRoleEntry.getRoleName().equalsIgnoreCase(roleName)) {
+                            selectApplicationEntry = appRoleEntry;
+                            break;
+                        }
+                    }
+                }
 
+                //step c
+                if (selectApplicationEntry == null) {
+                    //create new application, this command is already tested
+                    UserApplicationRoleEntry userRole = new UserApplicationRoleEntry(userToken.getTokenid(), appFound.getId(), appFound.getName(), organization, roleName, roleValue);
+                    String userAddRoleResult = new CommandAddUserRole(uri_useradmin_service, getMyAppTokenID(), userToken.getTokenid(), userToken.getUid(), userRole.toJson()).execute();
+                    log.debug("new: userAddRoleResult:{}", userAddRoleResult);
+                } else {
+
+                    selectApplicationEntry.setRoleValue(roleValue);
+                    String editedUserRoleResult = new CommandUpdateUserRole(uri_useradmin_service, getMyAppTokenID(), userToken.getTokenid(), userToken.getUid(), selectApplicationEntry.getId(), selectApplicationEntry.toJson()).execute();
+                    log.debug("update: userUpdateRoleResult:{}", editedUserRoleResult);
+                }
+                //step d
+                //call the "non-existing" updateUserToken method in STS
+                String updatedUserTokenXML = (new CommandRefreshUserToken(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userToken.getTokenid()).execute());
+                log.debug("Updated UserToken: {}", updatedUserTokenXML);
+                if (updatedUserTokenXML != null == updatedUserTokenXML.length() > 10) {
+                    result = true;
+                }
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            log.error("updateOrCreateUserApplicationRoleEntry failed: " + ex.getMessage());
+            result = false;
+        }
+
+        return result;
+    }
+
+    public static String getDummyToken() {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+                "<usertoken xmlns:ns2=\"http://www.w3.org/1999/xhtml\" id=\"759799fe-2e2f-4c8e-b096-d5796733d4d2\">\n" +
+                "    <uid>7583278592730985723</uid>\n" +
+                "    <securitylevel>0</securitylevel>\n" +
+                "    <personRef></personRef>\n" +
+                "    <firstname>Olav</firstname>\n" +
+                "    <lastname>Nordmann</lastname>\n" +
+                "    <email></email>\n" +
+                "    <timestamp>7982374982374</timestamp>\n" +
+                "    <lifespan>3600000</lifespan>\n" +
+                "    <issuer>/iam/issuer/tokenverifier</issuer>\n" +
+                "    <application ID=\"2349785543\">\n" +
+                "        <applicationName>MyApp</applicationName>\n" +
+                "        <organization ID=\"2349785543\">\n" +
+                "            <organizationName>myCompany</organizationName>\n" +
+                "            <role name=\"janitor\" value=\"Employed\"/>\n" +
+                "            <role name=\"board\" value=\"President\"/>\n" +
+                "        </organization>\n" +
+                "        <organization ID=\"0078\">\n" +
+                "            <organizationName>myDayJobCompany</organizationName>\n" +
+                "            <role name=\"board\" value=\"\"/>\n" +
+                "        </organization>\n" +
+                "    </application>\n" +
+                "    <application ID=\"appa\">\n" +
+                "        <applicationName>App A</applicationName>\n" +
+                "        <organization ID=\"1078\">\n" +
+                "            <organizationName>myFotballClub</organizationName>\n" +
+                "            <role name=\"janitor\" value=\"Employed\"/>\n" +
+                "        </organization>\n" +
+                "    </application>\n" +
+                "\n" +
+                "    <ns2:link type=\"application/xml\" href=\"/\" rel=\"self\"/>\n" +
+                "    <hash type=\"MD5\">7671ec2d5bac82d1e70b33c59b5c96a3</hash>\n" +
+                "</usertoken>";
+
+    }
 
 }
