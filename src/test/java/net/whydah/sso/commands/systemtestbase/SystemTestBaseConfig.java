@@ -96,6 +96,14 @@ public class SystemTestBaseConfig {
     }
 
     public boolean isCRMCustomerExtensionSystemTestEnabled() {
+
+        try {
+            if (CRMCustomerExtensionSystemTest) {
+                Thread.sleep(1500);
+            }
+        } catch (InterruptedException ie) {
+
+        }
         return CRMCustomerExtensionSystemTest;
     }
 
