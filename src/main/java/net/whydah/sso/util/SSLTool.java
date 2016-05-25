@@ -1,7 +1,6 @@
 package net.whydah.sso.util;
 
 
-import net.whydah.sso.config.ApplicationMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,10 +37,10 @@ public class SSLTool {
     public static void disableCertificateValidation() {
 
     	//REMOVE HERE FOR PROD TYPE
-        if (ApplicationMode.PROD.equals(ApplicationMode.getApplicationMode())) {
+        // if (ApplicationMode.PROD.equals(ApplicationMode.getApplicationMode())) {
             //  we wait with this....	return;
-        }
-    	
+        //  }
+
         log.warn("Installing a trust manager which does not validate SSL/TLS certificates, DO NOT USE IN PRODUCTION!!");
         // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[]{
