@@ -17,7 +17,8 @@ public class CommandGenerateAndSendSmsPin extends BaseHttpPostHystrixCommand<Boo
     private String appTokenXml;
 
     public CommandGenerateAndSendSmsPin(URI tokenServiceUri, String appTokenId, String appTokenXml, String phoneNo) {
-        super(tokenServiceUri, appTokenXml, appTokenId, "SSOAUserAuthGroup", 6000);//should have timeout if you don't want to see the fallback
+//        super(tokenServiceUri, appTokenXml, appTokenId, "SSOAUserAuthGroup", 6000);//should have timeout if you don't want to see the fallback
+        super(tokenServiceUri, appTokenXml, appTokenId, "SSOAUserAuthGroup");
 
 
         this.phoneNo = phoneNo;
