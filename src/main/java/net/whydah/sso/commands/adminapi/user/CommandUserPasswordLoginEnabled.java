@@ -10,7 +10,7 @@ public class CommandUserPasswordLoginEnabled extends BaseHttpGetHystrixCommand<B
 
 
     public CommandUserPasswordLoginEnabled(URI userAdminServiceUri, String myAppTokenId, String userName) {
-        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
+        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup", 6000);
 
         this.userName = userName;
         if (userAdminServiceUri == null || myAppTokenId == null || userName == null) {
