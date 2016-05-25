@@ -1,10 +1,13 @@
 package net.whydah.sso.util;
 
 
+import net.whydah.sso.config.ApplicationMode;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
+
 import java.io.*;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -36,6 +39,11 @@ public class SSLTool {
 
     public static void disableCertificateValidation() {
 
+    	//REMOVE HERE FOR PROD TYPE
+    	if(ApplicationMode.getApplicationMode().equals(ApplicationMode.PROD)){
+    		return;
+    	}
+    	
         log.warn("Installing a trust manager which does not validate SSL/TLS certificates, DO NOT USE IN PRODUCTION!!");
         // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[]{
