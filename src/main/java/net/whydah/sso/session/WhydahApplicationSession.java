@@ -43,7 +43,7 @@ public class WhydahApplicationSession {
     }
 
     protected WhydahApplicationSession(String sts, String uas, String appId, String appName, String appSecret) {
-        log.info("WhydahApplicationSession initialized: sts:{},  uas:{}, appId:{}, appName:{}, appSecret:{}", sts, uas, appId, appName, appSecret);
+        log.info("WhydahApplicationSession initializing: sts:{},  uas:{}, appId:{}, appName:{}, appSecret:{}", sts, uas, appId, appName, appSecret);
         this.sts = sts;
         this.uas = uas;
         this.myAppCredential = new ApplicationCredential(appId, appName, appSecret);
@@ -71,6 +71,7 @@ public class WhydahApplicationSession {
     }
 
     public static WhydahApplicationSession getInstance(String sts, ApplicationCredential appCred) {
+        log.info("WhydahApplicationSession getInstance(String sts, ApplicationCredential appCred) called");
         if (instance == null) {
             // Thread Safe. Might be costly operation in some case
             synchronized (WhydahApplicationSession.class) {
@@ -83,6 +84,7 @@ public class WhydahApplicationSession {
     }
 
     public static WhydahApplicationSession getInstance(String sts, String appId, String appName, String appSecret) {
+        log.info("WhydahApplicationSession getInstance(String sts, String appId, String appName, String appSecret) appCred called");
         if (instance == null) {
             // Thread Safe. Might be costly operation in some case
             synchronized (WhydahApplicationSession.class) {
@@ -95,6 +97,7 @@ public class WhydahApplicationSession {
     }
     
     public static WhydahApplicationSession getInstance(String sts, String uas, String appId, String appName, String appSecret) {
+        log.info("WhydahApplicationSession getInstance(String sts, String uas, String appId, String appName, String appSecret) appCred called");
         if (instance == null) {
             // Thread Safe. Might be costly operation in some case
             synchronized (WhydahApplicationSession.class) {
@@ -157,39 +160,40 @@ public class WhydahApplicationSession {
 
 
     public void renewWhydahApplicationSession() {
+        log.info("Renew application session called");
         if (applicationToken == null) {
             initializeWhydahApplicationSession();
             Runtime.getRuntime().removeShutdownHook(Thread.currentThread());
 
         }
         if (!checkActiveSession()) {
-            log.info("No active application session for applicationTokenId: {}, getApplicationID: {},   expires: {}", applicationToken.getApplicationID(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+            log.info("Renew WAS: No active application session for applicationTokenId: {}, getApplicationID: {},   expires: {}", applicationToken.getApplicationID(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
             for (int n = 0; n < 3 || !checkActiveSession(); n++) {
                 if (initializeWhydahApplicationSession()) {
                     break;
                 }
-                log.info("Unsuccessful attempt to logon application session, returned applicationtokenXML: {}: ", getActiveApplicationTokenXML());
+                log.info("Renew WAS: Unsuccessful attempt to logon application session, returned applicationtokenXML: {}: ", getActiveApplicationTokenXML());
                 try {
                     Thread.sleep(1000 * n);
                 } catch (InterruptedException ie) {
                 }
             }
         } else {
-            log.info("Active application session found, applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+            log.info("Renew WAS: ctive application session found, applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
 
             Long expires = Long.parseLong(applicationToken.getExpires());
             if (expiresBeforeNextSchedule(expires)) {
-                log.info("Active session expires before next check, re-new");
+                log.info("Renew WAS: Active session expires before next check, re-new");
                 for (int n = 0; n < 5; n++) {
                     String applicationTokenXML = WhydahUtil.extendApplicationSession(sts, getActiveApplicationTokenId(), 2000 + n * 1000);  // Wait a bit longer on retries
                     if (applicationTokenXML != null && applicationTokenXML.length() > 10) {
                         applicationToken = ApplicationTokenMapper.fromXml(applicationTokenXML);
                         if (checkActiveSession()) {
-                            log.info("Success in renew applicationsession, applicationTokenId: {} - for applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+                            log.info("Renew WAS: Success in renew applicationsession, applicationTokenId: {} - for applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
                             break;
                         }
                     } else {
-                        log.info("Failed to renew applicationsession, returned response from STS: {}", applicationTokenXML);
+                        log.info("Renew WAS:: Failed to renew applicationsession, attempt:{}, returned response from STS: {}", n, applicationTokenXML);
                         if (n > 2) {
                             // OK, we wont get a renewed session, so we start a new one
                             if (initializeWhydahApplicationSession()) {
@@ -214,11 +218,11 @@ public class WhydahApplicationSession {
         log.info("Initializing new application session with applicationID: {}", myAppCredential.getApplicationID());
         String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
         if (!checkApplicationToken(applicationTokenXML)) {
-            log.warn("Error, unable to initialize new application session, applicationTokenXml:" + applicationTokenXML);
+            log.warn("InitWAS: Error, unable to initialize new application session, applicationTokenXml:" + applicationTokenXML);
             return false;
         }
         setApplicationSessionParameters(applicationTokenXML);
-        log.info("Initialized new application session, applicationTokenId:{}, applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+        log.info("InitWAS:: Initialized new application session, applicationTokenId:{}, applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
         return true;
     }
 
@@ -274,7 +278,7 @@ public class WhydahApplicationSession {
     	
         if (ApplicationModelUtil.shouldUpdate(5) || getApplicationList() == null || getApplicationList().size() < 2) {
             String applicationsJson = new CommandListApplications(userAdminServiceUri,  applicationToken.getApplicationTokenId()).execute();
-            log.debug("AppLications returned:" + applicationsJson);
+            log.debug("updateApplinks: AppLications returned:" + applicationsJson);
             if (applicationsJson != null) {
                 if (applicationsJson.length() > 20) {
                     setAppLinks(ApplicationMapper.fromJsonList(applicationsJson));
@@ -292,7 +296,7 @@ public class WhydahApplicationSession {
             executorService.execute(new Runnable() {
                 public void run() {
                     updateApplinks();
-                    log.debug("Asynchronous startThreadAndUpdateAppLinks task");
+                    log.debug("Asynchronous startThreadAndUpdateAppLinks task executed");
                 }
             });
             executorService.shutdown();
