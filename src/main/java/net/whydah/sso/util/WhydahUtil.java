@@ -186,8 +186,8 @@ public class WhydahUtil {
 
     private static final String ADMIN_APPLICATION_ID = "2212";
     private static final String ADMIN_APPLICATION_NAME = "Whydah-UserAdminService";
-    private static final String ADMIN_ORGANIZATION_NAME = "WhydahUserAdmin";
-    private static final String ADMIN_ROLE_NAME = "Whydah";
+    private static final String ADMIN_ORGANIZATION_NAME = "Whydah";
+    private static final String ADMIN_ROLE_NAME = "WhydahUserAdmin";
     private static final String ADMIN_ROLE_VALUE = "1";
 
 

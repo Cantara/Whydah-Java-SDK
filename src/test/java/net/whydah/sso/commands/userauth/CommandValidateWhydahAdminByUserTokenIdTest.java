@@ -7,12 +7,15 @@ import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserToken;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertTrue;
 
 public class CommandValidateWhydahAdminByUserTokenIdTest {
+    private static final Logger log = LoggerFactory.getLogger(CommandValidateWhydahAdminByUserTokenIdTest.class);
+
 
     static SystemTestBaseConfig config;
 
@@ -22,7 +25,7 @@ public class CommandValidateWhydahAdminByUserTokenIdTest {
     }
 
 
-    @Ignore // Need whydah 2.2-alpha SDK to run against
+    //@Ignore // Need whydah 2.2-alpha SDK to run against
     @Test
     public void testCommandValidateWhydahAdminByUserTokenIdTest() throws Exception {
 
@@ -40,6 +43,7 @@ public class CommandValidateWhydahAdminByUserTokenIdTest {
             userCredential.setPassword("useradmin42");
             String userTokenXml = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential).execute();
             UserToken userToken = UserTokenMapper.fromUserTokenXml(userTokenXml);
+
 
             assertTrue(new CommandValidateWhydahAdminByUserTokenId(config.tokenServiceUri, myApplicationTokenID, userToken.getTokenid()).execute());
 
