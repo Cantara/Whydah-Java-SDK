@@ -1,4 +1,4 @@
-package net.whydah.sso.util;
+package net.whydah.sso.session.baseclasses;
 
 import net.whydah.sso.application.mappers.ApplicationMapper;
 import net.whydah.sso.application.types.Application;

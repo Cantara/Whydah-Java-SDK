@@ -1,10 +1,13 @@
 package net.whydah.sso.util;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import static junit.framework.TestCase.assertTrue;
 
 public class ImportStartSSLCertificatesTest {
 
@@ -14,23 +17,23 @@ public class ImportStartSSLCertificatesTest {
         InputStream is;
 
         try {
-            is = new FileInputStream("./src/resources/ca.crt");
-            SSLTool.ensureSslCertIsInKeystore("startssl-ca", is);
+            is = new FileInputStream("./src/main/resources/ca.crt");
+            SSLTool.ensureSslCertIsInKeystore("resources/startssl-ca", is);
             is.close();
 
-            is = new FileInputStream("./src/resources/sub.class1.server.ca.crt");
+            is = new FileInputStream("./src/main/resources/sub.class1.server.ca.crt");
             SSLTool.ensureSslCertIsInKeystore("startssl-sub.class1", is);
             is.close();
 
-            is = new FileInputStream("./src/resources/sub.class2.server.ca.crt");
+            is = new FileInputStream("./src/main/resources/sub.class2.server.ca.crt");
             SSLTool.ensureSslCertIsInKeystore("startssl-sub.class2", is);
             is.close();
 
-            is = new FileInputStream("./src/resources/sub.class3.server.ca.crt");
+            is = new FileInputStream("./src/main/resources/sub.class3.server.ca.crt");
             SSLTool.ensureSslCertIsInKeystore("startssl-sub.class3", is);
             is.close();
 
-            is = new FileInputStream("./src/resources/sub.class4.server.ca.crt");
+            is = new FileInputStream("./src/main/resources/sub.class4.server.ca.crt");
             SSLTool.ensureSslCertIsInKeystore("startssl-sub.class4", is);
             is.close();
 
@@ -42,4 +45,12 @@ public class ImportStartSSLCertificatesTest {
         }
 
     }
+
+    @Ignore
+    @Test
+    public void testSSSLToolImportCACert() throws Exception {
+        SSLTool.disableCertificateValidation();
+        assertTrue(SSLTool.ensureSslCertIsInKeystore("startssl-sub.class4"));
+    }
+
 }

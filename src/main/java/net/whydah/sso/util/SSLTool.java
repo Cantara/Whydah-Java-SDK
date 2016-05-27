@@ -14,6 +14,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Enumeration;
 
 public class SSLTool {
 
@@ -36,9 +37,9 @@ public class SSLTool {
 
     public static void disableCertificateValidation() {
 
-    	//REMOVE HERE FOR PROD TYPE
+        //REMOVE HERE FOR PROD TYPE
         // if (ApplicationMode.PROD.equals(ApplicationMode.getApplicationMode())) {
-            //  we wait with this....	return;
+        //  we wait with this....	return;
         //  }
 
         log.warn("Installing a trust manager which does not validate SSL/TLS certificates, DO NOT USE IN PRODUCTION!!");
@@ -92,6 +93,43 @@ public class SSLTool {
      */
     public static void ensureSslCertIsInKeystore(String alias, InputStream certInputStream)
             throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+
+        FileInputStream cacertsIs = null;
+        try {
+            //get default cacerts file
+            final File cacertsFile = new File(System.getProperty("java.home") + CACERTS_PATH);
+            if (!cacertsFile.exists()) {
+                throw new FileNotFoundException(cacertsFile.getAbsolutePath());
+            }
+
+            //load cacerts keystore
+            cacertsIs = new FileInputStream(cacertsFile);
+            final KeyStore cacerts = KeyStore.getInstance(KeyStore.getDefaultType());
+            cacerts.load(cacertsIs, CACERTS_PASSWORD.toCharArray());
+            cacertsIs.close();
+
+            //load certificate from input stream
+            final CertificateFactory cf = CertificateFactory.getInstance("X.509");
+            final Certificate cert = cf.generateCertificate(certInputStream);
+            certInputStream.close();
+
+            //check if cacerts contains the certificate
+            if (cacerts.getCertificateAlias(cert) == null) {
+                //cacerts doesn't contain the certificate, add it
+                cacerts.setCertificateEntry(alias, cert);
+                //write the updated cacerts keystore
+                FileOutputStream cacertsOs = new FileOutputStream(cacertsFile);
+                cacerts.store(cacertsOs, CACERTS_PASSWORD.toCharArray());
+                cacertsOs.close();
+            }
+        } catch (IOException ioe) {
+
+        } finally {
+            cacertsIs.close();
+        }
+    }
+
+    public static boolean ensureSslCertIsInKeystore(String alias) throws Exception {
         //get default cacerts file
         final File cacertsFile = new File(System.getProperty("java.home") + CACERTS_PATH);
         if (!cacertsFile.exists()) {
@@ -102,72 +140,79 @@ public class SSLTool {
         FileInputStream cacertsIs = new FileInputStream(cacertsFile);
         final KeyStore cacerts = KeyStore.getInstance(KeyStore.getDefaultType());
         cacerts.load(cacertsIs, CACERTS_PASSWORD.toCharArray());
-        cacertsIs.close();
-
-        //load certificate from input stream
-        final CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        final Certificate cert = cf.generateCertificate(certInputStream);
-        certInputStream.close();
-
-        //check if cacerts contains the certificate
-        if (cacerts.getCertificateAlias(cert) == null) {
-            //cacerts doesn't contain the certificate, add it
-            cacerts.setCertificateEntry(alias, cert);
-            //write the updated cacerts keystore
-            FileOutputStream cacertsOs = new FileOutputStream(cacertsFile);
-            cacerts.store(cacertsOs, CACERTS_PASSWORD.toCharArray());
-            cacertsOs.close();
+        Enumeration<String> aliases = cacerts.aliases();
+        while (aliases.hasMoreElements()) {
+            String key = aliases.nextElement();
+            if (alias.equalsIgnoreCase(key)) {
+                return true;
+            }
         }
+        cacertsIs.close();
+        return false;
     }
-
 
     private static void readCertificates() {
         try {
             loadFromClasspath("ca.crt");
             loadFromFile("ca.crt");
         } catch (Exception e) {
+            log.warn("Error installing {} ", "ca.crt");
         }
         try {
             loadFromClasspath("sub.class1.server.ca.crt");
             loadFromFile("sub.class1.server.ca.crt");
         } catch (Exception e) {
+            log.warn("Error installing {} ", "sub.class1.server.ca.crt");
         }
         try {
             loadFromClasspath("sub.class2.server.ca.crt");
             loadFromFile("sub.class2.server.ca.crt");
         } catch (Exception e) {
+            log.warn("Error installing {} ", "sub.class2.server.ca.crt");
         }
         try {
             loadFromClasspath("sub.class3.server.ca.crt");
             loadFromFile("sub.class3.server.ca.crt");
         } catch (Exception e) {
+            log.warn("Error installing {} ", "sub.class3.server.ca.crt");
         }
         try {
             loadFromClasspath("sub.class4.server.ca.crt");
             loadFromFile("sub.class4.server.ca.crt");
         } catch (Exception e) {
+            log.warn("Error installing {} ", "sub.class4.server.ca.crt");
         }
     }
 
     private static void loadFromClasspath(String certFile) throws Exception {
-        log.info("Loading certificate from classpath: {}", certFile);
-        InputStream is = SSLTool.class.getClassLoader().getResourceAsStream(certFile);
-        if (is == null) {
-            log.error("Error reading {} from classpath.", certFile);
+        InputStream is = null;
+        try {
+            log.trace("Loading certificate from classpath: {}", certFile);
+            is = SSLTool.class.getClassLoader().getResourceAsStream(certFile);
+            if (is == null) {
+                log.trace("Error reading {} from classpath.", certFile);
+            }
+            SSLTool.ensureSslCertIsInKeystore(certFile, is);
+        } catch (Exception e) {
+            log.debug("Error reading {} from classpath.", certFile, e);
+        } finally {
+            is.close();
+
         }
-        SSLTool.ensureSslCertIsInKeystore("startssl-" + certFile, is);
-        is.close();
     }
 
     private static void loadFromFile(String certFile) throws Exception {
+        InputStream is = null;
         try {
-            InputStream is = new FileInputStream(certFile);
+            is = new FileInputStream(certFile);
             if (is != null) {
-                SSLTool.ensureSslCertIsInKeystore("startssl-" + certFile, is);
+                SSLTool.ensureSslCertIsInKeystore(certFile, is);
             }
-            is.close();
         } catch (Exception e) {
-            log.error("Error reading sub.class4.server.ca.crt from classpath.");
+            log.debug("Error reading {} from filesystem.", certFile, e);
+        } finally {
+            is.close();
+
         }
 
     }

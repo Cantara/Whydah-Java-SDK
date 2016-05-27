@@ -7,7 +7,7 @@ import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.application.types.ApplicationToken;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
-import net.whydah.sso.util.ApplicationModelUtil;
+import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.util.WhydahUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -302,5 +302,6 @@ public class WhydahApplicationSession {
             executorService.shutdown();
         }
     }
+
 
 }

@@ -170,5 +170,17 @@ public class WhydahUtil {
         return userTokenXml;
     }
 
+    /**
+     * A simple ustil method to add some more details to the health endpont
+     */
+    public static String getPrintableStatus(WhydahApplicationSession was) {
+
+        String statusString = "Status:\n" +
+                " - hasApplicationToken: " + Boolean.toString(was.getActiveApplicationTokenId() != null) + "\n" +
+                " - hasValidApplicationToken: " + Boolean.toString(was.checkActiveSession()) + "\n" +
+                " - hasApplicationsMetadata:" + Boolean.toString(was.getApplicationList().size() > 2) + "\n";
+
+        return statusString;
+    }
 
 }
