@@ -183,4 +183,24 @@ public class WhydahUtil {
         return statusString;
     }
 
+
+    private static final String ADMIN_APPLICATION_ID = "2212";
+    private static final String ADMIN_APPLICATION_NAME = "Whydah-UserAdminService";
+    private static final String ADMIN_ORGANIZATION_NAME = "WhydahUserAdmin";
+    private static final String ADMIN_ROLE_NAME = "Whydah";
+    private static final String ADMIN_ROLE_VALUE = "1";
+
+
+    public static UserApplicationRoleEntry getWhydahUserAdminRole() {
+        UserApplicationRoleEntry adminRole = new UserApplicationRoleEntry();
+        adminRole.setApplicationId(ADMIN_APPLICATION_ID);
+        adminRole.setApplicationName(ADMIN_APPLICATION_NAME);
+        adminRole.setOrgName(ADMIN_ORGANIZATION_NAME);
+        adminRole.setRoleName(ADMIN_ROLE_NAME);
+        adminRole.setRoleValue(ADMIN_ROLE_VALUE);
+
+        return adminRole;
+
+    }
+
 }

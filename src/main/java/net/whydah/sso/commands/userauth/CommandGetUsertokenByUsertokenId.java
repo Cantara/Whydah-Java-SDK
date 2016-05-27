@@ -1,11 +1,11 @@
 package net.whydah.sso.commands.userauth;
 
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.util.ExceptionUtil;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-import net.whydah.sso.util.ExceptionUtil;
 
 
 public class CommandGetUsertokenByUsertokenId extends BaseHttpPostHystrixCommand<String> {
@@ -27,46 +27,8 @@ public class CommandGetUsertokenByUsertokenId extends BaseHttpPostHystrixCommand
 
     }
 
-//    @Override
-//    protected String run() {
-//
-//        String responseXML = null;
-//        log.trace("CommandGetUsertokenByUsertokenId - whydahServiceUri={} myAppTokenId={}, usertokenId:{}", tokenServiceUri.toString(), myAppTokenId, usertokenId);
-//
-//
-//        Client tokenServiceClient = ClientBuilder.newClient();
-//
-//        WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/get_usertoken_by_usertokenid");
-//        log.trace("CommandGetUsertokenByUsertokenId  - usertokenid: {} apptoken: {}", usertokenId, myAppTokenXml);
-//        Form formData = new Form();
-//        formData.param("apptoken", myAppTokenXml);  //
-//        formData.param("usertokenid", usertokenId);  //usertokenid
-//
-//        Response response = userTokenResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
-//        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
-//            log.debug("CommandGetUsertokenByUsertokenId - Response Code from STS: {}", response.getStatus());
-//            throw new IllegalArgumentException("CommandGetUsertokenByUsertokenId failed.");
-//        }
-//        if (!(response.getStatus() == OK.getStatusCode())) {
-//            log.debug("CommandGetUsertokenByUsertokenId - Response Code from STS: {}", response.getStatus());
-//        }
-//        responseXML = response.readEntity(String.class);
-//        log.debug("CommandGetUsertokenByUsertokenId - Response OK with XML: {}", responseXML);
-//
-//        if (responseXML == null) {
-//            String authenticationFailedMessage = ExceptionUtil.printableUrlErrorMessage("User session failed", userTokenResource, response);
-//            log.warn(authenticationFailedMessage);
-//            throw new RuntimeException(authenticationFailedMessage);
-//        }
-//
-//        return responseXML;
-//
-//
-//    }
-    
-    
-    
-    int retryCnt=0;
+
+	int retryCnt=0;
 	@Override
 	protected String dealWithFailedResponse(String responseBody, int statusCode) {
 		if(statusCode != java.net.HttpURLConnection.HTTP_FORBIDDEN &&retryCnt<1){
