@@ -6,12 +6,16 @@ import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
 
 import static org.junit.Assert.assertTrue;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class CommandCheckUserTokenIdTest {
 
     static SystemTestBaseConfig config;
+    private static final Logger log = getLogger(CommandCheckUserTokenIdTest.class);
+
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -24,9 +28,9 @@ public class CommandCheckUserTokenIdTest {
 
         if (config.isSystemTestEnabled()) {
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
-            System.out.println(myAppTokenXml);
+            log.debug(myAppTokenXml);
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-            System.out.println(myApplicationTokenID);
+            log.debug(myApplicationTokenID);
 
             assertTrue(myApplicationTokenID.length() > 6);
 
@@ -46,9 +50,9 @@ public class CommandCheckUserTokenIdTest {
 
         if (config.isSystemTestEnabled()) {
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
-            System.out.println(myAppTokenXml);
+            log.debug(myAppTokenXml);
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-            System.out.println(myApplicationTokenID);
+            log.debug(myApplicationTokenID);
 
             assertTrue(myApplicationTokenID.length() > 6);
 
