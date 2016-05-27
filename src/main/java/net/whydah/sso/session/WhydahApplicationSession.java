@@ -160,7 +160,7 @@ public class WhydahApplicationSession {
 
 
     public void renewWhydahApplicationSession() {
-        log.info("Renew application session called");
+        log.info("Renew WAS: Renew application session called");
         if (applicationToken == null) {
             initializeWhydahApplicationSession();
             Runtime.getRuntime().removeShutdownHook(Thread.currentThread());
@@ -179,7 +179,7 @@ public class WhydahApplicationSession {
                 }
             }
         } else {
-            log.info("Renew WAS: ctive application session found, applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+            log.info("Renew WAS: Active application session found, applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
 
             Long expires = Long.parseLong(applicationToken.getExpires());
             if (expiresBeforeNextSchedule(expires)) {
@@ -228,7 +228,7 @@ public class WhydahApplicationSession {
 
     private void setApplicationSessionParameters(String applicationTokenXML) {
         applicationToken = ApplicationTokenMapper.fromXml(applicationTokenXML);
-        log.info("New application session created for applicationID: {}, expires: {}", applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+        log.info("WAS: New application session created for applicationID: {}, expires: {}", applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
     }
 
     /**
@@ -278,7 +278,7 @@ public class WhydahApplicationSession {
     	
         if (ApplicationModelUtil.shouldUpdate(5) || getApplicationList() == null || getApplicationList().size() < 2) {
             String applicationsJson = new CommandListApplications(userAdminServiceUri,  applicationToken.getApplicationTokenId()).execute();
-            log.debug("updateApplinks: AppLications returned:" + applicationsJson);
+            log.debug("WAS: updateApplinks: AppLications returned:" + applicationsJson);
             if (applicationsJson != null) {
                 if (applicationsJson.length() > 20) {
                     setAppLinks(ApplicationMapper.fromJsonList(applicationsJson));
@@ -296,7 +296,7 @@ public class WhydahApplicationSession {
             executorService.execute(new Runnable() {
                 public void run() {
                     updateApplinks();
-                    log.debug("Asynchronous startThreadAndUpdateAppLinks task executed");
+                    log.debug("WAS: Asynchronous startThreadAndUpdateAppLinks task executed");
                 }
             });
             executorService.shutdown();
