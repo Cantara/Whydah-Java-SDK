@@ -28,7 +28,7 @@ public class SSLTool {
     private static SSLSocketFactory sslSocketFactory;
 
     static {
-        readCertificates();
+        // readCertificates();
     }
 
     public static boolean isCertificateCheckDisabled() {
@@ -42,7 +42,7 @@ public class SSLTool {
         //  we wait with this....	return;
         //  }
 
-        log.warn("Installing a trust manager which does not validate SSL/TLS certificates, DO NOT USE IN PRODUCTION!!");
+        log.warn("Installing a trust manager which does not validate SSL/TLS certificates, DO NOT USE IN PRODUCTION!! \n\n (This is only for test in self-signed environments) ");
         // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
