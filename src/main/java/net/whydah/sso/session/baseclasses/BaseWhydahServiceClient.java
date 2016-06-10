@@ -380,7 +380,7 @@ public class BaseWhydahServiceClient {
 				//call the "non-existing" updateUserToken method in STS
 				String updatedUserTokenXML = (new CommandRefreshUserToken(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userToken.getTokenid()).execute());
 				log.debug("Updated UserToken: {}", updatedUserTokenXML);
-				if (updatedUserTokenXML != null == updatedUserTokenXML.length() > 10) {
+				if (updatedUserTokenXML != null && updatedUserTokenXML.length() > 10) {
 					result = true;
 				}
 			}
