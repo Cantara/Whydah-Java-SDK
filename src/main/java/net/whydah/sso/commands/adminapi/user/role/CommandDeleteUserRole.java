@@ -19,7 +19,7 @@ public class CommandDeleteUserRole extends BaseHttpDeleteHystrixCommand<Boolean>
      * @PathParam("uid") String uid, @PathParam("roleid") String roleid) {
      */
     public CommandDeleteUserRole(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String uId, String roleId) {
-        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
+        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup",3000);
 
         this.adminUserTokenId = adminUserTokenId;
         this.roleId = roleId;
