@@ -42,7 +42,7 @@ public class CommandSendScheduledMail extends BaseHttpPostHystrixCommand<Boolean
         Map<String, String> data = new HashMap<String, String>();
         data.put("timestamp", timestamp);
         data.put("emailaddress", emailaddress);
-        data.put("subject", msg);
+        data.put("subject", subject);
         data.put("emailMessage", msg);
         return data;
     }
