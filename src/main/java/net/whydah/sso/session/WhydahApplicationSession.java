@@ -9,6 +9,7 @@ import net.whydah.sso.commands.adminapi.application.CommandListApplications;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.util.WhydahUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -303,5 +304,23 @@ public class WhydahApplicationSession {
         }
     }
 
+    public int getApplicationLifeSpan(String applicationid){
+    	if(getApplicationList()==null ||getApplicationList().isEmpty()){
+    		updateApplinks();
+    	}
+		Application found = null;
+		 for(Application app : getApplicationList()){
+			 if(app.getId().equals(applicationid)){
+				 found = app;
+				 break;
+			 }
+		 }
+		 
+		 if(found==null){
+			 return 86400;
+		 } else {
+			return Integer.valueOf(found.getSecurity().getMaxSessionTimeoutSeconds());
+		 }
+	}
 
 }
