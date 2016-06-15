@@ -12,10 +12,11 @@ public class CommandGetUserRoles extends BaseHttpGetHystrixCommand<String> {
 
 
     public CommandGetUserRoles(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String userID) {
-        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
+        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup", 3000);
 
 
         this.adminUserTokenId = adminUserTokenId;
+        this.myAppTokenId = myAppTokenId;
         this.userID = userID;
         if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userID == null) {
             log.error(TAG + " initialized with null-values - will fail");

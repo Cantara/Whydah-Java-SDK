@@ -147,13 +147,13 @@ public class BaseWhydahServiceClient {
 	}
 
     public static Integer calculateTokenRemainingLifetimeInSeconds(String userTokenXml) {
-        Integer tokenLifespanMs = UserTokenXpathHelper.getLifespan(userTokenXml);
+        Integer tokenLifespanSec = UserTokenXpathHelper.getLifespan(userTokenXml);
         Long tokenTimestampMsSinceEpoch = UserTokenXpathHelper.getTimestamp(userTokenXml);
 
-        if (tokenLifespanMs == null || tokenTimestampMsSinceEpoch == null) {
+        if (tokenLifespanSec == null || tokenTimestampMsSinceEpoch == null) {
             return null;
         }
-        long endOfTokenLifeMs = tokenTimestampMsSinceEpoch + tokenLifespanMs;
+        long endOfTokenLifeMs = tokenTimestampMsSinceEpoch + tokenLifespanSec * 1000;
         long remainingLifeMs = endOfTokenLifeMs - System.currentTimeMillis();
         return (int) (remainingLifeMs / 1000);
     }
