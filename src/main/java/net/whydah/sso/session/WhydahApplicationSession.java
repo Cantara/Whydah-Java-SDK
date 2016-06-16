@@ -304,23 +304,4 @@ public class WhydahApplicationSession {
         }
     }
 
-    public int getApplicationLifeSpan(String applicationid){
-    	if(getApplicationList()==null ||getApplicationList().isEmpty()){
-    		updateApplinks();
-    	}
-		Application found = null;
-		 for(Application app : getApplicationList()){
-			 if(app.getId().equals(applicationid)){
-				 found = app;
-				 break;
-			 }
-		 }
-		 
-		 if(found==null){
-			 return 86400;
-		 } else {
-			return Integer.valueOf(found.getSecurity().getMaxSessionTimeoutSeconds());
-		 }
-	}
-
 }

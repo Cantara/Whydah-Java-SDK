@@ -55,29 +55,5 @@ public class WhydahApplicationSessionTest {
         }
     }
     
-    @Test
-    public void testApplicationLifeSpan(){
-    	  WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(),
-    			  config.userAdminServiceUri.toString(), config.TEMPORARY_APPLICATION_ID,config.TEMPORARY_APPLICATION_NAME, config.TEMPORARY_APPLICATION_SECRET
-    			  );
-    	  
-    	  //useradminservice
-    	  int expires = applicationSession.getApplicationLifeSpan("2219");
-          System.out.println("Application expires in " + expires + " seconds");
-          viewCookieTimeout(expires);
-          
-    }
-
-	private void viewCookieTimeout(int expires) {
-		int defaultTokenLifeSpanInMs = 245000;
-		int tokenLifespanMs =  expires*1000; //UserTokenXpathHelper.getLifespan(userTokenXml);
-        Long tokenTimestampMsSinceEpoch = System.currentTimeMillis(); //UserTokenXpathHelper.getTimestamp(userTokenXml);
-
-       
-        long endOfTokenLifeMs = tokenTimestampMsSinceEpoch + tokenLifespanMs;
-        long remainingLifeMs = endOfTokenLifeMs - System.currentTimeMillis();
-        System.out.println("CookieMaxAge = " + (remainingLifeMs / 1000) + " seconds");
-		
-	}
     
 }
