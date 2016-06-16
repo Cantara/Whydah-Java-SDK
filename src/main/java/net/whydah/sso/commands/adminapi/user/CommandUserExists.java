@@ -11,7 +11,7 @@ public class CommandUserExists extends BaseHttpGetHystrixCommand<Boolean> {
 
 
     public CommandUserExists(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String userQuery) {
-    	super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
+        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup", 2000);
        
         this.adminUserTokenId = adminUserTokenId;
         this.userQuery = userQuery;
