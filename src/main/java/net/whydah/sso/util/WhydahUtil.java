@@ -207,6 +207,24 @@ public class WhydahUtil {
 
     }
 
+    /**
+     * A simple util method to add some more details to the health endpont
+     */
+    public static String getPrintableStatus(WhydahApplicationSession was, String userTokenId) {
+
+        boolean validUser = new CommandValidateUsertokenId(URI.create(was.getSTS()), was.getActiveApplicationTokenId(), userTokenId).execute();
+
+
+        String statusString = "Whydah session:\n" +
+                " - hasApplicationToken: " + Boolean.toString(was.getActiveApplicationTokenId() != null) + "\n" +
+                " - hasValidApplicationToken: " + Boolean.toString(was.checkActiveSession()) + "\n" +
+                " - hasValidAdminUserToken: " + validUser + "\n" +
+                " - hasApplicationsMetadata:" + Boolean.toString(was.getApplicationList().size() > 2) + "\n";
+
+        return statusString;
+
+    }
+
     private static final String ADMIN_APPLICATION_ID = "2212";
     private static final String ADMIN_APPLICATION_NAME = "Whydah-UserAdminService";
     private static final String ADMIN_ORGANIZATION_NAME = "Whydah";
