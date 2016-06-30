@@ -165,9 +165,9 @@ public class WhydahUtil {
     }
 
 
-    public static String getUserTokenByUserTokenId(String stsUri, String myAppTokenId, String myAppTokenXml ,String userTokenId) {
+    public static String getUserTokenByUserTokenId(String stsUri, String myAppTokenId, String myAppTokenXml, String userTokenId) {
         URI tokenServiceUri = URI.create(stsUri);
-        CommandGetUsertokenByUsertokenId command = new CommandGetUsertokenByUsertokenId(tokenServiceUri,myAppTokenId,myAppTokenXml, userTokenId);
+        CommandGetUsertokenByUsertokenId command = new CommandGetUsertokenByUsertokenId(tokenServiceUri, myAppTokenId, myAppTokenXml, userTokenId);
         String userTokenXml = command.execute();
         return userTokenXml;
     }
@@ -194,19 +194,18 @@ public class WhydahUtil {
         String userticket = UUID.randomUUID().toString();
         String userToken = new CommandLogonUserByUserCredential(URI.create(was.getSTS()), was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userCredential, userticket).execute();
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-        boolean validUser = new CommandValidateUsertokenId(URI.create(was.getSTS()), was.getActiveApplicationTokenId(), userTokenId).execute())
-        {
+        boolean validUser = new CommandValidateUsertokenId(URI.create(was.getSTS()), was.getActiveApplicationTokenId(), userTokenId).execute();
 
 
-            String statusString = "Whydah session:\n" +
-                    " - hasApplicationToken: " + Boolean.toString(was.getActiveApplicationTokenId() != null) + "\n" +
-                    " - hasValidApplicationToken: " + Boolean.toString(was.checkActiveSession()) + "\n" +
-                    " - hasValidAdminUserToken: " + validUser + "\n" +
-                    " - hasApplicationsMetadata:" + Boolean.toString(was.getApplicationList().size() > 2) + "\n";
+        String statusString = "Whydah session:\n" +
+                " - hasApplicationToken: " + Boolean.toString(was.getActiveApplicationTokenId() != null) + "\n" +
+                " - hasValidApplicationToken: " + Boolean.toString(was.checkActiveSession()) + "\n" +
+                " - hasValidAdminUserToken: " + validUser + "\n" +
+                " - hasApplicationsMetadata:" + Boolean.toString(was.getApplicationList().size() > 2) + "\n";
 
-            return statusString;
+        return statusString;
 
-        }
+    }
 
     private static final String ADMIN_APPLICATION_ID = "2212";
     private static final String ADMIN_APPLICATION_NAME = "Whydah-UserAdminService";
