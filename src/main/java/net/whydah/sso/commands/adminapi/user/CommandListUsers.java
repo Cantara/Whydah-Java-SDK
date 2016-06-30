@@ -20,40 +20,14 @@ public class CommandListUsers extends BaseHttpGetHystrixCommand<String> {
             userQuery = "*";
         }
         this.userQuery = userQuery;
-        if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userQuery == null) {
-            log.error(TAG + "initialized with null-values - will fail");
+        if (userAdminServiceUri == null || myAppTokenId == null || myAppTokenId.length() < 4 || adminUserTokenId == null || adminUserTokenId.length() < 4 || userQuery == null) {
+            log.error("CommandListUsers initialized with null-values - will fail - userAdminServiceUri:{}, myAppTokenId:{}, adminUserTokenId:{}, userQuery:{}", userAdminServiceUri, myAppTokenId, adminUserTokenId, userQuery);
+
         }
+
 
     }
 
-//    @Override
-//    protected String run() {
-//
-//        log.trace("CommandListUsers - myAppTokenId={}", myAppTokenId);
-//        String uasAdminApiUrl = userAdminServiceUri.toString() + myAppTokenId + "/" + adminUserTokenId + "/users/find/" + userQuery;
-//
-//        HttpRequest request = HttpRequest.get(uasAdminApiUrl);
-//        int statusCode = request.code();
-//        String responseBody = request.body();
-//        switch (statusCode) {
-//            case HttpSender.STATUS_OK:
-//                log.debug("CommandListUsers - {}", responseBody);
-//                return responseBody;
-//            default:
-//                log.warn("Unexpected response from UAS. Response is {} content is {}", responseBody, responseBody);
-//
-//        }
-//        throw new RuntimeException("CommandListUsers - Operation failed");
-//
-//
-//    }
-
-//
-//    @Override
-//    protected String getFallback() {
-//        log.warn("CommandListUsers - fallback - whydahServiceUri={}", userAdminServiceUri.toString());
-//        return null;
-//    }
 
 	@Override
 	protected String getTargetPath() {

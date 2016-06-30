@@ -15,7 +15,7 @@ public class CommandUserExists extends BaseHttpGetHystrixCommand<Boolean> {
        
         this.adminUserTokenId = adminUserTokenId;
         this.userQuery = userQuery;
-        if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userQuery == null) {
+        if (userAdminServiceUri == null || myAppTokenId == null || myAppTokenId.length() < 10 || adminUserTokenId == null || adminUserTokenId.length() < 10 || userQuery == null) {
             log.error("CommandUserExists initialized with null-values - will fail - userAdminServiceUri:{}, myAppTokenId:{}, adminUserTokenId:{}, userQuery:{}", userAdminServiceUri, myAppTokenId, adminUserTokenId, userQuery);
 
         }
