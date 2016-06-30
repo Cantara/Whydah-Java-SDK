@@ -225,6 +225,22 @@ public class WhydahUtil {
 
     }
 
+    /**
+     * A simple util method to add some more details to the health endpont
+     */
+    public static boolean hasValidAdminSession(WhydahApplicationSession was, String userTokenId) {
+
+        boolean validUser = new CommandValidateUsertokenId(URI.create(was.getSTS()), was.getActiveApplicationTokenId(), userTokenId).execute();
+        return validUser && (was.getActiveApplicationTokenId() != null) && was.checkActiveSession() && (was.getApplicationList().size() > 2);
+    }
+
+    /**
+     * A simple util method to add some more details to the health endpont
+     */
+    public static boolean hasValidWhydahSession(WhydahApplicationSession was) {
+        return (was.getActiveApplicationTokenId() != null) && was.checkActiveSession() && (was.getApplicationList().size() > 2);
+    }
+
     private static final String ADMIN_APPLICATION_ID = "2212";
     private static final String ADMIN_APPLICATION_NAME = "Whydah-UserAdminService";
     private static final String ADMIN_ORGANIZATION_NAME = "Whydah";
