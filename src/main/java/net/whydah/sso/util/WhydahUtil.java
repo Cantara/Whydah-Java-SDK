@@ -9,7 +9,9 @@ import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandRenewApplicationSession;
 import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
+import net.whydah.sso.commands.userauth.CommandValidateUsertokenId;
 import net.whydah.sso.session.WhydahApplicationSession;
+import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.mappers.UserIdentityMapper;
 import net.whydah.sso.user.mappers.UserRoleMapper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
@@ -181,8 +183,30 @@ public class WhydahUtil {
                 " - hasApplicationsMetadata:" + Boolean.toString(was.getApplicationList().size() > 2) + "\n";
 
         return statusString;
+
     }
 
+    /**
+     * A simple util method to add some more details to the health endpont
+     */
+    public static String getPrintableStatus(WhydahApplicationSession was, UserCredential userCredential) {
+
+        String userticket = UUID.randomUUID().toString();
+        String userToken = new CommandLogonUserByUserCredential(URI.create(was.getSTS()), was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userCredential, userticket).execute();
+        String userTokenId = UserXpathHelper.getUserTokenId(userToken);
+        boolean validUser = new CommandValidateUsertokenId(URI.create(was.getSTS()), was.getActiveApplicationTokenId(), userTokenId).execute())
+        {
+
+
+            String statusString = "Whydah session:\n" +
+                    " - hasApplicationToken: " + Boolean.toString(was.getActiveApplicationTokenId() != null) + "\n" +
+                    " - hasValidApplicationToken: " + Boolean.toString(was.checkActiveSession()) + "\n" +
+                    " - hasValidAdminUserToken: " + validUser + "\n" +
+                    " - hasApplicationsMetadata:" + Boolean.toString(was.getApplicationList().size() > 2) + "\n";
+
+            return statusString;
+
+        }
 
     private static final String ADMIN_APPLICATION_ID = "2212";
     private static final String ADMIN_APPLICATION_NAME = "Whydah-UserAdminService";
