@@ -276,8 +276,8 @@ public class WhydahApplicationSession {
             return;
         }
         URI userAdminServiceUri= URI.create(uas);
-    	
-        if (ApplicationModelUtil.shouldUpdate(5) || getApplicationList() == null || getApplicationList().size() < 2) {
+
+        if (ApplicationModelUtil.shouldUpdate(5) || getApplicationList() == null || getApplicationList().size() < 2 && applicationToken != null) {
             String applicationsJson = new CommandListApplications(userAdminServiceUri,  applicationToken.getApplicationTokenId()).execute();
             log.debug("WAS: updateApplinks: AppLications returned:" + applicationsJson);
             if (applicationsJson != null) {
