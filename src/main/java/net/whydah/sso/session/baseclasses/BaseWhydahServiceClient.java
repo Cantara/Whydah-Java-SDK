@@ -334,8 +334,9 @@ public class BaseWhydahServiceClient {
 			//step a -> find correct app
 			UserToken userToken = UserTokenMapper.fromUserTokenXml(userTokenXml);
 			List<Application> apps = getApplicationList();
-			if(apps==null){
-				was.updateApplinks();
+            if (apps == null || apps.size() == 0) {
+                log.warn("No APPS initialized - trying to refrest application list");
+                was.updateApplinks();
 				apps = getApplicationList();
 			} 
 			log.debug("application_list's size: {} apps", apps.size());

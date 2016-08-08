@@ -47,6 +47,7 @@ public class BaseDevelopmentWhydahServiceClient {
 
         if (was == null) {
             was = WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, activeApplicationId, applicationname, applicationsecret);
+            was.updateApplinks();
         }
 
         this.uri_securitytoken_service = URI.create(securitytokenserviceurl);
@@ -89,6 +90,7 @@ public class BaseDevelopmentWhydahServiceClient {
             }
             if (was == null) {
                 was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, applicationid, applicationname, applicationsecret);
+                was.updateApplinks();
             }
 
         } catch (ConstrettoExpressionException constrettoExpressionException) {
@@ -134,6 +136,7 @@ public class BaseDevelopmentWhydahServiceClient {
             }
             if (was == null) {
                 was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, applicationid, applicationname, applicationsecret);
+                was.updateApplinks();
             }
         } catch (Exception ex) {
             throw ex;

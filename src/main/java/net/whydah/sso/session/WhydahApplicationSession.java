@@ -272,6 +272,7 @@ public class WhydahApplicationSession {
 
     public void updateApplinks() {
         if (uas == null || uas.length() < 8) {
+            log.warn("Calling updateAppLinks without was initialized");
             return;
         }
         URI userAdminServiceUri= URI.create(uas);

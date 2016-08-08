@@ -56,8 +56,8 @@ public class BaseCRMCustomerTest {
 		String personJsonData = "{\n" +
 	            "  \"id\" : \"" + customerRefId + "\",\n" +
 	            "  \"firstname\" : \"First\",\n" +
-	            "  \"lastname\" : \"Lastname\",\n" +
-	            "  \"emailaddresses\" : {\n" +
+                "  \"lastname\" : \"ØÆØÅØÆØåøæ\",\n" +
+                "  \"emailaddresses\" : {\n" +
 	            "    \"jobb\" : {\n" +
 	            "      \"emailaddress\" : \"totto@capraconsulting.no\",\n" +
 	            "      \"tags\" : \"jobb, Capra\"\n" +
