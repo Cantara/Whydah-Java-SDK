@@ -4,6 +4,7 @@ import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ public class CommandLogonApplication extends BaseHttpPostHystrixCommand<String> 
 
 	private URI tokenServiceUri;
 	private ApplicationCredential appCredential;
+    int retryCnt = 0;
 
 	public CommandLogonApplication(URI tokenServiceUri, ApplicationCredential appCredential) {
         super(tokenServiceUri, "", "", "STSApplicationAuthGroup", 60000);
@@ -24,13 +26,15 @@ public class CommandLogonApplication extends BaseHttpPostHystrixCommand<String> 
 
     }
 
-    /**
-     @Override
-	protected String getFallback() {
-		log.warn("CommandLogonApplication - fallback - whydahServiceUri={}", tokenServiceUri.toString());
-		return null;
-	}
-     */
+    @Override
+    protected String dealWithFailedResponse(String responseBody, int statusCode) {
+        if (statusCode != HttpURLConnection.HTTP_CONFLICT && retryCnt < 1) {
+            retryCnt++;
+            return doPostCommand();
+        } else {
+            return null;
+        }
+    }
 
 
 	@Override

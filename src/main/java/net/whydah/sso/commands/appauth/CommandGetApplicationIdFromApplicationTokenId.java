@@ -12,45 +12,15 @@ public class CommandGetApplicationIdFromApplicationTokenId extends BaseHttpGetHy
 
 
     public CommandGetApplicationIdFromApplicationTokenId(URI tokenServiceUri, String applicationTokenId) {
-    	super(tokenServiceUri, "", applicationTokenId, "STSApplicationAdminGroup");
+        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup");
 
         if (tokenServiceUri == null || applicationTokenId == null) {
-            log.error("ComandGetApplicationIDFromApplicationTokenId initialized with null-values - will fail", CommandGetApplicationIdFromApplicationTokenId.class.getSimpleName());
+            log.error(TAG + " initialized with null-values - will fail tokenServiceUri={} || applicationTokenId={}", tokenServiceUri, applicationTokenId);
         }
     }
 
-//    @Override
-//    protected String run() {
-//        log.trace("ComandGetApplicationIDFromApplicationTokenId - whydahServiceUri={} applicationTokenId={}", tokenServiceUri.toString(), applicationTokenId);
-//
-//        if (applicationTokenId == null || applicationTokenId.length() < 4) {
-//            log.warn("ComandGetApplicationIDFromApplicationTokenId - Null or too short applicationTokenId={}. return false", applicationTokenId);
-//            return null;
-//        }
-//
-//
-//        Client tokenServiceClient = ClientBuilder.newClient();
-//        WebTarget verifyResource = tokenServiceClient.target(tokenServiceUri).path(applicationTokenId).path("get_application_id");
-//        Response response = verifyResource.request().get(Response.class);
-//        if (response.getStatus() == OK.getStatusCode()) {
-//            log.info("ComandGetApplicationIDFromApplicationTokenId - ApplicationTokenId authentication for {}: {} {}", verifyResource.getUri().toString(), response.getStatusInfo().getStatusCode(), response.getStatusInfo().getReasonPhrase());
-//            return response.readEntity(String.class);
-//        }
-//        if (response.getStatus() == CONFLICT.getStatusCode()) {
-//            log.warn("ComandGetApplicationIDFromApplicationTokenId - ApplicationTokenId authentication for {}: {} {}", verifyResource.getUri().toString(), response.getStatusInfo().getStatusCode(), response.getStatusInfo().getReasonPhrase());
-//        }
-//        return null;
-//
-//    }
-//
-//
-//    @Override
-//    protected String getFallback() {
-//        log.warn("ComandGetApplicationIDFromApplicationTokenId - fallback - whydahServiceUri={}", tokenServiceUri.toString());
-//        return null;
-//    }
 
-	@Override
+    @Override
 	protected String getTargetPath() {
 		return myAppTokenId + "/get_application_id";
 	}

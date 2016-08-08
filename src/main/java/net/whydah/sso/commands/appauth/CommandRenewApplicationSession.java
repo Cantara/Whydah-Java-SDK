@@ -11,11 +11,11 @@ public class CommandRenewApplicationSession extends BaseHttpPostHystrixCommand<S
 
 
     public CommandRenewApplicationSession(URI tokenServiceUri, String applicationtokenid, int millisecondwait) {
-        super(tokenServiceUri, "", applicationtokenid, "STSApplicationAdminGroup", millisecondwait);
+        super(tokenServiceUri, "", applicationtokenid, "STSApplicationAuthGroup", millisecondwait);
 
 
         if (tokenServiceUri == null || applicationtokenid == null) {
-            log.error("CommandRenewApplicationSession initialized with null-values - will fail");
+            log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationtokenid={}", tokenServiceUri, applicationtokenid);
             throw new IllegalArgumentException("Missing parameters for \n" +
                     "\ttokenServiceUri [" + tokenServiceUri + "], \n" +
                     "\tapplicationtokenid [" + applicationtokenid + "]");
@@ -24,11 +24,11 @@ public class CommandRenewApplicationSession extends BaseHttpPostHystrixCommand<S
     }
 
     public CommandRenewApplicationSession(URI tokenServiceUri, String applicationtokenid) {
-    	super(tokenServiceUri, "", applicationtokenid, "STSApplicationAdminGroup", 3000);
-        
+        super(tokenServiceUri, "", applicationtokenid, "STSApplicationAuthGroup", 3000);
+
 
         if (tokenServiceUri == null || applicationtokenid == null) {
-            log.error("CommandRenewApplicationSession initialized with null-values - will fail");
+            log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationtokenid={}", tokenServiceUri, applicationtokenid);
             throw new IllegalArgumentException("Missing parameters for \n" +
                     "\ttokenServiceUri [" + tokenServiceUri + "], \n" +
                     "\tapplicationtokenid [" + applicationtokenid + "]");
