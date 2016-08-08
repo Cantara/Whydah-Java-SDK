@@ -26,6 +26,7 @@ public class SystemTestBaseConfig {
     // Run SystemTests for Whydah Extensions?
     public boolean statisticsExtensionSystemTest = true;
     public boolean CRMCustomerExtensionSystemTest = true;
+    public int TIME_WAIT_BETWEEN_SYSTEMTEST = 15;  // 15 ms
     //
     public static String SYSTEMTEST_USER_CELLPHONE = "91905054";
     ;
@@ -83,7 +84,7 @@ public class SystemTestBaseConfig {
 
         try {
             if (systemTest) {
-                Thread.sleep(1500);
+                Thread.sleep(TIME_WAIT_BETWEEN_SYSTEMTEST);
             }
         } catch (InterruptedException ie) {
 
@@ -99,7 +100,7 @@ public class SystemTestBaseConfig {
 
         try {
             if (CRMCustomerExtensionSystemTest) {
-                Thread.sleep(1500);
+                Thread.sleep(TIME_WAIT_BETWEEN_SYSTEMTEST);
             }
         } catch (InterruptedException ie) {
 
