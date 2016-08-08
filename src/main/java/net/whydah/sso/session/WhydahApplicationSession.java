@@ -9,7 +9,6 @@ import net.whydah.sso.commands.adminapi.application.CommandListApplications;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.util.WhydahUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,7 +160,7 @@ public class WhydahApplicationSession {
 
 
     public void renewWhydahApplicationSession() {
-        log.info("Renew WAS: Renew application session called");
+        log.trace("Renew WAS: Renew application session called");
         if (applicationToken == null) {
             initializeWhydahApplicationSession();
             Runtime.getRuntime().removeShutdownHook(Thread.currentThread());
@@ -180,7 +179,7 @@ public class WhydahApplicationSession {
                 }
             }
         } else {
-            log.info("Renew WAS: Active application session found, applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+            log.trace("Renew WAS: Active application session found, applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
 
             Long expires = Long.parseLong(applicationToken.getExpires());
             if (expiresBeforeNextSchedule(expires)) {
