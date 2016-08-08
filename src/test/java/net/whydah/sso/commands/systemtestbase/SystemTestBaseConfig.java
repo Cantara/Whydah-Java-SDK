@@ -22,10 +22,10 @@ import static org.junit.Assert.assertTrue;
 public class SystemTestBaseConfig {
 
     // Run the Whydah SystemTests?
-    public boolean systemTest = false;
+    public boolean systemTest = true;
     // Run SystemTests for Whydah Extensions?
-    public boolean statisticsExtensionSystemTest = false;
-    public boolean CRMCustomerExtensionSystemTest = false;
+    public boolean statisticsExtensionSystemTest = true & systemTest;
+    public boolean CRMCustomerExtensionSystemTest = true & systemTest;
     public int TIME_WAIT_BETWEEN_SYSTEMTEST = 15;  // 15 ms
     //
     public static String SYSTEMTEST_USER_CELLPHONE = "91905054";
