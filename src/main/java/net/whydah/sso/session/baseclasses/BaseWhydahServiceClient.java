@@ -312,8 +312,12 @@ public class BaseWhydahServiceClient {
         }
         String result = new CommandCreatePinVerifiedUser(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenXml, userTicket, phoneNo, pin, userIdentityJson).execute();
         String userName = phoneNo;
-        if (userIdentityJson != null) {
-            userName = UserIdentityMapper.fromUserIdentityJson(userIdentityJson).getUsername();
+        try {
+            if (userIdentityJson != null) {
+                userName = UserIdentityMapper.fromUserIdentityJson(userIdentityJson).getUsername();
+            }
+        } catch (Exception e) {
+            log.warn("Error in trying to find username..", e);
         }
         new CommandResetUserPassword(uri_useradmin_service, userName, "NewUserPasswordResetEmail.ftl").execute();
         return result;
