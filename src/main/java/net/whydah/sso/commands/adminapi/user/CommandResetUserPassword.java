@@ -22,7 +22,7 @@ public class CommandResetUserPassword extends BaseHttpPostHystrixCommand<Boolean
     }
 
     public CommandResetUserPassword(URI userAdminServiceUri, String myAppTokenId, String userName, String emailTemplateName) {
-        super(userAdminServiceUri, "", myAppTokenId, "UASUserActionGroup", 30000);
+        super(userAdminServiceUri, null, myAppTokenId, "UASUserActionGroup", 30000);
 
         this.userName = userName;
         this.emailTemplateName = emailTemplateName;

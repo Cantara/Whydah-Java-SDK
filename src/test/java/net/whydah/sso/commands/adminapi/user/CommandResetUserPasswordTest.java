@@ -3,6 +3,7 @@ package net.whydah.sso.commands.adminapi.user;
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import net.whydah.sso.user.types.UserToken;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class CommandResetUserPasswordTest {
@@ -16,17 +17,18 @@ public class CommandResetUserPasswordTest {
 
 
     @Test
+    @Ignore
     public void testCommandResetUserPassword() throws Exception {
 
 
         if (config.isSystemTestEnabled()) {
             UserToken adminUser = config.logOnSystemTestApplicationAndSystemTestUser();
 
-
-            boolean result = new CommandResetUserPassword(config.userAdminServiceUri, config.myApplicationTokenID, "username").execute();
+            boolean result = new CommandResetUserPassword(config.userAdminServiceUri, config.myApplicationTokenID, config.userName).execute();
             System.out.println("CommandResetUserPassword return=" + result);
 
-            result = new CommandResetUserPassword(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), "username", "NewUserPasswordResetEmail.ftl").execute();
+            Thread.sleep(5000);
+            result = new CommandResetUserPassword(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), config.userName, "NewUserPasswordResetEmail.ftl").execute();
             System.out.println("CommandResetUserPassword return=" + result);
 
         }
