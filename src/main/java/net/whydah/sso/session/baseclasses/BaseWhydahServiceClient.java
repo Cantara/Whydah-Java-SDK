@@ -311,7 +311,10 @@ public class BaseWhydahServiceClient {
             was.renewWhydahApplicationSession();
         }
         String result = new CommandCreatePinVerifiedUser(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenXml, userTicket, phoneNo, pin, userIdentityJson).execute();
-        String userName = UserIdentityMapper.fromUserIdentityJson(userIdentityJson).getUsername();
+        String userName = phoneNo;
+        if (userIdentityJson != null) {
+            userName = UserIdentityMapper.fromUserIdentityJson(userIdentityJson).getUsername();
+        }
         new CommandResetUserPassword(uri_useradmin_service, userName, "NewUserPasswordResetEmail.ftl").execute();
         return result;
     }
