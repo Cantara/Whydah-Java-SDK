@@ -16,7 +16,7 @@ public class CommandResetUserPasswordTest {
 
 
     @Test
-    public void testCommandGetUser() throws Exception {
+    public void testCommandResetUserPassword() throws Exception {
 
 
         if (config.isSystemTestEnabled()) {
