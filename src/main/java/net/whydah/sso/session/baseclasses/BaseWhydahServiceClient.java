@@ -12,7 +12,6 @@ import net.whydah.sso.commands.extras.CommandSendSms;
 import net.whydah.sso.commands.userauth.*;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
-import net.whydah.sso.user.mappers.UserIdentityMapper;
 import net.whydah.sso.user.mappers.UserRoleMapper;
 import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
@@ -312,13 +311,7 @@ public class BaseWhydahServiceClient {
         }
         String result = new CommandCreatePinVerifiedUser(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenXml, userTicket, phoneNo, pin, userIdentityJson).execute();
         String userName = phoneNo;
-        try {
-            if (userIdentityJson != null) {
-                userName = UserIdentityMapper.fromUserIdentityJson(userIdentityJson).getUsername();
-            }
-        } catch (Exception e) {
-            log.warn("Error in trying to find username..", e);
-        }
+
         new CommandResetUserPassword(uri_useradmin_service, was.getActiveApplicationTokenId(), userName, "NewUserPasswordResetEmail.ftl").execute();
         return result;
     }
