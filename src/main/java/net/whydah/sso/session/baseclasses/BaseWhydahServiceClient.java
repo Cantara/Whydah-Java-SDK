@@ -319,7 +319,7 @@ public class BaseWhydahServiceClient {
         } catch (Exception e) {
             log.warn("Error in trying to find username..", e);
         }
-        new CommandResetUserPassword(uri_useradmin_service, userName, "NewUserPasswordResetEmail.ftl").execute();
+        new CommandResetUserPassword(uri_useradmin_service, was.getActiveApplicationTokenId(), userName, "NewUserPasswordResetEmail.ftl").execute();
         return result;
     }
 
