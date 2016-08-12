@@ -3,6 +3,7 @@ package net.whydah.sso.session.baseclasses;
 
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.commands.adminapi.user.CommandCreatePinVerifiedUser;
+import net.whydah.sso.commands.adminapi.user.CommandResetUserPassword;
 import net.whydah.sso.commands.adminapi.user.role.CommandAddUserRole;
 import net.whydah.sso.commands.adminapi.user.role.CommandGetUserRoles;
 import net.whydah.sso.commands.adminapi.user.role.CommandUpdateUserRole;
@@ -11,6 +12,7 @@ import net.whydah.sso.commands.extras.CommandSendSms;
 import net.whydah.sso.commands.userauth.*;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
+import net.whydah.sso.user.mappers.UserIdentityMapper;
 import net.whydah.sso.user.mappers.UserRoleMapper;
 import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
@@ -308,9 +310,10 @@ public class BaseWhydahServiceClient {
         if (was.getActiveApplicationToken() == null) {
             was.renewWhydahApplicationSession();
         }
-//    public CommandCreatePinVerifiedUser(URI serviceUri, String myAppTokenId, String myAppTokenXml, String adminUserToken, String userTicket, String phoneNo, String pin, String userIdentityJson) {
-
-        return new CommandCreatePinVerifiedUser(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenXml, userTicket, phoneNo, pin, userIdentityJson).execute();
+        String result = new CommandCreatePinVerifiedUser(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenXml, userTicket, phoneNo, pin, userIdentityJson).execute();
+        String userName = UserIdentityMapper.fromUserIdentityJson(userIdentityJson).getUsername();
+        new CommandResetUserPassword(uri_useradmin_service, userName, "NewUserPasswordResetEmail.ftl").execute();
+        return result;
     }
 
 	public List<Application> getApplicationList(){
