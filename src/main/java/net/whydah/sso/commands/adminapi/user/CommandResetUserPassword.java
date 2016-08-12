@@ -1,17 +1,17 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 import java.net.URI;
 
-public class CommandResetUserPassword extends BaseHttpGetHystrixCommand<Boolean> {
+public class CommandResetUserPassword extends BaseHttpPostHystrixCommand<Boolean> {
 
     private String userName;
     private String emailTemplateName = "";
 
 
-    public CommandResetUserPassword(URI userAdminServiceUri, String userName) {
-        super(userAdminServiceUri, "", "", "UASUserActionGroup", 2000);
+    public CommandResetUserPassword(URI userAdminServiceUri, String myAppTokenId, String userName) {
+        super(userAdminServiceUri, "", myAppTokenId, "UASUserActionGroup", 2000);
 
         this.userName = userName;
         if (userAdminServiceUri == null || userName == null) {
@@ -21,8 +21,8 @@ public class CommandResetUserPassword extends BaseHttpGetHystrixCommand<Boolean>
 
     }
 
-    public CommandResetUserPassword(URI userAdminServiceUri, String userName, String emailTemplateName) {
-        super(userAdminServiceUri, "", "", "UASUserActionGroup", 2000);
+    public CommandResetUserPassword(URI userAdminServiceUri, String myAppTokenId, String userName, String emailTemplateName) {
+        super(userAdminServiceUri, "", myAppTokenId, "UASUserActionGroup", 2000);
 
         this.userName = userName;
         this.emailTemplateName = emailTemplateName;
@@ -47,6 +47,5 @@ public class CommandResetUserPassword extends BaseHttpGetHystrixCommand<Boolean>
         }
         return myAppTokenId + "/auth/password/reset/username/" + userName + "/" + emailTemplateName;
     }
-
 
 }
