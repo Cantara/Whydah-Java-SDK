@@ -11,7 +11,7 @@ public class CommandResetUserPassword extends BaseHttpPostHystrixCommand<Boolean
 
 
     public CommandResetUserPassword(URI userAdminServiceUri, String myAppTokenId, String userName) {
-        super(userAdminServiceUri, "", myAppTokenId, "UASUserActionGroup", 2000);
+        super(userAdminServiceUri, null, myAppTokenId, "UASUserActionGroup", 30000);
 
         this.userName = userName;
         if (userAdminServiceUri == null || userName == null) {
@@ -22,7 +22,7 @@ public class CommandResetUserPassword extends BaseHttpPostHystrixCommand<Boolean
     }
 
     public CommandResetUserPassword(URI userAdminServiceUri, String myAppTokenId, String userName, String emailTemplateName) {
-        super(userAdminServiceUri, "", myAppTokenId, "UASUserActionGroup", 2000);
+        super(userAdminServiceUri, "", myAppTokenId, "UASUserActionGroup", 30000);
 
         this.userName = userName;
         this.emailTemplateName = emailTemplateName;
@@ -35,7 +35,7 @@ public class CommandResetUserPassword extends BaseHttpPostHystrixCommand<Boolean
 
     @Override
     protected Boolean dealWithResponse(String response) {
-        return response.length() > 5;
+        return response.length() < 32;
     }
 
 
