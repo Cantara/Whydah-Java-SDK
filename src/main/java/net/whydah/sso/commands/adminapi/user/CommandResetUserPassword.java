@@ -35,7 +35,7 @@ public class CommandResetUserPassword extends BaseHttpPostHystrixCommand<Boolean
 
     @Override
     protected Boolean dealWithResponse(String response) {
-        return response.length() > 32;
+        return response.length() > 5;
     }
 
 

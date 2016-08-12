@@ -23,10 +23,10 @@ public class CommandResetUserPasswordTest {
             UserToken adminUser = config.logOnSystemTestApplicationAndSystemTestUser();
 
 
-            boolean result = new CommandResetUserPassword(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), "48295510").execute();
+            boolean result = new CommandResetUserPassword(config.userAdminServiceUri, config.myApplicationTokenID, "username").execute();
             System.out.println("CommandResetUserPassword return=" + result);
 
-            result = new CommandResetUserPassword(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), "48295510", "NewUserPasswordResetEmail.ftl").execute();
+            result = new CommandResetUserPassword(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), "username", "NewUserPasswordResetEmail.ftl").execute();
             System.out.println("CommandResetUserPassword return=" + result);
 
         }
