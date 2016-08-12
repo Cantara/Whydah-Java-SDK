@@ -45,7 +45,7 @@ public class CommandResetUserPassword extends BaseHttpPostHystrixCommand<Boolean
         if (emailTemplateName == null || emailTemplateName.length() < 3) {
             return myAppTokenId + "/auth/password/reset/username/" + userName;
         }
-        return myAppTokenId + "/auth/password/reset/username/" + userName + "/" + emailTemplateName;
+        return myAppTokenId + "/auth/password/reset/username/" + userName + "/template/" + emailTemplateName;
     }
 
 }
