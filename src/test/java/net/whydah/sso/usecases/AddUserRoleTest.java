@@ -24,7 +24,7 @@ public class AddUserRoleTest {
 	static SystemTestBaseConfig config;
 	static BaseWhydahServiceClient client;
 
-    static final String ROLE_NAME = "Mydata" + UUID.randomUUID().toString();
+    static final String ROLE_NAME = "Mydata-" + UUID.randomUUID().toString();
 
 	@BeforeClass
 	public static void setup() throws Exception {
@@ -51,8 +51,8 @@ public class AddUserRoleTest {
 	}
 	
 	@Test
-	public void testUpdateRoleAndRefreshUserTokenWithNonExistingApplciation2(){
-		if (config.isSystemTestEnabled()) {
+    public void testUpdateRoleAndRefreshUserTokenWithNonExistingApplciation2() throws Exception {
+        if (config.isSystemTestEnabled()) {
 			//create a new application now
 		  
 			String userTokenXml1 = config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML();
@@ -89,8 +89,8 @@ public class AddUserRoleTest {
 			assertTrue(client.updateOrCreateUserApplicationRoleEntry("", newApplication.getName(), "Whydah", ROLE_NAME, "welcome", userTokenXml1));
 			
 			// Check for correct UserToken
-			//STRANGE THING HERE, the command's result does not have the latest updates for roles
 			String userTokenXml2 = new CommandGetUsertokenByUsertokenId(config.tokenServiceUri, config.myApplicationTokenID, config.myAppTokenXml, userTokenId).execute();
+            assertTrue(userTokenXml2.contains(ROLE_NAME));
 
 			//this works as expected as it contains the added role
 			String userTokenXml3 = config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML();
@@ -99,20 +99,11 @@ public class AddUserRoleTest {
             //assertTrue(userTokenXml2.contains(roleName));
             assertTrue(userTokenXml3.contains(ROLE_NAME));
             
-            
-            
-            
-            
-            
-            
-            //////////MERGED WITH TOTTO's VERSION//remove later
-            
+
             // Check that we do not get anonympous usertoken
             assertTrue(userTokenXml2.contains("SystemTestUser"));
             // Check that we get the new role
 
-            // TODO  fix this
-            //assertTrue(userTokenXml2.contains(ROLE_NAME));
 
             if (SYSTEST_PROPERTY_ANONYMOUSTOKEN) {
                 // detele the role and verify that we now get an anonymous usertoken
