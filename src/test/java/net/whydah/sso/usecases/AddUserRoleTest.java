@@ -13,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -20,6 +21,8 @@ import static org.junit.Assert.assertTrue;
 public class AddUserRoleTest {
 	static SystemTestBaseConfig config;
 	static BaseWhydahServiceClient client;
+
+    static final String ROLE_NAME = "Mydata" + UUID.randomUUID().toString();
 
 	@BeforeClass
 	public static void setup() throws Exception {
@@ -34,15 +37,15 @@ public class AddUserRoleTest {
 	@Test
 	public void testUpdateRoleAndRefreshUserTokenWithExistingApplication(){
 		if (config.isSystemTestEnabled()) {
-			assertTrue(client.updateOrCreateUserApplicationRoleEntry("", "ACSResource", "WhyDah", "MyData", "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
-		}
+            assertTrue(client.updateOrCreateUserApplicationRoleEntry("", "ACSResource", "Whydah", ROLE_NAME, "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
+        }
 	}
 	
 	@Test
 	public void testUpdateRoleAndRefreshUserTokenWithNonExistingApplciation(){
 		if (config.isSystemTestEnabled()) {
-			assertFalse(client.updateOrCreateUserApplicationRoleEntry("", "NON-EXISTING", "WhyDah", "MyData", "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
-		}
+            assertFalse(client.updateOrCreateUserApplicationRoleEntry("", "NON-EXISTING", "Whydah", ROLE_NAME, "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
+        }
 	}
 	
 	@Test
@@ -59,18 +62,18 @@ public class AddUserRoleTest {
             assertTrue(existingApplications == (countApplications(config.myApplicationTokenID, userTokenId) - 1));
             
             //however, client cannot update because it is holding the old application list
-			assertFalse(client.updateOrCreateUserApplicationRoleEntry(newApplication.getId(), newApplication.getName(), "WhyDah", "MyData", "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
-			
-			//should update the application list
+            assertFalse(client.updateOrCreateUserApplicationRoleEntry(newApplication.getId(), newApplication.getName(), "Whydah", ROLE_NAME, "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
+
+            //should update the application list
 			client.getWAS().updateApplinks(true);
 			
 			//now, it is ok to update role
-			assertTrue(client.updateOrCreateUserApplicationRoleEntry(newApplication.getId(), newApplication.getName(), "WhyDah", "MyData", "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
+            assertTrue(client.updateOrCreateUserApplicationRoleEntry(newApplication.getId(), newApplication.getName(), "Whydah", ROLE_NAME, "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
 
 			// Check for correct UserToken
 
 			String userTokenXml2 = new CommandGetUsertokenByUsertokenId(config.tokenServiceUri, config.myApplicationTokenID, config.myAppTokenXml, userTokenId).execute();
-			assertTrue(userTokenXml2.contains("MyData"));
+            assertTrue(userTokenXml2.contains(ROLE_NAME));
 
 		}
 	}
