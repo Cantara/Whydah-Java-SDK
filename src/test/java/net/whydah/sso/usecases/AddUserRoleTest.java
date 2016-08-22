@@ -15,6 +15,8 @@ import org.junit.Test;
 import java.util.List;
 import java.util.UUID;
 
+import static net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig.SYSTEST_PROPERTY_ANONYMOUSTOKEN;
+import static net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig.SYSTEST_PROPERTY_fulltokenapplications;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -73,7 +75,17 @@ public class AddUserRoleTest {
 			// Check for correct UserToken
 
 			String userTokenXml2 = new CommandGetUsertokenByUsertokenId(config.tokenServiceUri, config.myApplicationTokenID, config.myAppTokenXml, userTokenId).execute();
+            // Check that we do not get anonympous usertoken
+            assertTrue(userTokenXml2.contains("SystemTestUser"));
+            // Check that we get the new role
             assertTrue(userTokenXml2.contains(ROLE_NAME));
+
+            if (SYSTEST_PROPERTY_ANONYMOUSTOKEN) {
+                // detele the role and verify that we now get an anonymous usertoken
+            }
+            if (!SYSTEST_PROPERTY_fulltokenapplications) {
+                // check that we do not get all roles if we use an applicationid which is not set in the list of fulltokenapplications list/configuration
+            }
 
 		}
 	}
