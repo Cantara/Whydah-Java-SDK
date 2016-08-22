@@ -55,9 +55,13 @@ public class AddUserRoleTest {
 		if (config.isSystemTestEnabled()) {
 			//create a new application now
 		  
-            String userTokenId = UserXpathHelper.getUserTokenId(config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML());
+			String userTokenXml1 = config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML();
+            String userTokenId = UserXpathHelper.getUserTokenId(userTokenXml1);
             int existingApplications = countApplications(config.myApplicationTokenID, userTokenId);
             Application newApplication = ApplicationMapper.fromJson(ApplicationHelper.getDummyApplicationJson());
+            
+            
+            
             String applicationJson = ApplicationMapper.toJson(newApplication);
             String testAddApplication = new CommandAddApplication(config.userAdminServiceUri, config.myApplicationTokenID, userTokenId, applicationJson).execute();
             System.out.print("new app : " + testAddApplication);
@@ -70,17 +74,39 @@ public class AddUserRoleTest {
 
 
             //however, client cannot update because it is holding the old application list
-            assertFalse(client.updateOrCreateUserApplicationRoleEntry(newApplication.getId(), newApplication.getName(), "Whydah", ROLE_NAME, "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
-
+            
+           //NOTE: don't use newApplication.getId(). This is wrong b/c application is assigned a new unique ID from UIB
+            //assertFalse(client.updateOrCreateUserApplicationRoleEntry(newApplication.getId(), newApplication.getName(), "Whydah", roleName, "welcome", userTokenXml1));
+            assertFalse(client.updateOrCreateUserApplicationRoleEntry("", newApplication.getName(), "Whydah", ROLE_NAME, "welcome", userTokenXml1));
             //should update the application list
 			client.getWAS().updateApplinks(true);
 			
+			
 			//now, it is ok to update role
-            assertTrue(client.updateOrCreateUserApplicationRoleEntry(newApplication.getId(), newApplication.getName(), "Whydah", ROLE_NAME, "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
-
+			
+			//NOTE: don't use newApplication.getId(). This is wrong b/c application is assigned a new unique ID from UIB
+            //assertTrue(client.updateOrCreateUserApplicationRoleEntry(newApplication.getId(), newApplication.getName(), "Whydah", roleName, "welcome", userTokenXml1));
+			assertTrue(client.updateOrCreateUserApplicationRoleEntry("", newApplication.getName(), "Whydah", ROLE_NAME, "welcome", userTokenXml1));
+			
 			// Check for correct UserToken
-
+			//STRANGE THING HERE, the command's result does not have the latest updates for roles
 			String userTokenXml2 = new CommandGetUsertokenByUsertokenId(config.tokenServiceUri, config.myApplicationTokenID, config.myAppTokenXml, userTokenId).execute();
+
+			//this works as expected as it contains the added role
+			String userTokenXml3 = config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML();
+			
+			
+            //assertTrue(userTokenXml2.contains(roleName));
+            assertTrue(userTokenXml3.contains(ROLE_NAME));
+            
+            
+            
+            
+            
+            
+            
+            //////////MERGED WITH TOTTO's VERSION//remove later
+            
             // Check that we do not get anonympous usertoken
             assertTrue(userTokenXml2.contains("SystemTestUser"));
             // Check that we get the new role
@@ -94,6 +120,7 @@ public class AddUserRoleTest {
             if (!SYSTEST_PROPERTY_fulltokenapplications) {
                 // check that we do not get all roles if we use an applicationid which is not set in the list of fulltokenapplications list/configuration
             }
+           
 
 		}
 	}
