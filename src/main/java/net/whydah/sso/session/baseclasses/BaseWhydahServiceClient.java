@@ -339,7 +339,7 @@ public class BaseWhydahServiceClient {
 			List<Application> apps = getApplicationList();
             if (apps == null || apps.size() == 0) {
                 log.warn("No APPS initialized - trying to refrest application list");
-                was.updateApplinks();
+                was.updateApplinks(true);
 				apps = getApplicationList();
 			} 
 			log.debug("application_list's size: {} apps", apps.size());
