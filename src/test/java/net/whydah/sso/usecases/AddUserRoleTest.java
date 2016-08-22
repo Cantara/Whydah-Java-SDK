@@ -62,7 +62,13 @@ public class AddUserRoleTest {
             String testAddApplication = new CommandAddApplication(config.userAdminServiceUri, config.myApplicationTokenID, userTokenId, applicationJson).execute();
             System.out.print("new app : " + testAddApplication);
             assertTrue(existingApplications == (countApplications(config.myApplicationTokenID, userTokenId) - 1));
-            
+
+            String newApplicationId = ApplicationMapper.fromJson(testAddApplication).getId();
+            System.out.print("new applicationId : " + newApplicationId);
+
+            newApplication.setId(newApplicationId);
+
+
             //however, client cannot update because it is holding the old application list
             assertFalse(client.updateOrCreateUserApplicationRoleEntry(newApplication.getId(), newApplication.getName(), "Whydah", ROLE_NAME, "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
 
