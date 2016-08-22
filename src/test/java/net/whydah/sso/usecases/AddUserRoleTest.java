@@ -6,6 +6,7 @@ import net.whydah.sso.application.types.Application;
 import net.whydah.sso.commands.adminapi.application.CommandAddApplication;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
+import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
 import net.whydah.sso.session.baseclasses.BaseWhydahServiceClient;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import org.junit.BeforeClass;
@@ -65,6 +66,12 @@ public class AddUserRoleTest {
 			
 			//now, it is ok to update role
 			assertTrue(client.updateOrCreateUserApplicationRoleEntry(newApplication.getId(), newApplication.getName(), "WhyDah", "MyData", "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
+
+			// Check for correct UserToken
+
+			String userTokenXml2 = new CommandGetUsertokenByUsertokenId(config.tokenServiceUri, config.myApplicationTokenID, config.myAppTokenXml, userTokenId).execute();
+			assertTrue(userTokenXml2.contains("MyData"));
+
 		}
 	}
 	
