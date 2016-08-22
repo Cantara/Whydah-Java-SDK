@@ -277,7 +277,7 @@ public class WhydahApplicationSession {
         }
         URI userAdminServiceUri= URI.create(uas);
 
-        if (ApplicationModelUtil.shouldUpdate(5) || getApplicationList() == null || getApplicationList().size() < 2 && applicationToken != null) {
+        if ((ApplicationModelUtil.shouldUpdate(5) || getApplicationList() == null || getApplicationList().size() < 2) && applicationToken != null) {
             String applicationsJson = new CommandListApplications(userAdminServiceUri,  applicationToken.getApplicationTokenId()).execute();
             log.debug("WAS: updateApplinks: AppLications returned:" + applicationsJson);
             if (applicationsJson != null) {
@@ -288,6 +288,24 @@ public class WhydahApplicationSession {
         }
     }
 
+    public void updateApplinks(boolean forceUpdate) {
+        if (uas == null || uas.length() < 8) {
+            log.warn("Calling updateAppLinks without was initialized");
+            return;
+        }
+        URI userAdminServiceUri= URI.create(uas);
+
+        if (forceUpdate && applicationToken != null) {
+            String applicationsJson = new CommandListApplications(userAdminServiceUri,  applicationToken.getApplicationTokenId()).execute();
+            log.debug("WAS: updateApplinks: AppLications returned:" + applicationsJson);
+            if (applicationsJson != null) {
+                if (applicationsJson.length() > 20) {
+                    setAppLinks(ApplicationMapper.fromJsonList(applicationsJson));
+                }
+            }
+        }
+    }
+    
     private void startThreadAndUpdateAppLinks() {
         if (uas == null || uas.length() < 8) {
             log.info("Started WAS without UAS configuration, wont keep an updated applicationlist");
