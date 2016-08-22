@@ -87,7 +87,9 @@ public class AddUserRoleTest {
 			//NOTE: don't use newApplication.getId(). This is wrong b/c application is assigned a new unique ID from UIB
             //assertTrue(client.updateOrCreateUserApplicationRoleEntry(newApplication.getId(), newApplication.getName(), "Whydah", roleName, "welcome", userTokenXml1));
 			assertTrue(client.updateOrCreateUserApplicationRoleEntry("", newApplication.getName(), "Whydah", ROLE_NAME, "welcome", userTokenXml1));
-			
+
+            Thread.sleep(1000);  // 
+
 			// Check for correct UserToken
 			String userTokenXml2 = new CommandGetUsertokenByUsertokenId(config.tokenServiceUri, config.myApplicationTokenID, config.myAppTokenXml, userTokenId).execute();
             assertTrue(userTokenXml2.contains(ROLE_NAME));
@@ -98,7 +100,7 @@ public class AddUserRoleTest {
 			
             //assertTrue(userTokenXml2.contains(roleName));
             assertTrue(userTokenXml3.contains(ROLE_NAME));
-            
+
 
             // Check that we do not get anonympous usertoken
             assertTrue(userTokenXml2.contains("SystemTestUser"));
