@@ -15,7 +15,7 @@ public class CommandResetUserPassword extends BaseHttpPostHystrixCommand<Boolean
 
         this.userName = userName;
         if (userAdminServiceUri == null || userName == null) {
-            log.error("CommandUserExists initialized with null-values - will fail - userAdminServiceUri:{}, userName:{}, adminUserTokenId:{}, userQuery:{}", userAdminServiceUri, userName);
+            log.error("CommandResetUserPassword initialized with null-values - will fail - userAdminServiceUri:{}, userName:{}, adminUserTokenId:{}, userQuery:{}", userAdminServiceUri, userName);
 
         }
 
@@ -27,7 +27,7 @@ public class CommandResetUserPassword extends BaseHttpPostHystrixCommand<Boolean
         this.userName = userName;
         this.emailTemplateName = emailTemplateName;
         if (userAdminServiceUri == null || userName == null) {
-            log.error("CommandUserExists initialized with null-values - will fail - userAdminServiceUri:{}, userName:{}, adminUserTokenId:{}, userQuery:{}", userAdminServiceUri, userName);
+            log.error("CommandResetUserPassword initialized with null-values - will fail - userAdminServiceUri:{}, userName:{}, adminUserTokenId:{}, userQuery:{}", userAdminServiceUri, userName);
 
         }
 
