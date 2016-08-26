@@ -10,6 +10,7 @@ import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
 import net.whydah.sso.session.baseclasses.BaseWhydahServiceClient;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -50,7 +51,8 @@ public class AddUserRoleTest {
         }
 	}
 	
-	@Test
+    @Ignore
+    @Test
     public void testUpdateRoleAndRefreshUserTokenWithNonExistingApplciation2() throws Exception {
         if (config.isSystemTestEnabled()) {
 			//create a new application now
@@ -88,7 +90,7 @@ public class AddUserRoleTest {
             //assertTrue(client.updateOrCreateUserApplicationRoleEntry(newApplication.getId(), newApplication.getName(), "Whydah", roleName, "welcome", userTokenXml1));
 			assertTrue(client.updateOrCreateUserApplicationRoleEntry("", newApplication.getName(), "Whydah", ROLE_NAME, "welcome", userTokenXml1));
 
-            Thread.sleep(1000);  // 
+            Thread.sleep(1000);  //
 
 			// Check for correct UserToken
 			String userTokenXml2 = new CommandGetUsertokenByUsertokenId(config.tokenServiceUri, config.myApplicationTokenID, config.myAppTokenXml, userTokenId).execute();
