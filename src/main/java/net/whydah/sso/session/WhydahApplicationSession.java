@@ -167,7 +167,9 @@ public class WhydahApplicationSession {
 
         }
         if (!checkActiveSession()) {
-            log.info("Renew WAS: No active application session for applicationTokenId: {}, getApplicationID: {},   expires: {}", applicationToken.getApplicationID(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+            if (applicationToken != null) {
+                log.info("Renew WAS: No active application session for applicationTokenId: {}, getApplicationID: {},   expires: {}", applicationToken.getApplicationID(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+            }
             for (int n = 0; n < 3 || !checkActiveSession(); n++) {
                 if (initializeWhydahApplicationSession()) {
                     break;
