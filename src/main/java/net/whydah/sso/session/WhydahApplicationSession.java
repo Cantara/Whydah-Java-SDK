@@ -221,6 +221,7 @@ public class WhydahApplicationSession {
         String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
         if (!checkApplicationToken(applicationTokenXML)) {
             log.warn("InitWAS: Error, unable to initialize new application session, applicationTokenXml:" + applicationTokenXML);
+            removeApplicationSessionParameters(myAppCredential.getApplicationID());
             return false;
         }
         setApplicationSessionParameters(applicationTokenXML);
@@ -231,6 +232,11 @@ public class WhydahApplicationSession {
     private void setApplicationSessionParameters(String applicationTokenXML) {
         applicationToken = ApplicationTokenMapper.fromXml(applicationTokenXML);
         log.info("WAS: New application session created for applicationID: {}, expires: {}", applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+    }
+
+    private void removeApplicationSessionParameters(String applicationID) {
+        applicationToken = null;
+        log.info("WAS: Application session removed for application: {}");
     }
 
     /**
