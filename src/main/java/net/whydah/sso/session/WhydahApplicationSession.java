@@ -52,7 +52,11 @@ public class WhydahApplicationSession {
         ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
                 new Runnable() {
                     public void run() {
-                        renewWhydahApplicationSession();
+                    	try{
+                    		renewWhydahApplicationSession();
+                    	}catch(Exception ex){
+                    		ex.printStackTrace();
+                    	}
                     }
                 },
                 1, SESSION_CHECK_INTERVAL, TimeUnit.SECONDS);
