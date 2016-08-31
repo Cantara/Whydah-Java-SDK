@@ -2,12 +2,15 @@ package net.whydah.sso.commands.adminapi.user;
 
 import net.whydah.sso.application.mappers.ApplicationTokenMapper;
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
+import net.whydah.sso.commands.userauth.CommandGetUsertokenByUserticket;
 import net.whydah.sso.commands.userauth.CommandSendSmsPin;
 import net.whydah.sso.user.mappers.UserIdentityMapper;
 import net.whydah.sso.user.types.UserIdentity;
 import net.whydah.sso.user.types.UserToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 import java.util.UUID;
@@ -17,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 public class CommandCreatePinVerifiedUserTest {
 
     static SystemTestBaseConfig config;
+    private static final Logger log = LoggerFactory.getLogger(CommandGetUsertokenByUserticket.class);
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -40,6 +44,10 @@ public class CommandCreatePinVerifiedUserTest {
             String usersListJson = new CommandListUsers(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUser.getTokenid(), "*").execute();
             System.out.println("usersListJson=" + usersListJson);
             assertTrue(usersListJson.indexOf(uir.getUsername()) > 0);
+            String ut = new CommandGetUsertokenByUserticket(config.tokenServiceUri, config.myApplicationToken.getApplicationTokenId(), ApplicationTokenMapper.toXML(config.myApplicationToken), ticket).execute();
+
+            log.debug("Returned UserToken: {}", ut);
+            assertTrue(ut != null && ut.length() > 20);
         }
 
     }
