@@ -51,7 +51,6 @@
         <developerConnection>scm:git:ssh://git@github.com/cantara/Whydah-Java-SDK.git</developerConnection>
         <connection>scm:git:https://github.com/cantara/Whydah-Java-SDK.git</connection>
         <url>https://github.com/cantara/Whydah-Java-SDK</url>
-      <tag>Whydah-Java-SDK-2.1.176</tag>
   </scm>
 
 
@@ -73,7 +72,7 @@
 
     <properties>
         <service.name>Whydah-Java-SDK</service.name>
-        <whydah-typelib-version>1.7.1</whydah-typelib-version>
+        <whydah-typelib-version>1.7.2</whydah-typelib-version>
         <jersey.version>2.22.2</jersey.version>
         <slf4j.version>1.7.21</slf4j.version>
     </properties>
