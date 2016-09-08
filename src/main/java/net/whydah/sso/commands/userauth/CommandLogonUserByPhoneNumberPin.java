@@ -25,6 +25,13 @@ public class CommandLogonUserByPhoneNumberPin extends BaseHttpPostHystrixCommand
 		if (serviceUri == null || myAppTokenId == null || adminUserTokenId == null || phoneNo == null || pin == null) {
 			log.error("CommandLogonUserByPhoneNumberPin initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, myAppTokenXml:{}, ", adminUserTokenId, myAppTokenId, myAppTokenXml);
 		}
+        if (phoneNo.length() > 16 || phoneNo.length() < 7) {
+            log.warn("Attempting to access with illegal phone number: {}", phoneNo);
+        }
+        if (pin.length() > 7 || phoneNo.length() < 3) {
+            log.warn("Attempting to access with illegal pin code: {}", phoneNo);
+        }
+
 
 	}
 

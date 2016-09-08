@@ -63,7 +63,7 @@ public abstract class BaseHttpDeleteHystrixCommand<R> extends HystrixCommand<R> 
                 uriString += getTargetPath();
             }
 
-            log.debug("TAG" + " - whydahServiceUri={} myAppTokenId={}", uriString, myAppTokenId);
+            log.trace("TAG" + " - whydahServiceUri={} myAppTokenId={}", uriString, myAppTokenId);
 
             if (getQueryParameters() != null && getQueryParameters().length != 0) {
                 request = HttpRequest.delete(uriString, true, getQueryParameters());

@@ -5,10 +5,8 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.util.StringConv;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +63,7 @@ public abstract class BaseHttpPutHystrixCommand<R> extends HystrixCommand<R> {
                 uriString += getTargetPath();
             }
 
-            log.debug("TAG" + " - whydahServiceUri={} myAppTokenId={}", uriString, myAppTokenId);
+            log.trace("TAG" + " - whydahServiceUri={} myAppTokenId={}", uriString, myAppTokenId);
 
             if (getQueryParameters() != null && getQueryParameters().length != 0) {
                 request = HttpRequest.put(uriString, true, getQueryParameters());

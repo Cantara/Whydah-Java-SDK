@@ -153,7 +153,7 @@ public class WhydahApplicationSession {
                 log.warn("WAS: Unable to initialize new Application Session - no ApplicationToken returned");
                 return "";
             }
-        } 
+        }
         return ApplicationTokenMapper.toXML(applicationToken);
     }
 
