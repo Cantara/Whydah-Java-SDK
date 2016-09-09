@@ -27,8 +27,8 @@ public class SystemTestBaseConfig {
     public boolean systemTest = true;
 
     // Run SystemTests for Whydah Extensions?
-    public boolean statisticsExtensionSystemTest = true & systemTest;
-    public boolean CRMCustomerExtensionSystemTest = true & systemTest;
+    public boolean statisticsExtensionSystemTest = true && systemTest;
+    public boolean CRMCustomerExtensionSystemTest = true && systemTest;
     public int TIME_WAIT_BETWEEN_SYSTEMTEST = 15;  // 15 ms
     //
     public static String SYSTEMTEST_USER_CELLPHONE = "91905054";
