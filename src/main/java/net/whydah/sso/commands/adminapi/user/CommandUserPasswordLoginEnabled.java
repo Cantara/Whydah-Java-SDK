@@ -33,9 +33,4 @@ public class CommandUserPasswordLoginEnabled extends BaseHttpGetHystrixCommand<B
     }
 
 
-    /**
-     *     @Path("/user/{username}") public Response hasUserNameSetPassword(@PathParam("applicationtokenid") String applicationtokenid,
-     @PathParam("username") String username) {
-
-     */
 }
