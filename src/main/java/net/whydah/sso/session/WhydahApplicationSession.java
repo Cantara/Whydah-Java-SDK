@@ -218,7 +218,7 @@ public class WhydahApplicationSession {
                 }
             }
         }
-        if (uas != null || uas.length() > 8) {
+        if (uas != null && uas.length() > 8) {
             startThreadAndUpdateAppLinks();
         }
     }
