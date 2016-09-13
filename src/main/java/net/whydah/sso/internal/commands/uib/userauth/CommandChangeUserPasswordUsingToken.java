@@ -5,13 +5,9 @@ import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 import java.net.URI;
 
-/**
- * @author <a href="mailto:erik-dev@fjas.no">Erik Drolshammer</a> 2015-11-21.
- */
 public class CommandChangeUserPasswordUsingToken extends BaseHttpPostHystrixCommand<String> {
-    static final String CHANGE_PASSWORD_TOKEN_KEY = "changePasswordToken";
-    //public static final String NEW_PASSWORD_KEY = "newpassword";
-    
+    static final String CHANGE_USERCRED_TOKEN_KEY = "changePasswordToken";
+
   
     
     private String uid;
@@ -28,9 +24,6 @@ public class CommandChangeUserPasswordUsingToken extends BaseHttpPostHystrixComm
         if (uibUri == null || applicationtokenId == null || uid == null || changePasswordToken == null || json == null) {
             log.error("{} initialized with null-values - will fail", CommandChangeUserPasswordUsingToken.class.getSimpleName());
         }
-        if (uibUri == null || applicationtokenId == null || uid == null || changePasswordToken == null || json == null) {
-            log.error("CommandGetUsertokenByUserticket initialized with null-values - will fail uibUri:{} myAppTokenId:{}, uid:{}...", uibUri, applicationtokenId, uid);
-        }
     }
 
 
@@ -41,7 +34,7 @@ public class CommandChangeUserPasswordUsingToken extends BaseHttpPostHystrixComm
 
     @Override
     protected Object[] getQueryParameters() {
-    	return new String[]{CHANGE_PASSWORD_TOKEN_KEY, changePasswordToken};
+        return new String[]{CHANGE_USERCRED_TOKEN_KEY, changePasswordToken};
     }
     
 	@Override
