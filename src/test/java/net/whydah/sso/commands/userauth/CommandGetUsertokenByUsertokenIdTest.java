@@ -44,9 +44,11 @@ public class CommandGetUsertokenByUsertokenIdTest {
             String userTokenXml2 = new CommandGetUsertokenByUsertokenId(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userToken.getTokenid()).execute();
 
             UserToken ut2 = UserTokenMapper.fromUserTokenXml(userTokenXml2);
+            log.trace("Received usertoken", ut2.toString());
             assertTrue(userToken.getFirstName().equalsIgnoreCase(ut2.getFirstName()));
             assertTrue(userToken.getCellPhone().equalsIgnoreCase(ut2.getCellPhone()));
             assertTrue(userToken.getPersonRef().equalsIgnoreCase(ut2.getPersonRef()));
+            assertTrue(ut2.getPersonRef().length() > 0);  // Ensure that we get a valid personRef form our systemuser
 
         }
 

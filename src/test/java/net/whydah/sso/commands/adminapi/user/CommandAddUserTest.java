@@ -47,7 +47,13 @@ public class CommandAddUserTest {
     private UserIdentity getTestNewUserIdentity() {
         Random rand = new Random();
         rand.setSeed(new java.util.Date().getTime());
-        UserIdentity user = new UserIdentity("Test-User-" + UUID.randomUUID().toString().replace("-", "").replace("_", "").substring(1, 10), "Mt Test", "Testesen", "0", UUID.randomUUID().toString().replace("-", "").replace("_", "").substring(1, 10) + "@getwhydah.com", "47" + Integer.toString(rand.nextInt(100000000)));
+        UserIdentity user = new UserIdentity("Test-User-" +
+                UUID.randomUUID().toString().replace("-", "").replace("_", "").substring(1, 10),
+                "Mt Test",
+                "Testesen",
+                "PersonRef0",
+                UUID.randomUUID().toString().replace("-", "").replace("_", "").substring(1, 10) + "@getwhydah.com",
+                "47" + Integer.toString(rand.nextInt(100000000)));
         return user;
 
     }
