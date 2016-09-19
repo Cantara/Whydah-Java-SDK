@@ -46,6 +46,7 @@ public class CommandGetUsertokenByUsertokenIdTest {
             UserToken ut2 = UserTokenMapper.fromUserTokenXml(userTokenXml2);
             assertTrue(userToken.getFirstName().equalsIgnoreCase(ut2.getFirstName()));
             assertTrue(userToken.getCellPhone().equalsIgnoreCase(ut2.getCellPhone()));
+            assertTrue(userToken.getPersonRef().equalsIgnoreCase(ut2.getPersonRef()));
 
         }
 
