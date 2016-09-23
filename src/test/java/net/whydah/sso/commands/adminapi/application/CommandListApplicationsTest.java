@@ -89,9 +89,12 @@ public class CommandListApplicationsTest {
             assertTrue(applications.size() > 6);
             for (Application application : applications) {
                 log.debug(ApplicationMapper.toPrettyJson(application));
-                log.debug("Application applicationId:{} has getSecurity:{}", application.getId(), application.getSecurity());
-                log.debug("Application applicationId:{} has maxSessionTimeoutSeconds:{}", application.getId(), application.getSecurity().getMaxSessionTimeoutSeconds());
-                log.debug("Parsed: {}", ApplicationModelUtil.getParameterForApplication(ApplicationModelUtil.maxSessionTimeoutSeconds, application.getId()));
+                if (application.getSecurity() != null) {
+                    log.debug("Application applicationId:{} has getSecurity:{}", application.getId(), application.getSecurity());
+                    log.debug("Application applicationId:{} has maxSessionTimeoutSeconds:{}", application.getId(), application.getSecurity().getMaxSessionTimeoutSeconds());
+                    log.debug("Parsed: {}", ApplicationModelUtil.getParameterForApplication(ApplicationModelUtil.maxSessionTimeoutSeconds, application.getId()));
+
+                }
             }
 
         }
