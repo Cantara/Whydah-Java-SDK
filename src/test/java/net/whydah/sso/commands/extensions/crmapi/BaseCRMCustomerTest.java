@@ -18,6 +18,7 @@ public class BaseCRMCustomerTest {
 	public static void setup() throws Exception {
 		config = new SystemTestBaseConfig();
 		SSLTool.disableCertificateValidation();
+		//config.setLocalTest();
 		//config.setSystemTest(false);
 	}
 	

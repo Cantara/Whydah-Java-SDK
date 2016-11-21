@@ -2,26 +2,30 @@ package net.whydah.sso.commands.adminapi.application;
 
 
 import com.github.kevinsawicki.http.HttpRequest;
+
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.commands.baseclasses.BaseHttpPutHystrixCommand;
 
 import java.net.URI;
 
 // TODO:  wait for https://github.com/Cantara/Whydah-UserAdminService/issues/35
 
-public class CommandUpdateApplication extends BaseHttpPostHystrixCommand<String> {
+public class CommandUpdateApplication extends BaseHttpPutHystrixCommand<String> {
 
   
     
     private String adminUserTokenId;
     private String applicationJson;
+    private String applicationId;
 
-
-    public CommandUpdateApplication(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String applicationJson) {
+    public CommandUpdateApplication(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String applicationId, String applicationJson) {
         super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
         
     
         this.adminUserTokenId = adminUserTokenId;
         this.applicationJson = applicationJson;
+        this.applicationId = applicationId;
+        
         if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || applicationJson == null) {
             log.error(TAG + " initialized with null-values - will fail");
         }
@@ -32,29 +36,10 @@ public class CommandUpdateApplication extends BaseHttpPostHystrixCommand<String>
     protected HttpRequest dealWithRequestBeforeSend(HttpRequest request) {
     	return request.contentType("application/json").send(applicationJson);
     }
-
-//    @Override
-//    protected String run() {
-//        log.trace("CommandUpdateApplication - myAppTokenId={}", myAppTokenId);
-//
-//        Client uasClient = ClientBuilder.newClient();
-//
-//        WebTarget updateApplication = uasClient.target(userAdminServiceUri).path(myAppTokenId + "/" + adminUserTokenId + "/xxx");
-//        Response response = updateApplication.request().post(Entity.json(applicationJson));
-//        throw new UnsupportedOperationException();
-//        //return null;
-//
-//    }
-
-//    @Override
-//    protected String getFallback() {
-//        log.warn("CommandUpdateApplication - fallback - whydahServiceUri={}", userAdminServiceUri.toString());
-//        return null;
-//    }
     
     @Override
     protected String getTargetPath() {
-    	return myAppTokenId + "/" + adminUserTokenId + "/xxx";
+    	return myAppTokenId + "/" + adminUserTokenId + "/application/" + applicationId;
     }
 
 
