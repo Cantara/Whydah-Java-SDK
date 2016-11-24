@@ -38,6 +38,14 @@ public class CommandUpdateApplication extends BaseHttpPutHystrixCommand<String> 
     }
     
     @Override
+    protected String dealWithFailedResponse(String responseBody, int statusCode) {
+    	if(statusCode == 204){
+    		return applicationJson;
+    	}
+    	return null;
+    }
+    
+    @Override
     protected String getTargetPath() {
     	return myAppTokenId + "/" + adminUserTokenId + "/application/" + applicationId;
     }
