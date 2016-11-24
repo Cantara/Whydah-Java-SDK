@@ -33,7 +33,7 @@ public class CommandAddApplication extends BaseHttpPostHystrixCommand<String> {
 
 	@Override
 	protected String getTargetPath() {
-		return myAppTokenId + "/" + adminUserTokenId + "/application";
+		return myAppTokenId + "/" + adminUserTokenId + "/application/";
 	}
 
 }
