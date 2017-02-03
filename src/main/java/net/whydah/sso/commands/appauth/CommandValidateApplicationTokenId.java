@@ -35,7 +35,10 @@ public class CommandValidateApplicationTokenId extends BaseHttpGetHystrixCommand
 		return true;
 	}
 
-
+	@Override
+	protected Boolean getFallback() {
+		return false;
+	}
 
 
 	@Override

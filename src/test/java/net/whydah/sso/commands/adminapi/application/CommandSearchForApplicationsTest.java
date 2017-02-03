@@ -24,11 +24,11 @@ public class CommandSearchForApplicationsTest {
     @BeforeClass
     public static void setup() throws Exception {
         config = new SystemTestBaseConfig();
-        config.setLocalTest();
+        //config.setLocalTest();
     }
 
 
-    @Ignore
+    //@Ignore
     @Test
     public void testSearchApplicationsCommand() throws Exception {
         if (config.isSystemTestEnabled()) {
@@ -43,7 +43,7 @@ public class CommandSearchForApplicationsTest {
             String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID).execute();
             log.debug("applicationsJson=" + applicationsJson);
             
-            String applicationsJsonl = new CommandSearchForApplications(config.userAdminServiceUri, myApplicationTokenID, userTokenId,"ACSResource").execute();
+            String applicationsJsonl = new CommandSearchForApplications(config.userAdminServiceUri, myApplicationTokenID, userTokenId,"*").execute();
             log.debug("applicationsJson=" + applicationsJsonl);
             assertTrue(applicationsJsonl!=null);
 

@@ -34,6 +34,7 @@ public class CommandAddApplicationTest {
     @Test
     public void testAddApplication() throws Exception {
 
+    	config.setLocalTest();
         if (config.isSystemTestEnabled()) {
 
 
@@ -50,7 +51,15 @@ public class CommandAddApplicationTest {
 
             Application newApplication = ApplicationMapper.fromJson(ApplicationHelper.getDummyApplicationJson());
             String applicationJson = ApplicationMapper.toJson(newApplication);
-            String testAddApplication = new CommandAddApplication(config.userAdminServiceUri, myApplicationTokenID, userTokenId, applicationJson).execute();
+            String testAddApplication = new CommandAddApplication(config.userAdminServiceUri, myApplicationTokenID, userTokenId, applicationJson){
+             
+            	protected String dealWithFailedResponse(String responseBody, int statusCode) {
+            		return responseBody;
+            	};
+            	
+            }.execute();
+            
+            System.out.print(applicationJson);
             System.out.println("Applications found:" + countApplications(myApplicationTokenID, userTokenId));
             assertTrue(existingApplications == (countApplications(myApplicationTokenID, userTokenId) - 1));
 

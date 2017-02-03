@@ -31,7 +31,7 @@ public class SystemTestBaseConfig {
     public boolean CRMCustomerExtensionSystemTest = true && systemTest;
     public int TIME_WAIT_BETWEEN_SYSTEMTEST = 15;  // 15 ms
     //
-    public static String SYSTEMTEST_USER_CELLPHONE = "91905054";
+    public static String SYSTEMTEST_USER_CELLPHONE = "59441023";
     ;
     public static String SYSTEMTEST_USER_EMAIL = "totto@totto.org";
 
