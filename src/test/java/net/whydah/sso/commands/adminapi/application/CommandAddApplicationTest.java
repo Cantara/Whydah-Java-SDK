@@ -34,7 +34,6 @@ public class CommandAddApplicationTest {
     @Test
     public void testAddApplication() throws Exception {
 
-    	config.setLocalTest();
         if (config.isSystemTestEnabled()) {
 
 
