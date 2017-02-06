@@ -11,6 +11,8 @@ import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.user.types.UserToken;
 import net.whydah.sso.util.WhydahUtil;
+import net.whydah.sso.whydah.DEFCON;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +31,7 @@ public class WhydahApplicationSession {
     private String uas;
     private ApplicationCredential myAppCredential;
     private ApplicationToken applicationToken;
-    private UserToken.DEFCON defcon = UserToken.DEFCON.DEFCON5;
+    private DEFCON defcon = DEFCON.DEFCON5;
 
 
     protected WhydahApplicationSession() {
@@ -164,37 +166,37 @@ public class WhydahApplicationSession {
         return sts;
     }
 
-    public UserToken.DEFCON getDefcon() {
+    public DEFCON getDefcon() {
         return defcon;
     }
 
-    public void setDefcon(UserToken.DEFCON defcon) {
+    public void setDefcon(DEFCON defcon) {
         this.defcon = defcon;
     }
 
     public void updateDefcon(String userTokenXml) {
         String tokendefcon = UserTokenXpathHelper.getDEFCONLevel(userTokenXml);
-        if (UserToken.DEFCON.DEFCON5.equals(tokendefcon)) {
-            defcon = UserToken.DEFCON.DEFCON5;
+        if (DEFCON.DEFCON5.equals(tokendefcon)) {
+            defcon = DEFCON.DEFCON5;
         }
-        if (UserToken.DEFCON.DEFCON4.equals(tokendefcon)) {
+        if (DEFCON.DEFCON4.equals(tokendefcon)) {
             log.warn("DEFCON lecel is now DEFCON4");
-            defcon = UserToken.DEFCON.DEFCON4;
+            defcon = DEFCON.DEFCON4;
 
         }
-        if (UserToken.DEFCON.DEFCON3.equals(tokendefcon)) {
+        if (DEFCON.DEFCON3.equals(tokendefcon)) {
             log.error("DEFCON lecel is now DEFCON3");
-            defcon = UserToken.DEFCON.DEFCON3;
+            defcon = DEFCON.DEFCON3;
 
         }
-        if (UserToken.DEFCON.DEFCON2.equals(tokendefcon)) {
+        if (DEFCON.DEFCON2.equals(tokendefcon)) {
             log.error("DEFCON lecel is now DEFCON2");
-            defcon = UserToken.DEFCON.DEFCON2;
+            defcon = DEFCON.DEFCON2;
 
         }
-        if (UserToken.DEFCON.DEFCON1.equals(tokendefcon)) {
+        if (DEFCON.DEFCON1.equals(tokendefcon)) {
             log.error("DEFCON lecel is now DEFCON1");
-            defcon = UserToken.DEFCON.DEFCON1;
+            defcon = DEFCON.DEFCON1;
         }
 
     }

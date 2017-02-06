@@ -1,6 +1,8 @@
 package net.whydah.sso.application;
 
 import net.whydah.sso.application.types.Application;
+import net.whydah.sso.whydah.DEFCON;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -22,8 +24,8 @@ public class ApplicationTest {
     @Test
     public void testDefaultValuesInApplication() throws Exception {
         Application a = new Application("AppId", "appName");
-        assertTrue("DEFCON5".equalsIgnoreCase(a.getSecurity().getMinDEFCON()));
-        assertTrue("0".equalsIgnoreCase(a.getSecurity().getMinSecurityLevel()));
+        assertTrue(DEFCON.DEFCON5 == a.getSecurity().getMinimumDEFCONLevel());
+        assertTrue(a.getSecurity().getMinSecurityLevel()==0);
         assertTrue(Boolean.valueOf(a.getSecurity().getUserTokenFilter()));
     }
 
