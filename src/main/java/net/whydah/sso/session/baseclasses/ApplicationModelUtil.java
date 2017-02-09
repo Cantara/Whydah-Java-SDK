@@ -3,10 +3,13 @@ package net.whydah.sso.session.baseclasses;
 import net.whydah.sso.application.mappers.ApplicationMapper;
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.basehelpers.JsonPathHelper;
+import net.whydah.sso.commands.adminapi.application.CommandListApplications;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -14,13 +17,9 @@ public class ApplicationModelUtil {
     public static final String maxSessionTimeoutSeconds = "$.security.maxSessionTimeoutSeconds";
     public static final String minDEFCON = "$.security.minDEFCON";
     public static final String minSecurityLevel = "$.security.minSecurityLevel";
-
-
     private static final Logger log = LoggerFactory.getLogger(ApplicationModelUtil.class);
-    private static List<Application> applications;
-    private static URI userAdminServiceUri = null;
-
-
+    private static List<Application> applications = new ArrayList<Application>();
+   
     public static List<Application> getApplicationList() {
         return applications;
     }
@@ -56,7 +55,7 @@ public class ApplicationModelUtil {
 
 
     public static void updateApplicationList(URI userAdminServiceUri, String myAppTokenId, String userTokenId) {
-        if (shouldUpdate() || getApplicationList() == null || userAdminServiceUri != null){//HUY: Why should we check this? //|| applications.size() < 6) {
+        if (userAdminServiceUri != null){
             String applicationsJson = new net.whydah.sso.commands.adminapi.application.CommandSearchForApplications(userAdminServiceUri, myAppTokenId, userTokenId, "*").execute();
             log.debug("AppLications returned:" + applicationsJson);
             if (applicationsJson != null) {
@@ -66,16 +65,18 @@ public class ApplicationModelUtil {
             }
         }
     }
-
-//    public static void forcedUpdateApplicationList(URI userAdminServiceUri, String myAppTokenId, String userTokenId) {
-//        String applicationsJson = new net.whydah.sso.commands.adminapi.application.CommandListApplications(userAdminServiceUri, myAppTokenId).execute();
-//        log.debug("AppLications returned:" + applicationsJson);
-//        if (applicationsJson != null) {
-//            if (applicationsJson.length() > 20) {
-//                applications = ApplicationMapper.fromJsonList(applicationsJson);
-//            }
-//        }
-//    }
+    
+    public static void updateApplicationList(URI userAdminServiceUri, String myAppTokenId) {
+        if (userAdminServiceUri != null){
+            String applicationsJson = new CommandListApplications(userAdminServiceUri, myAppTokenId).execute();
+            log.debug("AppLications returned:" + applicationsJson);
+            if (applicationsJson != null) {
+                if (applicationsJson.length() > 20) {
+                    applications = ApplicationMapper.fromJsonList(applicationsJson);
+                }
+            }
+        }
+    }
 
     public static boolean shouldUpdate() {
         int max = 100;
