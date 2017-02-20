@@ -32,7 +32,11 @@ public class CommandVerifyUASAccessByApplicationTokenId extends BaseHttpGetHystr
 
 	@Override
 	protected Boolean dealWithResponse(String response) {
-		return true;
+		if(response.contains("true")){
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
