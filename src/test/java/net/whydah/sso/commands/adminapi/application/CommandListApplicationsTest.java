@@ -27,6 +27,7 @@ public class CommandListApplicationsTest {
     @BeforeClass
     public static void setup() throws Exception {
         config = new SystemTestBaseConfig();
+        //config.setLocalTest();
     }
 
 

@@ -11,11 +11,11 @@ public class CommandVerifyUASAccessByApplicationTokenId extends BaseHttpGetHystr
 	int retryCnt = 0;
 
 
-	public CommandVerifyUASAccessByApplicationTokenId(String tokenServiceUri, String applicationTokenId) {
-		super(URI.create(tokenServiceUri), "", applicationTokenId, "STSApplicationAuthGroup");
+	public CommandVerifyUASAccessByApplicationTokenId(String UASUri, String applicationTokenId) {
+		super(URI.create(UASUri), "", applicationTokenId, "STSApplicationAuthGroup");
 
-		if (tokenServiceUri == null || applicationTokenId == null) {
-			log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}", tokenServiceUri, applicationTokenId);
+		if (UASUri == null || applicationTokenId == null) {
+			log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}", UASUri, applicationTokenId);
 		}
 	}
 

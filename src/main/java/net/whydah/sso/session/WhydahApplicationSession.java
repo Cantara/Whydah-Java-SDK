@@ -32,6 +32,7 @@ public class WhydahApplicationSession {
     private ApplicationCredential myAppCredential;
     private ApplicationToken applicationToken;
     private DEFCON defcon = DEFCON.DEFCON5;
+    private boolean disableUpdateAppLink=false;
 
 
     protected WhydahApplicationSession() {
@@ -345,6 +346,9 @@ public class WhydahApplicationSession {
     }
 
     public void updateApplinks(boolean forceUpdate) {
+    	if(disableUpdateAppLink){
+    		return;
+    	}
         if (uas == null || uas.length() < 8) {
             log.warn("Calling updateAppLinks without was initialized");
             return;
@@ -363,6 +367,9 @@ public class WhydahApplicationSession {
     }
     
     private void startThreadAndUpdateAppLinks() {
+    	if(disableUpdateAppLink){
+    		return;
+    	}
         if (uas == null || uas.length() < 8) {
             log.info("Started WAS without UAS configuration, wont keep an updated applicationlist");
             return;
@@ -377,5 +384,13 @@ public class WhydahApplicationSession {
             executorService.shutdown();
         }
     }
+
+	public boolean isDisableUpdateAppLink() {
+		return disableUpdateAppLink;
+	}
+
+	public void setDisableUpdateAppLink(boolean disableUpdateAppLink) {
+		this.disableUpdateAppLink = disableUpdateAppLink;
+	}
 
 }

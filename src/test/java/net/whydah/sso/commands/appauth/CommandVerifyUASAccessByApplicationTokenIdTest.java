@@ -29,7 +29,7 @@ public class CommandVerifyUASAccessByApplicationTokenIdTest {
             assertTrue(myAppTokenXml != null);
             assertTrue(myAppTokenXml.length() > 6);
             ApplicationToken at = ApplicationTokenMapper.fromXml(myAppTokenXml);
-            boolean hasAccess = new CommandVerifyUASAccessByApplicationTokenId(config.tokenServiceUri.toString(), at.getApplicationTokenId()).execute();
+            boolean hasAccess = new CommandVerifyUASAccessByApplicationTokenId(config.userAdminServiceUri.toString(), at.getApplicationTokenId()).execute();
             if(hasAccess){
             	String appjson = new CommandListApplications(config.userAdminServiceUri, at.getApplicationTokenId()).execute();
             	assertTrue(appjson!=null);

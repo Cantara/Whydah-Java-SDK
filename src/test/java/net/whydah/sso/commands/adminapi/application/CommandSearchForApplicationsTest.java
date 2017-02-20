@@ -2,9 +2,11 @@ package net.whydah.sso.commands.adminapi.application;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
+import net.whydah.sso.commands.appauth.CommandVerifyUASAccessByApplicationTokenId;
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.helpers.UserXpathHelper;
+
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,12 +42,17 @@ public class CommandSearchForApplicationsTest {
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
-            String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID).execute();
-            log.debug("applicationsJson=" + applicationsJson);
-            
-            String applicationsJsonl = new CommandSearchForApplications(config.userAdminServiceUri, myApplicationTokenID, userTokenId,"*").execute();
-            log.debug("applicationsJson=" + applicationsJsonl);
-            assertTrue(applicationsJsonl!=null);
+            boolean hasAccess = new CommandVerifyUASAccessByApplicationTokenId(config.userAdminServiceUri.toString(), myApplicationTokenID).execute();
+            if(hasAccess){
+            	String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID).execute();
+            	log.debug("applicationsJson=" + applicationsJson);
+
+            	String applicationsJsonl = new CommandSearchForApplications(config.userAdminServiceUri, myApplicationTokenID, userTokenId,"*").execute();
+            	log.debug("applicationsJson=" + applicationsJsonl);
+            	assertTrue(applicationsJsonl!=null);
+            } else {
+            	log.debug("NO UASaccess permission to test");
+            }
 
         }
 

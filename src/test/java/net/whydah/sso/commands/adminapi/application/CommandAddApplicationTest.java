@@ -6,9 +6,11 @@ import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationMapper;
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
+import net.whydah.sso.commands.appauth.CommandVerifyUASAccessByApplicationTokenId;
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.helpers.UserXpathHelper;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -25,6 +27,7 @@ public class CommandAddApplicationTest {
     @BeforeClass
     public static void setup() throws Exception {
         config = new SystemTestBaseConfig();
+        //config.setLocalTest();
     }
 
     public static String getDummyApplicationJson() {
@@ -35,7 +38,8 @@ public class CommandAddApplicationTest {
     public void testAddApplication() throws Exception {
 
         if (config.isSystemTestEnabled()) {
-
+        	
+        	
 
             System.out.printf("Adding application:\n" + ApplicationMapper.toPrettyJson(ApplicationMapper.fromJson(getDummyApplicationJson())));
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
@@ -46,22 +50,28 @@ public class CommandAddApplicationTest {
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
-            int existingApplications = countApplications(myApplicationTokenID, userTokenId);
-
-            Application newApplication = ApplicationMapper.fromJson(ApplicationHelper.getDummyApplicationJson());
-            String applicationJson = ApplicationMapper.toJson(newApplication);
-            String testAddApplication = new CommandAddApplication(config.userAdminServiceUri, myApplicationTokenID, userTokenId, applicationJson){
-             
-            	protected String dealWithFailedResponse(String responseBody, int statusCode) {
-            		return responseBody;
-            	};
-            	
-            }.execute();
+            boolean hasAccess = new CommandVerifyUASAccessByApplicationTokenId(config.userAdminServiceUri.toString(), myApplicationTokenID).execute();
             
-            System.out.print(applicationJson);
-            System.out.println("Applications found:" + countApplications(myApplicationTokenID, userTokenId));
-            assertTrue(existingApplications == (countApplications(myApplicationTokenID, userTokenId) - 1));
+            if(hasAccess){
+            	int existingApplications = countApplications(myApplicationTokenID, userTokenId);
 
+            	Application newApplication = ApplicationMapper.fromJson(ApplicationHelper.getDummyApplicationJson());
+            	String applicationJson = ApplicationMapper.toJson(newApplication);
+
+            	String testAddApplication = new CommandAddApplication(config.userAdminServiceUri, myApplicationTokenID, userTokenId, applicationJson){
+
+            		protected String dealWithFailedResponse(String responseBody, int statusCode) {
+            			return responseBody;
+            		};
+
+            	}.execute();
+
+            	System.out.print(applicationJson);
+            	System.out.println("Applications found:" + countApplications(myApplicationTokenID, userTokenId));
+            	assertTrue(existingApplications == (countApplications(myApplicationTokenID, userTokenId) - 1));
+            } else {
+            	System.out.print("HAVE NO UASACCESS permission to test");
+            }
 
         }
 
