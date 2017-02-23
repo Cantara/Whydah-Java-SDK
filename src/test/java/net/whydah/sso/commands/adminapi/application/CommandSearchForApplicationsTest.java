@@ -42,7 +42,7 @@ public class CommandSearchForApplicationsTest {
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
-            boolean hasAccess = new CommandVerifyUASAccessByApplicationTokenId(config.userAdminServiceUri.toString(), myApplicationTokenID).execute();
+            boolean hasAccess = new CommandVerifyUASAccessByApplicationTokenId(config.userAdminServiceUri.toString(), myApplicationTokenID, userTokenId).execute();
             if(hasAccess){
             	String applicationsJson = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID).execute();
             	log.debug("applicationsJson=" + applicationsJson);

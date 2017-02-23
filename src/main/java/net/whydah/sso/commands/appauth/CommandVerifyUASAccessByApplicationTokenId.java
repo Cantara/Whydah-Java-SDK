@@ -9,14 +9,19 @@ public class CommandVerifyUASAccessByApplicationTokenId extends BaseHttpGetHystr
 
 
 	int retryCnt = 0;
-
+	String userTokenId="";
 
 	public CommandVerifyUASAccessByApplicationTokenId(String UASUri, String applicationTokenId) {
+		this(UASUri, applicationTokenId, "");
+	}
+	
+	public CommandVerifyUASAccessByApplicationTokenId(String UASUri, String applicationTokenId, String userTokenId) {
 		super(URI.create(UASUri), "", applicationTokenId, "STSApplicationAuthGroup");
 
 		if (UASUri == null || applicationTokenId == null) {
 			log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}", UASUri, applicationTokenId);
 		}
+		this.userTokenId = userTokenId;
 	}
 
 
@@ -47,6 +52,6 @@ public class CommandVerifyUASAccessByApplicationTokenId extends BaseHttpGetHystr
 
 	@Override
 	protected String getTargetPath() {
-		return myAppTokenId + "/hasUASAccess";
+		return myAppTokenId + (userTokenId==null||userTokenId.equals("")?"":"/" + userTokenId) + "/hasUASAccess";
 	}
 }

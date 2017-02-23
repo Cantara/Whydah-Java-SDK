@@ -50,7 +50,7 @@ public class CommandAddApplicationTest {
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
-            boolean hasAccess = new CommandVerifyUASAccessByApplicationTokenId(config.userAdminServiceUri.toString(), myApplicationTokenID).execute();
+            boolean hasAccess = new CommandVerifyUASAccessByApplicationTokenId(config.userAdminServiceUri.toString(), myApplicationTokenID, userTokenId).execute();
             
             if(hasAccess){
             	int existingApplications = countApplications(myApplicationTokenID, userTokenId);
@@ -68,7 +68,8 @@ public class CommandAddApplicationTest {
 
             	System.out.print(applicationJson);
             	System.out.println("Applications found:" + countApplications(myApplicationTokenID, userTokenId));
-            	assertTrue(existingApplications == (countApplications(myApplicationTokenID, userTokenId) - 1));
+            	int count = countApplications(myApplicationTokenID, userTokenId) - 1;
+            	assertTrue(existingApplications == count);
             } else {
             	System.out.print("HAVE NO UASACCESS permission to test");
             }
