@@ -73,7 +73,7 @@
 
     <properties>
         <service.name>Whydah-Java-SDK</service.name>
-        <whydah-typelib-version>2.3-alpha-2</whydah-typelib-version>
+        <whydah-typelib-version>2.3-alpha-3</whydah-typelib-version>
     </properties>
 
     <dependencies>
