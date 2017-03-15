@@ -5,11 +5,13 @@ import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.extensions.crmapi.CommandGetCRMCustomerTest;
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
+import net.whydah.sso.commands.userauth.CommandRefreshUserToken;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.mappers.UserRoleMapper;
 import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserToken;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -54,11 +56,18 @@ public class CommandAddUserRoleTest {
             log.debug("userAddRoleResult:{}", userAddRoleResult);
             assertNotNull(userAddRoleResult);
 
+            //should do a refresh here
+            String updatedUserTokenXML = (new CommandRefreshUserToken(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userTokenId).execute());
+			log.debug("Updated UserToken: {}", updatedUserTokenXML);
+			if (updatedUserTokenXML != null && updatedUserTokenXML.length() > 10) {
+				
+			}
+            
             // Force update with new role
             String userToken2 = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential, userticket).execute();
-            log.debug("userToken2:" + userToken2);
-            String userTokenId2 = UserXpathHelper.getUserTokenId(userToken2);
-            assertTrue(userToken2.length() >= userToken.length());
+            //log.debug("userToken2:" + userToken2);
+            //String userTokenId2 = UserXpathHelper.getUserTokenId(userToken2);
+            //assertTrue(userToken2.length() >= userToken.length());
 
             UserToken newuserToken = UserTokenMapper.fromUserTokenXml(userToken2);
             List<UserApplicationRoleEntry> roles = newuserToken.getRoleList();
