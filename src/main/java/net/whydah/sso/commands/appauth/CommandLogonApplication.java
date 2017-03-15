@@ -17,7 +17,7 @@ public class CommandLogonApplication extends BaseHttpPostHystrixCommand<String> 
     int retryCnt = 0;
 
 	public CommandLogonApplication(URI tokenServiceUri, ApplicationCredential appCredential) {
-        super(tokenServiceUri, "", "", "STSApplicationAuthGroup", 60000);
+        super(tokenServiceUri, "", "", "STSApplicationAuthGroup", 6000);
         this.appCredential = appCredential;
         this.tokenServiceUri = tokenServiceUri;
         if (tokenServiceUri == null || appCredential == null) {
@@ -28,12 +28,13 @@ public class CommandLogonApplication extends BaseHttpPostHystrixCommand<String> 
 
     @Override
     protected String dealWithFailedResponse(String responseBody, int statusCode) {
-        if (statusCode != HttpURLConnection.HTTP_CONFLICT && retryCnt < 1) {
-            retryCnt++;
-            return doPostCommand();
-        } else {
-            return null;
-        }
+//        if (statusCode != HttpURLConnection.HTTP_CONFLICT && retryCnt < 1) {
+//            retryCnt++;
+//            return doPostCommand();
+//        } else {
+//            return null;
+//        }
+    	return null;
     }
 
 
