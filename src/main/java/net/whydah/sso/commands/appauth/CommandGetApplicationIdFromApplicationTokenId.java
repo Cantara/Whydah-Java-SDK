@@ -12,7 +12,7 @@ public class CommandGetApplicationIdFromApplicationTokenId extends BaseHttpGetHy
 
 
     public CommandGetApplicationIdFromApplicationTokenId(URI tokenServiceUri, String applicationTokenId) {
-        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup");
+        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", 30000);
 
         if (tokenServiceUri == null || applicationTokenId == null) {
             log.error(TAG + " initialized with null-values - will fail tokenServiceUri={} || applicationTokenId={}", tokenServiceUri, applicationTokenId);
