@@ -10,7 +10,7 @@ public class CommandValidateUsertokenId extends BaseHttpGetHystrixCommand<Boolea
     private String usertokenid;
 
     public CommandValidateUsertokenId(URI tokenServiceUri, String myAppTokenId, String usertokenid) {
-    	super(tokenServiceUri, "", myAppTokenId, "SSOUserAuthGroup");
+    	super(tokenServiceUri, "", myAppTokenId, "SSOUserAuthGroup", 3000);
         this.usertokenid=usertokenid;
         if (tokenServiceUri == null || myAppTokenId == null || usertokenid == null  ) {
             log.error("CommandValidateUsertokenId initialized with null-values - will fail");
