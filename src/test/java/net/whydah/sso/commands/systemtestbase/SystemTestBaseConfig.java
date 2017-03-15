@@ -16,6 +16,7 @@ import net.whydah.sso.util.SystemTestUtil;
 import java.net.URI;
 import java.util.UUID;
 
+import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class SystemTestBaseConfig {
