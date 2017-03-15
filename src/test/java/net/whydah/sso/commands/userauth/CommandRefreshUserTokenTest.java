@@ -1,9 +1,11 @@
 package net.whydah.sso.commands.userauth;
 
 import net.whydah.sso.application.types.Application;
+import net.whydah.sso.commands.adminapi.user.CommandGetUser;
 import net.whydah.sso.commands.adminapi.user.role.CommandAddUserRole;
 import net.whydah.sso.commands.adminapi.user.role.CommandGetUserRoles;
 import net.whydah.sso.commands.adminapi.user.role.CommandUpdateUserRole;
+import net.whydah.sso.commands.appauth.CommandVerifyUASAccessByApplicationTokenId;
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import net.whydah.sso.session.baseclasses.BaseWhydahServiceClient;
 import net.whydah.sso.user.mappers.UserRoleMapper;
@@ -116,8 +118,10 @@ public class CommandRefreshUserTokenTest {
 //        	//get token
 //        	UserToken foundUserToken = UserTokenMapper.fromUserTokenXml(userAddRoleResult);
         	
-        	
-        	testUpdateRoleAndRefreshToken(adminUser);
+        	boolean hasAccess = new CommandVerifyUASAccessByApplicationTokenId(config.userAdminServiceUri.toString(), config.myApplicationTokenID).execute();
+        	if(hasAccess){
+        		testUpdateRoleAndRefreshToken(adminUser);
+        	}
 
         }
 
