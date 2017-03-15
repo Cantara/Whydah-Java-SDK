@@ -83,8 +83,9 @@ public class WhydahUtil {
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
         UserCredential userCredential = new UserCredential(username, password);
-        String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, UUID.randomUUID().toString()).execute();
-        return userToken;
+        String userTokenXML = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, UUID.randomUUID().toString()).execute();
+        // getWAS().updateDefcon(userTokenXML);
+        return userTokenXML;
 
     }
 
@@ -95,16 +96,18 @@ public class WhydahUtil {
             log.warn("Illegal application session from WhydahApplicationSession, applicationTokenId:" + was.getActiveApplicationTokenId());
 
         }
-        String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userCredential, UUID.randomUUID().toString()).execute();
-        return userToken;
+        String userTokenXML = new CommandLogonUserByUserCredential(tokenServiceUri, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userCredential, UUID.randomUUID().toString()).execute();
+        was.updateDefcon(userTokenXML);
+        return userTokenXML;
 
     }
 
 
     public static String extendUserSession(WhydahApplicationSession was, UserCredential userCredential) {
         URI tokenServiceUri = URI.create(was.getSTS());
-        String userToken = new CommandLogonUserByUserCredential(tokenServiceUri, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userCredential, UUID.randomUUID().toString()).execute();
-        return userToken;
+        String userTokenXML = new CommandLogonUserByUserCredential(tokenServiceUri, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userCredential, UUID.randomUUID().toString()).execute();
+        was.updateDefcon(userTokenXML);
+        return userTokenXML;
 
     }
 
@@ -178,12 +181,33 @@ public class WhydahUtil {
     public static String getPrintableStatus(WhydahApplicationSession was) {
 
         String statusString = "Whydah session:\n" +
+                " DEFCON: " + was.getDefcon() + "\"\n" +
                 " - hasApplicationToken: " + Boolean.toString(was.getActiveApplicationTokenId() != null) + "\n" +
                 " - hasValidApplicationToken: " + Boolean.toString(was.checkActiveSession()) + "\n" +
                 " - hasApplicationsMetadata:" + Boolean.toString(was.getApplicationList().size() > 2) + "\n";
-
         return statusString;
 
+    }
+
+    public String getWASHealthAsJson(WhydahApplicationSession was) {
+        boolean hasApplicationToken = false;
+        boolean hasValidApplicationToken = false;
+        boolean hasApplicationsMetadata = false;
+        try {
+            hasApplicationToken = (was.getActiveApplicationTokenId() != null);
+            hasValidApplicationToken = was.checkActiveSession();
+            hasApplicationsMetadata = was.getApplicationList().size() > 2;
+
+        } catch (Exception e) {
+
+        }
+        return "\n" +
+                "  \"WhydahApplicationSession\": {\n" +
+                "     \"DEFCON\": \"" + was.getDefcon() + "\"\n" +
+                "     \"hasApplicationToken\": \"" + Boolean.toString(hasApplicationToken) + "\"\n" +
+                "     \"hasValidApplicationToken\": \"" + Boolean.toString(hasValidApplicationToken) + "\"\n" +
+                "     \"hasApplicationsMetadata\": \"" + Boolean.toString(hasApplicationsMetadata) + "\"\n" +
+                "   }\n";
     }
 
     /**

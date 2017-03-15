@@ -218,6 +218,7 @@ public class BaseWhydahServiceClient {
         }
         log.debug("getUserTokenByPin() - Application logon OK. applicationTokenId={}. Log on with user adminUserTokenId {}.", getMyAppTokenID(), adminUserTokenId);
         String userTokenXML = new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenId, phoneNo, pin, userTicket).execute();
+        getWAS().updateDefcon(userTokenXML);
         return userTokenXML;
     }
 
@@ -226,8 +227,10 @@ public class BaseWhydahServiceClient {
         if (was.getActiveApplicationToken() == null) {
             was.renewWhydahApplicationSession();
         }
-        log.debug("getUserTokenByPin() - Application logon OK. applicationTokenId={}. Log on with user phoneno {}.", was.getActiveApplicationTokenId(), phoneNo);
-        return new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenId, phoneNo, pin, userTicket).execute();
+        log.debug("getUserTokenByPin2() - Application logon OK. applicationTokenId={}. Log on with user phoneno {}.", was.getActiveApplicationTokenId(), phoneNo);
+        String userTokenXML = new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenId, phoneNo, pin, userTicket).execute();
+        getWAS().updateDefcon(userTokenXML);
+        return userTokenXML;
     }
 
     public String getUserToken(UserCredential user, String userticket) {
@@ -235,7 +238,9 @@ public class BaseWhydahServiceClient {
             was.renewWhydahApplicationSession();
         }
         log.debug("getUserToken - Application logon OK. applicationTokenId={}. Log on with user credentials {}.", was.getActiveApplicationTokenId(), user.toString());
-        return new CommandLogonUserByUserCredential(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), user, userticket).execute();
+        String userTokenXML = new CommandLogonUserByUserCredential(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), user, userticket).execute();
+        getWAS().updateDefcon(userTokenXML);
+        return userTokenXML;
     }
 
     public boolean createTicketForUserTokenID(String userTicket, String userTokenID) {
@@ -251,7 +256,9 @@ public class BaseWhydahServiceClient {
         if (was.getActiveApplicationToken() == null) {
             was.renewWhydahApplicationSession();
         }
-        return new CommandGetUsertokenByUsertokenId(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), usertokenId).execute();
+        String userTokenXML = new CommandGetUsertokenByUsertokenId(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), usertokenId).execute();
+        getWAS().updateDefcon(userTokenXML);
+        return userTokenXML;
     }
 
     public void releaseUserToken(String userTokenId) {

@@ -9,10 +9,8 @@ import net.whydah.sso.commands.adminapi.application.CommandListApplications;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
-import net.whydah.sso.user.types.UserToken;
 import net.whydah.sso.util.WhydahUtil;
 import net.whydah.sso.whydah.DEFCON;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -173,31 +171,38 @@ public class WhydahApplicationSession {
 
     public void setDefcon(DEFCON defcon) {
         this.defcon = defcon;
+        DEFCONHandler.handleDefcon(defcon);
+
     }
 
     public void updateDefcon(String userTokenXml) {
         String tokendefcon = UserTokenXpathHelper.getDEFCONLevel(userTokenXml);
         if (DEFCON.DEFCON5.equals(tokendefcon)) {
             defcon = DEFCON.DEFCON5;
+            DEFCONHandler.handleDefcon(defcon);
         }
         if (DEFCON.DEFCON4.equals(tokendefcon)) {
             log.warn("DEFCON lecel is now DEFCON4");
             defcon = DEFCON.DEFCON4;
+            DEFCONHandler.handleDefcon(defcon);
 
         }
         if (DEFCON.DEFCON3.equals(tokendefcon)) {
             log.error("DEFCON lecel is now DEFCON3");
             defcon = DEFCON.DEFCON3;
+            DEFCONHandler.handleDefcon(defcon);
 
         }
         if (DEFCON.DEFCON2.equals(tokendefcon)) {
             log.error("DEFCON lecel is now DEFCON2");
             defcon = DEFCON.DEFCON2;
+            DEFCONHandler.handleDefcon(defcon);
 
         }
         if (DEFCON.DEFCON1.equals(tokendefcon)) {
             log.error("DEFCON lecel is now DEFCON1");
             defcon = DEFCON.DEFCON1;
+            DEFCONHandler.handleDefcon(defcon);
         }
 
     }
