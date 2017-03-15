@@ -16,7 +16,6 @@ import net.whydah.sso.util.SystemTestUtil;
 import java.net.URI;
 import java.util.UUID;
 
-import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class SystemTestBaseConfig {
@@ -24,7 +23,7 @@ public class SystemTestBaseConfig {
     public static final boolean SYSTEST_PROPERTY_ANONYMOUSTOKEN = true;
     public static final boolean SYSTEST_PROPERTY_fulltokenapplications = true;
     // Run the Whydah SystemTests?
-    public boolean systemTest = true;
+    public boolean systemTest = false;
 
     // Run SystemTests for Whydah Extensions?
     public boolean statisticsExtensionSystemTest = true && systemTest;
