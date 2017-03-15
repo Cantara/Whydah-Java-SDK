@@ -14,9 +14,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by totto on 23.06.15.
- */
 public class WhydahUserSession {
 
 

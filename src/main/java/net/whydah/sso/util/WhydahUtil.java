@@ -203,10 +203,10 @@ public class WhydahUtil {
         }
         return "\n" +
                 "  \"WhydahApplicationSession\": {\n" +
-                "     \"DEFCON\": \"" + was.getDefcon() + "\"\n" +
-                "     \"hasApplicationToken\": \"" + Boolean.toString(hasApplicationToken) + "\"\n" +
-                "     \"hasValidApplicationToken\": \"" + Boolean.toString(hasValidApplicationToken) + "\"\n" +
-                "     \"hasApplicationsMetadata\": \"" + Boolean.toString(hasApplicationsMetadata) + "\"\n" +
+                "     \"DEFCON\": \"" + was.getDefcon() + "\",\n" +
+                "     \"hasApplicationToken\": \"" + Boolean.toString(hasApplicationToken) + "\",\n" +
+                "     \"hasValidApplicationToken\": \"" + Boolean.toString(hasValidApplicationToken) + "\",\n" +
+                "     \"hasApplicationsMetadata\": \"" + Boolean.toString(hasApplicationsMetadata) + "\",\n" +
                 "   }\n";
     }
 
