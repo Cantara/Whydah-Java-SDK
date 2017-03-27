@@ -21,7 +21,7 @@ For code and examples for other languages, see <https://github.com/cantara/Whyda
 
 ```java
         // Log on application and user
-        String userToken = WhydahUtil.logOnApplicationAndUser("https://whydahdev.altrancloud.com/tokenservice/",\\
+        String userToken = WhydahUtil.logOnApplicationAndUser("https://whydahdev.cantara.no/tokenservice/",\\
                            "applicationID","applicationSecret", "username", "password");
         // Log get the user sessionId (userTokenId)
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
