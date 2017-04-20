@@ -154,7 +154,7 @@ public class BaseWhydahServiceClient {
         if (tokenLifespanSec == null || tokenTimestampMsSinceEpoch == null) {
             return null;
         }
-        long endOfTokenLifeMs = tokenTimestampMsSinceEpoch + tokenLifespanSec * 1000;
+        long endOfTokenLifeMs = tokenTimestampMsSinceEpoch + tokenLifespanSec;
         long remainingLifeMs = endOfTokenLifeMs - System.currentTimeMillis();
         return (int) (remainingLifeMs / 1000);
     }
