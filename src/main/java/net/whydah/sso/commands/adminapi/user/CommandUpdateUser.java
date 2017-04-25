@@ -9,11 +9,13 @@ public class CommandUpdateUser extends BaseHttpPutHystrixCommand<String> {
   
     private String adminUserTokenId;
     private String userJson;
+    private String uid;
 
 
-    public CommandUpdateUser(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String userJson) {
-    	super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
+    public CommandUpdateUser(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String uid, String userJson) {
+    	super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup", 3000);
         
+    	this.uid = uid;
         this.adminUserTokenId = adminUserTokenId;
         this.userJson = userJson;
         if (userAdminServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userJson == null) {
@@ -48,7 +50,7 @@ public class CommandUpdateUser extends BaseHttpPutHystrixCommand<String> {
 
 	@Override
 	protected String getTargetPath() {
-		return myAppTokenId + "/" + adminUserTokenId + "/xxx";
+		return myAppTokenId + "/" + adminUserTokenId  +  "/user/" + uid;
 	}
 
 

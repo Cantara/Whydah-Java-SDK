@@ -42,6 +42,11 @@ public class SystemTestBaseConfig {
     public String TEMPORARY_APPLICATION_SECRET = "55fhRM6nbKZ2wfC6RMmMuzXpk";//"LLNmHsQDCerVWx5d6aCjug9fyPE";
     public String userName = "systest";
     public String password = "systest42";
+    
+    //acsemployee, acsemployee, acs987, Samuel "Black Sam", Bellamy, acsemp@whydah.no, 0, 001
+    public String userName2 = "acsmanager";
+    public String password2 = "acs987";
+    
     public URI tokenServiceUri;
     public URI userAdminServiceUri;
     public ApplicationCredential appCredential;
@@ -132,6 +137,30 @@ public class SystemTestBaseConfig {
         return null;
     }
 
+    public UserToken logOnSystemTestApplicationAndUser(UserCredential _userCredential) {
+        if (isCRMCustomerExtensionSystemTestEnabled()) {
+            String myApplicationTokenID = "";
+            SSLTool.disableCertificateValidation();
+            ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
+            myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+            myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
+            assertTrue("Unable to log on application ", myApplicationTokenID.length() > 10);
+
+            ApplicationToken appToken = ApplicationTokenMapper.fromXml(myAppTokenXml);
+            assertNotNull(appToken);
+            myApplicationToken = appToken;
+
+            String userticket = UUID.randomUUID().toString();
+            String userTokenXML = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, _userCredential, userticket).execute();
+            String userTokenId = UserXpathHelper.getUserTokenId(userTokenXML);
+            assertTrue("Unable to log on user", userTokenId.length() > 10);
+            UserToken userToken = UserTokenMapper.fromUserTokenXml(userTokenXML);
+            assertNotNull(userToken);
+            return userToken;
+        }
+        return null;
+    }
+    
     public UserToken logOnSystemTestApplicationAndSystemTestUser() {
         if (isCRMCustomerExtensionSystemTestEnabled()) {
             String myApplicationTokenID = "";
@@ -176,6 +205,35 @@ public class SystemTestBaseConfig {
         }
         return null;
     }
+    
+    public String logOnSystemTestApplicationAndUser_getTokenXML(UserCredential _userCredential) {
+        if (isCRMCustomerExtensionSystemTestEnabled()) {
+            String myApplicationTokenID = "";
+            SSLTool.disableCertificateValidation();
+            ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
+            myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
+            myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
+            assertTrue("Unable to log on application ", myApplicationTokenID.length() > 10);
+
+            ApplicationToken appToken = ApplicationTokenMapper.fromXml(myAppTokenXml);
+            assertNotNull(appToken);
+            myApplicationToken = appToken;
+
+            String userticket = UUID.randomUUID().toString();
+            String userTokenXML = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, _userCredential, userticket).execute();
+            return userTokenXML;
+        }
+        return null;
+    }
+    
+    public String logOnByUserCredential(String userticket, UserCredential _credential){
+    	 String userTokenXML = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, _credential, userticket).execute();
+         return userTokenXML;
+    }
+    public String logOnBySystemTestUserCredential(String userticket){
+   	 String userTokenXML = new CommandLogonUserByUserCredential(tokenServiceUri, myApplicationTokenID, myAppTokenXml, userCredential, userticket).execute();
+        return userTokenXML;
+   }
     
     public String generatePin() {
     	java.util.Random generator = new java.util.Random();

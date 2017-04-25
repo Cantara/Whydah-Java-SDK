@@ -6,13 +6,12 @@ import java.net.URI;
 
 public class CommandGetUser extends BaseHttpGetHystrixCommand<String> {
  
-    private String myAppTokenId;
     private String adminUserTokenId;
     private String userID;
 
 
     public CommandGetUser(URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String userID) {
-    	super(userAdminServiceUri, "", myAppTokenId,"UASUserAdminGroup");
+    	super(userAdminServiceUri, "", myAppTokenId,"UASUserAdminGroup", 3000);
     	
         
         this.adminUserTokenId = adminUserTokenId;
@@ -49,7 +48,7 @@ public class CommandGetUser extends BaseHttpGetHystrixCommand<String> {
 
 	@Override
 	protected String getTargetPath() {
-		return myAppTokenId + "/" + adminUserTokenId + "/user" + "/" + userID;
+		return myAppTokenId + "/" + adminUserTokenId + "/user/" + userID;
 	}
 
 
