@@ -27,7 +27,7 @@ public class CommandListApplicationActivitiesTest {
     }
 
     @Test
-    public void testCommandListUserActivitiesTest() throws Exception {
+    public void testCommandListApplicationActivitiesTest() throws Exception {
 
         if (config.isStatisticsExtensionSystemtestEnabled()) {
 
@@ -43,7 +43,7 @@ public class CommandListApplicationActivitiesTest {
             String userId = UserXpathHelper.getUserIdFromUserTokenXml(userToken);
             assertTrue(userTokenId.length() > 10);
 
-            String userStats = new CommandListApplicationActivities(config.statisticsServiceUri, myApplicationTokenID, userTokenId, userId).execute();
+            String userStats = new CommandListApplicationActivities(config.statisticsServiceUri, myApplicationTokenID, "2215", userId).execute();
             log.debug("Returned list of usersessions: " + userStats);
             assertTrue(userStats != null);
             assertTrue(userStats.length() > 10);
