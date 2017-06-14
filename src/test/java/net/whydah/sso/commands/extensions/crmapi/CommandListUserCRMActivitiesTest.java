@@ -1,8 +1,10 @@
-package net.whydah.sso.commands.extensions.statistics;
+package net.whydah.sso.commands.extensions.crmapi;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
+import net.whydah.sso.commands.extensions.statistics.CommandGetUsersStatsTest;
+import net.whydah.sso.commands.extensions.statistics.CommandListUserCRMActivities;
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.helpers.UserXpathHelper;
