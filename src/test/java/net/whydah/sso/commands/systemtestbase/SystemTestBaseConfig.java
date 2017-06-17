@@ -140,7 +140,7 @@ public class SystemTestBaseConfig {
 
     public UserToken logOnSystemTestApplicationAndUser(UserCredential _userCredential) {
         if (isCRMCustomerExtensionSystemTestEnabled()) {
-            String myApplicationTokenID = "";
+          
             SSLTool.disableCertificateValidation();
             ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
             myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
@@ -164,7 +164,7 @@ public class SystemTestBaseConfig {
     
     public UserToken logOnSystemTestApplicationAndSystemTestUser() {
         if (isCRMCustomerExtensionSystemTestEnabled()) {
-            String myApplicationTokenID = "";
+           
             SSLTool.disableCertificateValidation();
             ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
             myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
@@ -189,7 +189,7 @@ public class SystemTestBaseConfig {
     
     public String logOnSystemTestApplicationAndSystemTestUser_getTokenXML() {
         if (isCRMCustomerExtensionSystemTestEnabled()) {
-            String myApplicationTokenID = "";
+       
             SSLTool.disableCertificateValidation();
             ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
             myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
@@ -209,7 +209,7 @@ public class SystemTestBaseConfig {
     
     public String logOnSystemTestApplicationAndUser_getTokenXML(UserCredential _userCredential) {
         if (isCRMCustomerExtensionSystemTestEnabled()) {
-            String myApplicationTokenID = "";
+           
             SSLTool.disableCertificateValidation();
             ApplicationCredential appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
             myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
