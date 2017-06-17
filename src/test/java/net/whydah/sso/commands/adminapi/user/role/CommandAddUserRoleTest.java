@@ -47,32 +47,35 @@ public class CommandAddUserRoleTest {
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
             String uId = UserXpathHelper.getUserIdFromUserTokenXml(userToken);
             assertTrue(userTokenId != null && userTokenId.length() > 5);
-
+            
 
             String userRoleJson = getTestNewUserRole(UserXpathHelper.getUserIdFromUserTokenXml(userToken), config.TEMPORARY_APPLICATION_ID);
-            UserApplicationRoleEntry addedRole = UserRoleMapper.fromJson(userRoleJson);
+            
             // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
             String userAddRoleResult = new CommandAddUserRole(config.userAdminServiceUri, myApplicationTokenID, userTokenId, uId, userRoleJson).execute();
             log.debug("userAddRoleResult:{}", userAddRoleResult);
             assertNotNull(userAddRoleResult);
-
-            //should do a refresh here
-            String updatedUserTokenXML = (new CommandRefreshUserToken(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userTokenId).execute());
-			log.debug("Updated UserToken: {}", updatedUserTokenXML);
-			if (updatedUserTokenXML != null && updatedUserTokenXML.length() > 10) {
-				
-			}
+            UserApplicationRoleEntry addedRole = UserRoleMapper.fromJson(userAddRoleResult);
             
+            //should do a refresh here
+//            String updatedUserTokenXML = (new CommandRefreshUserToken(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userTokenId).execute());
+//			log.debug("Updated UserToken: {}", updatedUserTokenXML);
+//			if (updatedUserTokenXML != null && updatedUserTokenXML.length() > 10) {
+//				
+//			}
+            Thread.sleep(5000);//wait to update
             // Force update with new role
             String userToken2 = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential, userticket).execute();
             //log.debug("userToken2:" + userToken2);
             //String userTokenId2 = UserXpathHelper.getUserTokenId(userToken2);
             //assertTrue(userToken2.length() >= userToken.length());
-
+            UserToken oldUserToken = UserTokenMapper.fromUserTokenXml(userToken);
             UserToken newuserToken = UserTokenMapper.fromUserTokenXml(userToken2);
-            List<UserApplicationRoleEntry> roles = newuserToken.getRoleList();
+            List<UserApplicationRoleEntry> newroleList = newuserToken.getRoleList();
+            assertTrue(newroleList.size() == oldUserToken.getRoleList().size() + 1);
+            
             boolean found = false;
-            for (UserApplicationRoleEntry role : roles) {
+            for (UserApplicationRoleEntry role : newroleList) {
                 log.debug("Found role: {}", UserRoleMapper.toJson(role));
                 if (role.getRoleName().equalsIgnoreCase(addedRole.getRoleName())) {
                     found = true;
@@ -80,6 +83,8 @@ public class CommandAddUserRoleTest {
 
             }
             assertTrue(found);
+            
+            
         }
 
     }
