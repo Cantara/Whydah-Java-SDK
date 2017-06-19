@@ -34,7 +34,7 @@ public class AddUserRoleTest {
 	@BeforeClass
 	public static void setup() throws Exception {
 		config = new SystemTestBaseConfig();
-		config.setLocalTest();
+		
 		if (config.isSystemTestEnabled()) {
 
 			client = new BaseWhydahServiceClient(config.tokenServiceUri.toString(), config.userAdminServiceUri.toString(), config.TEMPORARY_APPLICATION_ID, config.TEMPORARY_APPLICATION_NAME, config.TEMPORARY_APPLICATION_SECRET);
