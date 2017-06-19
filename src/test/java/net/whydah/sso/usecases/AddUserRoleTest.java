@@ -1,14 +1,18 @@
 package net.whydah.sso.usecases;
 
 import net.whydah.sso.application.helpers.ApplicationHelper;
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationMapper;
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.commands.adminapi.application.CommandAddApplication;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
+import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
+import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.session.baseclasses.BaseWhydahServiceClient;
 import net.whydah.sso.user.helpers.UserXpathHelper;
+
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -30,6 +34,7 @@ public class AddUserRoleTest {
 	@BeforeClass
 	public static void setup() throws Exception {
 		config = new SystemTestBaseConfig();
+		config.setLocalTest();
 		if (config.isSystemTestEnabled()) {
 
 			client = new BaseWhydahServiceClient(config.tokenServiceUri.toString(), config.userAdminServiceUri.toString(), config.TEMPORARY_APPLICATION_ID, config.TEMPORARY_APPLICATION_NAME, config.TEMPORARY_APPLICATION_SECRET);
@@ -40,7 +45,8 @@ public class AddUserRoleTest {
 	@Test
 	public void testUpdateRoleAndRefreshUserTokenWithExistingApplication(){
 		if (config.isSystemTestEnabled()) {
-            assertTrue(client.updateOrCreateUserApplicationRoleEntry("", "ACSResource", "Whydah", ROLE_NAME, "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
+			String tokenxml= config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML(); 
+            assertTrue(client.updateOrCreateUserApplicationRoleEntry("", "ACSResource", "Whydah", ROLE_NAME, "welcome", tokenxml));
         }
 	}
 	

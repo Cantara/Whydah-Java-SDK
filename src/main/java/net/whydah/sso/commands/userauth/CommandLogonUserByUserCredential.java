@@ -17,7 +17,7 @@ public class CommandLogonUserByUserCredential  extends BaseHttpPostHystrixComman
 
 
     public CommandLogonUserByUserCredential(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, UserCredential userCredential) {
-        super(tokenServiceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", 3000);
+        super(tokenServiceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", 6000);
         this.userCredential=userCredential;
         this.userticket= UUID.randomUUID().toString();  // Create new UUID ticket if not provided
         if (tokenServiceUri == null || myAppTokenId == null || userCredential == null) {
