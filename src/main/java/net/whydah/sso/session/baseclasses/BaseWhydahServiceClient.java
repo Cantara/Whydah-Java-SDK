@@ -387,6 +387,9 @@ public class BaseWhydahServiceClient {
 					String editedUserRoleResult = new CommandUpdateUserRole(uri_useradmin_service, getMyAppTokenID(), userToken.getTokenid(), userToken.getUid(), selectApplicationEntry.getId(), selectApplicationEntry.toJson()).execute();
 					log.debug("update: userUpdateRoleResult:{}", editedUserRoleResult);
 				}
+				
+				Thread.sleep(1000);
+				
 				//step d
 				//call the "non-existing" updateUserToken method in STS
 				String updatedUserTokenXML = (new CommandRefreshUserToken(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userToken.getTokenid()).execute());
