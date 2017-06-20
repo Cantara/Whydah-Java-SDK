@@ -6,6 +6,8 @@ import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.helpers.UserXpathHelper;
+import net.whydah.sso.user.mappers.UserTokenMapper;
+import net.whydah.sso.user.types.UserToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -38,9 +40,14 @@ public class CommandGetUserAggregateTest {
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
-            String usersListJson;
-            usersListJson = new CommandGetUserAggregate(config.userAdminServiceUri, myApplicationTokenID, userTokenId, "useradmin").execute();
-            System.out.println("userJson=" + usersListJson);
+            String usersAggregateJson = "";
+            usersAggregateJson = new CommandGetUserAggregate(config.userAdminServiceUri, myApplicationTokenID, userTokenId, "useradmin").execute();
+            assertTrue(usersAggregateJson.length() > 10);
+            assertTrue(usersAggregateJson.contains("useradmin"));
+            UserToken returnedUserAggregateAsUserToken = UserTokenMapper.fromUserAggregateJson(usersAggregateJson);
+            assertTrue(returnedUserAggregateAsUserToken.getUserName().equalsIgnoreCase("useradmin"));
+
+            //System.out.println("userJson=" + usersAggregateJson);
         }
     }
 
