@@ -1,6 +1,7 @@
 package net.whydah.sso.util;
 
 
+import net.whydah.sso.config.ApplicationMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +36,29 @@ public class SSLTool {
         return sc != null;
     }
 
+    public static void configureCertificateValidation() {
+        if (ApplicationMode.PROD.equals(ApplicationMode.getApplicationMode())) {
+            //  we wait with this....
+            return;
+        }
+        if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
+            //  we wait with this....
+            disableCertificateValidation();
+        }
+        if (ApplicationMode.TEST_LOCALHOST.equals(ApplicationMode.getApplicationMode())) {
+            //  we wait with this....
+            disableCertificateValidation();
+        }
+
+    }
+
     public static void disableCertificateValidation() {
 
-        //REMOVE HERE FOR PROD TYPE
-        // if (ApplicationMode.PROD.equals(ApplicationMode.getApplicationMode())) {
-        //  we wait with this....	return;
-        //  }
+        if (ApplicationMode.PROD.equals(ApplicationMode.getApplicationMode())) {
+            //  we wait with this....
+            log.warn("Asked to disable SSL/TLS certificates, DO NOT USE IN PRODUCTION!! \n\n Request ignored. ");
+            return;
+        }
 
         log.warn("Installing a trust manager which does not validate SSL/TLS certificates, DO NOT USE IN PRODUCTION!! \n\n (This is only for test in self-signed environments) ");
         // Create a trust manager that does not validate certificate chains
