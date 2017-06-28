@@ -44,6 +44,7 @@ public class ValidateUserRoleUseCaseTest {
     }
 
     @Test
+    @Ignore
     public void test1_logonApplication() throws Exception {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
             WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(userTokenServiceUri, TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
@@ -53,6 +54,7 @@ public class ValidateUserRoleUseCaseTest {
     }
 
     @Test
+    @Ignore
     public void test2_logonUser() throws Exception {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
 

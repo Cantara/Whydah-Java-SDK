@@ -26,11 +26,15 @@ public class CommandSendScheduledMailTest {
     public void testCommandSendScheduledMailTest() throws Exception {
 
         if (config.isSystemTestEnabled()) {
-            ApplicationToken applicationTokenToken = config.logOnSystemTestApplication();
-            String myAppTokenXml = ApplicationTokenMapper.toXML(applicationTokenToken);
+            config.logOnSystemTestApplication();
+            
+            Thread.sleep(3000);
+            
+            String myAppTokenXml = ApplicationTokenMapper.toXML(config.myApplicationToken);
 
             long timestamp = new Date().getTime() + 50 * 1000;  // 50 seconds
             assertTrue(new CommandSendScheduledMail(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, Long.toString(timestamp), SystemTestBaseConfig.SYSTEMTEST_USER_EMAIL, "whydah-email-passwordlogin-subject", "whydah-email-passwordlogin-body").execute());
+            
         }
     }
 }

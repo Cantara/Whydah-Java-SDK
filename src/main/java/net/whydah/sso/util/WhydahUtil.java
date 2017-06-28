@@ -142,7 +142,7 @@ public class WhydahUtil {
      */
     public static List<UserApplicationRoleEntry> addRolesToUser(String uasUri, String applicationTokenId, String adminUserTokenId, List<UserApplicationRoleEntry> roles) {
 
-        List<String> createdRolesXml = new ArrayList<>();
+        List<String> createdRolesList = new ArrayList<>();
         List<UserApplicationRoleEntry> createdRoles = new ArrayList<>();
 
         String userName = "";
@@ -154,14 +154,14 @@ public class WhydahUtil {
 
             if (userAddRoleResult != null && userAddRoleResult.length() > 5) {
                 log.debug("CommandAddRole - addRoles - Created role ok {}", userAddRoleResult);
-                createdRolesXml.add(userAddRoleResult);
+                createdRolesList.add(userAddRoleResult);
             } else {
-                //createdRolesXml.add("Failed to add role " + role.getRoleName() + ", reason: " + response.toString());
+               
                 log.trace("Failed to add role {}, {}", role.toString(), userAddRoleResult);
             }
         }
-        for (String createdRoleXml : createdRolesXml) {
-            UserApplicationRoleEntry createdUserRole = UserApplicationRoleEntry.fromXml(createdRoleXml);
+        for (String createdRoleString : createdRolesList) {
+            UserApplicationRoleEntry createdUserRole = UserRoleMapper.fromJson(createdRoleString);
             createdRoles.add(createdUserRole);
         }
         return createdRoles;
