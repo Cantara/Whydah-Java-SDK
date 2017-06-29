@@ -3,8 +3,6 @@ package net.whydah.sso.util;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
-import net.whydah.sso.commands.adminapi.user.CommandAddUser;
-import net.whydah.sso.commands.adminapi.user.role.CommandAddUserRole;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandRenewApplicationSession;
 import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
@@ -12,17 +10,12 @@ import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.commands.userauth.CommandValidateUsertokenId;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.helpers.UserXpathHelper;
-import net.whydah.sso.user.mappers.UserIdentityMapper;
-import net.whydah.sso.user.mappers.UserRoleMapper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.user.types.UserIdentity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 
@@ -111,61 +104,6 @@ public class WhydahUtil {
 
     }
 
-    /**
-     * @param uasUri             URI to the User Admin Service
-     * @param applicationTokenId TokenId fetched from the XML in logOnApplication
-     * @param adminUserTokenId   TokenId fetched from the XML returned in logOnApplicationAndUser
-     * @param userIdentity       The user identity you want to create.
-     * @return UserIdentityXml
-     */
-    public static String addUser(String uasUri, String applicationTokenId, String adminUserTokenId, UserIdentity userIdentity) {
-        String userId = null;
-
-        String userIdentityJson = UserIdentityMapper.toJsonWithoutUID(userIdentity);
-        // URI userAdminServiceUri, String myAppTokenId, String adminUserTokenId, String roleJson
-        String userAddRoleResult = new CommandAddUser(URI.create(uasUri), applicationTokenId, adminUserTokenId, userIdentityJson).execute();
-
-        if (userAddRoleResult != null && userAddRoleResult.length() > 10) {
-            log.debug("CommandAddUser - addUser - Log on OK with response {}", userAddRoleResult);
-            return userAddRoleResult;
-        }
-        throw new IllegalArgumentException("Not found");
-    }
-
-
-    /**
-     * @param uasUri             URI to the User Admin Service
-     * @param applicationTokenId TokenId fetched from the XML in logOnApplication
-     * @param adminUserTokenId   TokenId fetched from the XML returned in logOnApplicationAndUser
-     * @param roles              List of roles to be created.
-     * @return List of the roles that has been creatd. Empty list if no roles were created.
-     */
-    public static List<UserApplicationRoleEntry> addRolesToUser(String uasUri, String applicationTokenId, String adminUserTokenId, List<UserApplicationRoleEntry> roles) {
-
-        List<String> createdRolesList = new ArrayList<>();
-        List<UserApplicationRoleEntry> createdRoles = new ArrayList<>();
-
-        String userName = "";
-        for (UserApplicationRoleEntry role : roles) {
-            String roleXml = role.toXML();
-            log.trace("Try to add role {}", roleXml);
-            userName = role.getUserName();
-            String userAddRoleResult = new CommandAddUserRole(URI.create(uasUri), applicationTokenId, adminUserTokenId, role.getUserId(), UserRoleMapper.toJson(role)).execute();
-
-            if (userAddRoleResult != null && userAddRoleResult.length() > 5) {
-                log.debug("CommandAddRole - addRoles - Created role ok {}", userAddRoleResult);
-                createdRolesList.add(userAddRoleResult);
-            } else {
-               
-                log.trace("Failed to add role {}, {}", role.toString(), userAddRoleResult);
-            }
-        }
-        for (String createdRoleString : createdRolesList) {
-            UserApplicationRoleEntry createdUserRole = UserRoleMapper.fromJson(createdRoleString);
-            createdRoles.add(createdUserRole);
-        }
-        return createdRoles;
-    }
 
 
     public static String getUserTokenByUserTokenId(String stsUri, String myAppTokenId, String myAppTokenXml, String userTokenId) {

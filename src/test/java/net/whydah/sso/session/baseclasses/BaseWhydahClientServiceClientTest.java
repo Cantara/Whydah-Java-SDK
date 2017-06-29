@@ -2,9 +2,6 @@ package net.whydah.sso.session.baseclasses;
 
 import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import org.junit.BeforeClass;
-import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
 
 public class BaseWhydahClientServiceClientTest {
 
@@ -20,11 +17,4 @@ public class BaseWhydahClientServiceClientTest {
         }
     }
 
-    @Test
-    public void testUpdateRoleAndRefreshUserToken(){
-        if (config.isSystemTestEnabled()) {
-
-            assertTrue(client.updateOrCreateUserApplicationRoleEntry("", "ACSResource", "WhyDah", "INNData", "welcome", config.logOnSystemTestApplicationAndSystemTestUser_getTokenXML()));
-        }
-    }
 }
