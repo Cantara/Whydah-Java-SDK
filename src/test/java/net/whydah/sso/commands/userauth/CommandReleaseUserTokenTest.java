@@ -1,7 +1,7 @@
 package net.whydah.sso.commands.userauth;
 
-import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import net.whydah.sso.user.types.UserIdentity;
+import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.BeforeClass;
 
 import java.util.Random;

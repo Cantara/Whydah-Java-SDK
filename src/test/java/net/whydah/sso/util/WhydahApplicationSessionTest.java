@@ -1,10 +1,7 @@
 package net.whydah.sso.util;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import net.whydah.sso.session.WhydahApplicationSession;
-import net.whydah.sso.user.helpers.UserTokenXpathHelper;
-
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -1,8 +1,8 @@
 package net.whydah.sso.commands.userauth;
 
 import net.whydah.sso.application.mappers.ApplicationTokenMapper;
-import net.whydah.sso.commands.systemtestbase.SystemTestBaseConfig;
 import net.whydah.sso.user.types.UserToken;
+import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
