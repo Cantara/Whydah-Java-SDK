@@ -15,7 +15,10 @@ import net.whydah.sso.user.types.UserCredential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.management.ManagementFactory;
 import java.net.URI;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 
@@ -222,4 +225,8 @@ public class WhydahUtil {
 
     }
 
+    public static String getRunningSince() {
+        long uptimeInMillis = ManagementFactory.getRuntimeMXBean().getUptime();
+        return Instant.now().minus(uptimeInMillis, ChronoUnit.MILLIS).toString();
+    }
 }
