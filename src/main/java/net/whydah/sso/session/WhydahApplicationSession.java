@@ -165,6 +165,10 @@ public class WhydahApplicationSession {
         return sts;
     }
 
+    public String getUAS() {
+        return uas;
+    }
+
     public DEFCON getDefcon() {
         return defcon;
     }
