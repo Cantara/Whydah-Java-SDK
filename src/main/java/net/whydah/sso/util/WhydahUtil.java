@@ -123,6 +123,9 @@ public class WhydahUtil {
 
         String statusString = "Whydah session:\n" +
                 " DEFCON: " + was.getDefcon() + "\"\n" +
+                " - sts: " + was.getSTS() + "\"\n" +
+                " - uas: " + was.getUAS() + "\"\n" +
+                " - running since: " + getRunningSince() + "\"\n" +
                 " - hasApplicationToken: " + Boolean.toString(was.getActiveApplicationTokenId() != null) + "\n" +
                 " - hasValidApplicationToken: " + Boolean.toString(was.checkActiveSession()) + "\n" +
                 " - hasApplicationsMetadata:" + Boolean.toString(was.getApplicationList().size() > 2) + "\n";
@@ -145,6 +148,9 @@ public class WhydahUtil {
         return "\n" +
                 "  \"WhydahApplicationSession\": {\n" +
                 "     \"DEFCON\": \"" + was.getDefcon() + "\",\n" +
+                "     \"sts\": \"" + was.getSTS() + "\",\n" +
+                "     \"uas\": \"" + was.getUAS() + "\",\n" +
+                "     \"running since\": \"" + getRunningSince() + "\",\n" +
                 "     \"hasApplicationToken\": \"" + Boolean.toString(hasApplicationToken) + "\",\n" +
                 "     \"hasValidApplicationToken\": \"" + Boolean.toString(hasValidApplicationToken) + "\",\n" +
                 "     \"hasApplicationsMetadata\": \"" + Boolean.toString(hasApplicationsMetadata) + "\",\n" +
@@ -163,6 +169,10 @@ public class WhydahUtil {
 
 
         String statusString = "Whydah session:\n" +
+                " DEFCON: " + was.getDefcon() + "\"\n" +
+                " - sts: " + was.getSTS() + "\"\n" +
+                " - uas: " + was.getUAS() + "\"\n" +
+                " - running since: " + getRunningSince() + "\"\n" +
                 " - hasApplicationToken: " + Boolean.toString(was.getActiveApplicationTokenId() != null) + "\n" +
                 " - hasValidApplicationToken: " + Boolean.toString(was.checkActiveSession()) + "\n" +
                 " - hasValidAdminUserToken: " + validUser + "\n" +
@@ -181,6 +191,10 @@ public class WhydahUtil {
 
 
         String statusString = "Whydah session:\n" +
+                " DEFCON: " + was.getDefcon() + "\"\n" +
+                " - sts: " + was.getSTS() + "\"\n" +
+                " - uas: " + was.getUAS() + "\"\n" +
+                " - running since: " + getRunningSince() + "\"\n" +
                 " - hasApplicationToken: " + Boolean.toString(was.getActiveApplicationTokenId() != null) + "\n" +
                 " - hasValidApplicationToken: " + Boolean.toString(was.checkActiveSession()) + "\n" +
                 " - hasValidAdminUserToken: " + validUser + "\n" +
