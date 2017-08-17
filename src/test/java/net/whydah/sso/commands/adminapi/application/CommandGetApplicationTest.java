@@ -45,7 +45,7 @@ public class CommandGetApplicationTest {
             String applicationJson = new CommandGetApplicationById(config.userAdminServiceUri, myApplicationTokenID, userTokenId,applicationId ).execute();
             log.debug("applicationJson=" + applicationJson);
             assertTrue(applicationJson.length() > 100);
-            JSONAssert.assertEquals("{\"id\":\"101\",\"name\":\"ACSResource\"}", applicationJson,false);
+            JSONAssert.assertEquals("{\"id\":\"" + SystemTestBaseConfig.TEMPORARY_APPLICATION_ID + "\",\"name\":\"" + SystemTestBaseConfig.TEMPORARY_APPLICATION_NAME + "\"}", applicationJson, false);
 
         }
     }
