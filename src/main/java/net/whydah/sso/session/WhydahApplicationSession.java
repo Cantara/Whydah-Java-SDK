@@ -7,6 +7,7 @@ import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.application.types.ApplicationToken;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
+import net.whydah.sso.commands.threat.CommandSendThreatSignal;
 import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.util.WhydahUtil;
@@ -323,6 +324,16 @@ public class WhydahApplicationSession {
         return false;
     }
 
+    /**
+     *
+     */
+    public void reportThreatSignal(String threatMessage) {
+        try {
+            new CommandSendThreatSignal(URI.create(getSTS()), getActiveApplicationTokenId(), threatMessage + " - Instant: " + WhydahUtil.getRunningSince()).queue();
+        } catch (Exception e) {
+
+        }
+    }
 
     /**
      * Application cache section - keep a cache of configured applications
