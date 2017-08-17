@@ -39,9 +39,9 @@ public class SystemTestBaseConfig {
 
     //
     //
-    public String TEMPORARY_APPLICATION_ID = "101";//"11";
+    public String TEMPORARY_APPLICATION_ID = "9999";//"11";
     public String TEMPORARY_APPLICATION_NAME = "Whydah-SystemTests";//"Funny APp";//"11";
-    public String TEMPORARY_APPLICATION_SECRET = "55fhRM6nbKZ2wfC6RMmMuzXpk";//"LLNmHsQDCerVWx5d6aCjug9fyPE";
+    public String TEMPORARY_APPLICATION_SECRET = "9ju592A4t8dzz8mz788QQJ7Px";//"LLNmHsQDCerVWx5d6aCjug9fyPE";
     public String userName = "systest";
     public String password = "systest42";
     
