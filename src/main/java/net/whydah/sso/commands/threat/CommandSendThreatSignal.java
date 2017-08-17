@@ -21,6 +21,7 @@ public class CommandSendThreatSignal extends BaseHttpPostHystrixCommand<String> 
 
     public CommandSendThreatSignal(URI tokenServiceUri, String myAppTokenId, String threatMessage) {
     	super(tokenServiceUri, "", myAppTokenId,"WhydahThreat",1000);
+        this.myAppTokenId = myAppTokenId;
         
         
         this.threatMessage = threatMessage;
@@ -29,23 +30,6 @@ public class CommandSendThreatSignal extends BaseHttpPostHystrixCommand<String> 
         }
     }
 
-//    @Override
-//    protected String run() {
-//        log.trace("CommandSendThreatSignal - whydahServiceUri={} myAppTokenId={},", tokenServiceUri.toString(), myAppTokenId);
-//
-//        Client tokenServiceClient = ClientBuilder.newClient();
-//        WebTarget userTokenResource = tokenServiceClient.target(tokenServiceUri).path("threat").path(myAppTokenId).path("signal");
-//        log.trace("CommandSendThreatSignal  -  apptoken: {}", myAppTokenId);
-//        Form formData = new Form();
-//        formData.param("signal", threatMessage);
-//        Response response = userTokenResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
-//        if (!(response.getStatus() == OK.getStatusCode())) {
-//            log.debug("CommandSendThreatSignal - Response Code from STS: {}", response.getStatus());
-//        }
-//        return "";
-//
-//
-//    }
     @Override
     protected String dealWithResponse(String response) {
     	return "";
@@ -62,14 +46,9 @@ public class CommandSendThreatSignal extends BaseHttpPostHystrixCommand<String> 
 		data.put("signal", threatMessage);
 		return data;
 	}
-    
-//    @Override
-//    protected String getFallback() {
-//        log.warn("CommandSendThreatSignal - fallback - whydahServiceUri={} -  myAppTokenId: {}", tokenServiceUri.toString(), myAppTokenId);
-//        return null;
-//    }
 
-	@Override
+
+    @Override
 	protected String getTargetPath() {
 		return "threat/" + myAppTokenId + "/signal";
 	}
