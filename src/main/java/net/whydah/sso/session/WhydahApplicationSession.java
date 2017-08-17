@@ -12,10 +12,12 @@ import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.util.WhydahUtil;
 import net.whydah.sso.whydah.DEFCON;
+import net.whydah.sso.whydah.ThreatSignal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -329,7 +331,18 @@ public class WhydahApplicationSession {
      */
     public void reportThreatSignal(String threatMessage) {
         try {
-            new CommandSendThreatSignal(URI.create(getSTS()), getActiveApplicationTokenId(), threatMessage + " - Instant: " + WhydahUtil.getRunningSince()).queue();
+            new CommandSendThreatSignal(URI.create(getSTS()), getActiveApplicationTokenId(), threatMessage + " - Instant: " + Instant.now()).queue();
+        } catch (Exception e) {
+
+        }
+    }
+
+    /**
+     *
+     */
+    public void reportThreatSignal(ThreatSignal threatSignal) {
+        try {
+            new CommandSendThreatSignal(URI.create(getSTS()), getActiveApplicationTokenId(), threatSignal).queue();
         } catch (Exception e) {
 
         }
