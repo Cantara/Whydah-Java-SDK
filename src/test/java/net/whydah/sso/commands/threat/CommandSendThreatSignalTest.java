@@ -30,12 +30,10 @@ public class CommandSendThreatSignalTest {
 
             String myAppTokenXml;
             myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
-
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             Assert.assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
 
             String threatResult = new CommandSendThreatSignal(config.tokenServiceUri, myApplicationTokenID, "Systest - test threat signal - Instant: " + WhydahUtil.getRunningSince()).execute();
-            //     public CommandGenerateAndSendSmsPin(URI tokenServiceUri, String appTokenId, String appTokenXml, String phoneNo) {
             assertTrue(threatResult.length() == 0);
         }
 
