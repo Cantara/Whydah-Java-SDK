@@ -249,6 +249,7 @@ public class WhydahUtil {
     public static String getMyIPAddresssesString() {
         String ipAdresses = "";
         try {
+            ipAdresses = InetAddress.getLocalHost().getHostAddress();
             Enumeration<NetworkInterface> n = NetworkInterface.getNetworkInterfaces();
             for (; n.hasMoreElements(); ) {
                 NetworkInterface e = n.nextElement();
@@ -260,7 +261,7 @@ public class WhydahUtil {
                 }
             }
         } catch (Exception e) {
-
+            ipAdresses = "Not resolved";
         }
         return ipAdresses;
     }
