@@ -16,9 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.management.ManagementFactory;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.URI;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Enumeration;
 import java.util.UUID;
 
 
@@ -106,7 +109,6 @@ public class WhydahUtil {
         return userTokenXML;
 
     }
-
 
 
     public static String getUserTokenByUserTokenId(String stsUri, String myAppTokenId, String myAppTokenXml, String userTokenId) {
@@ -242,5 +244,24 @@ public class WhydahUtil {
     public static String getRunningSince() {
         long uptimeInMillis = ManagementFactory.getRuntimeMXBean().getUptime();
         return Instant.now().minus(uptimeInMillis, ChronoUnit.MILLIS).toString();
+    }
+
+    public static String getMyIPAddresssesString() {
+        String ipAdresses = "";
+        try {
+            Enumeration<NetworkInterface> n = NetworkInterface.getNetworkInterfaces();
+            for (; n.hasMoreElements(); ) {
+                NetworkInterface e = n.nextElement();
+
+                Enumeration<InetAddress> a = e.getInetAddresses();
+                for (; a.hasMoreElements(); ) {
+                    InetAddress addr = a.nextElement();
+                    ipAdresses = ipAdresses + "  " + addr.getHostAddress();
+                }
+            }
+        } catch (Exception e) {
+
+        }
+        return ipAdresses;
     }
 }

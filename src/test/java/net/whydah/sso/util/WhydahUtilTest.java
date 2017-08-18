@@ -61,6 +61,13 @@ public class WhydahUtilTest {
     }
 
 
+    @Test
+    public void testGetIpAddressesString() throws Exception {
+        String ipadresses = WhydahUtil.getMyIPAddresssesString();
+        assertNotNull(ipadresses);
+
+
+    }
 
 
 
