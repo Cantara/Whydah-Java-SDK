@@ -20,14 +20,6 @@ public class CommandSearchForApplications extends BaseHttpGetHystrixCommand<Stri
         }
     }
 
-    @Deprecated
-    public CommandSearchForApplications(URI userAdminServiceUri, String myAppTokenId, String applicationQuery) {
-        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup", 3000);
-        this.applicationQuery = applicationQuery;
-        if (userAdminServiceUri == null || myAppTokenId == null || applicationQuery == null) {
-            log.error(TAG + " initialized with null-values - will fail");
-        }
-    }
 
 //     @Path("{userTokenId}/find/applications/{applicationName}")
 
