@@ -330,11 +330,7 @@ public class WhydahApplicationSession {
      *
      */
     public void reportThreatSignal(String threatMessage) {
-        try {
-            new CommandSendThreatSignal(URI.create(getSTS()), getActiveApplicationTokenId(), threatMessage + " - Instant: " + Instant.now()).queue();
-        } catch (Exception e) {
-
-        }
+        reportThreatSignal(createThreat(threatMessage));
     }
 
     /**
@@ -348,6 +344,14 @@ public class WhydahApplicationSession {
         }
     }
 
+    public static ThreatSignal createThreat(String text) {
+        ThreatSignal threatSignal = new ThreatSignal();
+        threatSignal.setSignalEmitter(getInstance().getActiveApplicationName() + " [" + WhydahUtil.getMyIPAddresssesString() + "]");
+        threatSignal.setAdditionalProperty("DEFCON", getInstance().getDefcon());
+        threatSignal.setInstant(Instant.now().toString());
+        threatSignal.setText(text);
+        return threatSignal;
+    }
     /**
      * Application cache section - keep a cache of configured applications
      */
