@@ -6,7 +6,6 @@ import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 import java.net.HttpURLConnection;
 import java.net.URI;
 
-
 public class CommandListApplications extends BaseHttpGetHystrixCommand<String> {
 
     int retryCnt = 0;

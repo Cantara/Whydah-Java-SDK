@@ -56,7 +56,7 @@ public class ApplicationModelUtil {
 
     public static void updateApplicationList(URI userAdminServiceUri, String myAppTokenId, String userTokenId) {
         if (userAdminServiceUri != null){
-            String applicationsJson = new net.whydah.sso.commands.adminapi.application.CommandSearchForApplications(userAdminServiceUri, myAppTokenId, userTokenId, "*").execute();
+            String applicationsJson = new net.whydah.sso.commands.adminapi.application.CommandListApplications(userAdminServiceUri, myAppTokenId).execute();
             log.debug("AppLications returned:" + applicationsJson);
             if (applicationsJson != null) {
                 if (applicationsJson.length() > 20) {
