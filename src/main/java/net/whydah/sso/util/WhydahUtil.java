@@ -10,8 +10,10 @@ import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.commands.userauth.CommandValidateUsertokenId;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.helpers.UserXpathHelper;
+import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.user.types.UserToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -264,5 +267,29 @@ public class WhydahUtil {
             ipAdresses = "Not resolved";
         }
         return ipAdresses;
+    }
+
+    public boolean hasUASAccessAdminRole(String userTokenXml) {
+        UserToken userToken = UserTokenMapper.fromUserTokenXml(userTokenXml);
+
+
+        List<UserApplicationRoleEntry> roles = userToken.getRoleList();
+        UserApplicationRoleEntry adminRole = WhydahUtil.getWhydahUserAdminRole();
+        for (UserApplicationRoleEntry role : roles) {
+            log.debug("Checking for adminrole user UID:{} roleName: {} ", userToken.getUid(), role.getRoleName());
+            if (role.getApplicationId().equalsIgnoreCase(adminRole.getApplicationId())) {
+                if (role.getApplicationName().equalsIgnoreCase(adminRole.getApplicationName())) {
+                    if (role.getOrgName().equalsIgnoreCase(adminRole.getOrgName())) {
+                        if (role.getRoleName().equalsIgnoreCase(adminRole.getRoleName())) {
+                            if (role.getRoleValue().equalsIgnoreCase(adminRole.getRoleValue())) {
+                                log.info("Whydah Admin user is true for name={}, uid={}", userToken.getUserName(), userToken.getUid());
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
