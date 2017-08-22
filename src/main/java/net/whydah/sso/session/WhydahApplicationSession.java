@@ -30,7 +30,7 @@ public class WhydahApplicationSession {
     private static WhydahApplicationSession instance = null;
     private String sts;
     private String uas;
-    private ApplicationCredential myAppCredential;
+    private static ApplicationCredential myAppCredential;
     private ApplicationToken applicationToken;
     private DEFCON defcon = DEFCON.DEFCON5;
     private boolean disableUpdateAppLink=false;
