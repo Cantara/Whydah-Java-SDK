@@ -120,6 +120,10 @@ public class WhydahApplicationSession {
         return instance;
     }
 
+    public static ApplicationCredential getMyApplicationCredential() {
+        return myAppCredential;
+    }
+
     public static boolean expiresBeforeNextSchedule(Long timestamp) {
 
         long i = System.currentTimeMillis();
