@@ -19,6 +19,14 @@ public class CommandValidateApplicationTokenId extends BaseHttpGetHystrixCommand
 		}
 	}
 
+    public CommandValidateApplicationTokenId(URI tokenServiceUri, String applicationTokenId) {
+        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup");
+
+        if (tokenServiceUri == null || applicationTokenId == null) {
+            log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}", tokenServiceUri, applicationTokenId);
+        }
+    }
+
 
 	@Override
 	protected Boolean dealWithFailedResponse(String responseBody, int statusCode) {
