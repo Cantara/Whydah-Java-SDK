@@ -31,10 +31,12 @@ public class WhydahApplicationSession {
     private String sts;
     private String uas;
     private static ApplicationCredential myAppCredential;
+    private static int logonAttemptNo = 0;
     private ApplicationToken applicationToken;
     private DEFCON defcon = DEFCON.DEFCON5;
     private boolean disableUpdateAppLink=false;
 
+    private static final int[] FIBONACCI = new int[]{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144};
 
     protected WhydahApplicationSession() {
         this("https://whydahdev.cantara.no/tokenservice/", "99", "TestApp", "33879936R6Jr47D4Hj5R6p9qT");
@@ -283,14 +285,25 @@ public class WhydahApplicationSession {
 
     private boolean initializeWhydahApplicationSession() {
         log.info("Initializing new application session with applicationID: {}", myAppCredential.getApplicationID());
-        String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential, 100000);
+
+        try {
+            Thread.sleep(FIBONACCI[logonAttemptNo] * 1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
         if (!checkApplicationToken(applicationTokenXML)) {
-            log.warn("InitWAS: Error, unable to initialize new application session, applicationTokenXml:" + applicationTokenXML);
+            logonAttemptNo++;
+            if (logonAttemptNo > 12) {
+                logonAttemptNo = 1;
+            }
+            log.warn("InitWAS {}: Error, unable to initialize new application session, applicationTokenXml:\n{}", logonAttemptNo, applicationTokenXML);
             removeApplicationSessionParameters(myAppCredential.getApplicationID());
             return false;
         }
         setApplicationSessionParameters(applicationTokenXML);
-        log.info("InitWAS:: Initialized new application session, applicationTokenId:{}, applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+        log.info("InitWAS:{}: Initialized new application session, applicationTokenId:{}, applicationID: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+        logonAttemptNo = 0;
         return true;
     }
 
