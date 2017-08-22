@@ -53,6 +53,26 @@ public class WhydahUtil {
 
     }
 
+    /**
+     * Logon your application to Whydah.
+     *
+     * @param stsURI            URI to the Security Token Service, where you do logon
+     * @param applicationID     The registered ID of your application.
+     * @param applicationSecret Current, updatet secret of your application.
+     * @return applicationTokenXML Representing the application. In this you will find the applicationtokenId used as application session     * @param applicationSecret Current, updatet secret of your application's.
+     * for further operations.
+     */
+    public static String logOnApplication(String stsURI, String applicationID, String applicationSecret, int timeout) {
+        URI tokenServiceUri = URI.create(stsURI);
+        ApplicationCredential appCredential = new ApplicationCredential(applicationID, "", applicationSecret);
+        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential, timeout).execute();
+        if (myAppTokenXml == null || myAppTokenXml.length() < 10) {
+            log.error("logOnApplication - unable to create application session on " + stsURI + " for appCredentials: " + ApplicationCredentialMapper.toXML(appCredential));
+
+        }
+        return myAppTokenXml;
+
+    }
     public static String logOnApplication(String stsURI, ApplicationCredential myAppcredential) {
         URI tokenServiceUri = URI.create(stsURI);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, myAppcredential).execute();
@@ -64,6 +84,16 @@ public class WhydahUtil {
 
     }
 
+    public static String logOnApplication(String stsURI, ApplicationCredential myAppcredential, int timeout) {
+        URI tokenServiceUri = URI.create(stsURI);
+        String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, myAppcredential, timeout).execute();
+        if (myAppTokenXml == null || myAppTokenXml.length() < 10) {
+            log.error("logOnApplication - unable to create application session on " + stsURI + " for appCredentials: " + ApplicationCredentialMapper.toXML(myAppcredential));
+
+        }
+        return myAppTokenXml;
+
+    }
 
     public static String extendApplicationSession(String stsURI, String applicationTokenId) {
         URI tokenServiceUri = URI.create(stsURI);

@@ -4,7 +4,6 @@ import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +17,16 @@ public class CommandLogonApplication extends BaseHttpPostHystrixCommand<String> 
 
 	public CommandLogonApplication(URI tokenServiceUri, ApplicationCredential appCredential) {
         super(tokenServiceUri, "", "", "STSApplicationAuthGroup", 6000);
+        this.appCredential = appCredential;
+        this.tokenServiceUri = tokenServiceUri;
+        if (tokenServiceUri == null || appCredential == null) {
+            log.error(TAG + " initialized with null-values - will fail. tokenServiceUri:{}, appCredential:{} ", tokenServiceUri, appCredential);
+        }
+
+    }
+
+    public CommandLogonApplication(URI tokenServiceUri, ApplicationCredential appCredential, int timeout) {
+        super(tokenServiceUri, "", "", "STSApplicationAuthGroup", timeout);
         this.appCredential = appCredential;
         this.tokenServiceUri = tokenServiceUri;
         if (tokenServiceUri == null || appCredential == null) {
