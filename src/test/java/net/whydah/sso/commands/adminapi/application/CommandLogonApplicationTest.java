@@ -18,10 +18,11 @@ public class CommandLogonApplicationTest {
     }
 
     @Test
+    @Ignore
     public void testCommandLogonApplication() throws Exception {
         if (config.isSystemTestEnabled()) {
 
-            ApplicationCredential applicationCredential = new ApplicationCredential("2212", "UserAdminService", "9ju592A4t8dzz8mz7a5QQJ7Px");
+            ApplicationCredential applicationCredential = new ApplicationCredential("2212", "UserAdminService", "i9ju592A4t8dzz8mz7a5QQJ7Px");
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, applicationCredential).execute();
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
 
