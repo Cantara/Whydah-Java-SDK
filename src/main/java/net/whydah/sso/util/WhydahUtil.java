@@ -25,6 +25,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
 
 
@@ -237,6 +238,17 @@ public class WhydahUtil {
 
         return statusString;
 
+    }
+
+    /**
+     * A standard Util to be used to pring the resolved property configuration after startup
+     *
+     * @param properties
+     */
+    public static void printConfiguration(Properties properties) {
+        for (Object key : properties.keySet()) {
+            log.info("Using Property: {}, value: {}", key, properties.get(key));
+        }
     }
 
     /**
