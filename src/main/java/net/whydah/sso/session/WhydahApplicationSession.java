@@ -365,6 +365,7 @@ public class WhydahApplicationSession {
         ThreatSignal threatSignal = new ThreatSignal();
         threatSignal.setSignalEmitter(getInstance().getActiveApplicationName() + " [" + WhydahUtil.getMyIPAddresssesString() + "]");
         threatSignal.setAdditionalProperty("DEFCON", getInstance().getDefcon());
+        threatSignal.setAdditionalProperty("EMITTER IP", WhydahUtil.getMyIPAddresssesString());
         threatSignal.setInstant(Instant.now().toString());
         threatSignal.setText(text);
         return threatSignal;
