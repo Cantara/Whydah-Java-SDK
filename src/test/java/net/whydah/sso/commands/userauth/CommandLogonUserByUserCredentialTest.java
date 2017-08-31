@@ -62,7 +62,7 @@ public class CommandLogonUserByUserCredentialTest {
     public void tesLogOnApplicationAndUser() throws Exception {
 
         if (config.isSystemTestEnabled()) {
-            String userToken = WhydahUtil.logOnApplicationAndUser(config.tokenServiceUri.toString(), config.appCredential.getApplicationID(), "", config.appCredential.getApplicationSecret(), config.userCredential.getUserName(), config.userCredential.getPassword());
+            String userToken = WhydahUtil.logOnApplicationAndUser(config.tokenServiceUri.toString(), config.appCredential.getApplicationID(), config.appCredential.getApplicationName(), config.appCredential.getApplicationSecret(), config.userCredential.getUserName(), config.userCredential.getPassword());
             assertNotNull(userToken);
             assertTrue(userToken.contains("usertoken"));
         }
