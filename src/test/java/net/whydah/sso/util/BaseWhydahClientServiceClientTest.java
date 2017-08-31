@@ -1,6 +1,6 @@
-package net.whydah.sso.session.baseclasses;
+package net.whydah.sso.util;
 
-import net.whydah.sso.util.SystemTestBaseConfig;
+import net.whydah.sso.session.baseclasses.BaseWhydahServiceClient;
 import org.junit.BeforeClass;
 
 public class BaseWhydahClientServiceClientTest {
