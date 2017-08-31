@@ -6,13 +6,12 @@ Whydah-Java-SDK
 
 A client library which aimed to make Whydah integration more easy and more resilient
 
- * XML and JSON parsing of Whydah datastructures sent over the wire.
- * Util library for all the frequent used API calls
+ * XML and JSON parsing of Whydah datastructures sent over the wire.  (Whydah Typelib)
+ * Util library for all the frequent used standard API calls
  * SessionHandler for ApplicationSessions and User Sessions
- * Client logic for using Whydah Web SSO - SSOLoginWebapp (SSOLWA).
-   * The Java SDK is in a really early stage, and is currently used to experiment with a new remoting approach to increase system resilliance
-* Client logic for using administrative API in UserAdminService (UAS) for applications with appropriate rights
-    * Used as a TEST driver for the new UAS admin API's
+ * Client logic for using Whydah Web SSO - SSOLoginWebapp (SSOLWA) and STS (SecurityTokenService).
+
+The 3rd party Admin SDK is found at [https://github.com/Cantara/Whydah-Admin-SDK](https://github.com/Cantara/Whydah-Admin-SDK)
 
 For code and examples for other languages, see <https://github.com/cantara/Whydah-TestWebApp>
 
@@ -22,16 +21,18 @@ For code and examples for other languages, see <https://github.com/cantara/Whyda
 ```java
         // Log on application and user
         String userToken = WhydahUtil.logOnApplicationAndUser("https://whydahdev.cantara.no/tokenservice/",\\
-                           "applicationID","applicationSecret", "username", "password");
-        // Log get the user sessionId (userTokenId)
+                           new ApplicationCredential("applicationID","applicationname","applicationSecret"),\\
+                           new UserCredential( "username", "password");
+        // Get the user sessionId (userTokenId)
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
 ```
 
-## Example code, with automatic session renewwal
+## Example code, with automatic user and application session renewwal
 ```java
-        WhydahApplicationSession aSession = new WhydahApplicationSssion(uTokenSUri, appId, appSecret);
-        WhydahUserSession uSession = new WhydahUserSession(aSession,userCredential);
-        if (uSession.hasRole("WhydahAdmin"){
+        WhydahApplicationSession wasSession = new WhydahApplicationSession(uTokenSUri, \\
+                           new ApplicationCredential(appId, appName, appSecret));
+        WhydahUserSession wusSession = new WhydahUserSession(wasSession,userCredential);
+        if (wusSession.hasRole("WhydahAdmin"){
           // do admin privilege operation
         }
 ```
