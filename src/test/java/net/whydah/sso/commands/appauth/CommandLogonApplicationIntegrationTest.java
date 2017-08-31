@@ -1,8 +1,6 @@
 package net.whydah.sso.commands.appauth;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.application.types.ApplicationCredential;
-import net.whydah.sso.util.SSLTool;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,9 +24,7 @@ public class CommandLogonApplicationIntegrationTest {
     @Test
     public void testLogonApplication() throws Exception {
         if (config.isSystemTestEnabled()) {
-            SSLTool.disableCertificateValidation();
-            ApplicationCredential appCredential = new ApplicationCredential(config.TEMPORARY_APPLICATION_ID, config.TEMPORARY_APPLICATION_NAME, config.TEMPORARY_APPLICATION_SECRET);
-            myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, appCredential).execute();
+            myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
 

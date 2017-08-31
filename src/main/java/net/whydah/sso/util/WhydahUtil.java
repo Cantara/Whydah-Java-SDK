@@ -42,9 +42,9 @@ public class WhydahUtil {
      * @return applicationTokenXML Representing the application. In this you will find the applicationtokenId used as application session     * @param applicationSecret Current, updatet secret of your application's.
      * for further operations.
      */
-    public static String logOnApplication(String stsURI, String applicationID, String applicationSecret) {
+    public static String logOnApplication(String stsURI, String applicationID, String applicationName, String applicationSecret) {
         URI tokenServiceUri = URI.create(stsURI);
-        ApplicationCredential appCredential = new ApplicationCredential(applicationID, "", applicationSecret);
+        ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationName, applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential).execute();
         if (myAppTokenXml == null || myAppTokenXml.length() < 10) {
             log.error("logOnApplication - unable to create application session on " + stsURI + " for appCredentials: " + ApplicationCredentialMapper.toXML(appCredential));
@@ -63,9 +63,9 @@ public class WhydahUtil {
      * @return applicationTokenXML Representing the application. In this you will find the applicationtokenId used as application session     * @param applicationSecret Current, updatet secret of your application's.
      * for further operations.
      */
-    public static String logOnApplication(String stsURI, String applicationID, String applicationSecret, int timeout) {
+    public static String logOnApplication(String stsURI, String applicationID, String applicationName, String applicationSecret, int timeout) {
         URI tokenServiceUri = URI.create(stsURI);
-        ApplicationCredential appCredential = new ApplicationCredential(applicationID, "", applicationSecret);
+        ApplicationCredential appCredential = new ApplicationCredential(applicationID, applicationName, applicationSecret);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, appCredential, timeout).execute();
         if (myAppTokenXml == null || myAppTokenXml.length() < 10) {
             log.error("logOnApplication - unable to create application session on " + stsURI + " for appCredentials: " + ApplicationCredentialMapper.toXML(appCredential));

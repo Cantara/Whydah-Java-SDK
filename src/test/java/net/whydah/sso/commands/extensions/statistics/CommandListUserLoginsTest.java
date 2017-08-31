@@ -1,11 +1,9 @@
 package net.whydah.sso.commands.extensions.statistics;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.helpers.UserXpathHelper;
-import net.whydah.sso.util.SSLTool;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -33,9 +31,7 @@ public class CommandListUserLoginsTest {
     public void testUserLoginsCustomerCommand() throws Exception {
         if (config.isStatisticsExtensionSystemtestEnabled()) {
             String myApplicationTokenID = "";
-            SSLTool.disableCertificateValidation();
-            ApplicationCredential appCredential = new ApplicationCredential(config.TEMPORARY_APPLICATION_ID, config.TEMPORARY_APPLICATION_NAME, config.TEMPORARY_APPLICATION_SECRET);
-            String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, appCredential).execute();
+            String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue(myApplicationTokenID.length() > 10);
 
