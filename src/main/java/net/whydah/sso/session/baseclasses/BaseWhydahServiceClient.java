@@ -37,19 +37,9 @@ public class BaseWhydahServiceClient {
                                    String activeApplicationId,
                                    String applicationname,
                                    String applicationsecret) throws URISyntaxException {
-
-        if (was == null) {
-            was = WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, activeApplicationId, applicationname, applicationsecret);
-        }
-        
-        this.uri_securitytoken_service = URI.create(securitytokenserviceurl);
-        if (useradminserviceurl != null && useradminserviceurl.length() > 8) {  // UAS is optinal
-            this.uri_useradmin_service = URI.create(useradminserviceurl);
-        }
-
-        this.TAG = this.getClass().getName();
-        this.log = LoggerFactory.getLogger(TAG);
+        this(securitytokenserviceurl, useradminserviceurl, new ApplicationCredential(activeApplicationId, applicationname, applicationsecret));
     }
+
 
     public BaseWhydahServiceClient(String securitytokenserviceurl,
                                    String useradminserviceurl,
@@ -98,7 +88,7 @@ public class BaseWhydahServiceClient {
 
             }
             if (was == null) {
-                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, applicationid, applicationname, applicationsecret);
+                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, new ApplicationCredential(applicationid, applicationname, applicationsecret));
             }
 
         } catch (ConstrettoExpressionException constrettoExpressionException) {
@@ -143,7 +133,7 @@ public class BaseWhydahServiceClient {
 
             }
             if (was == null) {
-                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, applicationid, applicationname, applicationsecret);
+                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, new ApplicationCredential(applicationid, applicationname, applicationsecret));
             }
         } catch (Exception ex) {
             throw ex;

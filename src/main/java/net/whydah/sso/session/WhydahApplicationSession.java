@@ -65,7 +65,7 @@ public class WhydahApplicationSession {
                         }
                     }
                 },
-                1, SESSION_CHECK_INTERVAL, TimeUnit.SECONDS);
+                5, SESSION_CHECK_INTERVAL, TimeUnit.SECONDS);
     }
 
     protected WhydahApplicationSession(String sts, ApplicationCredential appCred) {
