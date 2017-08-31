@@ -86,10 +86,6 @@ public class CommandSendThreatSignalTest {
 
         if (config.isSystemTestEnabled()) {
 
-            String myAppTokenXml;
-            myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
-            String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-            Assert.assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
             WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential.getApplicationID(), config.appCredential.getApplicationName(), config.appCredential.getApplicationSecret());
 
             applicationSession.reportThreatSignal("TestSignal from SYStest");
