@@ -2,6 +2,7 @@ package net.whydah.sso.session.baseclasses;
 
 
 import net.whydah.sso.application.types.Application;
+import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.extras.CommandSendSms;
 import net.whydah.sso.commands.userauth.*;
@@ -41,6 +42,23 @@ public class BaseWhydahServiceClient {
             was = WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, activeApplicationId, applicationname, applicationsecret);
         }
         
+        this.uri_securitytoken_service = URI.create(securitytokenserviceurl);
+        if (useradminserviceurl != null && useradminserviceurl.length() > 8) {  // UAS is optinal
+            this.uri_useradmin_service = URI.create(useradminserviceurl);
+        }
+
+        this.TAG = this.getClass().getName();
+        this.log = LoggerFactory.getLogger(TAG);
+    }
+
+    public BaseWhydahServiceClient(String securitytokenserviceurl,
+                                   String useradminserviceurl,
+                                   ApplicationCredential applicationCredential) throws URISyntaxException {
+
+        if (was == null) {
+            was = WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, applicationCredential);
+        }
+
         this.uri_securitytoken_service = URI.create(securitytokenserviceurl);
         if (useradminserviceurl != null && useradminserviceurl.length() > 8) {  // UAS is optinal
             this.uri_useradmin_service = URI.create(useradminserviceurl);

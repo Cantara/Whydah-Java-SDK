@@ -13,7 +13,7 @@ public class BaseWhydahClientServiceClientTest {
         config = new SystemTestBaseConfig();
         if (config.isSystemTestEnabled()) {
 
-            client = new BaseWhydahServiceClient(config.tokenServiceUri.toString(), config.userAdminServiceUri.toString(), config.TEMPORARY_APPLICATION_ID, config.TEMPORARY_APPLICATION_NAME, config.TEMPORARY_APPLICATION_SECRET);
+            client = new BaseWhydahServiceClient(config.tokenServiceUri.toString(), config.userAdminServiceUri.toString(), config.appCredential);
         }
     }
 

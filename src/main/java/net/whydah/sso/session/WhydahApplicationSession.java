@@ -47,6 +47,9 @@ public class WhydahApplicationSession {
         this(sts, appCred.getApplicationID(), appCred.getApplicationName(), appCred.getApplicationSecret());
     }
 
+    protected WhydahApplicationSession(String sts, String uas, ApplicationCredential appCred) {
+        this(sts, uas, appCred.getApplicationID(), appCred.getApplicationName(), appCred.getApplicationSecret());
+    }
     protected WhydahApplicationSession(String sts, String appId, String appName, String appSecret) {
         this(sts, null, appId, appName, appSecret);
     }
@@ -90,6 +93,19 @@ public class WhydahApplicationSession {
             synchronized (WhydahApplicationSession.class) {
                 if (instance == null) {
                     instance = new WhydahApplicationSession(sts, appCred.getApplicationID(), appCred.getApplicationName(), appCred.getApplicationSecret());
+                }
+            }
+        }
+        return instance;
+    }
+
+    public static WhydahApplicationSession getInstance(String sts, String uas, ApplicationCredential appCred) {
+        log.info("WhydahApplicationSession getInstance(String sts,String uas, ApplicationCredential appCred) called");
+        if (instance == null) {
+            // Thread Safe. Might be costly operation in some case
+            synchronized (WhydahApplicationSession.class) {
+                if (instance == null) {
+                    instance = new WhydahApplicationSession(sts, uas, appCred);
                 }
             }
         }
