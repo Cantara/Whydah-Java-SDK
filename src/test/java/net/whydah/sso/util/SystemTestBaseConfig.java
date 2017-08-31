@@ -44,7 +44,8 @@ public class SystemTestBaseConfig {
     private String TEMPORARY_APPLICATION_SECRET = "9ju592A4t8dzz8mz788QQJ7Px";//"LLNmHsQDCerVWx5d6aCjug9fyPE";
     public String userName = "systest";
     public String password = "systest42";
-    
+    public String userEmail = "whydahadmin@getwhydah.com";
+
     //acsemployee, acsemployee, acs987, Samuel "Black Sam", Bellamy, acsemp@whydah.no, 0, 001
     public String userName2 = "acsmanager";
     public String password2 = "acs987";
