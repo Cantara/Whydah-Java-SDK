@@ -36,7 +36,7 @@ public class CommandSendThreatSignalTest {
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
 
-            String threatResult = new CommandSendThreatSignal(config.tokenServiceUri, myApplicationTokenID, "Systest - test threat signal - Instant: " + WhydahUtil.getRunningSince()).execute();
+            String threatResult = new CommandSendThreatSignal(config.tokenServiceUri, myApplicationTokenID, "Systest - test threat signal 1 - Instant: " + WhydahUtil.getRunningSince()).execute();
             assertTrue(threatResult.length() == 0);
         }
 
@@ -52,7 +52,7 @@ public class CommandSendThreatSignalTest {
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
 
-            ThreatSignal threatSignal = new ThreatSignal("Test threatsignal");
+            ThreatSignal threatSignal = new ThreatSignal("Test threatsignal 2");
             threatSignal.setInstant(Instant.now().toString());
             threatSignal.setSignalEmitter("Java-SDK-SYSTEST");
             threatSignal.setSignalSeverity("LOW");
@@ -74,7 +74,7 @@ public class CommandSendThreatSignalTest {
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
 
-            ThreatSignal threatSignal = WhydahApplicationSession.createThreat("Threatsignal from Systests");
+            ThreatSignal threatSignal = WhydahApplicationSession.createThreat("Threatsignal from Systests 3");
 
             String threatResult = new CommandSendThreatSignal(config.tokenServiceUri, myApplicationTokenID, threatSignal).execute();
             assertTrue(threatResult.length() == 0);
@@ -89,7 +89,8 @@ public class CommandSendThreatSignalTest {
 
             WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential.getApplicationID(), config.appCredential.getApplicationName(), config.appCredential.getApplicationSecret());
 
-            applicationSession.reportThreatSignal("TestSignal from SYStest");
+            applicationSession.reportThreatSignal("TestSignal from SYStest 4");
+            Thread.sleep(1000);  // Give quere() a chance to send the signal before test end
             log.debug("Done");
         }
 
