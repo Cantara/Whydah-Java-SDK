@@ -310,7 +310,7 @@ public class WhydahApplicationSession {
     }
 
 
-    private boolean initializeWhydahApplicationSession() {
+    private synchronized boolean initializeWhydahApplicationSession() {
         log.info("Initializing new application session {} with applicationID: {}", logonAttemptNo, myAppCredential.getApplicationID());
 
         try {

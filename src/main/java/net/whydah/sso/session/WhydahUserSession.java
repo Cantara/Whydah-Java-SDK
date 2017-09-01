@@ -32,7 +32,7 @@ public class WhydahUserSession {
     public WhydahUserSession(WhydahApplicationSession was, UserCredential userCredential) {
         if (was == null || was.getActiveApplicationTokenId() == null || was.getActiveApplicationTokenId().length() < 4) {
             log.error("Error, unable to initialize new user session, application session invalid:" + was.getActiveApplicationTokenId());
-
+            return;
         }
 
         this.was = was;
