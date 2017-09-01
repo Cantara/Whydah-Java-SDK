@@ -266,7 +266,7 @@ public class WhydahApplicationSession {
             }
             for (int n = 0; n < 3 || !checkActiveSession(); n++) {
                 if (initializeWhydahApplicationSession()) {
-                    break;
+                    return;
                 }
                 log.info("Renew WAS: Unsuccessful attempt to logon application session, returned applicationtokenXML: {}: ", getActiveApplicationTokenXML());
                 try {
