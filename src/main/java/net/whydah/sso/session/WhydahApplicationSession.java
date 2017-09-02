@@ -439,6 +439,13 @@ public class WhydahApplicationSession {
         }
     }
 
+    public boolean hasApplicationMetaData() {
+        if (applications == null) {
+            return false;
+        }
+        return getApplicationList().size() > 2;
+    }
+
     public void updateApplinks(boolean forceUpdate) {
     	if(disableUpdateAppLink){
     		return;
