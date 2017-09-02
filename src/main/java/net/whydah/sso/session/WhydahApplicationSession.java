@@ -418,6 +418,16 @@ public class WhydahApplicationSession {
         }
         URI userAdminServiceUri= URI.create(uas);
 
+        if (applications == null || applications.size() < 2) {
+            String applicationsJson = new CommandListApplications(userAdminServiceUri, applicationToken.getApplicationTokenId()).execute();
+            log.debug("WAS: updateApplinks (initial): AppLications returned:" + applicationsJson);
+            if (applicationsJson != null) {
+                if (applicationsJson.length() > 20) {
+                    setAppLinks(ApplicationMapper.fromJsonList(applicationsJson));
+                }
+            }
+
+        }
         if ((ApplicationModelUtil.shouldUpdate(5) || getApplicationList() == null || getApplicationList().size() < 2) && applicationToken != null) {
             String applicationsJson = new CommandListApplications(userAdminServiceUri,  applicationToken.getApplicationTokenId()).execute();
             log.debug("WAS: updateApplinks: AppLications returned:" + applicationsJson);
