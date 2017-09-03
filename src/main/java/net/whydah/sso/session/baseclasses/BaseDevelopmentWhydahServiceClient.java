@@ -1,6 +1,7 @@
 package net.whydah.sso.session.baseclasses;
 
 import net.whydah.sso.application.types.Application;
+import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.extras.CommandSendSms;
 import net.whydah.sso.commands.userauth.*;
@@ -29,6 +30,9 @@ public class BaseDevelopmentWhydahServiceClient {
     protected URI uri_crm_service;
     protected URI uri_report_service;
     protected String TAG = "";
+    private static ApplicationCredential applicationCredential;
+    private static String securitytokenserviceurl;
+    private static String useradminserviceurl;
 
 
     public BaseDevelopmentWhydahServiceClient(String securitytokenserviceurl,
@@ -36,10 +40,19 @@ public class BaseDevelopmentWhydahServiceClient {
                                               String activeApplicationId,
                                               String applicationname,
                                               String applicationsecret) throws URISyntaxException {
+        this(securitytokenserviceurl, useradminserviceurl, new ApplicationCredential(activeApplicationId, applicationname, applicationsecret));
+    }
 
+    public BaseDevelopmentWhydahServiceClient(String securitytokenserviceurl,
+                                              String useradminserviceurl,
+                                              ApplicationCredential applicationCredential) throws URISyntaxException {
+
+        this.applicationCredential = applicationCredential;
+        this.securitytokenserviceurl = securitytokenserviceurl;
+        this.useradminserviceurl = useradminserviceurl;
         if (was == null) {
-            was = WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, activeApplicationId, applicationname, applicationsecret);
-            was.updateApplinks();
+            was = WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, applicationCredential);
+            was.updateApplinks(true);
         }
 
         this.uri_securitytoken_service = URI.create(securitytokenserviceurl);
@@ -57,9 +70,11 @@ public class BaseDevelopmentWhydahServiceClient {
         try {
             if (configuration.hasValue("securitytokenservice")) {
                 this.uri_securitytoken_service = URI.create(configuration.evaluateToString("securitytokenservice"));
+                this.securitytokenserviceurl = configuration.evaluateToString("securitytokenservice");
             }
             if (configuration.hasValue("useradminservice")) {
                 this.uri_useradmin_service = URI.create(configuration.evaluateToString("useradminservice"));
+                this.useradminserviceurl = configuration.evaluateToString("useradminservice");
             }
             if (configuration.hasValue("crmservice")) {
                 this.uri_crm_service = URI.create(configuration.evaluateToString("crmservice"));
@@ -75,13 +90,15 @@ public class BaseDevelopmentWhydahServiceClient {
             String applicationid = configuration.evaluateToString("applicationid");
             String applicationname = configuration.evaluateToString("applicationname");
             String applicationsecret = configuration.evaluateToString("applicationsecret");
+            ApplicationCredential myApplicationCredential = new ApplicationCredential(applicationid, applicationname, applicationsecret);
+            this.applicationCredential = myApplicationCredential;
             String uasUrl = null;
             if (uri_useradmin_service != null) {
                 uasUrl = uri_useradmin_service.toString();
 
             }
             if (was == null) {
-                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, applicationid, applicationname, applicationsecret);
+                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, myApplicationCredential);
                 was.updateApplinks();
             }
 
@@ -103,9 +120,13 @@ public class BaseDevelopmentWhydahServiceClient {
         try {
             if (properties.getProperty("securitytokenservice", null) != null) {
                 this.uri_securitytoken_service = URI.create(properties.getProperty("securitytokenservice"));
+                this.securitytokenserviceurl = properties.getProperty("securitytokenservice");
+
             }
             if (properties.getProperty("useradminservice", null) != null) {
                 this.uri_useradmin_service = URI.create(properties.getProperty("useradminservice"));
+                this.useradminserviceurl = properties.getProperty("useradminservice");
+
             }
             if (properties.getProperty("crmservice", null) != null) {
                 this.uri_crm_service = URI.create(properties.getProperty("crmservice"));
@@ -121,13 +142,16 @@ public class BaseDevelopmentWhydahServiceClient {
             String applicationid = properties.getProperty("applicationid");
             String applicationname = properties.getProperty("applicationname");
             String applicationsecret = properties.getProperty("applicationsecret");
+            ApplicationCredential myApplicationCredential = new ApplicationCredential(applicationid, applicationname, applicationsecret);
+            this.applicationCredential = myApplicationCredential;
+
             String uasUrl = null;
             if (uri_useradmin_service != null) {
                 uasUrl = uri_useradmin_service.toString();
 
             }
             if (was == null) {
-                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, applicationid, applicationname, applicationsecret);
+                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, myApplicationCredential);
                 was.updateApplinks();
             }
         } catch (Exception ex) {
@@ -138,6 +162,11 @@ public class BaseDevelopmentWhydahServiceClient {
     //GENERAL
 
     public WhydahApplicationSession getWAS() {
+
+        if (was == null) {
+            was = WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, applicationCredential);
+            was.updateApplinks(true);
+        }
         return was;
     }
 
