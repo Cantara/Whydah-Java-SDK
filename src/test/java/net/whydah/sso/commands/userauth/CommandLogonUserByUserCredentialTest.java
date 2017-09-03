@@ -4,8 +4,11 @@ import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.user.helpers.UserXpathHelper;
+import net.whydah.sso.user.mappers.UserTokenMapper;
+import net.whydah.sso.user.types.UserToken;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import net.whydah.sso.util.WhydahUtil;
+import net.whydah.sso.whydah.DEFCON;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -39,18 +42,23 @@ public class CommandLogonUserByUserCredentialTest {
 
             assertTrue(myApplicationTokenID.length() > 6);
 
+
             String userticket = UUID.randomUUID().toString();
 
             myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-            String userToken = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential, userticket).execute();
-            String userTokenId = UserXpathHelper.getUserTokenId(userToken);
+            String userTokenXML = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential, userticket).execute();
+            String userTokenId = UserXpathHelper.getUserTokenId(userTokenXML);
+            UserToken myUserToken = UserTokenMapper.fromUserTokenXml(userTokenXML);
+            assertTrue(myUserToken.getDefcon().equalsIgnoreCase(DEFCON.DEFCON5.toString()));
+
 
             assertTrue(new CommandValidateUsertokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute());
 
             myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-            String userToken2 = new CommandGetUsertokenByUserticket(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userticket).execute();
+            String userToken2XML = new CommandGetUsertokenByUserticket(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userticket).execute();
+            assertTrue(userToken2XML.contains("DEFCON5"));
 
         }
 
