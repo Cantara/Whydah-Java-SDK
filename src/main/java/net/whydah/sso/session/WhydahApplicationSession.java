@@ -311,7 +311,7 @@ public class WhydahApplicationSession {
 
 
     private synchronized boolean initializeWhydahApplicationSession() {
-        log.info("Initializing new application session {} with applicationID: {}", logonAttemptNo, myAppCredential.getApplicationID());
+        log.info("Initializing new application session {} with applicationCredential: {}", logonAttemptNo, myAppCredential);
 
         try {
             Thread.sleep(FIBONACCI[logonAttemptNo] * 10000);
@@ -329,19 +329,19 @@ public class WhydahApplicationSession {
             return false;
         }
         setApplicationSessionParameters(applicationTokenXML);
-        log.info("InitWAS {}: Initialized new application session, applicationTokenId:{}, applicationID: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+        log.info("InitWAS {}: Initialized new application session, applicationTokenId:{}, applicationID: {}, applicationName: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getApplicationName(), applicationToken.getExpiresFormatted());
         logonAttemptNo = 0;
         return true;
     }
 
     private void setApplicationSessionParameters(String applicationTokenXML) {
         applicationToken = ApplicationTokenMapper.fromXml(applicationTokenXML);
-        log.info("WAS {}: New application session created for applicationID: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+        log.info("WAS {}: New application session created for applicationID: {}, applicationTokenID: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted());
     }
 
     private void removeApplicationSessionParameters(String applicationID) {
         applicationToken = null;
-        log.info("WAS {}: Application session removed for application: {}", logonAttemptNo, applicationID);
+        log.info("WAS {}: Application session removed for applicationID: {} applicationTokenID: {},", logonAttemptNo, applicationID);
     }
 
     /**
