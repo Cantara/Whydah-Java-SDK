@@ -4,7 +4,7 @@ import net.whydah.sso.application.mappers.ApplicationMapper;
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.basehelpers.JsonPathHelper;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
-
+import net.whydah.sso.util.LoggerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +42,7 @@ public class ApplicationModelUtil {
         try {
             for (Application application : applications) {
                 if (applicationID.equalsIgnoreCase(application.getId())) {
-                    log.info("Found application, looking for ", param);
+                    log.debug("Found application, looking for ", param);
                     return JsonPathHelper.findJsonPathValue(ApplicationMapper.toJson(application), param);
                 }
             }
@@ -57,7 +57,7 @@ public class ApplicationModelUtil {
     public static void updateApplicationList(URI userAdminServiceUri, String myAppTokenId, String userTokenId) {
         if (userAdminServiceUri != null){
             String applicationsJson = new net.whydah.sso.commands.adminapi.application.CommandListApplications(userAdminServiceUri, myAppTokenId).execute();
-            log.debug("AppLications returned:" + applicationsJson);
+            log.trace("AppLications returned:" + LoggerUtil.first50(applicationsJson));
             if (applicationsJson != null) {
                 if (applicationsJson.length() > 20) {
                     applications = ApplicationMapper.fromJsonList(applicationsJson);
