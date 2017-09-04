@@ -73,7 +73,7 @@
 
     <properties>
         <service.name>Whydah-Java-SDK</service.name>
-        <whydah-typelib-version>2.3.0-rc-7</whydah-typelib-version>
+        <whydah-typelib-version>2.3.0-rc-8</whydah-typelib-version>
         <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
 
