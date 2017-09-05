@@ -176,12 +176,18 @@ public class WhydahApplicationSession {
         if (applicationToken == null) {
             initializeWhydahApplicationSession();
         }
+        if (applicationToken == null) {
+            return "";
+        }
         return applicationToken.getApplicationTokenId();
     }
 
     public String getActiveApplicationName() {
         if (applicationToken == null) {
             initializeWhydahApplicationSession();
+        }
+        if (applicationToken == null) {
+            return "N/A";
         }
         return applicationToken.getApplicationName();
     }
