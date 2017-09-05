@@ -152,7 +152,9 @@ public class BaseDevelopmentWhydahServiceClient {
             }
             if (was == null) {
                 was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, myApplicationCredential);
-                was.updateApplinks();
+                if (was != null) {
+                    was.updateApplinks();
+                }
             }
         } catch (Exception ex) {
             throw ex;
