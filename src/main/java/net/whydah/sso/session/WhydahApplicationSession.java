@@ -176,12 +176,18 @@ public class WhydahApplicationSession {
         if (applicationToken == null) {
             initializeWhydahApplicationSession();
         }
+        if (applicationToken == null) {
+            return "";
+        }
         return applicationToken.getApplicationTokenId();
     }
 
     public String getActiveApplicationName() {
         if (applicationToken == null) {
             initializeWhydahApplicationSession();
+        }
+        if (applicationToken == null) {
+            return "N/A";
         }
         return applicationToken.getApplicationName();
     }
@@ -412,8 +418,8 @@ public class WhydahApplicationSession {
     }
 
     public void updateApplinks() {
-        if (uas == null || uas.length() < 8) {
-            log.warn("Calling updateAppLinks without was initialized");
+        if (uas == null || uas.length() < 8 || applicationToken == null) {
+            log.warn("Calling updateAppLinks without was initialized uas: {}, applicationTolken: {}", uas, applicationToken);
             return;
         }
         URI userAdminServiceUri= URI.create(uas);

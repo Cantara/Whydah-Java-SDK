@@ -33,7 +33,7 @@ public class MapAndFilterUserStatsTest {
         config = new SystemTestBaseConfig();
     }
 
-    public static String getUserSessionsJsonFromUserActivityJson(String userActivityJson, String filterusername) {
+    public static String getFilteredUserSessionsJsonFromUserActivityJson(String userActivityJson, String filterusername) {
         try {
             if (userActivityJson != null) {
                 List e = JsonPathHelper.findJsonpathList(userActivityJson, "$..userSessions.*");
@@ -94,8 +94,8 @@ public class MapAndFilterUserStatsTest {
             log.debug("Returned list {} of userlogins: {}", userLogins.length(), userLogins);
             assertTrue(userLogins != null);
             assertTrue(userLogins.length() > 10);
-            String mappedUL = getUserSessionsJsonFromUserActivityJson(userLogins, config.userName);
-            log.debug("Mapped:  {} getUserSessionsJsonFromUserActivityJson: {}", mappedUL.length(), mappedUL);
+            String mappedUL = getFilteredUserSessionsJsonFromUserActivityJson(userLogins, config.userName);
+            log.debug("Mapped:  {} getFilteredUserSessionsJsonFromUserActivityJson: {}", mappedUL.length(), mappedUL);
 
         }
     }
