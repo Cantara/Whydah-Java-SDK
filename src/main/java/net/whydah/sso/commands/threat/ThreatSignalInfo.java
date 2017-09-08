@@ -18,8 +18,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @JsonPropertyOrder({
         "definition-code",
         "responsible-ipaddress",
-        "activity-log",
-       
+        "suspicious-detail",
+        "activity-log"
+        
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ThreatSignalInfo {
@@ -32,13 +33,18 @@ public class ThreatSignalInfo {
 	private
 	String responsibleIPAddress="";
 	
+	@JsonProperty("suspicious-detail") //if any
+	private
+	String suspiciousDetail="";
+	
 	@JsonProperty("activity-log") //if any
 	private
 	List<ThreatActivityLog> activityLogList=new ArrayList<ThreatActivityLog>();
 	
 	public ThreatSignalInfo(){}
-	public ThreatSignalInfo(int code, String responsibleIpAddress, List<ThreatActivityLog> activityLogList){
+	public ThreatSignalInfo(int code, String responsibleIpAddress, String suspiciousDetail, List<ThreatActivityLog> activityLogList){
 		this.setThreatDefinitionCode(code);
+		this.setSuspiciousDetail(suspiciousDetail);
 		this.setResponsibleIPAddress(responsibleIpAddress);
 		this.activityLogList = activityLogList;
 	}
@@ -107,6 +113,20 @@ public class ThreatSignalInfo {
 	@JsonProperty("activity-log")
 	public void setActivityLogList(List<ThreatActivityLog> activityLogList) {
 		this.activityLogList = activityLogList;
+	}
+	/**
+	 * @return the suspiciousDetail
+	 */
+	@JsonProperty("suspicious-detail")
+	public String getSuspiciousDetail() {
+		return suspiciousDetail;
+	}
+	/**
+	 * @param suspiciousDetail the suspiciousDetail to set
+	 */
+	@JsonProperty("suspicious-detail")
+	public void setSuspiciousDetail(String suspiciousDetail) {
+		this.suspiciousDetail = suspiciousDetail;
 	}
 	
 }

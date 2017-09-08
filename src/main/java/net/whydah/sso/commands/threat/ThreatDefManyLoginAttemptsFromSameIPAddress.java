@@ -29,7 +29,7 @@ public class ThreatDefManyLoginAttemptsFromSameIPAddress extends IThreatDefiniti
 				}
 				if(i>=20){
 					//commit all the logList for observing unusual behavior
-					ThreatSignalInfo info = new ThreatSignalInfo(this.getCode(), ipaddress, logList);
+					ThreatSignalInfo info = new ThreatSignalInfo(this.getCode(), ipaddress, "" ,logList);
 					observer.commitThreat(info);
 				}
 			}

@@ -92,12 +92,13 @@ public class ThreatObserverTest {
 //					});
 					boolean found = false;
 				    long previousTimeRequest = 0; 
+				    int times = 0;
 					for(ThreatActivityLog log : logList){
 						
 						
 						long thisTimeRequest = Long.valueOf(log.getRequestTime());
 						if(thisTimeRequest - previousTimeRequest <= 1000){
-							logger.info("This ip address " + log.getIpAddress() + " is very suspicious");
+							times ++;
 							found = true;
 						}
 						
@@ -107,8 +108,9 @@ public class ThreatObserverTest {
 					
 					if(found){
 						suspicion ++;
+						logger.info("This ip address " + ip + " is very suspicious, repeating " + times +" times");
 						//commit anything we found, remove logs after we commit
-						ThreatSignalInfo info = new ThreatSignalInfo(getCode(), ip, collector.getActivityLogByIPAddress(ip));
+						ThreatSignalInfo info = new ThreatSignalInfo(getCode(), ip, "repeating " + times + " times",collector.getActivityLogByIPAddress(ip));
 						observer.commitThreat(info);
 					}
 					

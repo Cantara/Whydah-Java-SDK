@@ -21,7 +21,7 @@ public class ThreatDefTooManyRequestsForOneEndpoint extends IThreatDefinition {
 		for(String endpoint : collector.getAllEndPoints()){
 			List<ThreatActivityLog> logList = collector.getActivityLogByEndPoint(endpoint);
 			if(logList.size()>= COUNT){
-				ThreatSignalInfo info = new ThreatSignalInfo(this.getCode(), "", logList);
+				ThreatSignalInfo info = new ThreatSignalInfo(this.getCode(), "", "", logList);
 				observer.commitThreat(info);
 			}
 		}
