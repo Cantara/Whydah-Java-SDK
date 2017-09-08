@@ -38,7 +38,9 @@ public class ThreatSignalInfo {
 	
 	public ThreatSignalInfo(){}
 	public ThreatSignalInfo(int code, String responsibleIpAddress, List<ThreatActivityLog> activityLogList){
-		
+		this.setThreatDefinitionCode(code);
+		this.setResponsibleIPAddress(responsibleIpAddress);
+		this.activityLogList = activityLogList;
 	}
 	
 	public static ThreatSignalInfo fromJson(String json) {

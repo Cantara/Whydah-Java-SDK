@@ -101,8 +101,9 @@ public class ThreatActivityLog implements Serializable  {
 	}
 	
 	@JsonProperty("request-time")
-	public void setRequestTime(String requestTime) {
+	public ThreatActivityLog setRequestTime(String requestTime) {
 		this.requestTime = requestTime;
+		return this;
 	}
 	
 	@JsonProperty("user-token-id")
