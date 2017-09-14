@@ -16,24 +16,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "definition-code",
-        "responsible-ipaddress",
-        "suspicious-detail",
+        "def-code",
+        "suspect",
+        "detail",
         "activity-log"
         
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ThreatSignalInfo {
 	
-	@JsonProperty("definition-code")
+	@JsonProperty("def-code")
 	private
 	int threatDefinitionCode;
 	
-	@JsonProperty("responsible-ipaddress") //if any
+	@JsonProperty("suspect") //if any
 	private
 	String responsibleIPAddress="";
 	
-	@JsonProperty("suspicious-detail") //if any
+	@JsonProperty("detail") //if any
 	private
 	String suspiciousDetail="";
 	
@@ -75,28 +75,28 @@ public class ThreatSignalInfo {
 	/**
 	 * @return the threatDefinitionCode
 	 */
-    @JsonProperty("definition-code")
+    @JsonProperty("def-code")
 	public int getThreatDefinitionCode() {
 		return threatDefinitionCode;
 	}
 	/**
 	 * @param threatDefinitionCode the threatDefinitionCode to set
 	 */
-    @JsonProperty("definition-code")
+    @JsonProperty("def-code")
 	public void setThreatDefinitionCode(int threatDefinitionCode) {
 		this.threatDefinitionCode = threatDefinitionCode;
 	}
 	/**
 	 * @return the responsibleIdentities
 	 */
-    @JsonProperty("responsible-ipaddress") 
+    @JsonProperty("suspect") 
 	public String getResponsibleIPAddress() {
 		return responsibleIPAddress;
 	}
 	/**
 	 * @param responsibleIdentities the responsibleIdentities to set
 	 */
-    @JsonProperty("responsible-ipaddress") 
+    @JsonProperty("suspect") 
 	public void setResponsibleIPAddress(String responsibleIdentities) {
 		this.responsibleIPAddress = responsibleIdentities;
 	}
@@ -117,14 +117,14 @@ public class ThreatSignalInfo {
 	/**
 	 * @return the suspiciousDetail
 	 */
-	@JsonProperty("suspicious-detail")
+	@JsonProperty("detail")
 	public String getSuspiciousDetail() {
 		return suspiciousDetail;
 	}
 	/**
 	 * @param suspiciousDetail the suspiciousDetail to set
 	 */
-	@JsonProperty("suspicious-detail")
+	@JsonProperty("detail")
 	public void setSuspiciousDetail(String suspiciousDetail) {
 		this.suspiciousDetail = suspiciousDetail;
 	}

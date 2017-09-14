@@ -39,9 +39,7 @@ public class ThreatObserverTest {
 	    	ThreatObserver ob = new ThreatObserver(null);
 	    	//some login activity
 	    	ThreatActivityLog log = new ThreatActivityLog().
-	    	setUserName("59441023").setAppTokenId("").
-	    	setEndPoint("login").setIpAddress("171.250.110.28").
-	    	setUserTokenId("").setRequestTime(Long.toString(System.currentTimeMillis()));
+	    	setEndPoint("login").setIpAddress("171.250.110.28").setRequestTime(Long.toString(System.currentTimeMillis()));
 	    	
 	    	ob.addLogForDetection(log);
 	    	
@@ -143,15 +141,25 @@ public class ThreatObserverTest {
 	    	now = now + 5000;
 	    	for(int i = 0; i < 10; i++){
 	    		ThreatActivityLog log = new ThreatActivityLog().setEndPoint("login").setIpAddress("171.250.110.30").setRequestTime(Long.toString(now));
+	    		log = log.setAdditionalProperty("usertokenid", "12368123912");
 	    		ob.addLogForDetection(log);
 	    		
 	    		log = new ThreatActivityLog().setEndPoint("login").setIpAddress("171.250.110.31").setRequestTime(Long.toString(now));
+	    		log = log.setAdditionalProperty("usertokenid", "dtdr345345345");
 	    		ob.addLogForDetection(log);
 	    		
 	    		now = now + 300; //0.3 seconds each request
 	    	}
 	    	
-	    	while(!ob.isAllDetectionDone()){
+	    	waitForAllDetectionsToFinish(ob);
+	    	
+	    	assertTrue(suspicion == 2);
+	    	
+	    }
+
+
+		private void waitForAllDetectionsToFinish(ThreatObserver ob) {
+			while(!ob.isAllDetectionDone()){
 	    		try {
 					Thread.sleep(10);
 				} catch (InterruptedException e) {
@@ -165,10 +173,7 @@ public class ThreatObserverTest {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	    	
-	    	assertTrue(suspicion == 2);
-	    	
-	    }
+		}
 
 	    
 	    

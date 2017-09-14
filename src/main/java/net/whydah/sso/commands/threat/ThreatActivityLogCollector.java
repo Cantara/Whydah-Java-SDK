@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.whydah.sso.util.Lock;
 
@@ -20,8 +21,8 @@ public class ThreatActivityLogCollector {
 	private static final Logger logger = getLogger(ThreatActivityLogCollector.class);
 	
 	private Map<String, ThreatActivityLog> _threatLogCollection = new ConcurrentHashMap <>();
-	private Map<String, LinkedList<String>> _sortByIPAddress = new ConcurrentHashMap <String, LinkedList<String>>();
-	private Map<String, LinkedList<String>> _sortByEndpoint = new ConcurrentHashMap<String, LinkedList<String>>();
+	private Map<String, ConcurrentLinkedQueue<String>> _sortByIPAddress = new ConcurrentHashMap <String, ConcurrentLinkedQueue<String>>();
+	private Map<String, ConcurrentLinkedQueue<String>> _sortByEndpoint = new ConcurrentHashMap<String, ConcurrentLinkedQueue<String>>();
 	
 	Lock lock = new Lock();
 	
@@ -41,8 +42,8 @@ public class ThreatActivityLogCollector {
 	public List<ThreatActivityLog> getActivityLogByIPAddress(String ipAddress){
 		List<ThreatActivityLog> result = new ArrayList<>();
 		if(_sortByIPAddress.containsKey(ipAddress)){
-			List<String> logIds = new ArrayList<>(Collections.unmodifiableList(_sortByIPAddress.get(ipAddress)));
-			for(String logId : logIds){
+			//List<String> logIds = new ArrayList<>(Collections.unmodifiableList(_sortByIPAddress.get(ipAddress)));
+			for(String logId : _sortByIPAddress.get(ipAddress)){
 				if(_threatLogCollection.containsKey(logId)){
 					result.add(_threatLogCollection.get(logId));
 				}
@@ -65,18 +66,20 @@ public class ThreatActivityLogCollector {
 	}
 	
 	public void addLogForDetection(ThreatActivityLog log){
+		logger.debug("Log added for detection: " + ThreatActivityLog.toJson(log));
+		
 		while(_threatLogCollection.containsKey(log.getId())){
 			log.setId(UUID.randomUUID().toString());
 		}
 		_threatLogCollection.put(log.getId(), log);
 		
 		if(!_sortByIPAddress.containsKey(log.getIpAddress())){
-			_sortByIPAddress.put(log.getIpAddress(), new LinkedList<>());
+			_sortByIPAddress.put(log.getIpAddress(), new ConcurrentLinkedQueue<>());
 		}
 		_sortByIPAddress.get(log.getIpAddress()).add(log.getId());
 		
 		if(!_sortByEndpoint.containsKey(log.getEndPoint())){
-			_sortByEndpoint.put(log.getEndPoint(), new LinkedList<>());
+			_sortByEndpoint.put(log.getEndPoint(), new ConcurrentLinkedQueue<>());
 		}
 		_sortByEndpoint.get(log.getEndPoint()).add(log.getId());
 	}
@@ -95,7 +98,7 @@ public class ThreatActivityLogCollector {
 	 * @return the RAW _sortByIPAddress
 	 */
 	//USE WITH CARE
-	public Map<String, LinkedList<String>> get_AllLogSortedByIPAddress() {
+	public Map<String, ConcurrentLinkedQueue<String>> get_AllLogSortedByIPAddress() {
 		return _sortByIPAddress;
 	}
 
@@ -105,17 +108,17 @@ public class ThreatActivityLogCollector {
 	 * @return the RAW _sortByEndpoint
 	 */
 	//USE WITH CARE
-	public Map<String, LinkedList<String>> get_AllLogSortedByEndpoint() {
+	public Map<String, ConcurrentLinkedQueue<String>> get_AllLogSortedByEndpoint() {
 		return _sortByEndpoint;
 	}
 
 	public void removeLogs(List<ThreatActivityLog> logList) {
 		for(ThreatActivityLog log : logList){
 			if(_sortByIPAddress.containsKey(log.getIpAddress())){
-				_sortByIPAddress.remove(log.getId());
+				_sortByIPAddress.get(log.getIpAddress()).remove(log.getId());
 			}
 			if(_sortByEndpoint.containsKey(log.getEndPoint())){
-				_sortByEndpoint.remove(log.getId());
+				_sortByEndpoint.get(log.getEndPoint()).remove(log.getId());
 			}
 			_threatLogCollection.remove(log.getId());
 		}

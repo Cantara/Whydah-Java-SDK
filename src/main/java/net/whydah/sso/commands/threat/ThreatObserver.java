@@ -1,15 +1,21 @@
 package net.whydah.sso.commands.threat;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import org.slf4j.Logger;
 
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.util.Lock;
 
 public class ThreatObserver {
 
+	private static final Logger logger = getLogger(ThreatObserver.class);
+	
 	List<IThreatDefinition> threatDefs = new ArrayList<>();
 	ThreatActivityLogCollector collector = new ThreatActivityLogCollector();
 	WhydahApplicationSession was = null;
@@ -39,13 +45,7 @@ public class ThreatObserver {
 	public void addLogForDetection(ThreatActivityLog log){
 		collector.addLogForDetection(log);
 		if(!lock.isLocked()){
-			try {
-				lock.lock();
-				executeDetection();
-			} catch (InterruptedException e) {
-				lock.unlock();
-			}
-
+			executeDetection();
 		} else {
 			startAnotherDetection = true;
 		}
@@ -54,21 +54,20 @@ public class ThreatObserver {
 
 	private void executeDetection() {
 		executor.execute(new Runnable() {
-
 			@Override
 			public void run() {
-
-				detect();
-
-				if(startAnotherDetection){
-					startAnotherDetection = false;
+				try {
+					lock.lock();
 					detect();
+					if(startAnotherDetection){
+						startAnotherDetection = false;
+						detect();
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} finally{
+					lock.unlock();
 				}
-				
-
-				lock.unlock();
-				
-
 			}
 		});
 
@@ -76,13 +75,17 @@ public class ThreatObserver {
 
 	private void detect() {
 
-		System.out.println("INSPECTING ALL " + collector.get_AllLogCollection().size() + " REQUEST RECORDS");
+		long start = System.currentTimeMillis();
+		logger.debug("detecting  " + collector.get_AllLogCollection().size() + " request records");
 		//clean up first, remove logs having 1 hour old request time
 		collector.cleanOldLogs();
 		//trigger detection
 		for(IThreatDefinition def : threatDefs){
 			def.triggerDetection(collector, me); 
 		}
+		
+		logger.debug("detection done in " + String.valueOf(((System.currentTimeMillis() - start)/1000)) + " seconds");
+		
 
 	}
 
@@ -104,17 +107,22 @@ public class ThreatObserver {
 		} else if(info.getThreatDefinitionCode() == IThreatDefinition.DEF_CODE_MANY_REQUESTS_IN_A_SHORT_PERIOD){
 			//do something before reporting
 		}
+		List<ThreatActivityLog> origin = info.getActivityLogList();
+		int limit = Math.min(500, info.getActivityLogList().size());
+		//copy maximum 500 records only, no need to commit everything
+		int fromIndex = info.getActivityLogList().size() - limit;
+		List<ThreatActivityLog> subList = origin.subList(fromIndex, info.getActivityLogList().size()-1);
+		info.setActivityLogList(subList);
 
+		logger.info("THREAT FOUND - " + ThreatSignalInfo.toJson(info));
+		
 		if(was!=null){
 			//TODO: some more info for ThreatSignal possibly
 			this.was.reportThreatSignal(ThreatSignalInfo.toJson(info));
-		} else {
-			//log
-			System.out.println("THREAT FOUND - " + ThreatSignalInfo.toJson(info));
 		}
 
 		//remove this log after reporting
-		collector.removeLogs(info.getActivityLogList());
+		collector.removeLogs(origin);
 
 
 	}

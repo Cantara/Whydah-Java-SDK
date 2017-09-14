@@ -1,16 +1,20 @@
 package net.whydah.sso.commands.threat;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ThreatDefManyLoginAttemptsFromSameIPAddress extends IThreatDefinition {
 
+	int count = 20;
 
 	public int getCode() {
 		return IThreatDefinition.DEF_CODE_MANY_LOGIN_ATTEMPTS;
 	}
 
 	public String getDesc() {
-		return "detect if there are more than 20+ signon attempts from the same IP-address";
+		return "detect if there are more than " + count  + " signon attempts from the same IP-address";
 	}
 
 
@@ -21,15 +25,20 @@ public class ThreatDefManyLoginAttemptsFromSameIPAddress extends IThreatDefiniti
 			if(ipaddress!=null){
 				int i = 0; 
 				List<ThreatActivityLog> logList = collector.getActivityLogByIPAddress(ipaddress);
-
+			
 				for(ThreatActivityLog log : logList){
 					if(log.getEndPoint().toLowerCase().equals("login")){
 						i++;
+						
+					}
+					//there is no need inspecting anymore b/c suspects has been found. We just commit all logs to STS
+					if(i>=count){
+						break;
 					}
 				}
-				if(i>=20){
-					//commit all the logList for observing unusual behavior
-					ThreatSignalInfo info = new ThreatSignalInfo(this.getCode(), ipaddress, "" ,logList);
+				
+				if(i>=count){
+					ThreatSignalInfo info = new ThreatSignalInfo(this.getCode(), ipaddress, "" , logList);
 					observer.commitThreat(info);
 				}
 			}

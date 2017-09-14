@@ -8,11 +8,16 @@ import net.whydah.sso.application.types.ApplicationToken;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.threat.CommandSendThreatSignal;
+import net.whydah.sso.commands.threat.ThreatDefManyLoginAttemptsFromSameIPAddress;
+import net.whydah.sso.commands.threat.ThreatDefTooManyRequestsForOneEndpoint;
+import net.whydah.sso.commands.threat.ThreatObserver;
 import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.util.WhydahUtil;
 import net.whydah.sso.whydah.DEFCON;
 import net.whydah.sso.whydah.ThreatSignal;
+import net.whydah.sso.whydah.ThreatSignal.SeverityLevel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +43,7 @@ public class WhydahApplicationSession {
 
     private static final int[] FIBONACCI = new int[]{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144};
 
+    private ThreatObserver threatObserver;
     //  protected WhydahApplicationSession() {
     //      this("https://whydahdev.cantara.no/tokenservice/", "99", "TestApp", "33879936R6Jr47D4Hj5R6p9qT");
 
@@ -53,6 +59,13 @@ public class WhydahApplicationSession {
         this.sts = sts;
         this.uas = uas;
         this.myAppCredential = myAppCredential;
+        
+        //register threat definitions here
+        threatObserver = new ThreatObserver(this);
+        getThreatObserver().registerDefinition(new ThreatDefManyLoginAttemptsFromSameIPAddress());
+        getThreatObserver().registerDefinition(new ThreatDefTooManyRequestsForOneEndpoint());
+        //register more if any
+        
         initializeWhydahApplicationSession();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
@@ -90,7 +103,7 @@ public class WhydahApplicationSession {
             synchronized (WhydahApplicationSession.class) {
                 log.error("WhydahApplicationSession getInstance() called - with no instance instanciated - returning NULL");
                 if (instance == null) {
-                    //              instance = new WhydahApplicationSession();
+                    //instance = new WhydahApplicationSession();
                 }
             }
         }
@@ -382,6 +395,22 @@ public class WhydahApplicationSession {
     public void reportThreatSignal(String threatMessage) {
         reportThreatSignal(createThreat(threatMessage));
     }
+    
+    public void reportThreatSignal(String threatMessage, Object[] details) {
+        reportThreatSignal(createThreat(threatMessage));
+    }
+    
+    public void reportThreatSignal(String clientIpAddress, String source, String threatMessage) {
+        reportThreatSignal(createThreat(clientIpAddress, source, threatMessage));
+    }
+
+    public void reportThreatSignal(String clientIpAddress, String source, String threatMessage, Object[] details) {
+        reportThreatSignal(createThreat(clientIpAddress, source, threatMessage, details));
+    }
+    
+    public void reportThreatSignal(String clientIpAddress, String source, String threatMessage, Object[] details, SeverityLevel severity) {
+        reportThreatSignal(createThreat(clientIpAddress, source, threatMessage, details, severity));
+    }
 
     /**
      *
@@ -394,7 +423,7 @@ public class WhydahApplicationSession {
         }
     }
 
-    public static ThreatSignal createThreat(String text) {
+    public static ThreatSignal createThreat(String clientIpAddress, String source, String text, Object[] additionalProperties, SeverityLevel severity, boolean isImmediateThreat) {
         ThreatSignal threatSignal = new ThreatSignal();
         if (instance != null) {
             threatSignal.setSignalEmitter(instance.getActiveApplicationName() + " [" + WhydahUtil.getMyIPAddresssesString() + "]");
@@ -403,8 +432,46 @@ public class WhydahApplicationSession {
         threatSignal.setAdditionalProperty("EMITTER IP", WhydahUtil.getMyIPAddresssesString());
         threatSignal.setInstant(Instant.now().toString());
         threatSignal.setText(text);
+        if(clientIpAddress!=null && !clientIpAddress.equals("")){
+        	threatSignal.setAdditionalProperty("SUSPECT'S IP", clientIpAddress);
+        }
+        threatSignal.setAdditionalProperty("IMMEDIATE THREAT", true);
+        threatSignal.setSignalSeverity(severity.toString());
+        threatSignal.setSource(source);
+        if(additionalProperties!=null){
+        	for(int i=0; i<additionalProperties.length;i++){
+        		String key=additionalProperties[i].toString();
+        		Object value = (i==additionalProperties.length -1)?"":additionalProperties[i+1];
+        		threatSignal.setAdditionalProperty(key, value);
+        	}
+        }
+        
         return threatSignal;
     }
+    
+    
+    public static ThreatSignal createThreat(String clientIpAddress, String source, String text) {
+        return createThreat(clientIpAddress, source, text, null, SeverityLevel.LOW, true);
+    }
+    
+    public static ThreatSignal createThreat(String clientIpAddress, String source, String text, Object[] details) {
+        return createThreat(clientIpAddress, source, text, details, SeverityLevel.LOW, true);
+    }
+
+    public static ThreatSignal createThreat(String clientIpAddress, String source, String text, Object[] details, SeverityLevel severity) {
+        return createThreat(clientIpAddress, source, text, details, severity, true);
+    }
+    
+    public static ThreatSignal createThreat(String text) {
+        return createThreat("", "", text, null, SeverityLevel.LOW, true);
+    }
+    
+    public static ThreatSignal createThreat(String text,  Object[] details) {
+        return createThreat("", "", text, details, SeverityLevel.LOW, true);
+    }
+     
+   
+    
     /**
      * Application cache section - keep a cache of configured applications
      */
@@ -499,5 +566,13 @@ public class WhydahApplicationSession {
 	public void setDisableUpdateAppLink(boolean disableUpdateAppLink) {
 		this.disableUpdateAppLink = disableUpdateAppLink;
 	}
+
+	/**
+	 * @return the threatObserver
+	 */
+	public ThreatObserver getThreatObserver() {
+		return threatObserver;
+	}
+
 
 }
