@@ -153,7 +153,7 @@ public class ThreatObserverTest {
 	    	
 	    	waitForAllDetectionsToFinish(ob);
 	    	
-	    	assertTrue(suspicion == 2);
+	    	assertTrue(suspicion => 2);
 	    	
 	    }
 
