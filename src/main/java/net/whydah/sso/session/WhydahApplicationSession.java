@@ -17,7 +17,6 @@ import net.whydah.sso.util.WhydahUtil;
 import net.whydah.sso.whydah.DEFCON;
 import net.whydah.sso.whydah.ThreatSignal;
 import net.whydah.sso.whydah.ThreatSignal.SeverityLevel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -280,7 +279,7 @@ public class WhydahApplicationSession {
 
         }
         if (!checkActiveSession()) {
-            if (applicationToken != null) {
+            if (applicationToken == null) {
                 log.info("Renew WAS: No active application session for applicationTokenId: {}, getApplicationID: {},   expires: {}", applicationToken.getApplicationID(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
             }
             for (int n = 0; n < 3 || !checkActiveSession(); n++) {
