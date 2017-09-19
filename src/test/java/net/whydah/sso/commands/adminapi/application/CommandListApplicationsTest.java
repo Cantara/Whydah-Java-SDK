@@ -7,6 +7,7 @@ import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.user.helpers.UserXpathHelper;
+import net.whydah.sso.util.LoggerUtil;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class CommandListApplicationsTest {
             assertTrue(userTokenId != null && userTokenId.length() > 5);
 
             String applicationsJsonl = new CommandListApplications(config.userAdminServiceUri, myApplicationTokenID).execute();
-            log.debug("applicationsJson=" + applicationsJsonl);
+            log.debug("applicationsJson=" + LoggerUtil.first50(applicationsJsonl));
             assertTrue(!applicationsJsonl.isEmpty());
 
         }
