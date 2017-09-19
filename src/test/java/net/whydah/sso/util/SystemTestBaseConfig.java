@@ -23,8 +23,6 @@ import static org.junit.Assert.assertTrue;
 
 public class SystemTestBaseConfig {
 
-    public static final boolean SYSTEST_PROPERTY_ANONYMOUSTOKEN = true;
-    public static final boolean SYSTEST_PROPERTY_fulltokenapplications = true;
     // Run the Whydah SystemTests?
     public boolean systemTest = false;
 
@@ -46,10 +44,7 @@ public class SystemTestBaseConfig {
     public String password = "systest42";
     public String userEmail = "whydahadmin@getwhydah.com";
 
-    //acsemployee, acsemployee, acs987, Samuel "Black Sam", Bellamy, acsemp@whydah.no, 0, 001
-    public String userName2 = "acsmanager";
-    public String password2 = "acs987";
-    
+
     public URI tokenServiceUri;
     public URI userAdminServiceUri;
     public ApplicationCredential appCredential;
