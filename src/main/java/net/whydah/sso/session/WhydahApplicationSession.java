@@ -229,7 +229,8 @@ public class WhydahApplicationSession {
                 log.info("Renew WAS: No active application session, applicationToken=null, , myAppCredential:{}", myAppCredential);
             }
             for (int n = 0; n < 3 || !checkActiveSession(); n++) {
-                if (initializeWhydahApplicationSession()) {
+                initializeWhydahApplicationSession();
+                if (logonAttemptNo == 0) {
                     return;
                 }
                 log.info("Renew WAS: Unsuccessful attempt to logon application session, returned applicationtokenXML: {}: ", getActiveApplicationTokenXML());
@@ -256,7 +257,8 @@ public class WhydahApplicationSession {
                         log.info("Renew WAS:: Failed to renew applicationsession, attempt:{}, returned response from STS: {}", n, applicationTokenXML);
                         if (n > 2) {
                             // OK, we wont get a renewed session, so we start a new one
-                            if (initializeWhydahApplicationSession()) {
+                            initializeWhydahApplicationSession();
+                            if (logonAttemptNo == 0) {
                                 break;
                             }
                         }
@@ -273,8 +275,22 @@ public class WhydahApplicationSession {
         }
     }
 
+    private synchronized void initializeWhydahApplicationSession() {
+        logonAttemptNo = 1;
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        ScheduledFuture<?> sf = scheduler.schedule(
+                new Runnable() {
+                    public void run() {
+                        try {
+                            initializeWhydahApplicationSessionThread();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }, 5, TimeUnit.SECONDS);
+    }
 
-    private synchronized boolean initializeWhydahApplicationSession() {
+    private synchronized boolean initializeWhydahApplicationSessionThread() {
         log.info("Initializing new application session {} with applicationCredential: {}", logonAttemptNo, myAppCredential);
 
         try {
@@ -289,7 +305,7 @@ public class WhydahApplicationSession {
                 logonAttemptNo = 1;
             }
             log.warn("InitWAS {}: Error, unable to initialize new application session, applicationTokenXml:\n{}", logonAttemptNo, applicationTokenXML);
-            removeApplicationSessionParameters(myAppCredential.getApplicationID());
+            removeApplicationSessionParameters();
             return false;
         }
         setApplicationSessionParameters(applicationTokenXML);
@@ -303,9 +319,9 @@ public class WhydahApplicationSession {
         log.info("WAS {}: New application session created for applicationID: {}, applicationTokenID: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted());
     }
 
-    private void removeApplicationSessionParameters(String applicationID) {
+    private void removeApplicationSessionParameters() {
         applicationToken = null;
-        log.info("WAS {}: Application session removed for applicationID: {} applicationTokenID: {},", logonAttemptNo, applicationID);
+        log.info("WAS {}: Application session removed for applicationID: {} applicationName: {},", logonAttemptNo, myAppCredential.getApplicationID(), myAppCredential.getApplicationName());
     }
 
     /**
