@@ -226,7 +226,7 @@ public class WhydahApplicationSession {
         }
         if (!checkActiveSession()) {
             if (applicationToken == null) {
-                log.info("Renew WAS: No active application session for applicationTokenId: {}, getApplicationID: {},   expires: {}", applicationToken.getApplicationID(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+                log.info("Renew WAS: No active application session, applicationToken=null, , myAppCredential:{}", myAppCredential);
             }
             for (int n = 0; n < 3 || !checkActiveSession(); n++) {
                 if (initializeWhydahApplicationSession()) {
