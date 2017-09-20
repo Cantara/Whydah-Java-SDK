@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 public class SystemTestBaseConfig {
 
     // Run the Whydah SystemTests?
-    public boolean systemTest = true;
+    public boolean systemTest = false;
 
     // Run SystemTests for Whydah Extensions?
     public boolean statisticsExtensionSystemTest = true && systemTest;

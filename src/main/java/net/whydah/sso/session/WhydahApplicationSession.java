@@ -43,16 +43,10 @@ public class WhydahApplicationSession {
     private static final int[] FIBONACCI = new int[]{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144};
 
     private ThreatObserver threatObserver;
-    //  protected WhydahApplicationSession() {
-    //      this("https://whydahdev.cantara.no/tokenservice/", "99", "TestApp", "33879936R6Jr47D4Hj5R6p9qT");
-
-    //  }
-
 
     /**
      * Protected singleton constructors
      */
-
     protected WhydahApplicationSession(String sts, String uas, ApplicationCredential myAppCredential) {
         log.info("WhydahApplicationSession initializing: sts:{},  uas:{}, myAppCredential:{}", sts, uas, myAppCredential);
         this.sts = sts;
@@ -80,34 +74,11 @@ public class WhydahApplicationSession {
                 5, SESSION_CHECK_INTERVAL, TimeUnit.SECONDS);
     }
 
-    protected WhydahApplicationSession(String sts, ApplicationCredential appCred) {
-        this(sts, appCred.getApplicationID(), appCred.getApplicationName(), appCred.getApplicationSecret());
-    }
-
-    protected WhydahApplicationSession(String sts, String appId, String appName, String appSecret) {
-        this(sts, null, appId, appName, appSecret);
-    }
-
-    protected WhydahApplicationSession(String sts, String uas, String appId, String appName, String appSecret) {
-        this(sts, uas, new ApplicationCredential(appId, appName, appSecret));
-    }
 
 
-    /**
-     * Get Instance methods
-     */
-    public static WhydahApplicationSession getInstance() {
-        if (instance == null) {
-            // Thread Safe. Might be costly operation in some case
-            synchronized (WhydahApplicationSession.class) {
-                log.error("WhydahApplicationSession getInstance() called - with no instance instanciated - returning NULL");
-                if (instance == null) {
-                    //instance = new WhydahApplicationSession();
-                }
-            }
-        }
-        return instance;
-    }
+
+
+
 
     public static WhydahApplicationSession getInstance(String sts, ApplicationCredential appCred) {
         log.info("WhydahApplicationSession getInstance(String sts, ApplicationCredential appCred) called");
@@ -115,7 +86,7 @@ public class WhydahApplicationSession {
             // Thread Safe. Might be costly operation in some case
             synchronized (WhydahApplicationSession.class) {
                 if (instance == null) {
-                    instance = new WhydahApplicationSession(sts, appCred.getApplicationID(), appCred.getApplicationName(), appCred.getApplicationSecret());
+                    instance = new WhydahApplicationSession(sts, null, appCred);
                 }
             }
         }
@@ -123,7 +94,7 @@ public class WhydahApplicationSession {
     }
 
     public static WhydahApplicationSession getInstance(String sts, String uas, ApplicationCredential appCred) {
-        log.info("WhydahApplicationSession getInstance(String sts,String uas, ApplicationCredential appCred) called");
+        log.info("WhydahApplicationSession getInstance(String sts, String uas, ApplicationCredential appCred) called");
         if (instance == null) {
             // Thread Safe. Might be costly operation in some case
             synchronized (WhydahApplicationSession.class) {
@@ -135,31 +106,6 @@ public class WhydahApplicationSession {
         return instance;
     }
 
-    public static WhydahApplicationSession getInstance(String sts, String appId, String appName, String appSecret) {
-        log.info("WhydahApplicationSession getInstance(String sts, String appId, String appName, String appSecret) appCred called");
-        if (instance == null) {
-            // Thread Safe. Might be costly operation in some case
-            synchronized (WhydahApplicationSession.class) {
-                if (instance == null) {
-                    instance = new WhydahApplicationSession(sts, null, appId, appName, appSecret);
-                }
-            }
-        }
-        return instance;
-    }
-    
-    public static WhydahApplicationSession getInstance(String sts, String uas, String appId, String appName, String appSecret) {
-        log.info("WhydahApplicationSession getInstance(String sts, String uas, String appId, String appName, String appSecret) appCred called");
-        if (instance == null) {
-            // Thread Safe. Might be costly operation in some case
-            synchronized (WhydahApplicationSession.class) {
-                if (instance == null) {
-                    instance = new WhydahApplicationSession(sts, uas, appId, appName, appSecret);
-                }
-            }
-        }
-        return instance;
-    }
 
     public static ApplicationCredential getMyApplicationCredential() {
         return myAppCredential;

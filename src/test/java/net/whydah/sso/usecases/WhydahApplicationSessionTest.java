@@ -1,6 +1,7 @@
 package net.whydah.sso.usecases;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
+import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import net.whydah.sso.util.SystemTestUtil;
@@ -40,7 +41,7 @@ public class WhydahApplicationSessionTest {
     public void testTimeoutOnLocahost() throws Exception {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
 
-            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance("http://localhost:9998/tokenservice", "15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT");
+            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance("http://localhost:9998/tokenservice", new ApplicationCredential("15", "MyApp", "33779936R6Jr47D4Hj5R6p9qT"));
             String appToken = applicationSession.getActiveApplicationTokenXML();
             Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationSession.getActiveApplicationTokenXML());
             System.out.println("Application expires in " + expires + " seconds");

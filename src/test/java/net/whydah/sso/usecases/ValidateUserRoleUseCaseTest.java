@@ -39,7 +39,7 @@ public class ValidateUserRoleUseCaseTest {
     public void test1_logonApplication() throws Exception {
         if (config.isSystemTestEnabled()) {
 
-            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential.getApplicationID(), config.appCredential.getApplicationName(), config.appCredential.getApplicationSecret());
+            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
             System.out.println("Active ApplicationId:" + applicationSession.getActiveApplicationTokenId());
             assertTrue(applicationSession.checkActiveSession());
         }
@@ -49,7 +49,7 @@ public class ValidateUserRoleUseCaseTest {
     public void test2_logonUser() throws Exception {
         if (config.isSystemTestEnabled()) {
 
-            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential.getApplicationID(), config.appCredential.getApplicationName(), config.appCredential.getApplicationSecret());
+            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
 
             UserCredential userCredential = new UserCredential(userName, password);
             assertTrue(applicationSession.checkActiveSession());
@@ -64,7 +64,7 @@ public class ValidateUserRoleUseCaseTest {
     public void test2_logonUserSession() throws Exception {
         if (config.isSystemTestEnabled()) {
 
-            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential.getApplicationID(), config.appCredential.getApplicationName(), config.appCredential.getApplicationSecret());
+            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
             UserCredential userCredential = new UserCredential(userName, password);
             assertTrue(applicationSession.checkActiveSession());
             WhydahUserSession userSession = new WhydahUserSession(applicationSession, userCredential);
@@ -86,7 +86,7 @@ public class ValidateUserRoleUseCaseTest {
     public void bli_test2_logonUser() throws Exception {
         if (config.isSystemTestEnabled()) {
 
-            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential.getApplicationID(), config.appCredential.getApplicationName(), config.appCredential.getApplicationSecret());
+            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential.getApplicationID(), config.appCredential);
             assertTrue(applicationSession.checkActiveSession());
             String appTokenId = applicationSession.getActiveApplicationTokenId();
             log.trace("appTokenId {}", appTokenId);
@@ -102,7 +102,7 @@ public class ValidateUserRoleUseCaseTest {
     public void bli_test3_validateRole() throws Exception {
         if (config.isSystemTestEnabled()) {
 
-            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential.getApplicationID(), config.appCredential.getApplicationName(), config.appCredential.getApplicationSecret());
+            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
             assertTrue(applicationSession.checkActiveSession());
             String appTokenId = applicationSession.getActiveApplicationTokenId();
             log.trace("appTokenId {}", appTokenId);

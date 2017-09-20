@@ -87,7 +87,7 @@ public class CommandSendThreatSignalTest {
 
         if (config.isSystemTestEnabled()) {
 
-            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential.getApplicationID(), config.appCredential.getApplicationName(), config.appCredential.getApplicationSecret());
+            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
 
             applicationSession.reportThreatSignal("TestSignal from SYStest 4");
             Thread.sleep(1000);  // Give quere() a chance to send the signal before test end
