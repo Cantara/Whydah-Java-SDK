@@ -32,7 +32,6 @@ public class SystemTestBaseConfig {
     public int TIME_WAIT_BETWEEN_SYSTEMTEST = 15;  // 15 ms
     //
     public static String SYSTEMTEST_USER_CELLPHONE = "59441023";
-    ;
     public static String SYSTEMTEST_USER_EMAIL = "totto@totto.org";
 
     //
@@ -80,12 +79,6 @@ public class SystemTestBaseConfig {
     }
     
     public void setLocalTest(){
-//    	tokenServiceUri = URI.create("http://localhost:9998/tokenservice/");
-//        userAdminServiceUri = URI.create("http://localhost:9992/useradminservice/");
-//        crmServiceUri = URI.create("http://localhost:12121/crmservice/");
-//        statisticsServiceUri = URI.create("http://localhost:4901/reporter/");
-//        password = "useradmin"; //
-//        //password = "useradmin567";
         tokenServiceUri = URI.create("http://localhost:9998/tokenservice/");
         userAdminServiceUri = URI.create("http://localhost:9992/useradminservice/");
         crmServiceUri = URI.create("http://localhost:12121/crmservice/");
