@@ -1,14 +1,16 @@
 package net.whydah.sso.commands.appauth;
 
-import net.whydah.sso.util.SystemTestBaseConfig;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import rx.Observable;
+import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.Future;
 
-import static org.junit.Assert.assertTrue;
+import net.whydah.sso.util.SystemTestBaseConfig;
+
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import rx.Observable;
 
 
 public class CommandLogonApplicationTest {

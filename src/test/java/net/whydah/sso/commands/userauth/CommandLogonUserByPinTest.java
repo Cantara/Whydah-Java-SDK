@@ -1,13 +1,13 @@
 package net.whydah.sso.commands.userauth;
 
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
 import net.whydah.sso.application.mappers.ApplicationTokenMapper;
 import net.whydah.sso.user.types.UserToken;
 import net.whydah.sso.util.SystemTestBaseConfig;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
 
 public class CommandLogonUserByPinTest {
     static SystemTestBaseConfig config;

@@ -1,9 +1,9 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
+import static junit.framework.TestCase.assertTrue;
+
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static junit.framework.TestCase.assertTrue;
 
 public class CommandVerifyDeliveryAddressTest {
 

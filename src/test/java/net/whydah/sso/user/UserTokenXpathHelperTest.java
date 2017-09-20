@@ -1,17 +1,21 @@
 package net.whydah.sso.user;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.util.List;
+
 import net.whydah.sso.user.helpers.UserHelper;
 import net.whydah.sso.user.helpers.UserRoleXpathHelper;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
-
-import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class UserTokenXpathHelperTest {
     private static final Logger log = getLogger(UserTokenXpathHelperTest.class);

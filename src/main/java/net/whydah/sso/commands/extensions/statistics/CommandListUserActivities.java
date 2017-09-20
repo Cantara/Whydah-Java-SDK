@@ -1,8 +1,8 @@
 package net.whydah.sso.commands.extensions.statistics;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-
 import java.net.URI;
+
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 
 /**
  * https://whydahdev.cantara.no/reporter/observe/statistics/useradmin/usersession

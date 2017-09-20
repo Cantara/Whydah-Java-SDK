@@ -1,36 +1,38 @@
 package net.whydah.sso.commands.baseclasses;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
+import net.whydah.sso.util.StringConv;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.kevinsawicki.http.HttpRequest;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.util.StringConv;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 
-	protected Logger log;
-	protected URI whydahServiceUri;
-	protected String myAppTokenId="";
-	protected String myAppTokenXml="";
-	protected String TAG="";
-	protected HttpRequest request;
+	public Logger log;
+	public URI whydahServiceUri;
+	public String myAppTokenId="";
+	public String myAppTokenXml="";
+	public String TAG="";
+	public HttpRequest request;
 	
-	protected BaseHttpGetHystrixCommand(URI serviceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey, int hystrixExecutionTimeOut) {
+	public BaseHttpGetHystrixCommand(URI serviceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey, int hystrixExecutionTimeOut) {
 		super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(hystrixGroupKey)).
 				andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
 						.withExecutionTimeoutInMilliseconds(hystrixExecutionTimeOut)));
 		init(serviceUri, myAppTokenXml, myAppTokenId, hystrixGroupKey);
 	}
 
-	protected BaseHttpGetHystrixCommand(URI tokenServiceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey) {
+	public BaseHttpGetHystrixCommand(URI tokenServiceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey) {
 		super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(hystrixGroupKey)));
 		init(tokenServiceUri, myAppTokenXml, myAppTokenId, hystrixGroupKey);
 	}

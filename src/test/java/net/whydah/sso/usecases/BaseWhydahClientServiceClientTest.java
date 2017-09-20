@@ -2,6 +2,7 @@ package net.whydah.sso.usecases;
 
 import net.whydah.sso.session.baseclasses.BaseWhydahServiceClient;
 import net.whydah.sso.util.SystemTestBaseConfig;
+
 import org.junit.BeforeClass;
 
 public class BaseWhydahClientServiceClientTest {

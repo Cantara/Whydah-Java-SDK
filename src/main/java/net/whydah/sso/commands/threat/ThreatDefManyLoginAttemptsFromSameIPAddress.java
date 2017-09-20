@@ -1,9 +1,6 @@
 package net.whydah.sso.commands.threat;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ThreatDefManyLoginAttemptsFromSameIPAddress extends IThreatDefinition {
 

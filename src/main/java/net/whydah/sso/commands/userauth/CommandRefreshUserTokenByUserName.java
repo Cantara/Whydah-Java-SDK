@@ -1,10 +1,10 @@
 package net.whydah.sso.commands.userauth;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 public class CommandRefreshUserTokenByUserName extends BaseHttpPostHystrixCommand<String>{
 

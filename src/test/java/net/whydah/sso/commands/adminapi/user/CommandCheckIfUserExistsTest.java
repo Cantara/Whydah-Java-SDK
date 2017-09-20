@@ -1,13 +1,13 @@
 package net.whydah.sso.commands.adminapi.user;
 
 
-import net.whydah.sso.user.types.UserToken;
-import net.whydah.sso.util.SystemTestBaseConfig;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
+import net.whydah.sso.user.types.UserToken;
+import net.whydah.sso.util.SystemTestBaseConfig;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class CommandCheckIfUserExistsTest {
 

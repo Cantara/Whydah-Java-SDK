@@ -9,9 +9,6 @@ import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 import net.whydah.sso.user.mappers.UserCredentialMapper;
 import net.whydah.sso.user.types.UserCredential;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class CommandLogonUserByUserCredentialJersey  extends BaseHttpPostHystrixCommand<String> {
 
     private UserCredential userCredential;

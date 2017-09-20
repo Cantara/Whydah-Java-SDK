@@ -1,8 +1,8 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-
 import java.net.URI;
+
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 
 public class CommandGetCRMCustomerProfileImage extends BaseHttpGetHystrixCommand<byte[]> {
 

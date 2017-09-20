@@ -1,9 +1,10 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import com.github.kevinsawicki.http.HttpRequest;
+import java.net.URI;
+
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
-import java.net.URI;
+import com.github.kevinsawicki.http.HttpRequest;
 
 public class CommandCreateCRMCustomerProfileImage extends BaseHttpPostHystrixCommand<String> {
     

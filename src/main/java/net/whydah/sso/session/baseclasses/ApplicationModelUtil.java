@@ -1,16 +1,17 @@
 package net.whydah.sso.session.baseclasses;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.whydah.sso.application.mappers.ApplicationMapper;
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.basehelpers.JsonPathHelper;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
 import net.whydah.sso.util.LoggerUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class ApplicationModelUtil {

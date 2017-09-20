@@ -1,9 +1,10 @@
 package net.whydah.sso.user;
 
-import net.whydah.sso.user.types.UserIdentity;
-import org.junit.Before;
-
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import net.whydah.sso.user.types.UserIdentity;
+
+import org.junit.Before;
 
 /**
  * Created by baardl on 18.06.15.

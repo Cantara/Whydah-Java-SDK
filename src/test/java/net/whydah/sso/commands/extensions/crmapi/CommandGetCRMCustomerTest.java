@@ -1,12 +1,12 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
+import static org.junit.Assert.assertTrue;
 import net.whydah.sso.extensions.crmcustomer.mappers.CustomerMapper;
 import net.whydah.sso.user.types.UserToken;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.Assert.assertTrue;
 
 public class CommandGetCRMCustomerTest extends BaseCRMCustomerTest {
 

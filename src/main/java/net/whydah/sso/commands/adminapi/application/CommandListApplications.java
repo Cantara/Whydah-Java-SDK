@@ -1,10 +1,11 @@
 package net.whydah.sso.commands.adminapi.application;
 
-import com.github.kevinsawicki.http.HttpRequest;
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-
 import java.net.HttpURLConnection;
 import java.net.URI;
+
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+
+import com.github.kevinsawicki.http.HttpRequest;
 
 public class CommandListApplications extends BaseHttpGetHystrixCommand<String> {
 

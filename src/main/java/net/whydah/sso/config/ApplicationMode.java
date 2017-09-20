@@ -1,9 +1,9 @@
 package net.whydah.sso.config;
 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
 
 /**
  * Get application mode from os environment or system property.

@@ -1,11 +1,11 @@
 package net.whydah.sso.commands.appauth;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-
 import java.net.HttpURLConnection;
 import java.net.URI;
 
-public class CommandVerifyUASAccessByApplicationTokenId extends BaseHttpGetHystrixCommand<Boolean> {
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
+
+public class CommandVerifyUASAccessByApplicationTokenId extends BaseHttpGetHystrixCommandForBooleanType {
 
 
 	int retryCnt = 0;

@@ -1,11 +1,9 @@
 package net.whydah.sso.commands.userauth;
 
+import java.net.URI;
+
 import net.whydah.sso.user.helpers.UserHelper;
 import net.whydah.sso.user.types.UserCredential;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.net.URI;
 
 public class CommandLogonUserByUserCredentialWithStubbedFallback extends CommandLogonUserByUserCredential {
 

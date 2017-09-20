@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.slf4j.Logger;
-
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.util.Lock;
+
+import org.slf4j.Logger;
 
 public class ThreatObserver {
 

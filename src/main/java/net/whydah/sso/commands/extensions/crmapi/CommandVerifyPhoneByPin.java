@@ -2,9 +2,9 @@ package net.whydah.sso.commands.extensions.crmapi;
 
 import java.net.URI;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
 
-public class CommandVerifyPhoneByPin extends BaseHttpGetHystrixCommand<Boolean> {
+public class CommandVerifyPhoneByPin extends BaseHttpGetHystrixCommandForBooleanType {
 
     private final String personRef;
     private final String userTokenId;

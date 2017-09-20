@@ -1,11 +1,12 @@
 package net.whydah.sso.commands.appauth;
 
 
-import com.github.kevinsawicki.http.HttpRequest;
+import java.net.URI;
+
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 import net.whydah.sso.commands.baseclasses.HttpSender;
 
-import java.net.URI;
+import com.github.kevinsawicki.http.HttpRequest;
 
 public class CommandRenewApplicationSession extends BaseHttpPostHystrixCommand<String> {
 

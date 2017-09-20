@@ -1,10 +1,10 @@
 package net.whydah.sso.util;
 
-import org.junit.Test;
-
 import static net.whydah.sso.util.LoggerUtil.first50;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import org.junit.Test;
 
 public class LoggerUtilTest {
     @Test

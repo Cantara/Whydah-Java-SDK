@@ -1,11 +1,5 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import com.github.kevinsawicki.http.HttpRequest;
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-import net.whydah.sso.commands.baseclasses.HttpSender;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -14,6 +8,14 @@ import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+import net.whydah.sso.commands.baseclasses.HttpSender;
+
+import com.github.kevinsawicki.http.HttpRequest;
 
 public class CommandVerifyDeliveryAddress extends BaseHttpGetHystrixCommand<String> {
 

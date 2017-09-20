@@ -1,16 +1,18 @@
 package net.whydah.sso.commands.threat;
 
 
-import com.netflix.hystrix.exception.HystrixRuntimeException;
-import net.whydah.sso.util.backoff.BackOff;
-import net.whydah.sso.util.backoff.BackOffExecution;
-import net.whydah.sso.util.backoff.ExponentialBackOff;
-import org.junit.Test;
-import org.slf4j.Logger;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.URI;
 
-import static org.slf4j.LoggerFactory.getLogger;
+import net.whydah.sso.util.backoff.BackOff;
+import net.whydah.sso.util.backoff.BackOffExecution;
+import net.whydah.sso.util.backoff.ExponentialBackOff;
+
+import org.junit.Test;
+import org.slf4j.Logger;
+
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 
 public class ExpBackOfTest {
 

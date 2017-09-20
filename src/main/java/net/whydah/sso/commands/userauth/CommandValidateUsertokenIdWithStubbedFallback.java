@@ -1,9 +1,9 @@
 package net.whydah.sso.commands.userauth;
 
+import java.net.URI;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.URI;
 
 public class CommandValidateUsertokenIdWithStubbedFallback extends CommandValidateUsertokenId {
     private static final Logger log = LoggerFactory.getLogger(CommandValidateUsertokenIdWithStubbedFallback.class);

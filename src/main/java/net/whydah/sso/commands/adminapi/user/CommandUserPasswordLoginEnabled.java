@@ -1,10 +1,10 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-
 import java.net.URI;
 
-public class CommandUserPasswordLoginEnabled extends BaseHttpGetHystrixCommand<Boolean> {
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
+
+public class CommandUserPasswordLoginEnabled extends BaseHttpGetHystrixCommandForBooleanType {
 
     private String userName;
 

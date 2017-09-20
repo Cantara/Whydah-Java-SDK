@@ -1,14 +1,15 @@
 package net.whydah.sso.commands.extras;
 
-import net.whydah.sso.application.mappers.ApplicationTokenMapper;
-import net.whydah.sso.application.types.ApplicationToken;
-import net.whydah.sso.util.SystemTestBaseConfig;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertTrue;
+import net.whydah.sso.application.mappers.ApplicationTokenMapper;
+import net.whydah.sso.application.types.ApplicationToken;
+import net.whydah.sso.util.SystemTestBaseConfig;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class CommandSendScheduledSMSTest {
     static SystemTestBaseConfig config;

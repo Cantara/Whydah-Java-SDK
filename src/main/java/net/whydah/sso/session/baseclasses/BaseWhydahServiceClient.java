@@ -1,24 +1,32 @@
 package net.whydah.sso.session.baseclasses;
 
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Properties;
+
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.extras.CommandSendSms;
-import net.whydah.sso.commands.userauth.*;
+import net.whydah.sso.commands.userauth.CommandCreateTicketForUserTokenID;
+import net.whydah.sso.commands.userauth.CommandGenerateAndSendSmsPin;
+import net.whydah.sso.commands.userauth.CommandGetUsertokenByUserticket;
+import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
+import net.whydah.sso.commands.userauth.CommandLogonUserByPhoneNumberPin;
+import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
+import net.whydah.sso.commands.userauth.CommandReleaseUserToken;
+import net.whydah.sso.commands.userauth.CommandValidateUsertokenId;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
+
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoExpressionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Properties;
 
 public class BaseWhydahServiceClient {
 

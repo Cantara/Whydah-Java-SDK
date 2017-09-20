@@ -1,11 +1,12 @@
 package net.whydah.sso.commands.userauth;
 
-import net.whydah.sso.user.types.UserIdentity;
-import net.whydah.sso.util.SystemTestBaseConfig;
-import org.junit.BeforeClass;
-
 import java.util.Random;
 import java.util.UUID;
+
+import net.whydah.sso.user.types.UserIdentity;
+import net.whydah.sso.util.SystemTestBaseConfig;
+
+import org.junit.BeforeClass;
 
 public class CommandReleaseUserTokenTest {
 

@@ -4,13 +4,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gson.JsonObject;
-import com.jayway.jsonpath.JsonPath;
-
 import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 import net.whydah.sso.basehelpers.JsonPathHelper;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 

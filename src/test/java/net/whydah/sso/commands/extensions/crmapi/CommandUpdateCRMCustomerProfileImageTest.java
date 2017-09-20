@@ -1,9 +1,9 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import net.whydah.sso.user.types.UserToken;
-import org.junit.Test;
-
 import static org.junit.Assert.assertTrue;
+import net.whydah.sso.user.types.UserToken;
+
+import org.junit.Test;
 
 public class CommandUpdateCRMCustomerProfileImageTest extends BaseCRMCustomerTest {
 

@@ -1,11 +1,11 @@
 package net.whydah.sso.commands.userauth;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-
 import java.net.HttpURLConnection;
 import java.net.URI;
 
-public class CommandValidateUsertokenId extends BaseHttpGetHystrixCommand<Boolean> {
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
+
+public class CommandValidateUsertokenId extends BaseHttpGetHystrixCommandForBooleanType {
 
     private String usertokenid;
 

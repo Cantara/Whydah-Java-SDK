@@ -1,18 +1,20 @@
 package net.whydah.sso.commands.baseclasses;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
+import net.whydah.sso.util.StringConv;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.kevinsawicki.http.HttpRequest;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
-import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.util.StringConv;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class BaseHttpPutHystrixCommand<R> extends HystrixCommand<R> {
 

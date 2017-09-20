@@ -1,13 +1,13 @@
 package net.whydah.sso.util;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import static junit.framework.TestCase.assertTrue;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import static junit.framework.TestCase.assertTrue;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class ImportStartSSLCertificatesTest {
 

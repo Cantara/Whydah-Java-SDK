@@ -1,11 +1,11 @@
 package net.whydah.sso.commands.userauth;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-import net.whydah.sso.util.ExceptionUtil;
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.util.ExceptionUtil;
 
 
 public class CommandGetUsertokenByUsertokenId extends BaseHttpPostHystrixCommand<String> {

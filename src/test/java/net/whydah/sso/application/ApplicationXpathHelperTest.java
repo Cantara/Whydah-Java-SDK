@@ -1,16 +1,12 @@
 package net.whydah.sso.application;
 
-import net.whydah.sso.application.helpers.ApplicationHelper;
-import net.whydah.sso.application.helpers.ApplicationJsonpathHelper;
+import static org.junit.Assert.assertEquals;
+import static org.slf4j.LoggerFactory.getLogger;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
+
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class ApplicationXpathHelperTest {
 

@@ -1,6 +1,12 @@
 package net.whydah.sso.commands.userauth;
 
-import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.user.helpers.UserXpathHelper;
@@ -9,14 +15,12 @@ import net.whydah.sso.user.types.UserToken;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import net.whydah.sso.util.WhydahUtil;
 import net.whydah.sso.whydah.DEFCON;
+
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-
-import static org.junit.Assert.*;
+import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 
 public class CommandLogonUserByUserCredentialTest {
 

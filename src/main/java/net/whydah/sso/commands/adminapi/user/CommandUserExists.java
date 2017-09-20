@@ -1,10 +1,10 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-
 import java.net.URI;
 
-public class CommandUserExists extends BaseHttpGetHystrixCommand<Boolean> {
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
+
+public class CommandUserExists extends BaseHttpGetHystrixCommandForBooleanType {
   
     private String adminUserTokenId;
     private String userQuery;

@@ -1,9 +1,9 @@
 package net.whydah.sso.commands.extensions.statistics;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-
 import java.net.URI;
 import java.time.Instant;
+
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 
 public class CommandGetUsersStats extends BaseHttpGetHystrixCommand<String> {
 	

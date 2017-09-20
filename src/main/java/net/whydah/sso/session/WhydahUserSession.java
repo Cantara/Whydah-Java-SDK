@@ -1,18 +1,19 @@
 package net.whydah.sso.session;
 
-import net.whydah.sso.commands.userauth.CommandValidateUsertokenId;
-import net.whydah.sso.user.helpers.UserTokenXpathHelper;
-import net.whydah.sso.user.helpers.UserXpathHelper;
-import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.util.WhydahUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.URI;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import net.whydah.sso.commands.userauth.CommandValidateUsertokenId;
+import net.whydah.sso.user.helpers.UserTokenXpathHelper;
+import net.whydah.sso.user.helpers.UserXpathHelper;
+import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.util.WhydahUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WhydahUserSession {
 

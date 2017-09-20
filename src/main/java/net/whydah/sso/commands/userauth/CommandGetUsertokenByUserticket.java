@@ -1,13 +1,14 @@
 package net.whydah.sso.commands.userauth;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-import net.whydah.sso.util.ExceptionUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.util.ExceptionUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CommandGetUsertokenByUserticket extends BaseHttpPostHystrixCommand<String> {
 

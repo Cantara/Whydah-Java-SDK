@@ -1,12 +1,12 @@
 package net.whydah.sso.commands.adminapi.user;
 
+import static org.junit.Assert.assertTrue;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.util.SystemTestBaseConfig;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
 
 public class CommandUserPasswordLoginEnabledTest {
 

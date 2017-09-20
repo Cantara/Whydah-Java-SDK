@@ -1,12 +1,12 @@
 package net.whydah.sso.commands.appauth;
 
-import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
-import net.whydah.sso.application.types.ApplicationCredential;
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
+import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
+import net.whydah.sso.application.types.ApplicationCredential;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 public class CommandLogonApplication extends BaseHttpPostHystrixCommand<String> {
 

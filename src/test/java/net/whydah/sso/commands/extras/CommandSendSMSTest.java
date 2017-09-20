@@ -1,14 +1,14 @@
 package net.whydah.sso.commands.extras;
 
+import static junit.framework.TestCase.assertTrue;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandGenerateAndSendSmsPin;
 import net.whydah.sso.util.SystemTestBaseConfig;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static junit.framework.TestCase.assertTrue;
 
 
 public class CommandSendSMSTest {

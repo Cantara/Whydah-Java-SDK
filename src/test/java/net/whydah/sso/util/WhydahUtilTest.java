@@ -1,20 +1,21 @@
 package net.whydah.sso.util;
 
+import static org.junit.Assert.assertNotNull;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.net.URI;
+import java.util.UUID;
+
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
-
-import java.net.URI;
-import java.util.UUID;
-
-import static org.junit.Assert.assertNotNull;
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by baardl on 18.06.15.

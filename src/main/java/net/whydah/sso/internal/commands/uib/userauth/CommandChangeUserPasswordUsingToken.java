@@ -1,9 +1,10 @@
 package net.whydah.sso.internal.commands.uib.userauth;
 
-import com.github.kevinsawicki.http.HttpRequest;
+import java.net.URI;
+
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
-import java.net.URI;
+import com.github.kevinsawicki.http.HttpRequest;
 
 public class CommandChangeUserPasswordUsingToken extends BaseHttpPostHystrixCommand<String> {
     static final String CHANGE_USERCRED_TOKEN_KEY = "changePasswordToken";

@@ -4,9 +4,9 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommandForBooleanType;
 
-public class CommandCreateTicketForUserTokenID extends BaseHttpPostHystrixCommand<Boolean>{
+public class CommandCreateTicketForUserTokenID extends BaseHttpPostHystrixCommandForBooleanType{
 
 	String userTicket;
 	String userTokenID;

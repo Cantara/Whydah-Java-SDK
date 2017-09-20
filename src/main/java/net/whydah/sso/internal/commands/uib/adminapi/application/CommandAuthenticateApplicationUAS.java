@@ -1,10 +1,10 @@
 package net.whydah.sso.internal.commands.uib.adminapi.application;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 /**
  * Used by UAS to autenticate application against UIB.

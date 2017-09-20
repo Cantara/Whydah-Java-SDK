@@ -3,6 +3,7 @@ package net.whydah.sso.user;
 
 import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserToken;
+
 import org.junit.Test;
 
 public class UserJsonHelperTest {

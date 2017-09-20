@@ -1,14 +1,14 @@
 package net.whydah.sso.commands.userauth;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-import net.whydah.sso.user.mappers.UserCredentialMapper;
-import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.util.ExceptionUtil;
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.user.mappers.UserCredentialMapper;
+import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.util.ExceptionUtil;
 
 public class CommandLogonUserByUserCredential  extends BaseHttpPostHystrixCommand<String> {
 

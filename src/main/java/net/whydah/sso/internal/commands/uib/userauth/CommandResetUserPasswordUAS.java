@@ -1,8 +1,8 @@
 package net.whydah.sso.internal.commands.uib.userauth;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-
 import java.net.URI;
+
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 public class CommandResetUserPasswordUAS extends BaseHttpPostHystrixCommand<String> {
     private String uid;

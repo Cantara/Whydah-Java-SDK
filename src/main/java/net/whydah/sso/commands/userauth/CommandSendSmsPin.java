@@ -1,14 +1,14 @@
 package net.whydah.sso.commands.userauth;
 
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommandForBooleanType;
+
 
 //TODO:make test
-public class CommandSendSmsPin extends BaseHttpPostHystrixCommand<Boolean> {
+public class CommandSendSmsPin extends BaseHttpPostHystrixCommandForBooleanType {
 
 
     private String phoneNo;
