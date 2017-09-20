@@ -277,6 +277,12 @@ public class WhydahApplicationSession {
 
     private synchronized void initializeWhydahApplicationSession() {
         logonAttemptNo = 1;
+        String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
+        if (checkApplicationToken(applicationTokenXML)) {
+            setApplicationSessionParameters(applicationTokenXML);
+            log.info("InitWAS {}: Initialized new application session, applicationTokenId:{}, applicationID: {}, applicationName: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getApplicationName(), applicationToken.getExpiresFormatted());
+            logonAttemptNo = 0;
+        }
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> sf = scheduler.schedule(
                 new Runnable() {
