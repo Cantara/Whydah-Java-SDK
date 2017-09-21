@@ -1,15 +1,5 @@
 package net.whydah.sso.session;
 
-import java.net.URI;
-import java.time.Instant;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
 import net.whydah.sso.application.mappers.ApplicationMapper;
 import net.whydah.sso.application.mappers.ApplicationTokenMapper;
 import net.whydah.sso.application.types.Application;
@@ -27,9 +17,14 @@ import net.whydah.sso.util.WhydahUtil;
 import net.whydah.sso.whydah.DEFCON;
 import net.whydah.sso.whydah.ThreatSignal;
 import net.whydah.sso.whydah.ThreatSignal.SeverityLevel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URI;
+import java.time.Instant;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.*;
 
 public class WhydahApplicationSession {
 
@@ -231,19 +226,19 @@ public class WhydahApplicationSession {
         }
         if (!checkActiveSession()) {
             if (applicationToken == null) {
-                log.info("Renew WAS: No active application session, applicationToken=null, , myAppCredential:{}", myAppCredential);
+                log.info("Renew WAS: No active application session, applicationToken:null, myAppCredential:{}, logonAttemptNo:{}", myAppCredential, logonAttemptNo);
             }
-            for (int n = 0; n < 3 || !checkActiveSession(); n++) {
-                initializeWhydahApplicationSession();
-                if (logonAttemptNo == 0) {
-                    return;
-                }
-                log.info("Renew WAS: Unsuccessful attempt to logon application session, returned applicationtokenXML: {}: ", getActiveApplicationTokenXML());
-                try {
-                    Thread.sleep(1000 * n);
-                } catch (InterruptedException ie) {
-                }
-            }
+//            for (int n = 0; n < 3 || !checkActiveSession(); n++) {
+//                initializeWhydahApplicationSession();
+//                if (logonAttemptNo == 0) {
+//                    return;
+//                }
+//                log.info("Renew WAS: Unsuccessful attempt to logon application session, returned applicationtokenXML: {}: ", getActiveApplicationTokenXML());
+//                try {
+//                    Thread.sleep(1000 * n);
+//                } catch (InterruptedException ie) {
+//                }
+//            }
         } else {
             log.trace("Renew WAS: Active application session found, applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
 
@@ -287,18 +282,19 @@ public class WhydahApplicationSession {
             setApplicationSessionParameters(applicationTokenXML);
             log.info("InitWAS {}: Initialized new application session, applicationTokenId:{}, applicationID: {}, applicationName: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getApplicationName(), applicationToken.getExpiresFormatted());
             logonAttemptNo = 0;
-        }
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        ScheduledFuture<?> sf = scheduler.schedule(
-                new Runnable() {
-                    public void run() {
-                        try {
-                            initializeWhydahApplicationSessionThread();
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
+        } else {
+            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            ScheduledFuture<?> sf = scheduler.schedule(
+                    new Runnable() {
+                        public void run() {
+                            try {
+                                initializeWhydahApplicationSessionThread();
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
                         }
-                    }
-                }, 5, TimeUnit.SECONDS);
+                    }, 5, TimeUnit.SECONDS);
+        }
     }
 
     private synchronized boolean initializeWhydahApplicationSessionThread() {
