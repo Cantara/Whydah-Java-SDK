@@ -1,15 +1,5 @@
 package net.whydah.sso.util;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.lang.reflect.Field;
-import java.net.URI;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationTokenMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
@@ -21,10 +11,20 @@ import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserToken;
 
+import java.lang.reflect.Field;
+import java.net.URI;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 public class SystemTestBaseConfig {
 
     // Run the Whydah SystemTests?
-    public boolean systemTest = true;
+    public boolean systemTest = false;
 
     // Run SystemTests for Whydah Extensions?
     public boolean statisticsExtensionSystemTest = true && systemTest;
