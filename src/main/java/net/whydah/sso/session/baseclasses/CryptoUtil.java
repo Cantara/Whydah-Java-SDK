@@ -56,6 +56,7 @@ public class CryptoUtil {
     }
 
     public static String decrypt(String enc) throws Exception {
+        log.trace("Decrypting: [}", enc);
         if (isEncryptionEnabled()) {
             if (checkForBase64EncodesdString(enc)) {
                 try {
@@ -63,10 +64,10 @@ public class CryptoUtil {
                     cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((myKey.getEncryptionKey()), "AES"), myKey.getIv());
                     return new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
                 } catch (Exception e) {
-                    log.warn("Exception in trying to decrypt message, trying fallback to old key", e.getMessage());
+                    log.warn("Exception in trying to decrypt message, trying fallback to old key", e);
                 }
                 try {
-                    if (myOldKey != null) {
+                    if (myOldKey.getIv() != null) {
                         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
                         cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((myOldKey.getEncryptionKey()), "AES"), myOldKey.getIv());
                         return new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
