@@ -21,7 +21,9 @@ public class CommandRenewApplicationTokenTest {
     public static void setup() throws Exception {
         config = new SystemTestBaseConfig();
         String applicationID = ApplicationTokenXpathHelper.getApplicationIDFromApplicationCredential(ApplicationCredentialMapper.toXML(config.appCredential));
-        assertTrue(applicationID != null);
+        ExchangeableKey exchangeableKey = new ExchangeableKey("{\"encryptionKey\":\"ZmVlNTZiYjU4MWMzOTc3YzM0YWMzNTZiOWJlYjhhY2I=\",\n" +
+                "\"iv\":\"MDEyMzQ1Njc4OTBBQkNERQ==\"}");
+        CryptoUtil.setExchangeableKey(exchangeableKey);
     }
 
 
@@ -35,9 +37,6 @@ public class CommandRenewApplicationTokenTest {
             assertTrue(myAppTokenXml != null);
             assertTrue(myAppTokenXml.length() > 6);
             ApplicationToken at = ApplicationTokenMapper.fromXml(myAppTokenXml);
-            ExchangeableKey exchangeableKey = new ExchangeableKey("{\"encryptionKey\":\"ZmVlNTZiYjU4MWMzOTc3YzM0YWMzNTZiOWJlYjhhY2I=\",\n" +
-                    "\"iv\":\"MDEyMzQ1Njc4OTBBQkNERQ==\"}");
-            CryptoUtil.setExchangeableKey(exchangeableKey);
 
             assertTrue(new CommandValidateApplicationTokenId(config.tokenServiceUri.toString(), at.getApplicationTokenId()).execute());
 
