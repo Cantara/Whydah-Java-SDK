@@ -1,6 +1,7 @@
 package net.whydah.sso.session.baseclasses;
 
 import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
@@ -12,8 +13,14 @@ import java.security.spec.KeySpec;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class CryptoUtil {
 
+    private static final Logger log = getLogger(CryptoUtil.class);
+
+    private static byte[] oldEncryptionKey;
+    private static IvParameterSpec oldIv;
     private static byte[] encryptionKey;
     private static IvParameterSpec iv;
 
@@ -28,10 +35,12 @@ public class CryptoUtil {
     }
 
     private static void setEncryptionKey(byte[] encKey) {
+        oldEncryptionKey = encryptionKey;
         encryptionKey = encKey;
     }
 
     public static void setIv(IvParameterSpec ivp) {
+        oldIv = iv;
         iv = ivp;
     }
 
@@ -45,10 +54,21 @@ public class CryptoUtil {
 
     public static String decrypt(String enc) throws Exception {
         if (checkForBase64EncodesdString(enc)) {
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((encryptionKey), "AES"), iv);
-            String decrypted = new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
-            return decrypted;
+            try {
+                Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+                cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((encryptionKey), "AES"), iv);
+                String decrypted = new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
+                return decrypted;
+            } catch (Exception e) {
+                log.warn("Exception in trying to decrypt message, trying fallback to old key", e);
+                if (oldEncryptionKey != null) {
+                    Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+                    cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((oldEncryptionKey), "AES"), oldIv);
+                    String decrypted = new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
+                    return decrypted;
+
+                }
+            }
 
         }
         return enc;  // not encoded string, so we return the raw string
