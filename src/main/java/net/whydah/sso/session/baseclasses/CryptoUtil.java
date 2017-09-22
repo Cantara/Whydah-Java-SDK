@@ -3,24 +3,50 @@ package net.whydah.sso.session.baseclasses;
 import org.apache.commons.codec.binary.Hex;
 
 import javax.crypto.Cipher;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.SecureRandom;
+import java.security.spec.KeySpec;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CryptoUtil {
 
-    public static String encrypt(String sampleText, String encryptionKey, IvParameterSpec iv) throws Exception {
+    private static byte[] encryptionKey;
+    private static IvParameterSpec iv;
+
+
+    public static void setEncryptionSrecret(String secret) throws Exception {
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        KeySpec spec = new PBEKeySpec(secret.toCharArray(), salt, 65536, 256); // AES-256
+        SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        setEncryptionKey(f.generateSecret(spec).getEncoded());
+    }
+
+    private static void setEncryptionKey(byte[] encKey) {
+        encryptionKey = encKey;
+    }
+
+    public static void setIv(IvParameterSpec ivp) {
+        iv = ivp;
+    }
+
+
+    public static String encrypt(String sampleText) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(Hex.decodeHex(encryptionKey.toCharArray()), "AES"), iv);
+        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec((encryptionKey), "AES"), iv);
         String encrypted = Hex.encodeHexString(cipher.doFinal((sampleText.toString()).getBytes()));
         return encrypted;
     }
 
-    public static String decrypt(String enc, String encryptionKey, IvParameterSpec iv) throws Exception {
+    public static String decrypt(String enc) throws Exception {
         if (checkForBase64EncodesdString(enc)) {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(Hex.decodeHex(encryptionKey.toCharArray()), "AES"), iv);
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((encryptionKey), "AES"), iv);
             String decrypted = new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
             return decrypted;
 
