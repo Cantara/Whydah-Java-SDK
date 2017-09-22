@@ -1,20 +1,19 @@
 package net.whydah.sso.commands.baseclasses;
 
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-
-import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.util.StringConv;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.kevinsawicki.http.HttpRequest;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
+import net.whydah.sso.application.helpers.ApplicationXpathHelper;
+import net.whydah.sso.session.baseclasses.CryptoUtil;
+import net.whydah.sso.util.StringConv;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class BaseHttpPutHystrixCommand<R> extends HystrixCommand<R> {
 
@@ -84,9 +83,9 @@ public abstract class BaseHttpPutHystrixCommand<R> extends HystrixCommand<R> {
 
             responseBody = request.bytes();
 			int statusCode = request.code();
-			String responseAsText = StringConv.UTF8(responseBody);
-			
-			switch (statusCode) {
+            String responseAsText = CryptoUtil.decrypt(StringConv.UTF8(responseBody));
+
+            switch (statusCode) {
 			case java.net.HttpURLConnection.HTTP_OK:
 				onCompleted(responseAsText);
 				return dealWithResponse(responseAsText);
