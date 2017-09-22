@@ -13,6 +13,7 @@ import java.security.spec.KeySpec;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static net.whydah.sso.util.LoggerUtil.first50;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class CryptoUtil {
@@ -27,6 +28,7 @@ public class CryptoUtil {
         myOldKey.setEncryptionKey(myKey.getEncryptionKey());
         myOldKey.setIv(myKey.getIv());
         myKey = exchangeableKey;
+        log.trace("Updated key:", first50(myKey.toJsonEncoded()));
     }
 
     public static void setEncryptionSecretAndIv(String secret, IvParameterSpec ivp) throws Exception {
@@ -39,39 +41,46 @@ public class CryptoUtil {
         SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         myKey.setEncryptionKey(f.generateSecret(spec).getEncoded());
         myKey.setIv(ivp);
-        log.debug(myKey.toString());
+        log.trace("Created new key:{}", first50(myKey.toJsonEncoded()));
     }
-
-
 
 
     public static String encrypt(String sampleText) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec((myKey.getEncryptionKey()), "AES"), myKey.getIv());
-        String encrypted = Hex.encodeHexString(cipher.doFinal((sampleText.toString()).getBytes()));
-        return encrypted;
+        if (isEncryptionEnabled()) {
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec((myKey.getEncryptionKey()), "AES"), myKey.getIv());
+            return Hex.encodeHexString(cipher.doFinal((sampleText.toString()).getBytes()));
+        }
+        log.debug("crypto not enabled");
+        return sampleText;
     }
 
     public static String decrypt(String enc) throws Exception {
-        if (checkForBase64EncodesdString(enc)) {
-            try {
-                Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-                cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((myKey.getEncryptionKey()), "AES"), myKey.getIv());
-                String decrypted = new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
-                return decrypted;
-            } catch (Exception e) {
-                log.warn("Exception in trying to decrypt message, trying fallback to old key", e.getMessage());
-                if (myOldKey != null) {
+        if (isEncryptionEnabled()) {
+            if (checkForBase64EncodesdString(enc)) {
+                try {
                     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-                    cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((myOldKey.getEncryptionKey()), "AES"), myOldKey.getIv());
-                    String decrypted = new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
-                    return decrypted;
-
+                    cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((myKey.getEncryptionKey()), "AES"), myKey.getIv());
+                    return new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
+                } catch (Exception e) {
+                    log.warn("Exception in trying to decrypt message, trying fallback to old key", e.getMessage());
+                }
+                try {
+                    if (myOldKey != null) {
+                        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+                        cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((myOldKey.getEncryptionKey()), "AES"), myOldKey.getIv());
+                        return new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
+                    }
+                } catch (Exception e) {
+                    log.warn("Exception in trying to decrypt message.", e);
                 }
             }
-
         }
         return enc;  // not encoded string, so we return the raw string
+    }
+
+    private static boolean isEncryptionEnabled() {
+        return myKey.getEncryptionKey() != null;
     }
 
     public static boolean checkForBase64EncodesdString(String string) {

@@ -24,6 +24,6 @@ public class LoggerUtil {
     }
 
     public static String first50(Object object) {
-        return first(object, 50);
+        return first(object, 50).replace("\n", "");
     }
 }

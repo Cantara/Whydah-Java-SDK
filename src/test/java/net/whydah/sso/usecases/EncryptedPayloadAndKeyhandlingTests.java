@@ -21,6 +21,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static net.whydah.sso.session.baseclasses.CryptoUtil.decrypt;
 import static net.whydah.sso.session.baseclasses.CryptoUtil.encrypt;
+import static net.whydah.sso.util.LoggerUtil.first50;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class EncryptedPayloadAndKeyhandlingTests {
@@ -91,7 +92,8 @@ public class EncryptedPayloadAndKeyhandlingTests {
 
         ekey.setEncryptionKey(decoder.decode(encryptionKeyEncoded));
         ekey.setIv(new IvParameterSpec(decoder.decode(iv)));
-        log.debug(ekey.toJsonEncoded());
+        //assertTrue(jsonEncodedKey.equalsIgnoreCase(ekey.toJsonEncoded()));
+        log.debug("{}", first50(ekey.toJsonEncoded()));
         ekey.setIv(new IvParameterSpec("01234567890ABCDEF".getBytes()));
 
     }

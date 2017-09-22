@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import javax.crypto.spec.IvParameterSpec;
 import java.util.Base64;
 
+import static net.whydah.sso.util.LoggerUtil.first50;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ExchangeableKey {
@@ -22,7 +23,7 @@ public class ExchangeableKey {
     }
 
     public ExchangeableKey(String jsonEncodedKey) {
-        log.debug("Constructor called with " + jsonEncodedKey);
+        log.debug("Constructor called with {}", first50(jsonEncodedKey));
         String encryptionKeyEncoded = JsonPathHelper.findJsonPathValue(jsonEncodedKey, "$.encryptionKey");
         String iv = JsonPathHelper.findJsonPathValue(jsonEncodedKey, "$.iv");
         Base64.Decoder decoder = Base64.getDecoder();
