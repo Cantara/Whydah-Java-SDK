@@ -23,6 +23,11 @@ public class CryptoUtil {
     private static ExchangeableKey myOldKey = new ExchangeableKey();
     private static ExchangeableKey myKey = new ExchangeableKey();
 
+    public static void setExchangeableKey(ExchangeableKey exchangeableKey) throws Exception {
+        myOldKey.setEncryptionKey(myKey.getEncryptionKey());
+        myOldKey.setIv(myKey.getIv());
+        myKey = exchangeableKey;
+    }
 
     public static void setEncryptionSecretAndIv(String secret, IvParameterSpec ivp) throws Exception {
         myOldKey.setEncryptionKey(myKey.getEncryptionKey());
@@ -81,6 +86,6 @@ public class CryptoUtil {
     }
 
     public static String getActiveKey() {
-        return myKey.toString();
+        return myKey.toJsonEncoded();
     }
 }

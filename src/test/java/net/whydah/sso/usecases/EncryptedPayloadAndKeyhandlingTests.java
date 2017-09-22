@@ -1,10 +1,13 @@
 package net.whydah.sso.usecases;
 
+import net.whydah.sso.basehelpers.JsonPathHelper;
 import net.whydah.sso.session.baseclasses.CryptoUtil;
+import net.whydah.sso.session.baseclasses.ExchangeableKey;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
 
 import javax.crypto.spec.IvParameterSpec;
 import java.security.Key;
@@ -18,8 +21,10 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static net.whydah.sso.session.baseclasses.CryptoUtil.decrypt;
 import static net.whydah.sso.session.baseclasses.CryptoUtil.encrypt;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class EncryptedPayloadAndKeyhandlingTests {
+    private static final Logger log = getLogger(EncryptedPayloadAndKeyhandlingTests.class);
 
     static SystemTestBaseConfig config;
 
@@ -51,6 +56,13 @@ public class EncryptedPayloadAndKeyhandlingTests {
         String result = decrypt(encryptedText);
         assertTrue(result.equalsIgnoreCase(testData));
 
+        String receivedKey = CryptoUtil.getActiveKey();
+        ExchangeableKey exchangeableKey = new ExchangeableKey(receivedKey);
+        CryptoUtil.setExchangeableKey(exchangeableKey);
+        String resultEK = decrypt(encryptedText);
+        assertTrue(resultEK.equalsIgnoreCase(testData));
+
+
         // Let us try with unencryptet text
         String result2 = decrypt(testData);
         assertTrue(result2.equalsIgnoreCase(testData));
@@ -64,7 +76,22 @@ public class EncryptedPayloadAndKeyhandlingTests {
     }
 
 
+    @Test
+    public void testUnmashallingExchangableKey() throws Exception {
+        String jsonEncodedKey = "{  \n" +
+                "   \"encryptionKey\":\"EhFw9E7XeCdhvG1ovt68pYh+00mGLLNR+Gv0neyRccM=\",\n" +
+                "   \"iv\":\"SPSK0jqxW7syp5nV0TQsGQ==\"\n" +
+                "}";
+        ExchangeableKey ekey = new ExchangeableKey();
+        String encryptionKeyEncoded = JsonPathHelper.findJsonPathValue(jsonEncodedKey, "$.encryptionKey");
+        String iv = JsonPathHelper.findJsonPathValue(jsonEncodedKey, "$.iv");
+        Base64.Decoder decoder = Base64.getDecoder();
 
+        ekey.setEncryptionKey(decoder.decode(encryptionKeyEncoded));
+        ekey.setIv(new IvParameterSpec(decoder.decode(iv)));
+        log.debug(ekey.toJsonEncoded());
+
+    }
 
     @Test
     public void testRSAPublicKeySetup() throws Exception {

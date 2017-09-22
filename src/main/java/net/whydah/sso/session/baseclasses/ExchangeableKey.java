@@ -1,5 +1,6 @@
 package net.whydah.sso.session.baseclasses;
 
+import net.whydah.sso.basehelpers.JsonPathHelper;
 import org.slf4j.Logger;
 
 import javax.crypto.spec.IvParameterSpec;
@@ -20,10 +21,14 @@ public class ExchangeableKey {
         this.iv = iv;
     }
 
-    public ExchangeableKey(String exportedString) {
-        log.debug("Constructor called with " + exportedString);
-        this.encryptionKey = encryptionKey;
-        this.iv = iv;
+    public ExchangeableKey(String jsonEncodedKey) {
+        log.debug("Constructor called with " + jsonEncodedKey);
+        String encryptionKeyEncoded = JsonPathHelper.findJsonPathValue(jsonEncodedKey, "$.encryptionKey");
+        String iv = JsonPathHelper.findJsonPathValue(jsonEncodedKey, "$.iv");
+        Base64.Decoder decoder = Base64.getDecoder();
+
+        setEncryptionKey(decoder.decode(encryptionKeyEncoded));
+        setIv(new IvParameterSpec(decoder.decode(iv)));
     }
 
     public ExchangeableKey() {
@@ -45,11 +50,10 @@ public class ExchangeableKey {
         this.iv = iv;
     }
 
-    @Override
-    public String toString() {
-        return "ExchangeableKey{" +
-                "encryptionKey=" + encoder.encodeToString(encryptionKey) +
-                ", iv=" + encoder.encodeToString(iv.getIV()) +
+    public String toJsonEncoded() {
+        return "{" +
+                "\"encryptionKey\":\"" + encoder.encodeToString(encryptionKey) + "\",\n" +
+                "\"iv\":\"" + encoder.encodeToString(iv.getIV()) + "\"" +
                 '}';
     }
 }
