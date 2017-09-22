@@ -2,6 +2,7 @@ package net.whydah.sso.usecases;
 
 import net.whydah.sso.session.baseclasses.CryptoUtil;
 import net.whydah.sso.util.SystemTestBaseConfig;
+import org.apache.commons.codec.binary.Hex;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -11,6 +12,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.UUID;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
@@ -42,7 +44,6 @@ public class EncryptedPayloadAndKeyhandlingTests {
 
 
         String testData = "Hello World";
-        // String sharedKey = Hex.encodeHexString(UUID.randomUUID().toString().getBytes()).substring(0, 32);
 
         CryptoUtil.setEncryptionSrecret(config.appCredential.getApplicationSecret());
         CryptoUtil.setIv(iv);
@@ -54,6 +55,12 @@ public class EncryptedPayloadAndKeyhandlingTests {
         // Let us try with unencryptet text
         String result2 = decrypt(testData);
         assertTrue(result2.equalsIgnoreCase(testData));
+
+        String sharedKey = Hex.encodeHexString(UUID.randomUUID().toString().getBytes()).substring(0, 32);
+        CryptoUtil.setEncryptionSrecret(sharedKey);
+        CryptoUtil.setIv(iv);   // Weakness - these has to be set "atomically"
+        String result3 = decrypt(encryptedText);
+        assertTrue(result3.equalsIgnoreCase(testData));
 
     }
 
