@@ -19,33 +19,30 @@ public class CryptoUtil {
 
     private static final Logger log = getLogger(CryptoUtil.class);
 
-    private static byte[] oldEncryptionKey;
-    private static IvParameterSpec oldIv;
-    private static byte[] encryptionKey;
-    private static IvParameterSpec iv;
+
+    private static ExchangeableKey myOldKey = new ExchangeableKey();
+    private static ExchangeableKey myKey = new ExchangeableKey();
 
 
     public static void setEncryptionSecretAndIv(String secret, IvParameterSpec ivp) throws Exception {
+        myOldKey.setEncryptionKey(myKey.getEncryptionKey());
+        myOldKey.setIv(myKey.getIv());
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
         KeySpec spec = new PBEKeySpec(secret.toCharArray(), salt, 65536, 256); // AES-256
         SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        setEncryptionKey(f.generateSecret(spec).getEncoded());
-        oldIv = iv;
-        iv = ivp;
+        myKey.setEncryptionKey(f.generateSecret(spec).getEncoded());
+        myKey.setIv(ivp);
+        log.debug(myKey.toString());
     }
 
-    private static void setEncryptionKey(byte[] encKey) {
-        oldEncryptionKey = encryptionKey;
-        encryptionKey = encKey;
-    }
 
 
 
     public static String encrypt(String sampleText) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec((encryptionKey), "AES"), iv);
+        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec((myKey.getEncryptionKey()), "AES"), myKey.getIv());
         String encrypted = Hex.encodeHexString(cipher.doFinal((sampleText.toString()).getBytes()));
         return encrypted;
     }
@@ -54,14 +51,14 @@ public class CryptoUtil {
         if (checkForBase64EncodesdString(enc)) {
             try {
                 Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-                cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((encryptionKey), "AES"), iv);
+                cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((myKey.getEncryptionKey()), "AES"), myKey.getIv());
                 String decrypted = new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
                 return decrypted;
             } catch (Exception e) {
-                log.warn("Exception in trying to decrypt message, trying fallback to old key", e);
-                if (oldEncryptionKey != null) {
+                log.warn("Exception in trying to decrypt message, trying fallback to old key", e.getMessage());
+                if (myOldKey != null) {
                     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-                    cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((oldEncryptionKey), "AES"), oldIv);
+                    cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((myOldKey.getEncryptionKey()), "AES"), myOldKey.getIv());
                     String decrypted = new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
                     return decrypted;
 
@@ -81,5 +78,9 @@ public class CryptoUtil {
         } else {
             return false;
         }
+    }
+
+    public static String getActiveKey() {
+        return myKey.toString();
     }
 }
