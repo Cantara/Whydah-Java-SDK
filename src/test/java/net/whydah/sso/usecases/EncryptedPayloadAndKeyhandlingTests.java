@@ -45,6 +45,10 @@ public class EncryptedPayloadAndKeyhandlingTests {
         String result = decrypt(encryptedText, sharedKey, iv);
         assertTrue(result.equalsIgnoreCase(testData));
 
+        // Let us try with unencryptet text
+        String result2 = decrypt(testData, sharedKey, iv);
+        assertTrue(result2.equalsIgnoreCase(testData));
+
     }
 
 
