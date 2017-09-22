@@ -8,6 +8,7 @@ import net.whydah.sso.session.baseclasses.CryptoUtil;
 import net.whydah.sso.session.baseclasses.ExchangeableKey;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -28,6 +29,7 @@ public class CommandRenewApplicationTokenTest {
 
 
     @Test
+    @Ignore
     public void testCommandRenewApplicationTokenTest() throws Exception {
 
         if (config.isSystemTestEnabled()) {
