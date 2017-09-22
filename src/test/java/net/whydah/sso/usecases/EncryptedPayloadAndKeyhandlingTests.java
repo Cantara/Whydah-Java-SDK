@@ -3,9 +3,7 @@ package net.whydah.sso.usecases;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 
-import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -15,6 +13,8 @@ import java.util.UUID;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
+import static net.whydah.sso.session.baseclasses.CryptoUtil.decrypt;
+import static net.whydah.sso.session.baseclasses.CryptoUtil.encrypt;
 
 public class EncryptedPayloadAndKeyhandlingTests {
 
@@ -48,19 +48,7 @@ public class EncryptedPayloadAndKeyhandlingTests {
     }
 
 
-    private String encrypt(String sampleText, String encryptionKey, IvParameterSpec iv) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(Hex.decodeHex(encryptionKey.toCharArray()), "AES"), iv);
-        String encrypted = Hex.encodeHexString(cipher.doFinal((sampleText.toString()).getBytes()));
-        return encrypted;
-    }
 
-    private String decrypt(String enc, String encryptionKey, IvParameterSpec iv) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(Hex.decodeHex(encryptionKey.toCharArray()), "AES"), iv);
-        String decrypted = new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
-        return decrypted;
-    }
 
     @Test
     public void testRSAPublicKeySetup() throws Exception {
