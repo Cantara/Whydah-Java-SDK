@@ -87,7 +87,7 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 			
 			responseBody = request.bytes();
 			int statusCode = request.code();
-            log.warn("rasposeBoby: {}", responseBody);
+            log.warn("resposeBoby: {}", responseBody);
             log.warn("StringConv: {}", StringConv.UTF8(responseBody));
             log.warn("responseAsText: {}", CryptoUtil.decrypt(StringConv.UTF8(responseBody)));
             String responseAsText = CryptoUtil.decrypt(StringConv.UTF8(responseBody));

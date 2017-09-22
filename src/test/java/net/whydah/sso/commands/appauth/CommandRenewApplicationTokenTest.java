@@ -44,6 +44,7 @@ public class CommandRenewApplicationTokenTest {
             assertTrue(applicationTokenXml != null);
             assertTrue(applicationTokenXml.length() > 6);
             ApplicationToken at2 = ApplicationTokenMapper.fromXml(applicationTokenXml);
+            assertTrue(at2.getApplicationID().equalsIgnoreCase(config.appCredential.getApplicationID()));
 
         }
     }
