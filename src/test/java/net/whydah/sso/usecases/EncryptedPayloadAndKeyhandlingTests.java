@@ -45,8 +45,7 @@ public class EncryptedPayloadAndKeyhandlingTests {
 
         String testData = "Hello World";
 
-        CryptoUtil.setEncryptionSrecret(config.appCredential.getApplicationSecret());
-        CryptoUtil.setIv(iv);
+        CryptoUtil.setEncryptionSecretAndIv(config.appCredential.getApplicationSecret(), iv);
         String encryptedText = encrypt(testData);
         assertNotNull(encryptedText);
         String result = decrypt(encryptedText);
@@ -57,8 +56,7 @@ public class EncryptedPayloadAndKeyhandlingTests {
         assertTrue(result2.equalsIgnoreCase(testData));
 
         String sharedKey = Hex.encodeHexString(UUID.randomUUID().toString().getBytes()).substring(0, 32);
-        CryptoUtil.setEncryptionSrecret(sharedKey);
-        CryptoUtil.setIv(iv);   // Weakness - these has to be set "atomically"
+        CryptoUtil.setEncryptionSecretAndIv(sharedKey, iv);
         String result3 = decrypt(encryptedText);
         assertTrue(result3.equalsIgnoreCase(testData));
 

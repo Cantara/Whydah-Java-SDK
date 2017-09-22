@@ -25,13 +25,15 @@ public class CryptoUtil {
     private static IvParameterSpec iv;
 
 
-    public static void setEncryptionSrecret(String secret) throws Exception {
+    public static void setEncryptionSecretAndIv(String secret, IvParameterSpec ivp) throws Exception {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
         KeySpec spec = new PBEKeySpec(secret.toCharArray(), salt, 65536, 256); // AES-256
         SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         setEncryptionKey(f.generateSecret(spec).getEncoded());
+        oldIv = iv;
+        iv = ivp;
     }
 
     private static void setEncryptionKey(byte[] encKey) {
@@ -39,10 +41,6 @@ public class CryptoUtil {
         encryptionKey = encKey;
     }
 
-    public static void setIv(IvParameterSpec ivp) {
-        oldIv = iv;
-        iv = ivp;
-    }
 
 
     public static String encrypt(String sampleText) throws Exception {
