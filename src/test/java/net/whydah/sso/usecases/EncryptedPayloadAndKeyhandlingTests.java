@@ -50,7 +50,7 @@ public class EncryptedPayloadAndKeyhandlingTests {
 
         String testData = "Hello World";
 
-        CryptoUtil.setEncryptionSecretAndIv(config.appCredential.getApplicationSecret(), iv));
+        CryptoUtil.setEncryptionSecretAndIv(config.appCredential.getApplicationSecret(), iv);
         String encryptedText = encrypt(testData);
         assertNotNull(encryptedText);
         String result = decrypt(encryptedText);
