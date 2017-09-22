@@ -86,13 +86,14 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 			request = dealWithRequestBeforeSend(request);
 			
 			responseBody = request.bytes();
-			int statusCode = request.code();
-            log.warn("resposeBoby: {}", responseBody);
-            log.warn("StringConv: {}", StringConv.UTF8(responseBody));
-            log.warn("responseAsText: {}", CryptoUtil.decrypt(StringConv.UTF8(responseBody)));
-            String responseAsText = CryptoUtil.decrypt(StringConv.UTF8(responseBody));
-			
-			switch (statusCode) {
+            byte[] responseBodyCopy = responseBody.clone();
+            int statusCode = request.code();
+            log.warn("resposeBody: {}", responseBodyCopy);
+            log.warn("StringConv: {}", StringConv.UTF8(responseBodyCopy));
+            log.warn("responseAsText: {}", CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy)));
+            String responseAsText = CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy));
+
+            switch (statusCode) {
 			case java.net.HttpURLConnection.HTTP_OK:
 				onCompleted(responseAsText);
 				return dealWithResponse(responseAsText);
