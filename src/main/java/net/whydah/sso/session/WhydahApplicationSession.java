@@ -12,6 +12,7 @@ import net.whydah.sso.commands.threat.ThreatDefManyLoginAttemptsFromSameIPAddres
 import net.whydah.sso.commands.threat.ThreatDefTooManyRequestsForOneEndpoint;
 import net.whydah.sso.commands.threat.ThreatObserver;
 import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
+import net.whydah.sso.session.baseclasses.CryptoUtil;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.util.WhydahUtil;
 import net.whydah.sso.whydah.DEFCON;
@@ -20,6 +21,7 @@ import net.whydah.sso.whydah.ThreatSignal.SeverityLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.crypto.spec.IvParameterSpec;
 import java.net.URI;
 import java.time.Instant;
 import java.util.LinkedList;
@@ -324,7 +326,12 @@ public class WhydahApplicationSession {
 
     private void setApplicationSessionParameters(String applicationTokenXML) {
         applicationToken = ApplicationTokenMapper.fromXml(applicationTokenXML);
-        log.info("WAS {}: New application session created for applicationID: {}, applicationTokenID: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted());
+        try {
+            CryptoUtil.setEncryptionSecretAndIv(applicationToken.getApplicationTokenId(), new IvParameterSpec("01234567890ABCDE".getBytes()));
+        } catch (Exception e) {
+            log.warn("WAS {}: Unable to instansiate Crypto", e);
+        }
+        log.info("WAS {}: New application session created for applicationID: {}, applicationTokenID: {}, expires: {}, key:{}", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted(), CryptoUtil.getActiveKey());
     }
 
     private void removeApplicationSessionParameters() {

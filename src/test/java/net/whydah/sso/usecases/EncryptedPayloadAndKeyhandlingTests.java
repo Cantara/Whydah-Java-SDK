@@ -50,7 +50,7 @@ public class EncryptedPayloadAndKeyhandlingTests {
 
         String testData = "Hello World";
 
-        CryptoUtil.setEncryptionSecretAndIv(config.appCredential.getApplicationSecret(), iv);
+        CryptoUtil.setEncryptionSecretAndIv(config.appCredential.getApplicationSecret(), iv));
         String encryptedText = encrypt(testData);
         assertNotNull(encryptedText);
         String result = decrypt(encryptedText);
@@ -68,7 +68,7 @@ public class EncryptedPayloadAndKeyhandlingTests {
         assertTrue(result2.equalsIgnoreCase(testData));
 
         String sharedKey = Hex.encodeHexString(UUID.randomUUID().toString().getBytes()).substring(0, 32);
-        CryptoUtil.setEncryptionSecretAndIv(sharedKey, iv);
+        CryptoUtil.setEncryptionSecretAndIv(sharedKey, new IvParameterSpec("01234567890ABCDEF".getBytes()));
         String result3 = decrypt(encryptedText);
         assertTrue(result3.equalsIgnoreCase(testData));
 
@@ -82,6 +82,8 @@ public class EncryptedPayloadAndKeyhandlingTests {
                 "   \"encryptionKey\":\"EhFw9E7XeCdhvG1ovt68pYh+00mGLLNR+Gv0neyRccM=\",\n" +
                 "   \"iv\":\"SPSK0jqxW7syp5nV0TQsGQ==\"\n" +
                 "}";
+
+
         ExchangeableKey ekey = new ExchangeableKey();
         String encryptionKeyEncoded = JsonPathHelper.findJsonPathValue(jsonEncodedKey, "$.encryptionKey");
         String iv = JsonPathHelper.findJsonPathValue(jsonEncodedKey, "$.iv");
@@ -90,6 +92,7 @@ public class EncryptedPayloadAndKeyhandlingTests {
         ekey.setEncryptionKey(decoder.decode(encryptionKeyEncoded));
         ekey.setIv(new IvParameterSpec(decoder.decode(iv)));
         log.debug(ekey.toJsonEncoded());
+        ekey.setIv(new IvParameterSpec("01234567890ABCDEF".getBytes()));
 
     }
 
