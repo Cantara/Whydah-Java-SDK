@@ -1,28 +1,26 @@
 package net.whydah.sso.commands.extensions.statistics;
 
-import static org.junit.Assert.assertTrue;
-
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
-
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.basehelpers.JsonPathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.util.SystemTestBaseConfig;
-
+import net.whydah.sso.whydah.TimeLimitedCodeBlock;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.junit.Assert.assertTrue;
 
 public class MapAndFilterUserStatsTest {
 
@@ -100,10 +98,45 @@ public class MapAndFilterUserStatsTest {
             log.debug("Returned list {} of userlogins: {}", userLogins.length(), userLogins);
             assertTrue(userLogins != null);
             assertTrue(userLogins.length() > 10);
-            String mappedUL = getFilteredUserSessionsJsonFromUserActivityJson(userLogins, config.userName);
+            String mappedUL = getTimedFilteredUserSessionsJsonFromUserActivityJson(userLogins, config.userName);
             log.debug("Mapped:  {} getFilteredUserSessionsJsonFromUserActivityJson: {}", mappedUL.length(), mappedUL);
 
         }
+    }
+
+    public static String getTimedFilteredUserSessionsJsonFromUserActivityJson(String userActivityJson, String filterusername) {
+        final long startTime = System.currentTimeMillis();
+        log(startTime, "calling runWithTimeout!");
+        String result = "";
+        try {
+            result = TimeLimitedCodeBlock.runWithTimeout(new Callable<String>() {
+                @Override
+                public String call() {
+//                    try {
+                    log(startTime, "starting sleep!");
+                    String r = getFilteredUserSessionsJsonFromUserActivityJson(userActivityJson, filterusername);
+                    log(startTime, "woke up!");
+                    return r;
+
+                    //throw new InterruptedException("");
+                    //                  }
+                    //                  catch (InterruptedException e) {
+                    //                      log(startTime, "was interrupted!");
+                    //                  }
+                }
+            }, 2, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            log(startTime, "got timeout!");
+        } catch (Exception e) {
+            log(startTime, "got exception!");
+        }
+        log(startTime, "end of main method!");
+        return result;
+    }
+
+    private static void log(long startTime, String msg) {
+        long elapsedSeconds = (System.currentTimeMillis() - startTime);
+        log.trace("%1$5sms [%2$16s] %3$s\n", elapsedSeconds, Thread.currentThread().getName(), msg);
     }
 
 }
