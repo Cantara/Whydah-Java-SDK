@@ -12,7 +12,7 @@ public class LoggerUtil {
             String text = object.toString();
             if (text != null) {
                 if (text.length() > numChars) {
-                    first = text.substring(0, numChars);
+                    first = text.substring(0, numChars).replace("\n", " ");
                 } else {
                     first = text;
                 }
@@ -24,6 +24,6 @@ public class LoggerUtil {
     }
 
     public static String first50(Object object) {
-        return first(object, 50).replace("\n", "");
+        return first(object, 50);
     }
 }
