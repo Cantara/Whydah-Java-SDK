@@ -6,6 +6,7 @@ import net.whydah.sso.session.baseclasses.CryptoUtil;
 import net.whydah.sso.session.baseclasses.ExchangeableKey;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 
@@ -28,7 +29,7 @@ public class CommandRenewApplicationTokenTest {
 
 
     @Test
-    //@Ignore
+    @Ignore
     public void testCommandRenewWithCryptoApplicationTokenTest() throws Exception {
 
         if (config.isSystemTestEnabled()) {

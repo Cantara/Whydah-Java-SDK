@@ -36,7 +36,7 @@ public class CryptoUtil {
             myOldKey.setEncryptionKey(myKey.getEncryptionKey());
             myOldKey.setIv(myKey.getIv());
         }
-        myKey = exchangeableKey;
+        myKey = new ExchangeableKey(exchangeableKey.toJsonEncoded());
         log.trace("Updated key:", first50(myKey.toJsonEncoded()));
     }
 
