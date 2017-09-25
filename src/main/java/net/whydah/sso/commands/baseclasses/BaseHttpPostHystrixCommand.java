@@ -89,7 +89,7 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
             byte[] responseBodyCopy = responseBody.clone();
             int statusCode = request.code();
             log.trace("resposeBody: {}", responseBodyCopy);
-            log.trace("StringConv: {}", StringConv.UTF8(responseBodyCopy));
+            log.info("StringConv: {}", StringConv.UTF8(responseBodyCopy));
             log.trace("responseAsText: {}", CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy)));
             String responseAsText = CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy));
 
