@@ -6,7 +6,6 @@ import net.whydah.sso.session.baseclasses.CryptoUtil;
 import net.whydah.sso.session.baseclasses.ExchangeableKey;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 
@@ -29,7 +28,7 @@ public class CommandRenewApplicationTokenTest {
 
 
     @Test
-    @Ignore
+    //@Ignore
     public void testCommandRenewWithCryptoApplicationTokenTest() throws Exception {
 
         if (config.isSystemTestEnabled()) {
@@ -58,10 +57,15 @@ public class CommandRenewApplicationTokenTest {
                 applicationTokenXml = new CommandRenewApplicationSession(config.tokenServiceUri, applicationToken.getApplicationTokenId()).execute();
                 assertTrue(applicationTokenXml != null);
                 assertTrue(applicationTokenXml.length() > 6);
-                applicationToken1 = ApplicationTokenMapper.fromXml(applicationTokenXml);
+                exchangeableKeyString = new CommandGetApplicationKey(config.tokenServiceUri, applicationToken.getApplicationTokenId()).execute();
+                log.debug("{} Found exchangeableKeyString: {}", n, exchangeableKeyString);
+                exchangeableKey = new ExchangeableKey(exchangeableKeyString);
+                log.debug("{} Found exchangeableKey: {}", n, exchangeableKey);
+                CryptoUtil.setExchangeableKey(exchangeableKey);
+                applicationToken1 = ApplicationTokenMapper.fromXml(CryptoUtil.decrypt(applicationTokenXml));
                 log.debug("{} Updated ApplicationToken: {}", n, first50(applicationToken1));
                 assertTrue(applicationToken1.getApplicationID().equalsIgnoreCase(config.appCredential.getApplicationID()));
-                Thread.sleep(5000);
+                Thread.sleep(200);
 
             }
 

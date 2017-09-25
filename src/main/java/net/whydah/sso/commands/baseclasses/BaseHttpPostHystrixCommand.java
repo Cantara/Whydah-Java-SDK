@@ -91,7 +91,12 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
             log.trace("resposeBody: {}", responseBodyCopy);
             log.info("StringConv: {}", StringConv.UTF8(responseBodyCopy));
             log.trace("responseAsText: {}", CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy)));
-            String responseAsText = CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy));
+            String responseAsText = StringConv.UTF8(responseBodyCopy);
+            try {
+                responseAsText = CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy));
+            } catch (Exception e) {
+                log.warn("Unable to decrypt - wrong cryptokey?", e);
+            }
 
             switch (statusCode) {
 			case java.net.HttpURLConnection.HTTP_OK:
