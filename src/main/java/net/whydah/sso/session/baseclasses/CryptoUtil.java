@@ -32,8 +32,10 @@ public class CryptoUtil {
     }
 
     public static void setEncryptionSecretAndIv(String secret, IvParameterSpec ivp) throws Exception {
-        myOldKey.setEncryptionKey(myKey.getEncryptionKey());
-        myOldKey.setIv(myKey.getIv());
+        ExchangeableKey existingKey = null;
+        if (myKey.getEncryptionKey() != null) {
+            existingKey = new ExchangeableKey(myKey.toJsonEncoded());
+        }
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
@@ -42,6 +44,11 @@ public class CryptoUtil {
         myKey.setEncryptionKey(f.generateSecret(spec).getEncoded());
         myKey.setIv(ivp);
         log.trace("Created new key:{}", first50(myKey.toJsonEncoded()));
+        if (existingKey != null && myKey.toJsonEncoded().equalsIgnoreCase(existingKey.toJsonEncoded())) {
+            log.trace("Do not update, same key");
+        } else {
+            myOldKey = existingKey;
+        }
     }
 
 
