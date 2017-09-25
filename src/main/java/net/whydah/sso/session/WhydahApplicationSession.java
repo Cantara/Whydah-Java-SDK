@@ -31,18 +31,19 @@ import java.util.concurrent.*;
 public class WhydahApplicationSession {
 
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
-    private static final int SESSION_CHECK_INTERVAL = 50;  // Check every 30 seconds to adapt quickly
+    private static final int SESSION_CHECK_INTERVAL = 30;  // Check every 30 seconds to adapt quickly
     private List<Application> applications = new LinkedList<Application>();
     private static WhydahApplicationSession instance = null;
     private String sts;
     private String uas;
     private static ApplicationCredential myAppCredential;
     private static int logonAttemptNo = 0;
-    private ApplicationToken applicationToken;
+    private static ApplicationToken applicationToken;
     private DEFCON defcon = DEFCON.DEFCON5;
     private boolean disableUpdateAppLink=false;
 
     private static final int[] FIBONACCI = new int[]{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144};
+    private static ScheduledExecutorService scheduler;
 
     private ThreatObserver threatObserver;
 
@@ -62,7 +63,7 @@ public class WhydahApplicationSession {
         //register more if any
         
         initializeWhydahApplicationSession();
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
                 new Runnable() {
                     public void run() {
@@ -115,10 +116,11 @@ public class WhydahApplicationSession {
 
     public static boolean expiresBeforeNextSchedule(Long timestamp) {
 
-        long i = System.currentTimeMillis();
-        long j = (timestamp);
-        long diffSeconds = j - i;
-        if (diffSeconds < SESSION_CHECK_INTERVAL) {
+        long currentTime = System.currentTimeMillis();
+        long expiresAt = (timestamp);
+        long diffSeconds = (expiresAt - currentTime) / 1000;
+        log.debug("expiresBeforeNextSchedule - expiresAt: {} - now: {} - expires in: {} seconds", expiresAt, currentTime, diffSeconds);
+        if (diffSeconds < SESSION_CHECK_INTERVAL * 2) {
             log.debug("expiresBeforeNextSchedule - re-new application session.. diffseconds: {}", diffSeconds);
             return true;
         }
@@ -254,6 +256,7 @@ public class WhydahApplicationSession {
                         applicationToken = ApplicationTokenMapper.fromXml(applicationTokenXML);
                         if (checkActiveSession()) {
                             log.info("Renew WAS: Success in renew applicationsession, applicationTokenId: {} - for applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+                            log.debug("Renew WAS: - expiresAt: {} - now: {} - expires in: {} seconds", applicationToken.getExpires(), System.currentTimeMillis(), (Long.parseLong(applicationToken.getExpires()) - System.currentTimeMillis()) / 1000);
                             break;
                         }
                     } else {
