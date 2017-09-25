@@ -23,7 +23,6 @@ import net.whydah.sso.whydah.ThreatSignal.SeverityLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.crypto.spec.IvParameterSpec;
 import java.net.URI;
 import java.time.Instant;
 import java.util.LinkedList;
@@ -260,9 +259,9 @@ public class WhydahApplicationSession {
                             log.info("Renew WAS: Success in renew applicationsession, applicationTokenId: {} - for applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
                             log.debug("Renew WAS: - expiresAt: {} - now: {} - expires in: {} seconds", applicationToken.getExpires(), System.currentTimeMillis(), (Long.parseLong(applicationToken.getExpires()) - System.currentTimeMillis()) / 1000);
                             String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), applicationToken.getApplicationTokenId()).execute();
-                            log.debug("{} Found exchangeableKeyString: {}", n, exchangeableKeyString);
+                            log.debug("Found exchangeableKeyString: {}", exchangeableKeyString);
                             ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);
-                            log.debug("{} Found exchangeableKey: {}", n, exchangeableKey);
+                            log.debug("Found exchangeableKey: {}", exchangeableKey);
                             try {
                                 CryptoUtil.setExchangeableKey(exchangeableKey);
 
@@ -341,10 +340,15 @@ public class WhydahApplicationSession {
 
     private void setApplicationSessionParameters(String applicationTokenXML) {
         applicationToken = ApplicationTokenMapper.fromXml(applicationTokenXML);
+        String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), applicationToken.getApplicationTokenId()).execute();
+        log.debug("Found exchangeableKeyString: {}", exchangeableKeyString);
+        ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);
+        log.debug("Found exchangeableKey: {}", exchangeableKey);
         try {
-            CryptoUtil.setEncryptionSecretAndIv(applicationToken.getApplicationTokenId(), new IvParameterSpec("01234567890ABCDE".getBytes()));
+            CryptoUtil.setExchangeableKey(exchangeableKey);
+
         } catch (Exception e) {
-            log.warn("WAS {}: Unable to instansiate Crypto", e);
+            log.warn("Unable to update CryptoUtil with new cryptokey", e);
         }
         log.info("WAS {}: New application session created for applicationID: {}, applicationTokenID: {}, expires: {}, key:{}", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted(), CryptoUtil.getActiveKey());
     }
