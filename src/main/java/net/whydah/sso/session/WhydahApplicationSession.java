@@ -31,7 +31,7 @@ import java.util.concurrent.*;
 public class WhydahApplicationSession {
 
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
-    private static final int SESSION_CHECK_INTERVAL = 30;  // Check every 30 seconds to adapt quickly
+    public static final int SESSION_CHECK_INTERVAL = 30;  // Check every 30 seconds to adapt quickly
     private List<Application> applications = new LinkedList<Application>();
     private static WhydahApplicationSession instance = null;
     private String sts;
