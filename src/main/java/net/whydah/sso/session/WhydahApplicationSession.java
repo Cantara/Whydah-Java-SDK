@@ -6,6 +6,7 @@ import net.whydah.sso.application.types.Application;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.application.types.ApplicationToken;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
+import net.whydah.sso.commands.appauth.CommandGetApplicationKey;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.threat.CommandSendThreatSignal;
 import net.whydah.sso.commands.threat.ThreatDefManyLoginAttemptsFromSameIPAddress;
@@ -13,6 +14,7 @@ import net.whydah.sso.commands.threat.ThreatDefTooManyRequestsForOneEndpoint;
 import net.whydah.sso.commands.threat.ThreatObserver;
 import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.session.baseclasses.CryptoUtil;
+import net.whydah.sso.session.baseclasses.ExchangeableKey;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.util.WhydahUtil;
 import net.whydah.sso.whydah.DEFCON;
@@ -257,6 +259,16 @@ public class WhydahApplicationSession {
                         if (checkActiveSession()) {
                             log.info("Renew WAS: Success in renew applicationsession, applicationTokenId: {} - for applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
                             log.debug("Renew WAS: - expiresAt: {} - now: {} - expires in: {} seconds", applicationToken.getExpires(), System.currentTimeMillis(), (Long.parseLong(applicationToken.getExpires()) - System.currentTimeMillis()) / 1000);
+                            String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), applicationToken.getApplicationTokenId()).execute();
+                            log.debug("{} Found exchangeableKeyString: {}", n, exchangeableKeyString);
+                            ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);
+                            log.debug("{} Found exchangeableKey: {}", n, exchangeableKey);
+                            try {
+                                CryptoUtil.setExchangeableKey(exchangeableKey);
+
+                            } catch (Exception e) {
+                                log.warn("Unable to update CryptoUtil with new cryptokey", e);
+                            }
                             break;
                         }
                     } else {
