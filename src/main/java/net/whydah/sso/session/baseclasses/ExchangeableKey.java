@@ -63,9 +63,9 @@ public class ExchangeableKey {
     }
 
     /**
-     * Alterative method to generate cryptokey form secret
+     * Alterative method to generate cryptokey from secret
      *
-     * @param secret
+     * @param secret the string we convert into a special key
      * @throws Exception
      */
     public void setEncryptionSecret(String secret) throws Exception {
