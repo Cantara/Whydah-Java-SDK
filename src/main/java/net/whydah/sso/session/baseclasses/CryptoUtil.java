@@ -25,8 +25,17 @@ public class CryptoUtil {
     private static ExchangeableKey myKey = new ExchangeableKey();
 
     public static void setExchangeableKey(ExchangeableKey exchangeableKey) throws Exception {
-        myOldKey.setEncryptionKey(myKey.getEncryptionKey());
-        myOldKey.setIv(myKey.getIv());
+        ExchangeableKey existingKey = null;
+        if (myKey.getEncryptionKey() != null) {
+            existingKey = new ExchangeableKey(myKey.toJsonEncoded());
+        }
+
+        if (existingKey != null && myKey.toJsonEncoded().equalsIgnoreCase(existingKey.toJsonEncoded())) {
+            log.trace("Do not update, same key");
+        } else {
+            myOldKey.setEncryptionKey(myKey.getEncryptionKey());
+            myOldKey.setIv(myKey.getIv());
+        }
         myKey = exchangeableKey;
         log.trace("Updated key:", first50(myKey.toJsonEncoded()));
     }
