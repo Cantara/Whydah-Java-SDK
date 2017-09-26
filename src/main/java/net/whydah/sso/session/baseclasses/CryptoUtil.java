@@ -72,7 +72,7 @@ public class CryptoUtil {
     }
 
     public static String decrypt(String enc) throws Exception {
-        log.trace("Decrypting: [}, myKey:{}, myIV:{}", enc, myKey.getEncryptionKey(), myKey.getIv());
+        log.trace("Decrypting: {}, myKey:{}, myIV:{}", enc, myKey.getEncryptionKey(), myKey.getIv());
         if (isEncryptionEnabled()) {
             if (checkForBase64EncodesdString(enc)) {
                 try {
