@@ -1,7 +1,5 @@
 package net.whydah.sso.commands.appauth;
 
-import net.whydah.sso.application.helpers.ApplicationTokenXpathHelper;
-import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.application.mappers.ApplicationTokenMapper;
 import net.whydah.sso.application.types.ApplicationToken;
 import net.whydah.sso.session.baseclasses.CryptoUtil;
@@ -10,10 +8,16 @@ import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
 
+import static net.whydah.sso.util.LoggerUtil.first50;
 import static org.junit.Assert.assertTrue;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class CommandRenewApplicationTokenTest {
+
+    private static final Logger log = getLogger(CommandRenewApplicationTokenTest.class);
+
 
 
     static SystemTestBaseConfig config;
@@ -21,16 +25,12 @@ public class CommandRenewApplicationTokenTest {
     @BeforeClass
     public static void setup() throws Exception {
         config = new SystemTestBaseConfig();
-        String applicationID = ApplicationTokenXpathHelper.getApplicationIDFromApplicationCredential(ApplicationCredentialMapper.toXML(config.appCredential));
-        ExchangeableKey exchangeableKey = new ExchangeableKey("{\"encryptionKey\":\"ZmVlNTZiYjU4MWMzOTc3YzM0YWMzNTZiOWJlYjhhY2I=\",\n" +
-                "\"iv\":\"MDEyMzQ1Njc4OTBBQkNERQ==\"}");
-        CryptoUtil.setExchangeableKey(exchangeableKey);
     }
 
 
     @Test
     @Ignore
-    public void testCommandRenewApplicationTokenTest() throws Exception {
+    public void testCommandRenewWithCryptoApplicationTokenTest() throws Exception {
 
         if (config.isSystemTestEnabled()) {
 
@@ -38,15 +38,37 @@ public class CommandRenewApplicationTokenTest {
             // System.out.println("ApplicationTokenID=" + myApplicationTokenID);
             assertTrue(myAppTokenXml != null);
             assertTrue(myAppTokenXml.length() > 6);
-            ApplicationToken at = ApplicationTokenMapper.fromXml(myAppTokenXml);
+            ApplicationToken applicationToken = ApplicationTokenMapper.fromXml(myAppTokenXml);
 
-            assertTrue(new CommandValidateApplicationTokenId(config.tokenServiceUri.toString(), at.getApplicationTokenId()).execute());
+            assertTrue(new CommandValidateApplicationTokenId(config.tokenServiceUri.toString(), applicationToken.getApplicationTokenId()).execute());
 
-            String applicationTokenXml = new CommandRenewApplicationSession(config.tokenServiceUri, at.getApplicationTokenId()).execute();
-            assertTrue(applicationTokenXml != null);
-            assertTrue(applicationTokenXml.length() > 6);
-            ApplicationToken at2 = ApplicationTokenMapper.fromXml(applicationTokenXml);
-            assertTrue(at2.getApplicationID().equalsIgnoreCase(config.appCredential.getApplicationID()));
+
+            // Lets loop a few times
+            String exchangeableKeyString;
+            ExchangeableKey exchangeableKey;
+            String applicationTokenXml;
+            ApplicationToken applicationToken1;
+
+            for (int n = 0; n < 10; n++) {
+                exchangeableKeyString = new CommandGetApplicationKey(config.tokenServiceUri, applicationToken.getApplicationTokenId()).execute();
+                log.debug("{} Found exchangeableKeyString: {}", n, exchangeableKeyString);
+                exchangeableKey = new ExchangeableKey(exchangeableKeyString);
+                log.debug("{} Found exchangeableKey: {}", n, exchangeableKey);
+                CryptoUtil.setExchangeableKey(exchangeableKey);
+                applicationTokenXml = new CommandRenewApplicationSession(config.tokenServiceUri, applicationToken.getApplicationTokenId()).execute();
+                assertTrue(applicationTokenXml != null);
+                assertTrue(applicationTokenXml.length() > 6);
+                exchangeableKeyString = new CommandGetApplicationKey(config.tokenServiceUri, applicationToken.getApplicationTokenId()).execute();
+                log.debug("{} Found exchangeableKeyString: {}", n, exchangeableKeyString);
+                exchangeableKey = new ExchangeableKey(exchangeableKeyString);
+                log.debug("{} Found exchangeableKey: {}", n, exchangeableKey);
+                CryptoUtil.setExchangeableKey(exchangeableKey);
+                applicationToken1 = ApplicationTokenMapper.fromXml(CryptoUtil.decrypt(applicationTokenXml));
+                log.debug("{} Updated ApplicationToken: {}", n, first50(applicationToken1));
+                assertTrue(applicationToken1.getApplicationID().equalsIgnoreCase(config.appCredential.getApplicationID()));
+                Thread.sleep(200);
+
+            }
 
         }
     }

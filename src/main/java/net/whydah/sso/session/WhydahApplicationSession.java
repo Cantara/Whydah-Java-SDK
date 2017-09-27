@@ -6,6 +6,7 @@ import net.whydah.sso.application.types.Application;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.application.types.ApplicationToken;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
+import net.whydah.sso.commands.appauth.CommandGetApplicationKey;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.threat.CommandSendThreatSignal;
 import net.whydah.sso.commands.threat.ThreatDefManyLoginAttemptsFromSameIPAddress;
@@ -13,6 +14,7 @@ import net.whydah.sso.commands.threat.ThreatDefTooManyRequestsForOneEndpoint;
 import net.whydah.sso.commands.threat.ThreatObserver;
 import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.session.baseclasses.CryptoUtil;
+import net.whydah.sso.session.baseclasses.ExchangeableKey;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.util.WhydahUtil;
 import net.whydah.sso.whydah.DEFCON;
@@ -21,7 +23,6 @@ import net.whydah.sso.whydah.ThreatSignal.SeverityLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.crypto.spec.IvParameterSpec;
 import java.net.URI;
 import java.time.Instant;
 import java.util.LinkedList;
@@ -31,18 +32,19 @@ import java.util.concurrent.*;
 public class WhydahApplicationSession {
 
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
-    private static final int SESSION_CHECK_INTERVAL = 50;  // Check every 30 seconds to adapt quickly
+    public static final int SESSION_CHECK_INTERVAL = 10;  // Check every 30 seconds to adapt quickly
     private List<Application> applications = new LinkedList<Application>();
     private static WhydahApplicationSession instance = null;
     private String sts;
     private String uas;
     private static ApplicationCredential myAppCredential;
     private static int logonAttemptNo = 0;
-    private ApplicationToken applicationToken;
+    private static ApplicationToken applicationToken;
     private DEFCON defcon = DEFCON.DEFCON5;
     private boolean disableUpdateAppLink=false;
 
     private static final int[] FIBONACCI = new int[]{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144};
+    private static ScheduledExecutorService scheduler;
 
     private ThreatObserver threatObserver;
 
@@ -62,7 +64,7 @@ public class WhydahApplicationSession {
         //register more if any
         
         initializeWhydahApplicationSession();
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
                 new Runnable() {
                     public void run() {
@@ -115,10 +117,11 @@ public class WhydahApplicationSession {
 
     public static boolean expiresBeforeNextSchedule(Long timestamp) {
 
-        long i = System.currentTimeMillis();
-        long j = (timestamp);
-        long diffSeconds = j - i;
-        if (diffSeconds < SESSION_CHECK_INTERVAL) {
+        long currentTime = System.currentTimeMillis();
+        long expiresAt = (timestamp);
+        long diffSeconds = (expiresAt - currentTime) / 1000;
+        log.debug("expiresBeforeNextSchedule - expiresAt: {} - now: {} - expires in: {} seconds", expiresAt, currentTime, diffSeconds);
+        if (diffSeconds < SESSION_CHECK_INTERVAL * 2) {
             log.debug("expiresBeforeNextSchedule - re-new application session.. diffseconds: {}", diffSeconds);
             return true;
         }
@@ -254,6 +257,17 @@ public class WhydahApplicationSession {
                         applicationToken = ApplicationTokenMapper.fromXml(applicationTokenXML);
                         if (checkActiveSession()) {
                             log.info("Renew WAS: Success in renew applicationsession, applicationTokenId: {} - for applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+                            log.debug("Renew WAS: - expiresAt: {} - now: {} - expires in: {} seconds", applicationToken.getExpires(), System.currentTimeMillis(), (Long.parseLong(applicationToken.getExpires()) - System.currentTimeMillis()) / 1000);
+                            String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), applicationToken.getApplicationTokenId()).execute();
+                            log.debug("Found exchangeableKeyString: {}", exchangeableKeyString);
+                            ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);
+                            log.debug("Found exchangeableKey: {}", exchangeableKey);
+                            try {
+                                CryptoUtil.setExchangeableKey(exchangeableKey);
+
+                            } catch (Exception e) {
+                                log.warn("Unable to update CryptoUtil with new cryptokey", e);
+                            }
                             break;
                         }
                     } else {
@@ -326,10 +340,15 @@ public class WhydahApplicationSession {
 
     private void setApplicationSessionParameters(String applicationTokenXML) {
         applicationToken = ApplicationTokenMapper.fromXml(applicationTokenXML);
+        String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), applicationToken.getApplicationTokenId()).execute();
+        log.debug("Found exchangeableKeyString: {}", exchangeableKeyString);
+        ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);
+        log.debug("Found exchangeableKey: {}", exchangeableKey);
         try {
-            CryptoUtil.setEncryptionSecretAndIv(applicationToken.getApplicationTokenId(), new IvParameterSpec("01234567890ABCDE".getBytes()));
+            CryptoUtil.setExchangeableKey(exchangeableKey);
+
         } catch (Exception e) {
-            log.warn("WAS {}: Unable to instansiate Crypto", e);
+            log.warn("Unable to update CryptoUtil with new cryptokey", e);
         }
         log.info("WAS {}: New application session created for applicationID: {}, applicationTokenID: {}, expires: {}, key:{}", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted(), CryptoUtil.getActiveKey());
     }

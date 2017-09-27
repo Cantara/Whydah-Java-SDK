@@ -162,4 +162,23 @@ public class EncryptedPayloadAndKeyhandlingTests {
         String result = decrypt(StringConv.UTF8(encryptedText));
         assertTrue(result.equalsIgnoreCase(payload));
     }
+
+    @Test
+    public void testCryptoKeyKeyHandling() throws Exception {
+        Base64.Decoder decoder = Base64.getDecoder();
+        ExchangeableKey exchangeableKey = new ExchangeableKey();
+        String iv = "MDEyMzQ1Njc4OTBBQkNERQ==";
+        ExchangeableKey applicationKey = new ExchangeableKey();
+        applicationKey.setEncryptionSecret(UUID.randomUUID().toString());
+        applicationKey.setIv(new IvParameterSpec(decoder.decode(iv)));
+
+        ExchangeableKey exchangeableKey1 = new ExchangeableKey();
+        exchangeableKey1.setEncryptionSecret(UUID.randomUUID().toString());
+        exchangeableKey1.setIv(new IvParameterSpec(decoder.decode(iv)));
+
+        CryptoUtil.setExchangeableKey(applicationKey);
+        CryptoUtil.setExchangeableKey(exchangeableKey1);
+        assertTrue(exchangeableKey1.toJsonEncoded().equalsIgnoreCase(CryptoUtil.getActiveKey()));
+
+    }
 }

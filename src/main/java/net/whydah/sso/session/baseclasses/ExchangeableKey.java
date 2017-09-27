@@ -3,7 +3,11 @@ package net.whydah.sso.session.baseclasses;
 import net.whydah.sso.basehelpers.JsonPathHelper;
 import org.slf4j.Logger;
 
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import java.security.SecureRandom;
+import java.security.spec.KeySpec;
 import java.util.Base64;
 
 import static net.whydah.sso.util.LoggerUtil.first50;
@@ -56,5 +60,21 @@ public class ExchangeableKey {
                 "\"encryptionKey\":\"" + encoder.encodeToString(encryptionKey) + "\",\n" +
                 "\"iv\":\"" + encoder.encodeToString(iv.getIV()) + "\"" +
                 '}';
+    }
+
+    /**
+     * Alterative method to generate cryptokey from secret
+     *
+     * @param secret the string we convert into a special key
+     * @throws Exception
+     */
+    public void setEncryptionSecret(String secret) throws Exception {
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        KeySpec spec = new PBEKeySpec(secret.toCharArray(), salt, 65536, 256); // AES-256
+        SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        setEncryptionKey(f.generateSecret(spec).getEncoded());
+
     }
 }

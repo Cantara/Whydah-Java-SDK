@@ -27,9 +27,9 @@ public class WhydahApplicationSessionTest {
     @Test
     public void testTimecalculations() throws Exception {
         log.trace("testTimecalculations() - starting test");
-        long i = System.currentTimeMillis()+200;
+        long i = System.currentTimeMillis() + WhydahApplicationSession.SESSION_CHECK_INTERVAL * 2 * 1000 + 200;
         assertTrue(!WhydahApplicationSession.expiresBeforeNextSchedule(i));
-        i = System.currentTimeMillis() + 10;
+        i = System.currentTimeMillis() + WhydahApplicationSession.SESSION_CHECK_INTERVAL * 1 * 1000;
         assertTrue(WhydahApplicationSession.expiresBeforeNextSchedule(i));
         log.trace("testTimecalculations() - done");
 
@@ -54,6 +54,24 @@ public class WhydahApplicationSessionTest {
             assertFalse(appToken.equals(applicationSession.getActiveApplicationToken()));
         }
     }
-    
-    
+
+    @Test
+    @Ignore
+    public void testTimeoutOnSystest() throws Exception {
+        if (config.isSystemTestEnabled()) {
+            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
+            String appToken = applicationSession.getActiveApplicationTokenXML();
+            Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationSession.getActiveApplicationTokenXML());
+            long waittimeinseconds = (expires - System.currentTimeMillis()) / 1000;
+            log.debug("Application Session expires in " + waittimeinseconds + " seconds");
+            assertTrue(!applicationSession.expiresBeforeNextSchedule(expires));
+            log.debug("Thread waiting to expire...  (will take " + waittimeinseconds + " seconds...)");
+            Thread.sleep(waittimeinseconds * 4 * 1000);  // Let it run for a while
+            // Should be marked timeout
+            assertTrue(applicationSession.expiresBeforeNextSchedule(expires));
+            // Session should have been renewed and given a new applicationTokenID
+            assertFalse(appToken.equals(applicationSession.getActiveApplicationToken()));
+        }
+    }
+
 }

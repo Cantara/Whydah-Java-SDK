@@ -25,15 +25,26 @@ public class CryptoUtil {
     private static ExchangeableKey myKey = new ExchangeableKey();
 
     public static void setExchangeableKey(ExchangeableKey exchangeableKey) throws Exception {
-        myOldKey.setEncryptionKey(myKey.getEncryptionKey());
-        myOldKey.setIv(myKey.getIv());
-        myKey = exchangeableKey;
+        ExchangeableKey existingKey = null;
+        if (myKey.getEncryptionKey() != null) {
+            existingKey = new ExchangeableKey(myKey.toJsonEncoded());
+        }
+
+        if (existingKey != null && myKey.toJsonEncoded().equalsIgnoreCase(existingKey.toJsonEncoded())) {
+            log.trace("Do not update, same key");
+        } else {
+            myOldKey.setEncryptionKey(myKey.getEncryptionKey());
+            myOldKey.setIv(myKey.getIv());
+        }
+        myKey = new ExchangeableKey(exchangeableKey.toJsonEncoded());
         log.trace("Updated key:", first50(myKey.toJsonEncoded()));
     }
 
     public static void setEncryptionSecretAndIv(String secret, IvParameterSpec ivp) throws Exception {
-        myOldKey.setEncryptionKey(myKey.getEncryptionKey());
-        myOldKey.setIv(myKey.getIv());
+        ExchangeableKey existingKey = null;
+        if (myKey.getEncryptionKey() != null) {
+            existingKey = new ExchangeableKey(myKey.toJsonEncoded());
+        }
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
@@ -42,6 +53,11 @@ public class CryptoUtil {
         myKey.setEncryptionKey(f.generateSecret(spec).getEncoded());
         myKey.setIv(ivp);
         log.trace("Created new key:{}", first50(myKey.toJsonEncoded()));
+        if (existingKey != null && myKey.toJsonEncoded().equalsIgnoreCase(existingKey.toJsonEncoded())) {
+            log.trace("Do not update, same key");
+        } else {
+            myOldKey = existingKey;
+        }
     }
 
 
@@ -56,7 +72,7 @@ public class CryptoUtil {
     }
 
     public static String decrypt(String enc) throws Exception {
-        log.trace("Decrypting: [}, myKey:{}, myIV:{}", enc, myKey.getEncryptionKey(), myKey.getIv());
+        log.trace("Decrypting: {}, myKey:{}, myIV:{}", enc, myKey.getEncryptionKey(), myKey.getIv());
         if (isEncryptionEnabled()) {
             if (checkForBase64EncodesdString(enc)) {
                 try {
