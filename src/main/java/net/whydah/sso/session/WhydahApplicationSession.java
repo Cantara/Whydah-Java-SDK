@@ -415,9 +415,9 @@ public class WhydahApplicationSession {
         threatSignal.setSignalSeverity(severity.toString());
         threatSignal.setSource(source);
         if(additionalProperties!=null){
-        	for(int i=0; i<additionalProperties.length;i++){
+        	for(int i=0; i<additionalProperties.length;i=i+2){
         		String key=additionalProperties[i].toString();
-        		Object value = (i==additionalProperties.length -1)?"":additionalProperties[i+1];
+        		Object value = (i+1==additionalProperties.length)?"":additionalProperties[i+1];
         		threatSignal.setAdditionalProperty(key, value);
         	}
         }
