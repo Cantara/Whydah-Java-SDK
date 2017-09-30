@@ -82,9 +82,21 @@ public abstract class BaseHttpDeleteHystrixCommand<R> extends HystrixCommand<R> 
             request = dealWithRequestBeforeSend(request);
 
             responseBody = request.bytes();
+            responseBody = request.bytes();
+            byte[] responseBodyCopy = responseBody.clone();
             int statusCode = request.code();
-            String responseAsText = CryptoUtil.decrypt(StringConv.UTF8(responseBody));
-
+            String responseAsText = StringConv.UTF8(responseBodyCopy);
+            if (responseBodyCopy.length > 0) {
+                log.trace("resposeBody: {}", responseBodyCopy);
+                log.debug("StringConv: {}", StringConv.UTF8(responseBodyCopy));
+                log.trace("responseAsText: {}", CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy)));
+                responseAsText = StringConv.UTF8(responseBodyCopy);
+                try {
+                    responseAsText = CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy));
+                } catch (Exception e) {
+                    log.warn("Unable to decrypt - wrong cryptokey?", e);
+                }
+            }
             switch (statusCode) {
                 case java.net.HttpURLConnection.HTTP_OK:
                     onCompleted(responseAsText);
