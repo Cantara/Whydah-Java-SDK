@@ -93,7 +93,6 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 			
 			
 			responseBody = request.bytes();
-			responseBody = request.bytes();
 			byte[] responseBodyCopy = responseBody.clone();
 			int statusCode = request.code();
 			String responseAsText = StringConv.UTF8(responseBodyCopy);
