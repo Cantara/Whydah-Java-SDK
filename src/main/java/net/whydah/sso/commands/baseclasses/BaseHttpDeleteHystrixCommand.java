@@ -82,7 +82,6 @@ public abstract class BaseHttpDeleteHystrixCommand<R> extends HystrixCommand<R> 
             request = dealWithRequestBeforeSend(request);
 
             responseBody = request.bytes();
-            responseBody = request.bytes();
             byte[] responseBodyCopy = responseBody.clone();
             int statusCode = request.code();
             String responseAsText = StringConv.UTF8(responseBodyCopy);
