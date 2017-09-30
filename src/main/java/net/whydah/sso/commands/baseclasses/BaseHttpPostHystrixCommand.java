@@ -92,10 +92,10 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
             if (responseBodyCopy.length > 0) {
                 log.trace("resposeBody: {}", responseBodyCopy);
                 log.debug("StringConv: {}", StringConv.UTF8(responseBodyCopy));
-                log.trace("responseAsText: {}", CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy)));
-                responseAsText = StringConv.UTF8(responseBodyCopy);
                 try {
-                    responseAsText = CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy));
+					log.trace("responseAsText: {}", CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy)));
+					responseAsText = StringConv.UTF8(responseBodyCopy);
+					responseAsText = CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy));
                 } catch (Exception e) {
                     log.warn("Unable to decrypt - wrong cryptokey?", e);
                 }
