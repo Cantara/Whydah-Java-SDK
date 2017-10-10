@@ -392,7 +392,7 @@ public class WhydahApplicationSession {
     }
     
     public void reportThreatSignal(String threatMessage, Object[] details) {
-        reportThreatSignal(createThreat(threatMessage));
+        reportThreatSignal(createThreat(threatMessage, details));
     }
     
     public void reportThreatSignal(String clientIpAddress, String source, String threatMessage) {
