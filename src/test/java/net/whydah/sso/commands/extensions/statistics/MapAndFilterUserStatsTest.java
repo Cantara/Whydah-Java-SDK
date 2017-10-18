@@ -105,7 +105,7 @@ public class MapAndFilterUserStatsTest {
     }
 
     public static String getTimedFilteredUserSessionsJsonFromUserActivityJson(String userActivityJson, String filterusername) {
-        final long startTime = System.currentTimeMillis();
+            final long startTime = System.currentTimeMillis();
         log(startTime, "calling runWithTimeout!");
         String result = "";
         try {
@@ -136,7 +136,7 @@ public class MapAndFilterUserStatsTest {
 
     private static void log(long startTime, String msg) {
         long elapsedSeconds = (System.currentTimeMillis() - startTime);
-        log.trace("%1$5sms [%2$16s] %3$s\n", elapsedSeconds, Thread.currentThread().getName(), msg);
+        log.info("{}ms [{}] {}\n", elapsedSeconds, Thread.currentThread().getName(), msg);
     }
 
 }
