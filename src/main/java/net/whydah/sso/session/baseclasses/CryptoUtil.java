@@ -80,7 +80,7 @@ public class CryptoUtil {
                     cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec((myKey.getEncryptionKey()), "AES"), myKey.getIv());
                     return new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
                 } catch (Exception e) {
-                    log.warn("Exception in trying to decrypt message, trying fallback to old key", e);
+                    log.warn("Exception in trying to decrypt message, trying fallback to old key", e.getMessage());
                 }
                 try {
                     if (myOldKey.getIv() != null) {
@@ -89,7 +89,7 @@ public class CryptoUtil {
                         return new String(cipher.doFinal(Hex.decodeHex(enc.toCharArray())));
                     }
                 } catch (Exception e) {
-                    log.warn("Exception in trying to decrypt message.", e);
+                    log.warn("Exception in trying to decrypt message.", e.getMessage());
                 }
             }
         }
