@@ -1,17 +1,16 @@
 package net.whydah.sso.session.baseclasses;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
 import net.whydah.sso.application.mappers.ApplicationMapper;
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.basehelpers.JsonPathHelper;
 import net.whydah.sso.commands.adminapi.application.CommandListApplications;
 import net.whydah.sso.util.LoggerUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ApplicationModelUtil {
@@ -20,7 +19,7 @@ public class ApplicationModelUtil {
     public static final String minSecurityLevel = "$.security.minSecurityLevel";
     private static final Logger log = LoggerFactory.getLogger(ApplicationModelUtil.class);
     private static List<Application> applications = new ArrayList<Application>();
-   
+
     public static List<Application> getApplicationList() {
         return applications;
     }
@@ -56,27 +55,41 @@ public class ApplicationModelUtil {
 
 
     public static void updateApplicationList(URI userAdminServiceUri, String myAppTokenId, String userTokenId) {
-        if (userAdminServiceUri != null){
+        if (userAdminServiceUri != null) {
             String applicationsJson = new net.whydah.sso.commands.adminapi.application.CommandListApplications(userAdminServiceUri, myAppTokenId).execute();
             log.trace("AppLications returned:" + LoggerUtil.first50(applicationsJson));
             if (applicationsJson != null) {
                 if (applicationsJson.length() > 20) {
-                    applications = ApplicationMapper.fromJsonList(applicationsJson);
+                    try {
+                        List<Application> newapplications = ApplicationMapper.fromJsonList(applicationsJson);
+                        updateApplications(newapplications);
+                    } catch (Exception e) {
+                        log.warn("Unable to update applicationList");
+                    }
                 }
             }
         }
     }
-    
+
     public static void updateApplicationList(URI userAdminServiceUri, String myAppTokenId) {
-        if (userAdminServiceUri != null){
+        if (userAdminServiceUri != null) {
             String applicationsJson = new CommandListApplications(userAdminServiceUri, myAppTokenId).execute();
             log.debug("AppLications returned:" + applicationsJson);
             if (applicationsJson != null) {
                 if (applicationsJson.length() > 20) {
-                    applications = ApplicationMapper.fromJsonList(applicationsJson);
+                    try {
+                        List<Application> newapplications = ApplicationMapper.fromJsonList(applicationsJson);
+                        updateApplications(newapplications);
+                    } catch (Exception e) {
+                        log.warn("Unable to update applicationList");
+                    }
                 }
             }
         }
+    }
+
+    private static synchronized void updateApplications(List<Application> newapplications) {
+        applications = newapplications;
     }
 
     public static boolean shouldUpdate() {
