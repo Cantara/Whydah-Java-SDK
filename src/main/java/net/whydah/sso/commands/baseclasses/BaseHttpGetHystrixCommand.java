@@ -5,9 +5,11 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
+
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.session.baseclasses.CryptoUtil;
 import net.whydah.sso.util.StringConv;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,18 +97,29 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 			responseBody = request.bytes();
 			byte[] responseBodyCopy = responseBody.clone();
 			int statusCode = request.code();
-			String responseAsText = StringConv.UTF8(responseBodyCopy);
-			if (responseBodyCopy.length > 0) {
-				log.trace("resposeBody: {}", responseBodyCopy);
-				log.trace("StringConv: {}", StringConv.UTF8(responseBodyCopy));
-				try {
-					log.trace("responseAsText: {}", CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy)));
-					responseAsText = StringConv.UTF8(responseBodyCopy);
-					responseAsText = CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy));
-				} catch (Exception e) {
-					log.warn("Unable to decrypt - wrong cryptokey?", e.getMessage());
-				}
-			}
+//			String responseAsText = StringConv.UTF8(responseBodyCopy);
+//			if (responseBodyCopy.length > 0) {
+//				log.trace("resposeBody: {}", responseBodyCopy);
+//				log.trace("StringConv: {}", StringConv.UTF8(responseBodyCopy));
+//				try {
+//					log.trace("responseAsText: {}", CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy)));
+//					responseAsText = StringConv.UTF8(responseBodyCopy);
+//					responseAsText = CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy));
+//				} catch (Exception e) {
+//					log.warn("Unable to decrypt - wrong cryptokey?", e.getMessage());
+//				}
+//			}
+			 String responseAsText = StringConv.UTF8(responseBodyCopy);
+	            if (responseBodyCopy.length > 0) {
+	                log.trace("resposeBody: {}", responseBodyCopy);
+	                log.debug("StringConv: {}", responseAsText);
+	                try {
+	                	responseAsText = CryptoUtil.decrypt(responseAsText);
+	                    log.trace("responseAsText: {}", responseAsText);
+	                } catch (Exception e) {
+	                    log.warn("Unable to decrypt - wrong cryptokey?", e);
+	                }
+	            }
 			switch (statusCode) {
 			case java.net.HttpURLConnection.HTTP_OK:
 				onCompleted(responseAsText);
