@@ -99,12 +99,12 @@ public abstract class BaseHttpDeleteHystrixCommand<R> extends HystrixCommand<R> 
             String responseAsText = StringConv.UTF8(responseBodyCopy);
             if (responseBodyCopy.length > 0) {
                 log.trace("resposeBody: {}", responseBodyCopy);
-                log.debug("StringConv: {}", responseAsText);
+                log.trace("StringConv: {}", responseAsText);
                 try {
                 	responseAsText = CryptoUtil.decrypt(responseAsText);
                     log.trace("responseAsText: {}", responseAsText);
                 } catch (Exception e) {
-                    log.warn("Unable to decrypt - wrong cryptokey?", e);
+                    log.warn("Unable to decrypt - wrong cryptokey?", e.getMessage());
                 }
             }
             switch (statusCode) {

@@ -29,6 +29,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
 
+import static net.whydah.sso.util.LoggerUtil.first50;
+
 public class WhydahApplicationSession {
 
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
@@ -498,7 +500,7 @@ public class WhydahApplicationSession {
         }
         if ((ApplicationModelUtil.shouldUpdate(5) || getApplicationList() == null || getApplicationList().size() < 2) && applicationToken != null) {
             String applicationsJson = new CommandListApplications(userAdminServiceUri,  applicationToken.getApplicationTokenId()).execute();
-            log.debug("WAS: updateApplinks: AppLications returned:" + applicationsJson);
+            log.debug("WAS: updateApplinks: AppLications returned:" + first50(applicationsJson));
             if (applicationsJson != null) {
                 if (applicationsJson.length() > 20) {
                     setAppLinks(ApplicationMapper.fromJsonList(applicationsJson));
@@ -526,7 +528,7 @@ public class WhydahApplicationSession {
 
         if (forceUpdate && applicationToken != null) {
             String applicationsJson = new CommandListApplications(userAdminServiceUri,  applicationToken.getApplicationTokenId()).execute();
-            log.debug("WAS: updateApplinks: AppLications returned:" + applicationsJson);
+            log.debug("WAS: updateApplinks: AppLications returned:" + first50(applicationsJson));
             if (applicationsJson != null) {
                 if (applicationsJson.length() > 20) {
                     setAppLinks(ApplicationMapper.fromJsonList(applicationsJson));
