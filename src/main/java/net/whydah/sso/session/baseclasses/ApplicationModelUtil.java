@@ -74,7 +74,7 @@ public class ApplicationModelUtil {
     public static void updateApplicationList(URI userAdminServiceUri, String myAppTokenId) {
         if (userAdminServiceUri != null) {
             String applicationsJson = new CommandListApplications(userAdminServiceUri, myAppTokenId).execute();
-            log.debug("AppLications returned:" + LoggerUtil.first50(applicationsJson));
+            log.trace("AppLications returned:" + LoggerUtil.first50(applicationsJson));
             if (applicationsJson != null) {
                 if (applicationsJson.length() > 20) {
                     try {
