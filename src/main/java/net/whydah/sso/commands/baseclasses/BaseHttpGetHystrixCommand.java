@@ -15,6 +15,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import static net.whydah.sso.util.LoggerUtil.first50;
+
 public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 
 	public Logger log;
@@ -158,8 +160,8 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 	}
 
 
-	private void onCompleted(String responseBody) {
-		log.debug(TAG + " - ok: " + responseBody);
+	protected void onCompleted(String responseBody) {
+		log.debug(TAG + " - ok: " + first50(responseBody));
 	}
 
 
