@@ -1,12 +1,12 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import static org.junit.Assert.assertTrue;
 import net.whydah.sso.extensions.crmcustomer.mappers.CustomerMapper;
 import net.whydah.sso.user.types.UserToken;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.Assert.assertTrue;
 
 public class CommandGetCRMCustomerTest extends BaseCRMCustomerTest {
 
@@ -22,10 +22,10 @@ public class CommandGetCRMCustomerTest extends BaseCRMCustomerTest {
             
             //create dummy customer
             String personJson = generateDummyCustomerData(generateUniqueuePersonRef());
-            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getTokenid(), null, personJson).execute();
+            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getUserTokenId(), null, personJson).execute();
             
             //query
-            String customerJson = new CommandGetCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getTokenid(), crmCustomerId).execute();
+            String customerJson = new CommandGetCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getUserTokenId(), crmCustomerId).execute();
             log.debug("Returned CRM id: {} - crmCustomerId {} - customer: {}", CustomerMapper.fromJson(customerJson).getId(), crmCustomerId, customerJson);
             assertTrue(customerJson != null);
             assertTrue(customerJson.length() > 10);

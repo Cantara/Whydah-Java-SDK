@@ -1,18 +1,18 @@
 package net.whydah.sso.commands.userauth;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
 import net.whydah.sso.user.types.UserToken;
 import net.whydah.sso.util.SystemTestBaseConfig;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class CommandGetUsertokenByUsertokenIdTest {
 
@@ -41,7 +41,7 @@ public class CommandGetUsertokenByUsertokenIdTest {
             String userTokenXml = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential).execute();
             UserToken userToken = UserTokenMapper.fromUserTokenXml(userTokenXml);
 
-            String userTokenXml2 = new CommandGetUsertokenByUsertokenId(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userToken.getTokenid()).execute();
+            String userTokenXml2 = new CommandGetUsertokenByUsertokenId(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userToken.getUserTokenId()).execute();
 
             UserToken ut2 = UserTokenMapper.fromUserTokenXml(userTokenXml2);
             log.trace("Received usertoken", ut2.toString());
@@ -71,7 +71,7 @@ public class CommandGetUsertokenByUsertokenIdTest {
             String userTokenXml = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential).execute();
             UserToken userToken = UserTokenMapper.fromUserTokenXml(userTokenXml);
 
-            String userTokenXml2 = new CommandGetUsertokenByUsertokenId(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userToken.getTokenid()).execute();
+            String userTokenXml2 = new CommandGetUsertokenByUsertokenId(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userToken.getUserTokenId()).execute();
             log.debug(userTokenXml2);
 
             UserToken ut2 = UserTokenMapper.fromUserTokenXml(userTokenXml2);

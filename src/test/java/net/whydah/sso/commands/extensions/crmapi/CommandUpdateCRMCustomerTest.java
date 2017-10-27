@@ -1,9 +1,9 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import static org.junit.Assert.assertTrue;
 import net.whydah.sso.user.types.UserToken;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 public class CommandUpdateCRMCustomerTest extends BaseCRMCustomerTest{
    
@@ -15,11 +15,11 @@ public class CommandUpdateCRMCustomerTest extends BaseCRMCustomerTest{
 
             //create a dummy customer
             String personJson1 = generateDummyCustomerData("");
-            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getTokenid(), null, personJson1).execute();
+            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getUserTokenId(), null, personJson1).execute();
             
             //update id in the jsondata
             String personJson2 = generateDummyCustomerData(generateUniqueuePersonRef());
-            String customerJsonLocation = new CommandUpdateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getTokenid(), crmCustomerId, personJson2).execute();
+            String customerJsonLocation = new CommandUpdateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), adminUserToken.getUserTokenId(), crmCustomerId, personJson2).execute();
             System.out.println("Returned CRM customer location: " + customerJsonLocation);
             
             

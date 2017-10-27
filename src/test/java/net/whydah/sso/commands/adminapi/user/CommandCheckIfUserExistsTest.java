@@ -1,13 +1,13 @@
 package net.whydah.sso.commands.adminapi.user;
 
 
-import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertTrue;
 import net.whydah.sso.user.types.UserToken;
 import net.whydah.sso.util.SystemTestBaseConfig;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class CommandCheckIfUserExistsTest {
 
@@ -26,11 +26,11 @@ public class CommandCheckIfUserExistsTest {
         if (config.isSystemTestEnabled()) {
             UserToken adminUser = config.logOnSystemTestApplicationAndSystemTestUser();
 
-            Boolean userExists = new CommandUserExists(config.userAdminServiceUri, config.myApplicationTokenID, adminUser.getTokenid(), "useradmin").execute();
+            Boolean userExists = new CommandUserExists(config.userAdminServiceUri, config.myApplicationTokenID, adminUser.getUserTokenId(), "useradmin").execute();
             // Need to create real testdata for the assert to work, as systemusers does not have the roles set..
             assertTrue(userExists);
 
-            Boolean userExists2 = new CommandUserExists(config.userAdminServiceUri, config.myApplicationTokenID, adminUser.getTokenid(), "NonExistingUser").execute();
+            Boolean userExists2 = new CommandUserExists(config.userAdminServiceUri, config.myApplicationTokenID, adminUser.getUserTokenId(), "NonExistingUser").execute();
             // Need to create real testdata for the assert to work, as systemusers does not have the roles set..
             assertFalse(userExists2);
 

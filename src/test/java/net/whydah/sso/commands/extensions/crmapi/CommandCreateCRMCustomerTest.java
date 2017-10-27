@@ -1,9 +1,9 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import static org.junit.Assert.assertTrue;
 import net.whydah.sso.user.types.UserToken;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 public class CommandCreateCRMCustomerTest extends BaseCRMCustomerTest {
 
@@ -16,7 +16,7 @@ public class CommandCreateCRMCustomerTest extends BaseCRMCustomerTest {
 
             String personRef = generateUniqueuePersonRef(); //Must be unique for test to pass
             String personJson = generateDummyCustomerData(personRef);
-            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), myUserToken.getTokenid(), personRef, personJson).execute();
+            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), myUserToken.getUserTokenId(), personRef, personJson).execute();
             System.out.println("Returned CRM customer id: " + crmCustomerId);
             assertTrue(crmCustomerId != null);
             assertTrue(crmCustomerId.equals(personRef));
@@ -32,7 +32,7 @@ public class CommandCreateCRMCustomerTest extends BaseCRMCustomerTest {
             UserToken myUserToken = config.logOnSystemTestApplicationAndSystemTestUser();
             String personRef = null;
             String personJson = generateDummyCustomerData("1234");//length should be less than 4 or empty
-            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), myUserToken.getTokenid(), personRef, personJson).execute();
+            String crmCustomerId = new CommandCreateCRMCustomer(config.crmServiceUri, config.myApplicationToken.getApplicationTokenId(), myUserToken.getUserTokenId(), personRef, personJson).execute();
             System.out.println("Returned CRM customer id: " + crmCustomerId);
             assertTrue(crmCustomerId != null);
             assertTrue(crmCustomerId.length() > 0);
