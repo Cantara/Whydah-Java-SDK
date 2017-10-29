@@ -1,4 +1,4 @@
-package net.whydah.sso.commands.adminapi.application;
+package net.whydah.sso.commands.application;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;

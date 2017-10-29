@@ -1,18 +1,18 @@
-package net.whydah.sso.commands.adminapi.application;
+package net.whydah.sso.commands.application;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.application.types.ApplicationTokenID;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertTrue;
 
-
-public class CommandLogonApplicationTest {
+public class CommandSearchForApplicationsTest {
+    private final static Logger log = LoggerFactory.getLogger(CommandSearchForApplicationsTest.class);
     static SystemTestBaseConfig config;
 
     @BeforeClass
@@ -21,14 +21,14 @@ public class CommandLogonApplicationTest {
     }
 
     @Test
-    @Ignore
-    public void testCommandLogonApplication() throws Exception {
+    public void testCommandSearchForApplications() throws Exception {
         if (config.isSystemTestEnabled()) {
 
-            ApplicationCredential applicationCredential = new ApplicationCredential("2212", "UserAdminService", "i9ju592A4t8dzz8mz7a5QQJ7Px");
-            String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, applicationCredential).execute();
+            String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue(new ApplicationTokenID(myApplicationTokenID).isValid());
+            String applications = new CommandSearchForApplications(config.userAdminServiceUri, myApplicationTokenID, "100").execute();
+            assertTrue(applications != null);
 
         }
     }

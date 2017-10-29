@@ -1,9 +1,4 @@
-package net.whydah.sso.commands.adminapi.application;
-
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-import java.util.UUID;
+package net.whydah.sso.commands.application;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.mappers.ApplicationMapper;
@@ -14,11 +9,15 @@ import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.util.LoggerUtil;
 import net.whydah.sso.util.SystemTestBaseConfig;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.Assert.assertTrue;
 
 public class CommandListApplicationsTest {
 
