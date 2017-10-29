@@ -97,18 +97,6 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 			responseBody = request.bytes();
 			byte[] responseBodyCopy = responseBody.clone();
 			int statusCode = request.code();
-//			String responseAsText = StringConv.UTF8(responseBodyCopy);
-//			if (responseBodyCopy.length > 0) {
-//				log.trace("resposeBody: {}", responseBodyCopy);
-//				log.trace("StringConv: {}", StringConv.UTF8(responseBodyCopy));
-//				try {
-//					log.trace("responseAsText: {}", CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy)));
-//					responseAsText = StringConv.UTF8(responseBodyCopy);
-//					responseAsText = CryptoUtil.decrypt(StringConv.UTF8(responseBodyCopy));
-//				} catch (Exception e) {
-//					log.warn("Unable to decrypt - wrong cryptokey?", e.getMessage());
-//				}
-//			}
 			 String responseAsText = StringConv.UTF8(responseBodyCopy);
 	            if (responseBodyCopy.length > 0) {
 	                log.trace("resposeBody: {}", responseBodyCopy);
@@ -117,7 +105,7 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 	                	responseAsText = CryptoUtil.decrypt(responseAsText);
 	                    log.trace("responseAsText: {}", responseAsText);
 	                } catch (Exception e) {
-						log.warn("Unable to decrypt - wrong cryptokey?", e.getMessage());
+						log.info("Unable to decrypt - wrong cryptokey?", e.getMessage());
 					}
 	            }
 			switch (statusCode) {

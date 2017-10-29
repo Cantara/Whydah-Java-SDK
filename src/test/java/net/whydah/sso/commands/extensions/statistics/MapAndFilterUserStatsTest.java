@@ -2,11 +2,11 @@ package net.whydah.sso.commands.extensions.statistics;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.basehelpers.JsonPathHelper;
-import net.whydah.sso.commands.appauth.CommandLogonApplication;
-import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.user.helpers.UserXpathHelper;
+import net.whydah.sso.session.WhydahApplicationSession;
+import net.whydah.sso.session.WhydahUserSession;
+import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.user.types.UserTokenID;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import net.whydah.sso.whydah.TimeLimitedCodeBlock;
 import org.junit.BeforeClass;
@@ -15,7 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -26,7 +29,10 @@ public class MapAndFilterUserStatsTest {
 
     private static final ObjectMapper mapper;
     private final static Logger log = LoggerFactory.getLogger(MapAndFilterUserStatsTest.class);
+    public static String userName = "admin";
+    public static String password = "whydahadmin";
     static SystemTestBaseConfig config;
+    private static WhydahApplicationSession applicationSession;
 
     static {
         mapper = (new ObjectMapper()).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -35,6 +41,32 @@ public class MapAndFilterUserStatsTest {
     @BeforeClass
     public static void setup() throws Exception {
         config = new SystemTestBaseConfig();
+        userName = config.userName;
+        password = config.password;
+        if (config.isSystemTestEnabled()) {
+            applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
+        }
+
+    }
+
+
+    @Test
+    public void testUserLoginsCustomerCommand() throws Exception {
+        if (config.isStatisticsExtensionSystemtestEnabled()) {
+
+            UserCredential userCredential = new UserCredential(userName, password);
+            WhydahUserSession userSession2 = new WhydahUserSession(applicationSession, userCredential);
+            String userTokenId = userSession2.getActiveUserTokenId();
+            assertTrue(new UserTokenID(userTokenId).isValid());
+
+            String userLogins = new CommandListUserActivities(config.statisticsServiceUri, applicationSession.getActiveApplicationTokenId(), userTokenId, config.userName).execute();
+            assertTrue(userLogins != null);
+            log.debug("Returned list {} of userlogins: {}", userLogins.length(), userLogins);
+            assertTrue(userLogins.length() > 10);
+            String mappedUL = getTimedFilteredUserSessionsJsonFromUserActivityJson(userLogins, config.userName);
+            log.debug("Mapped:  {} getFilteredUserSessionsJsonFromUserActivityJson: {}", mappedUL.length(), mappedUL);
+
+        }
     }
 
     public static String getFilteredUserSessionsJsonFromUserActivityJson(String userActivityJson, String filterusername) {
@@ -82,27 +114,6 @@ public class MapAndFilterUserStatsTest {
         return null;
     }
 
-    @Test
-    public void testUserLoginsCustomerCommand() throws Exception {
-        if (config.isStatisticsExtensionSystemtestEnabled()) {
-            String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
-            String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-            assertTrue(myApplicationTokenID.length() > 10);
-
-            String userticket = UUID.randomUUID().toString();
-            String userToken = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential, userticket).execute();
-            String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-            assertTrue(userTokenId.length() > 10);
-
-            String userLogins = new CommandListUserActivities(config.statisticsServiceUri, myApplicationTokenID, userTokenId, config.userName).execute();
-            log.debug("Returned list {} of userlogins: {}", userLogins.length(), userLogins);
-            assertTrue(userLogins != null);
-            assertTrue(userLogins.length() > 10);
-            String mappedUL = getTimedFilteredUserSessionsJsonFromUserActivityJson(userLogins, config.userName);
-            log.debug("Mapped:  {} getFilteredUserSessionsJsonFromUserActivityJson: {}", mappedUL.length(), mappedUL);
-
-        }
-    }
 
     public static String getTimedFilteredUserSessionsJsonFromUserActivityJson(String userActivityJson, String filterusername) {
             final long startTime = System.currentTimeMillis();

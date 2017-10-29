@@ -1,20 +1,20 @@
 package net.whydah.sso.usecases;
 
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.slf4j.LoggerFactory.getLogger;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.session.WhydahUserSession;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import net.whydah.sso.util.WhydahUtil;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by baardl on 26.06.15.
@@ -27,20 +27,22 @@ public class ValidateUserRoleUseCaseTest {
     public static String userName = "admin";
     public static String password = "whydahadmin";
     private final String roleName = "WhydahUserAdmin";
+    private static WhydahApplicationSession applicationSession;
 
     @Before
     public void setUp() throws Exception {
         config = new SystemTestBaseConfig();
         userName = config.userName;
         password = config.password;
+        if (config.isSystemTestEnabled()) {
+            applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
+        }
     }
 
     @Test
     public void test1_logonApplication() throws Exception {
         if (config.isSystemTestEnabled()) {
-
-            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
-            System.out.println("Active ApplicationId:" + applicationSession.getActiveApplicationTokenId());
+            log.debug("Active ApplicationId:{}", applicationSession.getActiveApplicationTokenId());
             assertTrue(applicationSession.checkActiveSession());
         }
     }
@@ -48,9 +50,6 @@ public class ValidateUserRoleUseCaseTest {
     @Test
     public void test2_logonUser() throws Exception {
         if (config.isSystemTestEnabled()) {
-
-            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
-
             UserCredential userCredential = new UserCredential(userName, password);
             assertTrue(applicationSession.checkActiveSession());
             String userTokenXml = WhydahUtil.logOnUser(applicationSession, userCredential);
@@ -63,8 +62,6 @@ public class ValidateUserRoleUseCaseTest {
     @Test   // NB takes 35 minutes to complete......
     public void test2_logonUserSession() throws Exception {
         if (config.isSystemTestEnabled()) {
-
-            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
             UserCredential userCredential = new UserCredential(userName, password);
             assertTrue(applicationSession.checkActiveSession());
             WhydahUserSession userSession = new WhydahUserSession(applicationSession, userCredential);
@@ -85,8 +82,6 @@ public class ValidateUserRoleUseCaseTest {
     @Test
     public void bli_test2_logonUser() throws Exception {
         if (config.isSystemTestEnabled()) {
-
-            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential.getApplicationID(), config.appCredential);
             assertTrue(applicationSession.checkActiveSession());
             String appTokenId = applicationSession.getActiveApplicationTokenId();
             log.trace("appTokenId {}", appTokenId);
@@ -101,8 +96,6 @@ public class ValidateUserRoleUseCaseTest {
     @Test
     public void bli_test3_validateRole() throws Exception {
         if (config.isSystemTestEnabled()) {
-
-            WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
             assertTrue(applicationSession.checkActiveSession());
             String appTokenId = applicationSession.getActiveApplicationTokenId();
             log.trace("appTokenId {}", appTokenId);

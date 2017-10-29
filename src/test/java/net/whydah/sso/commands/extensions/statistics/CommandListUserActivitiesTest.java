@@ -1,29 +1,35 @@
 package net.whydah.sso.commands.extensions.statistics;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.UUID;
-
-import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.commands.appauth.CommandLogonApplication;
-import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.user.helpers.UserXpathHelper;
-import net.whydah.sso.util.SSLTool;
+import net.whydah.sso.session.WhydahApplicationSession;
+import net.whydah.sso.session.WhydahUserSession;
+import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.SystemTestBaseConfig;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 public class CommandListUserActivitiesTest {
+    private final static Logger log = LoggerFactory.getLogger(CommandListUserActivitiesTest.class);
+    public static String userName = "admin";
+    public static String password = "whydahadmin";
+    private static WhydahApplicationSession applicationSession;
+
     static SystemTestBaseConfig config;
-    private final static Logger log = LoggerFactory.getLogger(CommandGetUsersStatsTest.class);
 
 
     @BeforeClass
     public static void setup() throws Exception {
         config = new SystemTestBaseConfig();
+        userName = config.userName;
+        password = config.password;
+        if (config.isStatisticsExtensionSystemtestEnabled()) {
+            applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
+        }
+
     }
 
     @Test
@@ -31,20 +37,17 @@ public class CommandListUserActivitiesTest {
 
         if (config.isStatisticsExtensionSystemtestEnabled()) {
 
-            SSLTool.disableCertificateValidation();
-            String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
-            String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-            assertTrue(myApplicationTokenID.length() > 10);
+            UserCredential userCredential = new UserCredential(userName, password);
+            assertTrue(applicationSession.checkActiveSession());
+            WhydahUserSession userSession = new WhydahUserSession(applicationSession, userCredential);
+            assertTrue(userSession.hasActiveSession());
+            assertNotNull(userSession.getActiveUserToken());
+            assertTrue(userSession.getActiveUserToken().contains(config.userEmail));
+            assertTrue(applicationSession.checkActiveSession());
 
-            String userticket = UUID.randomUUID().toString();
-            String userToken = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential, userticket).execute();
-            String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-            String userId = UserXpathHelper.getUserIdFromUserTokenXml(userToken);
-            assertTrue(userTokenId.length() > 10);
-
-            String userStats = new CommandListUserActivities(config.statisticsServiceUri, myApplicationTokenID, userTokenId, userId).execute();
-            log.debug("Returned list of usersessions: " + userStats);
+            String userStats = new CommandListUserActivities(config.statisticsServiceUri, applicationSession.getActiveApplicationTokenId(), userSession.getActiveUserTokenId(), userName).execute();
             assertTrue(userStats != null);
+            log.debug("Returned list of usersessions: " + userStats);
             assertTrue(userStats.length() > 10);
         }
 

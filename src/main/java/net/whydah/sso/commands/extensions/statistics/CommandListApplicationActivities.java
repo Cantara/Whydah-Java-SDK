@@ -1,8 +1,9 @@
 package net.whydah.sso.commands.extensions.statistics;
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+import net.whydah.sso.util.ExceptionUtil;
+
+import java.net.URI;
 
 public class CommandListApplicationActivities extends BaseHttpGetHystrixCommand<String> {
 
@@ -23,12 +24,27 @@ public class CommandListApplicationActivities extends BaseHttpGetHystrixCommand<
 
     }
 
+    int retryCnt = 0;
+
+    @Override
+    protected String dealWithFailedResponse(String responseBody, int statusCode) {
+        if (statusCode != java.net.HttpURLConnection.HTTP_FORBIDDEN && retryCnt < 1) {
+            //do retry
+            retryCnt++;
+            return doGetCommand();
+        } else {
+            String authenticationFailedMessage = ExceptionUtil.printableUrlErrorMessage("User session failed", request, statusCode);
+            log.warn(authenticationFailedMessage);
+            return null;
+        }
+    }
+
 
     @Override
     protected String getTargetPath() {
         return "observe/statistics/" + applicationid + "/usersession";
     }
 
-
+// https://whydahdev.cantara.no/reporter/observe/statistics/9999/usersession
 }
 

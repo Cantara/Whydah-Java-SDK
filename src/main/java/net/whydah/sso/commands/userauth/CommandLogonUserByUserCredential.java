@@ -1,14 +1,14 @@
 package net.whydah.sso.commands.userauth;
 
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 import net.whydah.sso.user.mappers.UserCredentialMapper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.ExceptionUtil;
+
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class CommandLogonUserByUserCredential  extends BaseHttpPostHystrixCommand<String> {
 
@@ -63,53 +63,6 @@ public class CommandLogonUserByUserCredential  extends BaseHttpPostHystrixComman
 			return null;
 		}
 	}
-
-//
-//	 @Override
-//	    protected String run() {
-//	        log.trace("CommandLogonUserByUserCredential - uri={} myAppTokenId={}", tokenServiceUri.toString(), myAppTokenId);
-//
-//	        Client tokenServiceClient = ClientBuilder.newClient();
-//	        WebTarget getUserToken = tokenServiceClient.target(tokenServiceUri).path("user/" + myAppTokenId + "/" + userticket + "/usertoken");
-//	        Form formData = new Form();
-//	        formData.param("apptoken", myAppTokenXml);
-//	        formData.param("usercredential", UserCredentialMapper.toXML(userCredential));
-//	        Response response = postForm(formData,getUserToken);
-//	        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
-//	            log.warn("CommandLogonUserByUserCredential - getUserToken - User authentication failed with status code " + response.getStatus());
-//	            return null;
-//	        }
-//	        if (response.getStatus() == OK.getStatusCode()) {
-//	            String responseXML = response.readEntity(String.class);
-//	            log.trace("CommandLogonUserByUserCredential - getUserToken - Log on OK with response {}", responseXML);
-//	            return responseXML;
-//	        }
-//
-//	        //retry once for other statuses
-//	        log.info("CommandLogonUserByUserCredential - getUserToken - retry once for other statuses");
-//	        response = postForm(formData,getUserToken);
-//	        if (response.getStatus() == OK.getStatusCode()) {
-//	            String responseXML = response.readEntity(String.class);
-//	            log.trace("CommandLogonUserByUserCredential - getUserToken - Log on OK with response {}", responseXML);
-//	            return responseXML;
-//	        } else if (response.getStatus() == NOT_FOUND.getStatusCode()) {
-//	            log.error(ExceptionUtil.printableUrlErrorMessage("CommandLogonUserByUserCredential - getUserToken - Auth failed - Problems connecting with TokenService", getUserToken, response));
-//	        } else {
-//	            log.info(ExceptionUtil.printableUrlErrorMessage("CommandLogonUserByUserCredential - getUserToken - User authentication failed", getUserToken, response));
-//	        }
-//	        return null;
-//
-//	    }
-//
-//	    private Response postForm(Form formData, WebTarget logonResource) {
-//	        return logonResource.request().post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED_TYPE),Response.class);
-//	    }
-//
-//	    @Override
-//	    protected String getFallback() {
-//	        log.warn("CommandLogonUserByUserCredential - fallback - uri={}", tokenServiceUri.toString());
-//	        return null;
-//	    }
 
 
 }

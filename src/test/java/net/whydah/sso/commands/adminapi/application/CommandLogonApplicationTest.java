@@ -2,12 +2,14 @@ package net.whydah.sso.commands.adminapi.application;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.application.types.ApplicationCredential;
+import net.whydah.sso.application.types.ApplicationTokenID;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.util.SystemTestBaseConfig;
-
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 
 public class CommandLogonApplicationTest {
@@ -16,7 +18,6 @@ public class CommandLogonApplicationTest {
     @BeforeClass
     public static void setup() throws Exception {
         config = new SystemTestBaseConfig();
-        //config.setLocalTest();
     }
 
     @Test
@@ -27,6 +28,7 @@ public class CommandLogonApplicationTest {
             ApplicationCredential applicationCredential = new ApplicationCredential("2212", "UserAdminService", "i9ju592A4t8dzz8mz7a5QQJ7Px");
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, applicationCredential).execute();
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
+            assertTrue(new ApplicationTokenID(myApplicationTokenID).isValid());
 
         }
     }
