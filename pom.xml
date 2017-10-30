@@ -13,6 +13,19 @@
         <version>6</version>
     </parent>
 
+    <scm>
+        <developerConnection>scm:git:ssh://git@github.com/cantara/Whydah-Java-SDK.git</developerConnection>
+        <connection>scm:git:https://github.com/cantara/Whydah-Java-SDK.git</connection>
+        <url>https://github.com/cantara/Whydah-Java-SDK</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <properties>
+        <service.name>Whydah-Java-SDK</service.name>
+        <whydah-typelib-version>2.3.43</whydah-typelib-version>
+        <additionalparam>-Xdoclint:none</additionalparam>
+    </properties>
+
 
     <developers>
         <developer>
@@ -47,12 +60,6 @@
         </developer>
     </developers>
 
-    <scm>
-        <developerConnection>scm:git:ssh://git@github.com/cantara/Whydah-Java-SDK.git</developerConnection>
-        <connection>scm:git:https://github.com/cantara/Whydah-Java-SDK.git</connection>
-        <url>https://github.com/cantara/Whydah-Java-SDK</url>
-    <tag>HEAD</tag>
-  </scm>
 
 
     <repositories>
@@ -71,11 +78,6 @@
     </repositories>
 
 
-    <properties>
-        <service.name>Whydah-Java-SDK</service.name>
-        <whydah-typelib-version>2.3.42</whydah-typelib-version>
-        <additionalparam>-Xdoclint:none</additionalparam>
-    </properties>
 
     <dependencies>
         <dependency>
