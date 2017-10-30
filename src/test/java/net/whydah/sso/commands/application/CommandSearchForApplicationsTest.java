@@ -26,7 +26,7 @@ public class CommandSearchForApplicationsTest {
 
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-            assertTrue(new ApplicationTokenID(myApplicationTokenID).isValid());
+            assertTrue(ApplicationTokenID.isValid(myApplicationTokenID));
             String applications = new CommandSearchForApplications(config.userAdminServiceUri, myApplicationTokenID, "100").execute();
             assertTrue(applications != null);
 
