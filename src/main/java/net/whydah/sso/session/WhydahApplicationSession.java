@@ -54,30 +54,34 @@ public class WhydahApplicationSession {
      * Protected singleton constructors
      */
     protected WhydahApplicationSession(String sts, String uas, ApplicationCredential myAppCredential) {
-        log.info("WhydahApplicationSession initializing: sts:{},  uas:{}, myAppCredential:{}", sts, uas, myAppCredential);
-        this.sts = sts;
-        this.uas = uas;
-        this.myAppCredential = myAppCredential;
-        
-        //register threat definitions here
-        threatObserver = new ThreatObserver(this);
-        getThreatObserver().registerDefinition(new ThreatDefManyLoginAttemptsFromSameIPAddress());
-        getThreatObserver().registerDefinition(new ThreatDefTooManyRequestsForOneEndpoint());
-        //register more if any
-        
-        initializeWhydahApplicationSession();
-        scheduler = Executors.newScheduledThreadPool(1);
-        ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
-                new Runnable() {
-                    public void run() {
-                        try {
-                            renewWhydahApplicationSession();
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                },
-                5, SESSION_CHECK_INTERVAL, TimeUnit.SECONDS);
+        synchronized (WhydahApplicationSession.class) {
+            if (instance == null) {
+                log.info("WhydahApplicationSession initializing: sts:{},  uas:{}, myAppCredential:{}", sts, uas, myAppCredential);
+                this.sts = sts;
+                this.uas = uas;
+                this.myAppCredential = myAppCredential;
+
+                //register threat definitions here
+                threatObserver = new ThreatObserver(this);
+                getThreatObserver().registerDefinition(new ThreatDefManyLoginAttemptsFromSameIPAddress());
+                getThreatObserver().registerDefinition(new ThreatDefTooManyRequestsForOneEndpoint());
+                //register more if any
+
+                initializeWhydahApplicationSession();
+                scheduler = Executors.newScheduledThreadPool(1);
+                ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
+                        new Runnable() {
+                            public void run() {
+                                try {
+                                    renewWhydahApplicationSession();
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        },
+                        5, SESSION_CHECK_INTERVAL, TimeUnit.SECONDS);
+            }
+        }
     }
 
 
@@ -89,12 +93,9 @@ public class WhydahApplicationSession {
     public static WhydahApplicationSession getInstance(String sts, ApplicationCredential appCred) {
         log.info("WhydahApplicationSession getInstance(String sts, ApplicationCredential appCred) called");
         if (instance == null) {
-            // Thread Safe. Might be costly operation in some case
-            synchronized (WhydahApplicationSession.class) {
                 if (instance == null) {
                     instance = new WhydahApplicationSession(sts, null, appCred);
                 }
-            }
         }
         return instance;
     }
@@ -102,12 +103,9 @@ public class WhydahApplicationSession {
     public static WhydahApplicationSession getInstance(String sts, String uas, ApplicationCredential appCred) {
         log.info("WhydahApplicationSession getInstance(String sts, String uas, ApplicationCredential appCred) called");
         if (instance == null) {
-            // Thread Safe. Might be costly operation in some case
-            synchronized (WhydahApplicationSession.class) {
                 if (instance == null) {
                     instance = new WhydahApplicationSession(sts, uas, appCred);
                 }
-            }
         }
         return instance;
     }
