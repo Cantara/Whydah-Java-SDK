@@ -22,7 +22,7 @@
 
     <properties>
         <service.name>Whydah-Java-SDK</service.name>
-        <whydah-typelib-version>2.3.44</whydah-typelib-version>
+        <whydah-typelib-version>2.3.46</whydah-typelib-version>
         <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
 
@@ -110,6 +110,13 @@
             </exclusions>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.constretto/constretto-core -->
+        <!--        <dependency>
+                    <groupId>org.constretto</groupId>
+                    <artifactId>constretto-core</artifactId>
+                    <version>3.0.0-BETA1</version>
+                </dependency>
+        -->
         <dependency>
             <groupId>org.constretto</groupId>
             <artifactId>constretto-core</artifactId>
