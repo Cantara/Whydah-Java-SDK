@@ -79,7 +79,7 @@ public class BaseCRMCustomerTest {
 	            "  },\n" +
 	            "  \"phonenumbers\" : {\n" +
 	            "    \"tja\" : {\n" +
-	            "      \"phonenumber\" : \"privat\",\n" +
+	            "      \"phonenumber\" : \"96909999\",\n" +
 	            "      \"tags\" : \"96909999\"\n" +
 	            "    }\n" +
 	            "  },\n" +
