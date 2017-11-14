@@ -1,18 +1,6 @@
 package net.whydah.sso.commands.extensions.statistics;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import net.whydah.sso.basehelpers.JsonPathHelper;
-import net.whydah.sso.session.WhydahApplicationSession;
-import net.whydah.sso.session.WhydahUserSession;
-import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.user.types.UserTokenID;
-import net.whydah.sso.util.SystemTestBaseConfig;
-import net.whydah.sso.whydah.TimeLimitedCodeBlock;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.junit.Assert.assertTrue;
 
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
@@ -23,7 +11,21 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static org.junit.Assert.assertTrue;
+import net.whydah.sso.basehelpers.JsonPathHelper;
+import net.whydah.sso.ddd.model.UserTokenId;
+import net.whydah.sso.session.WhydahApplicationSession;
+import net.whydah.sso.session.WhydahUserSession;
+import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.util.SystemTestBaseConfig;
+import net.whydah.sso.whydah.TimeLimitedCodeBlock;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MapAndFilterUserStatsTest {
 
@@ -57,7 +59,7 @@ public class MapAndFilterUserStatsTest {
             UserCredential userCredential = new UserCredential(userName, password);
             WhydahUserSession userSession2 = new WhydahUserSession(applicationSession, userCredential);
             String userTokenId = userSession2.getActiveUserTokenId();
-            assertTrue(new UserTokenID(userTokenId).isValid());
+            assertTrue(UserTokenId.isValid(userTokenId));
 
             String userLogins = new CommandListUserActivities(config.statisticsServiceUri, applicationSession.getActiveApplicationTokenId(), userTokenId, config.userName).execute();
             assertTrue(userLogins != null);

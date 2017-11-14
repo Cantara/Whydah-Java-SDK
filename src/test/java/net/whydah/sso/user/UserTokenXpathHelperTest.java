@@ -9,6 +9,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.util.List;
 
 import net.whydah.sso.user.helpers.UserHelper;
+import net.whydah.sso.user.helpers.UserRoleJsonPathHelper;
 import net.whydah.sso.user.helpers.UserRoleXpathHelper;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
@@ -173,7 +174,7 @@ public class UserTokenXpathHelperTest {
 
     @Test
     public void testGetUserRoleFromUserAggregateJSON() throws Exception {
-        UserApplicationRoleEntry roles[] = UserRoleXpathHelper.getUserRoleFromUserAggregateJson(userAggregateJson);
+        UserApplicationRoleEntry roles[] = UserRoleJsonPathHelper.getUserRoleFromUserAggregateJson(userAggregateJson);
         assertTrue("applicationId".equals(roles[0].getApplicationId()));
         assertTrue("applicationId123".equals(roles[1].getApplicationId()));
 

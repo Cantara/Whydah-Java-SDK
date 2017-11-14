@@ -1,9 +1,10 @@
 package net.whydah.sso.commands.application;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
-import net.whydah.sso.application.types.ApplicationTokenID;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
+import net.whydah.sso.ddd.model.ApplicationTokenID;
 import net.whydah.sso.util.SystemTestBaseConfig;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -26,7 +27,15 @@ public class CommandSearchForApplicationsTest {
 
             String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-            assertTrue(ApplicationTokenID.isValid(myApplicationTokenID));
+           
+            boolean isValid = true;
+            try{
+            	new ApplicationTokenID(myApplicationTokenID);
+            }catch(Exception ex){
+            	isValid = false;
+            }
+            assertTrue(isValid);
+            
             String applications = new CommandSearchForApplications(config.userAdminServiceUri, myApplicationTokenID, "100").execute();
             assertTrue(applications != null);
 
