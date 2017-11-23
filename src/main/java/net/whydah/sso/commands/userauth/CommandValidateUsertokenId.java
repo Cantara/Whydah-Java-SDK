@@ -13,10 +13,10 @@ public class CommandValidateUsertokenId extends BaseHttpGetHystrixCommandForBool
 
     public CommandValidateUsertokenId(URI tokenServiceUri, String applicationTokenId, String userTokenId) {
         super(tokenServiceUri, "", applicationTokenId, "SSOUserAuthGroup", 3000);
-        this.usertokenid=usertokenid;
         if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId)) {
             log.error("CommandValidateUsertokenId initialized with null-values - will fail");
         }
+        this.usertokenid = userTokenId;
     }
 
 
