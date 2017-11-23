@@ -1,18 +1,20 @@
 package net.whydah.sso.commands.userauth;
 
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
+import net.whydah.sso.ddd.model.user.UserTokenId;
+
 import java.net.HttpURLConnection;
 import java.net.URI;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
 
 public class CommandValidateUsertokenId extends BaseHttpGetHystrixCommandForBooleanType {
 
     private String usertokenid;
 
-    public CommandValidateUsertokenId(URI tokenServiceUri, String myAppTokenId, String usertokenid) {
-    	super(tokenServiceUri, "", myAppTokenId, "SSOUserAuthGroup", 3000);
+    public CommandValidateUsertokenId(URI tokenServiceUri, String applicationTokenId, String userTokenId) {
+        super(tokenServiceUri, "", applicationTokenId, "SSOUserAuthGroup", 3000);
         this.usertokenid=usertokenid;
-        if (tokenServiceUri == null || myAppTokenId == null || usertokenid == null  ) {
+        if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId)) {
             log.error("CommandValidateUsertokenId initialized with null-values - will fail");
         }
     }
