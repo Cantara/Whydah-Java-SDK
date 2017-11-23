@@ -1,6 +1,18 @@
 package net.whydah.sso.commands.extensions.statistics;
 
-import static org.junit.Assert.assertTrue;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import net.whydah.sso.basehelpers.JsonPathHelper;
+import net.whydah.sso.ddd.model.user.UserTokenId;
+import net.whydah.sso.session.WhydahApplicationSession;
+import net.whydah.sso.session.WhydahUserSession;
+import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.util.SystemTestBaseConfig;
+import net.whydah.sso.whydah.TimeLimitedCodeBlock;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
@@ -11,21 +23,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import net.whydah.sso.basehelpers.JsonPathHelper;
-import net.whydah.sso.ddd.model.UserTokenId;
-import net.whydah.sso.session.WhydahApplicationSession;
-import net.whydah.sso.session.WhydahUserSession;
-import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.util.SystemTestBaseConfig;
-import net.whydah.sso.whydah.TimeLimitedCodeBlock;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.junit.Assert.assertTrue;
 
 public class MapAndFilterUserStatsTest {
 

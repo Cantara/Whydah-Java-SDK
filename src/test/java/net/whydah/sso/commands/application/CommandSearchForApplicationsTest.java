@@ -2,9 +2,8 @@ package net.whydah.sso.commands.application;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
-import net.whydah.sso.ddd.model.ApplicationTokenID;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
 import net.whydah.sso.util.SystemTestBaseConfig;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
