@@ -1,11 +1,11 @@
 package net.whydah.sso.commands.appauth;
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
-
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URI;
 
 public class CommandGetApplicationIdFromApplicationTokenId extends BaseHttpGetHystrixCommand<String> {
     private static final Logger log = LoggerFactory.getLogger(CommandGetApplicationIdFromApplicationTokenId.class);
@@ -15,7 +15,7 @@ public class CommandGetApplicationIdFromApplicationTokenId extends BaseHttpGetHy
     public CommandGetApplicationIdFromApplicationTokenId(URI tokenServiceUri, String applicationTokenId) {
         super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", 30000);
 
-        if (tokenServiceUri == null || applicationTokenId == null) {
+        if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
             log.error(TAG + " initialized with null-values - will fail tokenServiceUri={} || applicationTokenId={}", tokenServiceUri, applicationTokenId);
         }
     }

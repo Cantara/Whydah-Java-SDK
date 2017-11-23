@@ -1,9 +1,11 @@
 package net.whydah.sso.commands.appauth;
 
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
+import net.whydah.sso.ddd.model.user.UserTokenId;
+
 import java.net.HttpURLConnection;
 import java.net.URI;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
 
 public class CommandVerifyUASAccessByApplicationTokenId extends BaseHttpGetHystrixCommandForBooleanType {
 
@@ -18,8 +20,8 @@ public class CommandVerifyUASAccessByApplicationTokenId extends BaseHttpGetHystr
 	public CommandVerifyUASAccessByApplicationTokenId(String UASUri, String applicationTokenId, String userTokenId) {
 		super(URI.create(UASUri), "", applicationTokenId, "STSApplicationAuthGroup");
 
-		if (UASUri == null || applicationTokenId == null) {
-			log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}", UASUri, applicationTokenId);
+		if (UASUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId)) {
+			log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}, userTokenId:{}", UASUri, applicationTokenId, userTokenId);
 		}
 		this.userTokenId = userTokenId;
 	}

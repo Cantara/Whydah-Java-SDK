@@ -1,9 +1,10 @@
 package net.whydah.sso.commands.appauth;
 
+import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
+
 import java.net.HttpURLConnection;
 import java.net.URI;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
 
 public class CommandValidateApplicationTokenId extends BaseHttpGetHystrixCommandForBooleanType {
 
@@ -14,7 +15,7 @@ public class CommandValidateApplicationTokenId extends BaseHttpGetHystrixCommand
 	public CommandValidateApplicationTokenId(String tokenServiceUri, String applicationTokenId) {
 		super(URI.create(tokenServiceUri), "", applicationTokenId, "STSApplicationAuthGroup");
 
-		if (tokenServiceUri == null || applicationTokenId == null) {
+		if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
 			log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}", tokenServiceUri, applicationTokenId);
 		}
 	}
@@ -22,8 +23,8 @@ public class CommandValidateApplicationTokenId extends BaseHttpGetHystrixCommand
     public CommandValidateApplicationTokenId(URI tokenServiceUri, String applicationTokenId) {
         super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup");
 
-        if (tokenServiceUri == null || applicationTokenId == null) {
-            log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}", tokenServiceUri, applicationTokenId);
+		if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
+			log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}", tokenServiceUri, applicationTokenId);
         }
     }
 

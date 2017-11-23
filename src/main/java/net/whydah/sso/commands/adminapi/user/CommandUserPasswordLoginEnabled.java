@@ -1,23 +1,25 @@
 package net.whydah.sso.commands.adminapi.user;
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
+import net.whydah.sso.ddd.model.user.UserName;
+
+import java.net.URI;
 
 public class CommandUserPasswordLoginEnabled extends BaseHttpGetHystrixCommandForBooleanType {
 
     private String userName;
 
 
-    public CommandUserPasswordLoginEnabled(URI userAdminServiceUri, String myAppTokenId, String userName) {
-        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup");
+    public CommandUserPasswordLoginEnabled(URI userAdminServiceUri, String applicationTokenId, String userName) {
+        super(userAdminServiceUri, "", applicationTokenId, "UASUserAdminGroup");
 //        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup", 6000);
 
-        this.userName = userName;
-        if (userAdminServiceUri == null || myAppTokenId == null || userName == null) {
-            log.error("CommandUserPasswordLoginEnabled initialized with null-values - will fail - userAdminServiceUri:{}, myAppTokenId:{}, userName:{}", userAdminServiceUri, myAppTokenId, userName);
+        if (userAdminServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserName.isValid(userName)) {
+            log.error("CommandUserPasswordLoginEnabled initialized with null-values - will fail - userAdminServiceUri:{}, myAppTokenId:{}, userName:{}", userAdminServiceUri, applicationTokenId, userName);
 
         }
+        this.userName = userName;
 
     }
 

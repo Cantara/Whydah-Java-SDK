@@ -1,6 +1,7 @@
 package net.whydah.sso.commands.appauth;
 
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,7 @@ public class CommandGetApplicationKey extends BaseHttpGetHystrixCommand<String> 
     public CommandGetApplicationKey(URI tokenServiceUri, String applicationTokenId) {
         super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", 30000);
 
-        if (tokenServiceUri == null || applicationTokenId == null) {
+        if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
             log.error(TAG + " initialized with null-values - will fail tokenServiceUri={} || applicationTokenId={}", tokenServiceUri, applicationTokenId);
         }
     }
