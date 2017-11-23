@@ -1,8 +1,10 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
+import net.whydah.sso.ddd.model.user.PersonRef;
+import net.whydah.sso.ddd.model.user.UserTokenId;
+
+import java.net.URI;
 
 public class CommandVerifyPhoneByPin extends BaseHttpGetHystrixCommandForBooleanType {
 
@@ -15,13 +17,13 @@ public class CommandVerifyPhoneByPin extends BaseHttpGetHystrixCommandForBoolean
     public CommandVerifyPhoneByPin(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String phoneNo, String pin) {
     	super(crmServiceUri, appTokenXml, "","CrmExtensionGroup");
 
+        if (crmServiceUri == null || appTokenXml == null || !UserTokenId.isValid(userTokenId) || !PersonRef.isValid(personRef) || phoneNo == null || pin == null) {
+            log.error("{} initialized with null-values - will fail", CommandVerifyPhoneByPin.class.getSimpleName());
+        }
         this.userTokenId = userTokenId;
         this.personRef = personRef;
         this.phoneNo = phoneNo;
         this.pin = pin;
-        if (crmServiceUri == null || appTokenXml == null || this.phoneNo == null || this.pin == null) {
-            log.error("{} initialized with null-values - will fail", CommandVerifyPhoneByPin.class.getSimpleName());
-        }
     }
 //
 //    @Override

@@ -1,8 +1,8 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
+
+import java.net.URI;
 
 public class CommandSendPhoneVerificationPin extends BaseHttpGetHystrixCommandForBooleanType {
 
@@ -11,7 +11,7 @@ public class CommandSendPhoneVerificationPin extends BaseHttpGetHystrixCommandFo
     private String phoneNo;
 
     public CommandSendPhoneVerificationPin(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String phoneNo) {
-    	super(crmServiceUri, "", appTokenXml, "CrmExtensionGroup");
+        super(crmServiceUri, appTokenXml, "", "CrmExtensionGroup");
         
       
         this.userTokenId = userTokenId;

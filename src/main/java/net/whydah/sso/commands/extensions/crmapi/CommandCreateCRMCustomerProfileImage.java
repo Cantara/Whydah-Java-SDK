@@ -1,10 +1,11 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import java.net.URI;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-
 import com.github.kevinsawicki.http.HttpRequest;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
+import net.whydah.sso.ddd.model.user.UserTokenId;
+
+import java.net.URI;
 
 public class CommandCreateCRMCustomerProfileImage extends BaseHttpPostHystrixCommand<String> {
     
@@ -15,15 +16,14 @@ public class CommandCreateCRMCustomerProfileImage extends BaseHttpPostHystrixCom
     private byte[] imageData;
 
 
-    public CommandCreateCRMCustomerProfileImage(URI crmServiceUri, String myAppTokenId, String userTokenId, String customerRefId, String contentType, byte[] imageData) {
-    	super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 6000);
+    public CommandCreateCRMCustomerProfileImage(URI crmServiceUri, String applicationTokenId, String userTokenId, String customerRefId, String contentType, byte[] imageData) {
+        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", 6000);
         
         this.userTokenId = userTokenId;
         this.customerRefId = customerRefId;
         this.imageData = imageData;
         this.contentType = contentType;
-
-        if (crmServiceUri == null || customerRefId == null || imageData == null || contentType == null) {
+        if (crmServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId) || customerRefId == null || imageData == null || contentType == null) {
             log.error(TAG + " initialized with null-values - will fail");
         }
 

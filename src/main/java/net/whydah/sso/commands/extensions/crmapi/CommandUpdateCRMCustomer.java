@@ -1,10 +1,12 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import java.net.URI;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpPutHystrixCommand;
-
 import com.github.kevinsawicki.http.HttpRequest;
+import net.whydah.sso.commands.baseclasses.BaseHttpPutHystrixCommand;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
+import net.whydah.sso.ddd.model.user.PersonRef;
+import net.whydah.sso.ddd.model.user.UserTokenId;
+
+import java.net.URI;
 
 public class CommandUpdateCRMCustomer extends BaseHttpPutHystrixCommand<String> {
     
@@ -13,16 +15,16 @@ public class CommandUpdateCRMCustomer extends BaseHttpPutHystrixCommand<String> 
     private String customerJson;
 
 
-    public CommandUpdateCRMCustomer(URI crmServiceUri, String myAppTokenId, String userTokenId, String personRef, String customerJson) {
-    	super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 6000);
-        
+    public CommandUpdateCRMCustomer(URI crmServiceUri, String applicationTokenId, String userTokenId, String personRef, String customerJson) {
+        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", 6000);
+
+
+        if (crmServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId) || !PersonRef.isValid(personRef) || customerJson == null) {
+            log.error("CommandUpdateCRMCustomer initialized with null-values - will fail - crmServiceUri:{} myAppTokenId:{} userTokenId:{} personRef:{}", crmServiceUri, applicationTokenId, userTokenId, personRef);
+        }
         this.userTokenId = userTokenId;
         this.personRef = personRef;
         this.customerJson = customerJson;
-
-        if (crmServiceUri == null || myAppTokenId == null || userTokenId == null || personRef == null || customerJson == null) {
-            log.error("CommandUpdateCRMCustomer initialized with null-values - will fail - crmServiceUri:{} myAppTokenId:{} userTokenId:{} personRef:{}", crmServiceUri, myAppTokenId, userTokenId, personRef);
-        }
 
     }
     

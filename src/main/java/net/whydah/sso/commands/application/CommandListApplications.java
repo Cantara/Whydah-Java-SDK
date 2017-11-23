@@ -2,6 +2,7 @@ package net.whydah.sso.commands.application;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
 
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -11,10 +12,10 @@ public class CommandListApplications extends BaseHttpGetHystrixCommand<String> {
     int retryCnt = 0;
 
 
-    public CommandListApplications(URI userAdminServiceUri, String myAppTokenId) {
-        super(userAdminServiceUri, "", myAppTokenId, "UASUserAdminGroup", 6000);
-        if (userAdminServiceUri == null || myAppTokenId == null) {
-            log.error(TAG + " initialized with null-values - will fail - userAdminServiceUri={}, myAppTokenId={}", userAdminServiceUri, myAppTokenId);
+    public CommandListApplications(URI userAdminServiceUri, String applicationTokenId) {
+        super(userAdminServiceUri, "", applicationTokenId, "UASUserAdminGroup", 6000);
+        if (userAdminServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
+            log.error(TAG + " initialized with null-values - will fail - userAdminServiceUri={}, myAppTokenId={}", userAdminServiceUri, applicationTokenId);
         }
     }
 

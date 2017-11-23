@@ -1,10 +1,11 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import java.net.URI;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-
 import com.github.kevinsawicki.http.HttpRequest;
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
+import net.whydah.sso.ddd.model.user.UserTokenId;
+
+import java.net.URI;
 
 public class CommandCreateCRMCustomer extends BaseHttpPostHystrixCommand<String> {
 
@@ -14,18 +15,18 @@ public class CommandCreateCRMCustomer extends BaseHttpPostHystrixCommand<String>
 	private String customerJson;
 
 
-	public CommandCreateCRMCustomer(URI crmServiceUri, String myAppTokenId, String userTokenId, String customerRefId, String customerJson) {
-		super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 6000);
+	public CommandCreateCRMCustomer(URI crmServiceUri, String applicationTokenId, String userTokenId, String customerRefId, String customerJson) {
+		super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", 6000);
 
+
+		if (crmServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId)) {
+			log.error(TAG + " initialized with null-values - will fail");
+			log.error("CommandCreateCRMCustomer initialized with null-values - will fail - crmServiceUri:{} myAppTokenId:{} userTokenId:{} personRef:{}", crmServiceUri, applicationTokenId, userTokenId, customerRefId);
+
+		}
 		this.userTokenId = userTokenId;
 		this.customerRefId = customerRefId;
 		this.customerJson = customerJson;
-
-		if (crmServiceUri == null || myAppTokenId == null || userTokenId == null) {
-			log.error(TAG + " initialized with null-values - will fail");
-			log.error("CommandCreateCRMCustomer initialized with null-values - will fail - crmServiceUri:{} myAppTokenId:{} userTokenId:{} personRef:{}", crmServiceUri, myAppTokenId, userTokenId, customerRefId);
-
-		}
 
 	}
 

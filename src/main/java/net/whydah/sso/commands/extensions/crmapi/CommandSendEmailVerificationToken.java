@@ -1,8 +1,8 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import java.net.URI;
-
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommandForBooleanType;
+
+import java.net.URI;
 
 public class CommandSendEmailVerificationToken extends BaseHttpGetHystrixCommandForBooleanType {
    
@@ -18,6 +18,7 @@ public class CommandSendEmailVerificationToken extends BaseHttpGetHystrixCommand
         this.personRef = personRef;
         this.emailaddress = emailaddress;
         this.linkurl = linkurl;
+
         if (crmServiceUri == null || appTokenXml == null || this.emailaddress == null || this.linkurl == null) {
             log.error(TAG + " initialized with null-values - will fail");
         }

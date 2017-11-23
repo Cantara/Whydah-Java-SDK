@@ -1,10 +1,12 @@
 package net.whydah.sso.commands.extensions.crmapi;
 
-import java.net.URI;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpPutHystrixCommand;
-
 import com.github.kevinsawicki.http.HttpRequest;
+import net.whydah.sso.commands.baseclasses.BaseHttpPutHystrixCommand;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
+import net.whydah.sso.ddd.model.user.PersonRef;
+import net.whydah.sso.ddd.model.user.UserTokenId;
+
+import java.net.URI;
 
 public class CommandUpdateCRMCustomerProfileImage extends BaseHttpPutHystrixCommand<String> {
 
@@ -14,18 +16,18 @@ public class CommandUpdateCRMCustomerProfileImage extends BaseHttpPutHystrixComm
     private byte[] imageData;
 
 
-    public CommandUpdateCRMCustomerProfileImage(URI crmServiceUri, String myAppTokenId, String userTokenId, String personRef, String contentType, byte[] imageData) {
-    	super(crmServiceUri, "", myAppTokenId, "CrmExtensionGroup", 3000);
-        
+    public CommandUpdateCRMCustomerProfileImage(URI crmServiceUri, String applicationTokenId, String userTokenId, String personRef, String contentType, byte[] imageData) {
+        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", 3000);
+
+
+        if (crmServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId) || !PersonRef.isValid(personRef) || imageData == null || contentType == null) {
+            log.error("CommandUpdateCRMCustomerProfileImage initialized with null-values - will fail");
+        }
+
         this.userTokenId = userTokenId;
         this.personRef = personRef;
         this.imageData = imageData;
         this.contentType = contentType;
-
-        if (crmServiceUri == null || personRef == null || imageData == null || contentType == null) {
-            log.error("CommandUpdateCRMCustomerProfileImage initialized with null-values - will fail");
-        }
-
     }
 
 //    @Override
