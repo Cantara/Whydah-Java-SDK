@@ -4,7 +4,8 @@ import java.net.URI;
 
 public abstract class BaseHttpGetHystrixCommandForBooleanType extends BaseHttpGetHystrixCommand<Boolean> {
 
-	public BaseHttpGetHystrixCommandForBooleanType(URI tokenServiceUri,
+
+    public BaseHttpGetHystrixCommandForBooleanType(URI tokenServiceUri,
 			String myAppTokenXml, String myAppTokenId, String hystrixGroupKey) {
 		super(tokenServiceUri, myAppTokenXml, myAppTokenId, hystrixGroupKey);
 	}

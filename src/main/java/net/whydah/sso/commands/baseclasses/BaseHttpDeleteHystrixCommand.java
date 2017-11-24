@@ -4,6 +4,7 @@ import com.github.kevinsawicki.http.HttpRequest;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
+import com.netflix.hystrix.HystrixThreadPoolProperties;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.session.baseclasses.CryptoUtil;
@@ -26,6 +27,18 @@ public abstract class BaseHttpDeleteHystrixCommand<R> extends HystrixCommand<R> 
     protected String TAG = "";
     protected HttpRequest request;
     private byte[] responseBody;
+
+    private static HystrixThreadPoolProperties.Setter threadProperties;
+
+    static {
+        threadProperties = HystrixThreadPoolProperties.Setter();
+        threadProperties.withCoreSize(10);
+        threadProperties.withMaxQueueSize(1000);
+        threadProperties.withMaxQueueSize(10000);
+        HystrixRequestContext.initializeContext();
+
+    }
+
 
     protected BaseHttpDeleteHystrixCommand(URI serviceUri, String myAppTokenXml, String myAppTokenId, String hystrixGroupKey, int hystrixExecutionTimeOut) {
         super(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(hystrixGroupKey)).
@@ -50,7 +63,6 @@ public abstract class BaseHttpDeleteHystrixCommand<R> extends HystrixCommand<R> 
         }
         this.TAG = this.getClass().getName() + ", pool :" + hystrixGroupKey;
         this.log = LoggerFactory.getLogger(TAG);
-        HystrixRequestContext.initializeContext();
     }
 
     @Override
