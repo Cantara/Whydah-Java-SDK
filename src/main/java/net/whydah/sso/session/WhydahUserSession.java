@@ -31,8 +31,8 @@ public class WhydahUserSession {
 
 
     public WhydahUserSession(WhydahApplicationSession was, UserCredential userCredential) {
-        if (was == null || ApplicationTokenID.isValid(was.getActiveApplicationTokenId())) {
-            log.error("Error, unable to initialize new user session, application session invalid:" + was.getActiveApplicationTokenId());
+        if (was == null || !ApplicationTokenID.isValid(was.getActiveApplicationTokenId())) {
+            log.error("Error, unable to initialize new user session, application session invalid: " + was.getActiveApplicationTokenId());
             return;
         }
 
