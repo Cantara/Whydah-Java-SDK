@@ -1,10 +1,11 @@
 package net.whydah.sso.commands.userauth;
 
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.ddd.model.user.UserName;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 public class CommandRefreshUserTokenByUserName extends BaseHttpPostHystrixCommand<String>{
 
@@ -12,7 +13,9 @@ public class CommandRefreshUserTokenByUserName extends BaseHttpPostHystrixComman
 	public CommandRefreshUserTokenByUserName(URI serviceUri, String myAppTokenId,
 			String myAppTokenXml, String userName) {
 		super(serviceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", 3000);
-		this.userName = userName; 
+		if (UserName.isValid(userName)) {
+			this.userName = userName;
+		}
 	}
 
 	@Override

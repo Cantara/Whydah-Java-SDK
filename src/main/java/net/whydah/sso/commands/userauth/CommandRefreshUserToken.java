@@ -1,10 +1,11 @@
 package net.whydah.sso.commands.userauth;
 
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.ddd.model.user.UserTokenId;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 
 public class CommandRefreshUserToken extends BaseHttpPostHystrixCommand<String>{
 
@@ -12,8 +13,10 @@ public class CommandRefreshUserToken extends BaseHttpPostHystrixCommand<String>{
 	public CommandRefreshUserToken(URI serviceUri, String myAppTokenId,
 			String myAppTokenXml, String userTokenId) {
 		super(serviceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", 3000);
-		this.userTokenId = userTokenId; 
-	}
+        if (UserTokenId.isValid(userTokenId)) {
+            this.userTokenId = userTokenId;
+        }
+    }
 
 	@Override
 	protected Map<String, String> getFormParameters() {

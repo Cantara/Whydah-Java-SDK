@@ -1,10 +1,12 @@
 package net.whydah.sso.commands.userauth;
 
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommandForBooleanType;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
+import net.whydah.sso.ddd.model.user.UserTokenId;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommandForBooleanType;
 
 public class CommandCreateTicketForUserTokenID extends BaseHttpPostHystrixCommandForBooleanType{
 
@@ -12,8 +14,14 @@ public class CommandCreateTicketForUserTokenID extends BaseHttpPostHystrixComman
 	String userTokenID;
 	
 	public CommandCreateTicketForUserTokenID(URI serviceUri,
-			String myAppTokenId, String myAppTokenXml, String userTicket, String userTokenId) {
-		super(serviceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup");
+                                             String applicationTokenId, String myAppTokenXml, String userTicket, String userTokenId) {
+        super(serviceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup");
+
+        if (serviceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId)) {
+            log.error(TAG + " initialized with null-values - will fail");
+            log.error("CommandCreateTicketForUserTokenID initialized with null-values - will fail - crmServiceUri:{} myAppTokenId:{} userTokenId:{} personRef:{}", serviceUri, applicationTokenId, userTokenId);
+        }
+
 		this.userTicket = userTicket;
 		this.userTokenID = userTokenId;
 	}

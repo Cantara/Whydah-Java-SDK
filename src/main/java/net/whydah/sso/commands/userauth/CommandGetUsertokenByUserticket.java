@@ -1,14 +1,14 @@
 package net.whydah.sso.commands.userauth;
 
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
+import net.whydah.sso.util.ExceptionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-import net.whydah.sso.util.ExceptionUtil;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CommandGetUsertokenByUserticket extends BaseHttpPostHystrixCommand<String> {
 
@@ -18,13 +18,14 @@ public class CommandGetUsertokenByUserticket extends BaseHttpPostHystrixCommand<
     private String userticket;
     int retryCnt = 0;
 
-    public CommandGetUsertokenByUserticket(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml,String userticket) {
-        super(tokenServiceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", 1500);
-        this.userticket=userticket;
-        
-        if (tokenServiceUri == null || myAppTokenId == null || myAppTokenXml == null || userticket == null) {
-            log.error(TAG + " initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, myAppTokenXml:{}, userCredential:*****", tokenServiceUri, myAppTokenId, myAppTokenXml, userticket);
+    public CommandGetUsertokenByUserticket(URI tokenServiceUri, String applicationTokenId, String myAppTokenXml, String userticket) {
+        super(tokenServiceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", 1500);
+
+
+        if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || myAppTokenXml == null || userticket == null) {
+            log.error(TAG + " initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, myAppTokenXml:{}, userCredential:*****", tokenServiceUri, applicationTokenId, myAppTokenXml, userticket);
         }
+        this.userticket = userticket;
 
     }
 

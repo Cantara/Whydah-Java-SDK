@@ -1,11 +1,13 @@
 package net.whydah.sso.commands.userauth;
 
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
+import net.whydah.sso.ddd.model.user.UserTokenId;
+import net.whydah.sso.util.ExceptionUtil;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
-import net.whydah.sso.util.ExceptionUtil;
 
 
 public class CommandLogonUserByPhoneNumberPin extends BaseHttpPostHystrixCommand<String> {
@@ -16,15 +18,22 @@ public class CommandLogonUserByPhoneNumberPin extends BaseHttpPostHystrixCommand
 	private String pin;
 	private String userticket;
 
-	public CommandLogonUserByPhoneNumberPin(URI serviceUri, String myAppTokenId, String myAppTokenXml, String adminUserTokenId, String phoneNo, String pin, String userTicket) {
-		super(serviceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", 8000);
+	public CommandLogonUserByPhoneNumberPin(URI serviceUri, String applicationTokenId, String myAppTokenXml, String adminUserTokenId, String phoneNo, String pin, String userTicket) {
+		super(serviceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", 8000);
 		this.phoneNo = phoneNo;
 		this.pin = pin;
 		this.userticket = userTicket;
 		this.adminUserTokenId = adminUserTokenId;
-		if (serviceUri == null || myAppTokenId == null || adminUserTokenId == null || phoneNo == null || pin == null) {
+
+
+		if (serviceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(adminUserTokenId) || phoneNo == null || pin == null) {
 			log.error("CommandLogonUserByPhoneNumberPin initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, myAppTokenXml:{}, ", adminUserTokenId, myAppTokenId, myAppTokenXml);
 		}
+		this.phoneNo = phoneNo;
+		this.pin = pin;
+		this.userticket = userTicket;
+		this.adminUserTokenId = adminUserTokenId;
+
         if (phoneNo.length() > 16 || phoneNo.length() < 7) {
             log.warn("Attempting to access with illegal phone number: {}", phoneNo);
         }
