@@ -1,19 +1,19 @@
 package net.whydah.sso.session;
 
+import net.whydah.sso.commands.userauth.CommandValidateUsertokenId;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
+import net.whydah.sso.user.helpers.UserTokenXpathHelper;
+import net.whydah.sso.user.helpers.UserXpathHelper;
+import net.whydah.sso.user.types.UserCredential;
+import net.whydah.sso.util.WhydahUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.URI;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import net.whydah.sso.commands.userauth.CommandValidateUsertokenId;
-import net.whydah.sso.user.helpers.UserTokenXpathHelper;
-import net.whydah.sso.user.helpers.UserXpathHelper;
-import net.whydah.sso.user.types.UserCredential;
-import net.whydah.sso.util.WhydahUtil;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class WhydahUserSession {
 
@@ -31,7 +31,7 @@ public class WhydahUserSession {
 
 
     public WhydahUserSession(WhydahApplicationSession was, UserCredential userCredential) {
-        if (was == null || was.getActiveApplicationTokenId() == null || was.getActiveApplicationTokenId().length() < 4) {
+        if (was == null || ApplicationTokenID.isValid(was.getActiveApplicationTokenId())) {
             log.error("Error, unable to initialize new user session, application session invalid:" + was.getActiveApplicationTokenId());
             return;
         }
@@ -81,6 +81,15 @@ public class WhydahUserSession {
         return userTokenXML;
     }
 
+    public boolean hasRole(String roleName) {
+        return UserXpathHelper.hasRoleFromUserToken(userTokenXML, was.getActiveApplicationTokenId(), roleName);
+    }
+
+    public boolean hasUASAccessAdminRole() {
+        return WhydahUtil.hasUASAccessAdminRole(userTokenXML);
+    }
+
+
     /*
     * @return true is session is active and working
      */
@@ -96,9 +105,6 @@ public class WhydahUserSession {
         }
     }
 
-    public boolean hasRole(String roleName) {
-        return UserXpathHelper.hasRoleFromUserToken(userTokenXML, was.getActiveApplicationTokenId(), roleName);
-    }
 
     private void renewWhydahUserSession() {
         log.info("Renew user session");

@@ -16,6 +16,7 @@ import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.session.baseclasses.CryptoUtil;
 import net.whydah.sso.session.baseclasses.ExchangeableKey;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
+import net.whydah.sso.user.types.UserToken;
 import net.whydah.sso.util.WhydahUtil;
 import net.whydah.sso.whydah.DEFCON;
 import net.whydah.sso.whydah.ThreatSignal;
@@ -183,6 +184,11 @@ public class WhydahApplicationSession {
         DEFCONHandler.handleDefcon(defcon);
 
     }
+
+    public boolean hasUASAccessAdminRole(UserToken userToken) {
+        return WhydahUtil.hasUASAccessAdminRole(userToken);
+    }
+
 
     public void updateDefcon(String userTokenXml) {
         String tokendefcon = UserTokenXpathHelper.getDEFCONLevel(userTokenXml);
