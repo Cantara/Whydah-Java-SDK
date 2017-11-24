@@ -8,6 +8,7 @@ import net.whydah.sso.commands.appauth.CommandRenewApplicationSession;
 import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
 import net.whydah.sso.commands.userauth.CommandValidateUsertokenId;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.mappers.UserTokenMapper;
@@ -125,9 +126,8 @@ public class WhydahUtil {
 
     public static String logOnUser(WhydahApplicationSession was, UserCredential userCredential) {
         URI tokenServiceUri = URI.create(was.getSTS());
-        if (was.getActiveApplicationTokenId() == null || was.getActiveApplicationTokenId().length() < 8) {
+        if (!ApplicationTokenID.isValid(was.getActiveApplicationTokenId())) {
             log.warn("Illegal application session from WhydahApplicationSession, applicationTokenId:" + was.getActiveApplicationTokenId());
-
         }
         String userTokenXML = new CommandLogonUserByUserCredential(tokenServiceUri, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userCredential, UUID.randomUUID().toString()).execute();
         was.updateDefcon(userTokenXML);
@@ -147,8 +147,7 @@ public class WhydahUtil {
 
     public static String getUserTokenByUserTokenId(String stsUri, String myAppTokenId, String myAppTokenXml, String userTokenId) {
         URI tokenServiceUri = URI.create(stsUri);
-        CommandGetUsertokenByUsertokenId command = new CommandGetUsertokenByUsertokenId(tokenServiceUri, myAppTokenId, myAppTokenXml, userTokenId);
-        String userTokenXml = command.execute();
+        String userTokenXml = new CommandGetUsertokenByUsertokenId(tokenServiceUri, myAppTokenId, myAppTokenXml, userTokenId).execute();
         return userTokenXml;
     }
 
