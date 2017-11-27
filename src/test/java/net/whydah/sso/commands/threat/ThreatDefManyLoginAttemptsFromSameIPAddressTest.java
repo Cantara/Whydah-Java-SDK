@@ -30,7 +30,7 @@ public class ThreatDefManyLoginAttemptsFromSameIPAddressTest {
 		
 		 assertFalse(found);
 		 
-		 for(int i = 0; i < 1000000; i++){
+		 for(int i = 0; i < 25; i++){
 			 ThreatActivityLog log = new ThreatActivityLog().setEndPoint("login").setIpAddress("171.250.110.30").setRequestTime(Long.toString(System.currentTimeMillis()));
 			 ob.addLogForDetection(log);
 		 }

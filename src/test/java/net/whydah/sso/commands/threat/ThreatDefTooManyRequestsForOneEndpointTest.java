@@ -15,6 +15,8 @@ public class ThreatDefTooManyRequestsForOneEndpointTest {
 	@Test
 	public void testOperation() throws InterruptedException
 	{
+		ThreatDefTooManyRequestsForOneEndpoint.COUNT = 100;
+		
 		ThreatObserver ob = new ThreatObserver(){
 			@Override
 			public void commitThreat(ThreatSignalInfo info) {
@@ -22,7 +24,7 @@ public class ThreatDefTooManyRequestsForOneEndpointTest {
 				super.commitThreat(info);
 			}
 		};
-
+		
 		ob.registerDefinition(new ThreatDefTooManyRequestsForOneEndpoint());
 
 		for(int i = 0; i < 10; i++){
@@ -32,7 +34,7 @@ public class ThreatDefTooManyRequestsForOneEndpointTest {
 
 		assertFalse(found);
 
-		for(int i = 0; i < 1000000; i++){
+		for(int i = 0; i < ThreatDefTooManyRequestsForOneEndpoint.COUNT; i++){
 			ThreatActivityLog log = new ThreatActivityLog().setEndPoint("login").setIpAddress("171.250.110.*").setRequestTime(Long.toString(System.currentTimeMillis()));
 			ob.addLogForDetection(log);
 		}

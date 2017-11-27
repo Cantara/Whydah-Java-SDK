@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ThreatDefTooManyRequestsForOneEndpoint extends IThreatDefinition {
 
-	int COUNT = 1000000; //1 million requests in one hour?
+	public static int COUNT = 1000000; //1 million requests in one hour?
 	
 	public int getCode() {
 		return IThreatDefinition.DEF_CODE_MANY_REQUESTS_IN_A_SHORT_PERIOD;

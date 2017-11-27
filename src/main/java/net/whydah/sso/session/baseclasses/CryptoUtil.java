@@ -48,7 +48,7 @@ public class CryptoUtil {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
-        KeySpec spec = new PBEKeySpec(secret.toCharArray(), salt, 65536, 256); // AES-256
+        KeySpec spec = new PBEKeySpec(secret.toCharArray(), salt, 65536, 128); // AES-256
         SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         myKey.setEncryptionKey(f.generateSecret(spec).getEncoded());
         myKey.setIv(ivp);

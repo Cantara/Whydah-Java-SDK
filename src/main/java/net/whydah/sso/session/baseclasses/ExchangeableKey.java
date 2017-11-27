@@ -1,11 +1,14 @@
 package net.whydah.sso.session.baseclasses;
 
 import net.whydah.sso.basehelpers.JsonPathHelper;
+
 import org.slf4j.Logger;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
+
+import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.Base64;
@@ -36,7 +39,9 @@ public class ExchangeableKey {
         setIv(new IvParameterSpec(decoder.decode(iv)));
     }
 
-    public ExchangeableKey() {
+    public ExchangeableKey()  {
+    	
+        
     }
 
     public byte[] getEncryptionKey() {

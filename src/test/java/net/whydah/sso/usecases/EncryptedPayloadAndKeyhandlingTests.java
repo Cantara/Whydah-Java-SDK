@@ -5,8 +5,10 @@ import net.whydah.sso.application.types.ApplicationToken;
 import net.whydah.sso.basehelpers.JsonPathHelper;
 import net.whydah.sso.session.baseclasses.CryptoUtil;
 import net.whydah.sso.session.baseclasses.ExchangeableKey;
+import net.whydah.sso.util.AESUtils;
 import net.whydah.sso.util.StringConv;
 import net.whydah.sso.util.SystemTestBaseConfig;
+
 import org.apache.commons.codec.binary.Hex;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -14,6 +16,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 
 import javax.crypto.spec.IvParameterSpec;
+
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -39,7 +42,7 @@ public class EncryptedPayloadAndKeyhandlingTests {
     }
 
 
-
+   
     @Test
     public void testCreateAndShipKeys() throws Exception {
         SecureRandom random = new SecureRandom();
@@ -49,9 +52,6 @@ public class EncryptedPayloadAndKeyhandlingTests {
         byte[] ivBytes = new byte[16];
         random.nextBytes(ivBytes);
         IvParameterSpec iv = new IvParameterSpec(ivBytes);
-
-
-
 
         String testData = "Hello World";
 
