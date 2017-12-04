@@ -60,6 +60,8 @@ public class WhydahApplicationSessionTest {
     public void testTimeoutOnSystest() throws Exception {
         if (config.isSystemTestEnabled()) {
             WhydahApplicationSession applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
+            WhydahApplicationSession applicationSession2 = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
+            WhydahApplicationSession applicationSession3 = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
             String appToken = applicationSession.getActiveApplicationTokenXML();
             Long expires = ApplicationXpathHelper.getExpiresFromAppTokenXml(applicationSession.getActiveApplicationTokenXML());
             long waittimeinseconds = (expires - System.currentTimeMillis()) / 1000;
