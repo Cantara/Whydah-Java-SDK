@@ -10,7 +10,7 @@ import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
 import org.constretto.ConstrettoConfiguration;
-import org.constretto.exception.ConstrettoConversionException;
+import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,20 +22,18 @@ import java.util.Properties;
 
 public class BaseWhydahServiceClient {
 
+    protected static final Logger log;
+    protected static final String TAG;
+
     private static volatile WhydahApplicationSession whydahApplicationSession = null;
     private static final Object lock = new Object();
 
-    protected static Logger log;
-
-
     protected URI uri_securitytoken_service;
-
-
     protected URI uri_useradmin_service;
-    //    protected URI uri_useridentitybackend_service;
     protected URI uri_crm_service;
     protected URI uri_report_service;
-    protected static String TAG = "";
+
+
     private static ApplicationCredential applicationCredential;
 
     static {
@@ -44,16 +42,13 @@ public class BaseWhydahServiceClient {
 
     }
 
-    public static synchronized void setWhydahApplicationSession(WhydahApplicationSession whydahApplicationSession) {
-        BaseWhydahServiceClient.whydahApplicationSession = whydahApplicationSession;
-    }
 
     public BaseWhydahServiceClient(String securitytokenserviceurl,
                                    String useradminserviceurl,
-                                   String activeApplicationId,
+                                   String applicationId,
                                    String applicationname,
                                    String applicationsecret) throws URISyntaxException {
-        this(securitytokenserviceurl, useradminserviceurl, new ApplicationCredential(activeApplicationId, applicationname, applicationsecret));
+        this(securitytokenserviceurl, useradminserviceurl, new ApplicationCredential(applicationId, applicationname, applicationsecret));
     }
 
 
@@ -61,20 +56,19 @@ public class BaseWhydahServiceClient {
                                    String useradminserviceurl,
                                    ApplicationCredential applicationCredential) throws URISyntaxException {
 
-        this.applicationCredential = applicationCredential;
+
+        setApplicationCredential(applicationCredential);
         this.uri_securitytoken_service = URI.create(securitytokenserviceurl);
+        this.uri_useradmin_service = URI.create(useradminserviceurl);
 
         getWAS();
 
     }
 
     public BaseWhydahServiceClient(ConstrettoConfiguration configuration) {
-        this.TAG = this.getClass().getName();
-        this.log = LoggerFactory.getLogger(TAG);
         try {
             if (configuration.hasValue("securitytokenservice")) {
                 this.uri_securitytoken_service = URI.create(configuration.evaluateToString("securitytokenservice"));
-
             }
             if (configuration.hasValue("useradminservice")) {
                 this.uri_useradmin_service = URI.create(configuration.evaluateToString("useradminservice"));
@@ -91,24 +85,22 @@ public class BaseWhydahServiceClient {
             String applicationname = configuration.evaluateToString("applicationname");
             String applicationsecret = configuration.evaluateToString("applicationsecret");
             ApplicationCredential myApplicationCredential = new ApplicationCredential(applicationid, applicationname, applicationsecret);
-            this.applicationCredential = myApplicationCredential;
+            setApplicationCredential(myApplicationCredential);
 
             getWAS();
 
         } catch (ConstrettoExpressionException constrettoExpressionException) {
             log.debug("Some parameters where not found");
-        } catch (ConstrettoConversionException cce) {
-            log.debug("Some parameters where not found");
-
+            throw constrettoExpressionException;
         } catch (Exception ex) {
             throw ex;
+        } finally {
+            throw new ConstrettoException("Could not resove configuration");
         }
     }
 
 
     public BaseWhydahServiceClient(Properties properties) {
-        this.TAG = this.getClass().getName();
-        this.log = LoggerFactory.getLogger(TAG);
 
         try {
             if (properties.getProperty("securitytokenservice", null) != null) {
@@ -130,7 +122,7 @@ public class BaseWhydahServiceClient {
             String applicationname = properties.getProperty("applicationname");
             String applicationsecret = properties.getProperty("applicationsecret");
             ApplicationCredential myApplicationCredential = new ApplicationCredential(applicationid, applicationname, applicationsecret);
-            this.applicationCredential = myApplicationCredential;
+            setApplicationCredential(myApplicationCredential);
 
             getWAS();
         } catch (Exception ex) {
@@ -151,6 +143,10 @@ public class BaseWhydahServiceClient {
 
     public String getUri_securitytoken_service() {
         return uri_securitytoken_service.toString();
+    }
+
+    public static synchronized void setWhydahApplicationSession(WhydahApplicationSession whydahApplicationSession) {
+        BaseWhydahServiceClient.whydahApplicationSession = whydahApplicationSession;
     }
 
 
@@ -299,6 +295,10 @@ public class BaseWhydahServiceClient {
 	public List<Application> getApplicationList(){
         return getWAS().getApplicationList();
 	}
-	
+
+    public static void setApplicationCredential(ApplicationCredential applicationCredential) {
+        BaseWhydahServiceClient.applicationCredential = applicationCredential;
+    }
+
 
 }
