@@ -41,6 +41,11 @@ public class WhydahApplicationSession {
     private static final Object lock = new Object();
     private String sts;
     private String uas;
+
+    public static synchronized void setApplicationToken(ApplicationToken applicationToken) {
+        WhydahApplicationSession.applicationToken = applicationToken;
+    }
+
     private static ApplicationCredential myAppCredential;
     private static int logonAttemptNo = 0;
     private static ApplicationToken applicationToken;
@@ -219,7 +224,7 @@ public class WhydahApplicationSession {
     }
 
     public synchronized void killApplicationSession() {
-        applicationToken = null;
+        setApplicationToken(null);
         initializeWhydahApplicationSession();
     }
 
@@ -256,7 +261,7 @@ public class WhydahApplicationSession {
                 for (int n = 0; n < 5; n++) {
                     String applicationTokenXML = WhydahUtil.extendApplicationSession(sts, getActiveApplicationTokenId(), 2000 + n * 1000);  // Wait a bit longer on retries
                     if (applicationTokenXML != null && applicationTokenXML.length() > 10) {
-                        applicationToken = ApplicationTokenMapper.fromXml(applicationTokenXML);
+                        setApplicationToken(ApplicationTokenMapper.fromXml(applicationTokenXML));
                         if (checkActiveSession()) {
                             log.info("Renew WAS: Success in renew applicationsession, applicationTokenId: {} - for applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
                             log.debug("Renew WAS: - expiresAt: {} - now: {} - expires in: {} seconds", applicationToken.getExpires(), System.currentTimeMillis(), (Long.parseLong(applicationToken.getExpires()) - System.currentTimeMillis()) / 1000);
@@ -341,7 +346,7 @@ public class WhydahApplicationSession {
     }
 
     private void setApplicationSessionParameters(String applicationTokenXML) {
-        applicationToken = ApplicationTokenMapper.fromXml(applicationTokenXML);
+        setApplicationToken(ApplicationTokenMapper.fromXml(applicationTokenXML));
         String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), applicationToken.getApplicationTokenId()).execute();
         log.debug("Found exchangeableKeyString: {}", exchangeableKeyString);
         ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);

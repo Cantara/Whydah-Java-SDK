@@ -1,36 +1,28 @@
 package net.whydah.sso.session.baseclasses;
 
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Properties;
-
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.extras.CommandSendSms;
-import net.whydah.sso.commands.userauth.CommandCreateTicketForUserTokenID;
-import net.whydah.sso.commands.userauth.CommandGenerateAndSendSmsPin;
-import net.whydah.sso.commands.userauth.CommandGetUsertokenByUserticket;
-import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
-import net.whydah.sso.commands.userauth.CommandLogonUserByPhoneNumberPin;
-import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.commands.userauth.CommandReleaseUserToken;
-import net.whydah.sso.commands.userauth.CommandValidateUsertokenId;
+import net.whydah.sso.commands.userauth.*;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
-
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoExpressionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Properties;
+
 public class BaseWhydahServiceClient {
 
-    static WhydahApplicationSession was = null;
+    private static WhydahApplicationSession was = null;
     protected Logger log;
     protected URI uri_securitytoken_service;
     protected URI uri_useradmin_service;
@@ -42,6 +34,9 @@ public class BaseWhydahServiceClient {
     private static String securitytokenserviceurl;
     private static String useradminserviceurl;
 
+    public static synchronized void setWas(WhydahApplicationSession was) {
+        BaseWhydahServiceClient.was = was;
+    }
 
     public BaseWhydahServiceClient(String securitytokenserviceurl,
                                    String useradminserviceurl,
@@ -60,7 +55,7 @@ public class BaseWhydahServiceClient {
         this.securitytokenserviceurl = securitytokenserviceurl;
         this.useradminserviceurl = useradminserviceurl;
         if (was == null) {
-            was = WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, applicationCredential);
+            setWas(WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, applicationCredential));
             was.updateApplinks(true);
         }
 
@@ -109,7 +104,7 @@ public class BaseWhydahServiceClient {
 
             }
             if (was == null) {
-                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, myApplicationCredential);
+                setWas(WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, myApplicationCredential));
             }
 
         } catch (ConstrettoExpressionException constrettoExpressionException) {
@@ -160,7 +155,7 @@ public class BaseWhydahServiceClient {
 
             }
             if (was == null) {
-                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, myApplicationCredential);
+                setWas(WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, myApplicationCredential));
             }
         } catch (Exception ex) {
             throw ex;
@@ -172,7 +167,7 @@ public class BaseWhydahServiceClient {
     public WhydahApplicationSession getWAS(){
 
         if (was == null) {
-            was = WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, applicationCredential);
+            setWas(WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, applicationCredential));
             was.updateApplinks(true);
         }
         return was;
