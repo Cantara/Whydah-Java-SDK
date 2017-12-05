@@ -299,6 +299,9 @@ public class WhydahApplicationSession {
     }
 
     private synchronized void initializeWhydahApplicationSession() {
+        if (instance == null) {
+            return;  //  Block starting threads outside instance scope
+        }
         logonAttemptNo = 1;
         String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
         if (checkApplicationToken(applicationTokenXML)) {
@@ -485,7 +488,7 @@ public class WhydahApplicationSession {
 
     public void updateApplinks() {
         if (uas == null || uas.length() < 8 || applicationToken == null) {
-            log.warn("Calling updateAppLinks without was initialized uas: {}, applicationTolken: {}", uas, applicationToken);
+            log.warn("Called updateAppLinks without was initialized uas: {}, applicationToken: {} - aborting", uas, applicationToken);
             return;
         }
         URI userAdminServiceUri = URI.create(uas);
