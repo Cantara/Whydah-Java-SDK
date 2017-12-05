@@ -50,9 +50,15 @@ public class WhydahApplicationSession {
     private boolean disableUpdateAppLink = false;
 
     private static final int[] FIBONACCI = new int[]{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144};
-    private static ScheduledExecutorService scheduler;
+    private static ScheduledExecutorService initialize_scheduler;
+    private static ScheduledExecutorService renew_scheduler;
 
     private ThreatObserver threatObserver;
+
+    static {
+        initialize_scheduler = Executors.newScheduledThreadPool(1);
+        renew_scheduler = Executors.newScheduledThreadPool(1);
+    }
 
     /**
      * Protected singleton constructors
@@ -72,8 +78,7 @@ public class WhydahApplicationSession {
                 //register more if any
 
                 initializeWhydahApplicationSession();
-                scheduler = Executors.newScheduledThreadPool(2);
-                ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
+                ScheduledFuture<?> sf = renew_scheduler.scheduleAtFixedRate(
                         new Runnable() {
                             public void run() {
                                 try {
@@ -301,7 +306,7 @@ public class WhydahApplicationSession {
             log.info("InitWAS {}: Initialized new application session, applicationTokenId:{}, applicationID: {}, applicationName: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getApplicationName(), applicationToken.getExpiresFormatted());
             logonAttemptNo = 0;
         } else {
-            ScheduledFuture<?> sf = scheduler.schedule(
+            ScheduledFuture<?> sf = initialize_scheduler.schedule(
                     new Runnable() {
                         public void run() {
                             try {
@@ -314,7 +319,7 @@ public class WhydahApplicationSession {
         }
     }
 
-    private synchronized boolean initializeWhydahApplicationSessionThread() {
+    private boolean initializeWhydahApplicationSessionThread() {
         log.info("Initializing new application session {} with applicationCredential: {}", logonAttemptNo, myAppCredential);
 
         try {
