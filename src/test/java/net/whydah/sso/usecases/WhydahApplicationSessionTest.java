@@ -37,7 +37,7 @@ public class WhydahApplicationSessionTest {
 
    
     @Test
-    @Ignore
+    //@Ignore
     public void testTimeoutOnLocahost() throws Exception {
         if (!SystemTestUtil.noLocalWhydahRunning()) {
 

@@ -43,10 +43,6 @@ public class WhydahApplicationSession {
     private String sts;
     private String uas;
 
-    public static synchronized void setApplicationToken(ApplicationToken applicationToken) {
-        WhydahApplicationSession.applicationToken = applicationToken;
-    }
-
     private static ApplicationCredential myAppCredential;
     private static int logonAttemptNo = 0;
     private static ApplicationToken applicationToken;
@@ -229,6 +225,11 @@ public class WhydahApplicationSession {
         initializeWhydahApplicationSession();
     }
 
+    public static synchronized void setApplicationToken(ApplicationToken myApplicationToken) {
+        applicationToken = myApplicationToken;
+    }
+
+
 
     public void renewWhydahApplicationSession() {
         log.trace("Renew WAS: Renew application session called");
@@ -242,23 +243,12 @@ public class WhydahApplicationSession {
                 log.info("Renew WAS: No active application session, applicationToken:null, myAppCredential:{}, logonAttemptNo:{}", myAppCredential, logonAttemptNo);
             }
             initializeWhydahApplicationSession();
-//            for (int n = 0; n < 3 || !checkActiveSession(); n++) {
-//                initializeWhydahApplicationSession();
-//                if (logonAttemptNo == 0) {
-//                    return;
-//                }
-//                log.info("Renew WAS: Unsuccessful attempt to logon application session, returned applicationtokenXML: {}: ", getActiveApplicationTokenXML());
-//                try {
-//                    Thread.sleep(1000 * n);
-//                } catch (InterruptedException ie) {
-//                }
-//            }
         } else {
             log.trace("Renew WAS: Active application session found, applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
 
             Long expires = Long.parseLong(applicationToken.getExpires());
             if (expiresBeforeNextSchedule(expires)) {
-                log.info("Renew WAS: Active session expires before next check, re-new");
+                log.info("Renew WAS: Active session expires before next check, re-new - applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
                 for (int n = 0; n < 5; n++) {
                     String applicationTokenXML = WhydahUtil.extendApplicationSession(sts, getActiveApplicationTokenId(), 2000 + n * 1000);  // Wait a bit longer on retries
                     if (applicationTokenXML != null && applicationTokenXML.length() > 10) {
@@ -277,9 +267,12 @@ public class WhydahApplicationSession {
                                 log.warn("Unable to update CryptoUtil with new cryptokey", e);
                             }
                             break;
+                        } else {
+                            log.info("Renew WAS: received invaled applicationtoken in renew applicationsession, applicationTokenId: {} - for applicationID: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID());
+
                         }
                     } else {
-                        log.info("Renew WAS:: Failed to renew applicationsession, attempt:{}, returned response from STS: {}", n, applicationTokenXML);
+                        log.info("Renew WAS: Failed to renew applicationsession, attempt:{}, returned response from STS: {}", n, applicationTokenXML);
                         if (n > 2) {
                             // OK, we wont get a renewed session, so we start a new one
                             initializeWhydahApplicationSession();
