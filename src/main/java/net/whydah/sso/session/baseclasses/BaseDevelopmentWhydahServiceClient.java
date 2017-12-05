@@ -184,7 +184,8 @@ public class BaseDevelopmentWhydahServiceClient {
 
     public String getMyAppTokenID() {
         if (was.getActiveApplicationToken() == null) {
-            was.renewWhydahApplicationSession();
+            return null;
+//            was.renewWhydahApplicationSession();
         }
         return was.getActiveApplicationTokenId();
     }
@@ -192,14 +193,16 @@ public class BaseDevelopmentWhydahServiceClient {
     public String getMyAppTokenXml() {
 
         if (was.getActiveApplicationToken() == null) {
-            was.renewWhydahApplicationSession();
+            return null;
+//          was.renewWhydahApplicationSession();
         }
         return was.getActiveApplicationTokenXML();
     }
 
     public String getUserTokenFromUserTokenId(String userTokenId) {
         if (was.getActiveApplicationToken() == null) {
-            was.renewWhydahApplicationSession();
+            return null;
+//            was.renewWhydahApplicationSession();
         }
 
         String userTokenXML = new CommandGetUsertokenByUsertokenId(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userTokenId).execute();
@@ -229,7 +232,8 @@ public class BaseDevelopmentWhydahServiceClient {
             return getDummyToken();
         }
         if (was.getActiveApplicationToken() == null) {
-            was.renewWhydahApplicationSession();
+            return null;
+//            was.renewWhydahApplicationSession();
         }
         log.debug("getUserTokenByPin() - Application logon OK. applicationTokenId={}. Log on with user adminUserTokenId {}.", getMyAppTokenID(), adminUserTokenId);
         String userTokenXML = new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenId, phoneNo, pin, userTicket).execute();
@@ -243,7 +247,8 @@ public class BaseDevelopmentWhydahServiceClient {
             return getDummyToken();
         }
         if (was.getActiveApplicationToken() == null) {
-            was.renewWhydahApplicationSession();
+            return null;
+//          was.renewWhydahApplicationSession();
         }
         log.debug("getUserTokenByPin() - Application logon OK. applicationTokenId={}. Log on with user phoneno {}.", was.getActiveApplicationTokenId(), phoneNo);
         return new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenId, phoneNo, pin, userTicket).execute();
@@ -254,7 +259,8 @@ public class BaseDevelopmentWhydahServiceClient {
             return getDummyToken();
         }
         if (was.getActiveApplicationToken() == null) {
-            was.renewWhydahApplicationSession();
+            return null;
+//            was.renewWhydahApplicationSession();
         }
         log.debug("getUserToken - Application logon OK. applicationTokenId={}. Log on with user credentials {}.", was.getActiveApplicationTokenId(), user.toString());
         String userTokenXML = new CommandLogonUserByUserCredential(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), user, userticket).execute();
@@ -266,7 +272,8 @@ public class BaseDevelopmentWhydahServiceClient {
         log.debug("createTicketForUserTokenID - apptokenid: {}", was.getActiveApplicationTokenId());
         log.debug("createTicketForUserTokenID - userticket: {} userTokenID: {}", userTicket, userTokenID);
         if (was.getActiveApplicationToken() == null) {
-            was.renewWhydahApplicationSession();
+            return false;
+//            was.renewWhydahApplicationSession();
         }
         return new CommandCreateTicketForUserTokenID(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userTicket, userTokenID).execute();
     }
@@ -276,7 +283,8 @@ public class BaseDevelopmentWhydahServiceClient {
             return getDummyToken();
         }
         if (was.getActiveApplicationToken() == null) {
-            was.renewWhydahApplicationSession();
+            return null;
+//            was.renewWhydahApplicationSession();
         }
         String userTokenXML = new CommandGetUsertokenByUsertokenId(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), usertokenId).execute();
         getWAS().updateDefcon(userTokenXML);
@@ -303,7 +311,8 @@ public class BaseDevelopmentWhydahServiceClient {
 
     public boolean sendUserSMSPin(String phoneNo) {
         if (was.getActiveApplicationToken() == null) {
-            was.renewWhydahApplicationSession();
+            return false;
+//            was.renewWhydahApplicationSession();
         }
         if (phoneNo == null) {
             return false;
@@ -311,12 +320,13 @@ public class BaseDevelopmentWhydahServiceClient {
         log.debug("sendUserSMSPin - apptokenid: {}", was.getActiveApplicationTokenId());
         log.debug("sendUserSMSPin - phoneNo: {} ", phoneNo);
 
-        return new CommandGenerateAndSendSmsPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), phoneNo).execute();
+        return new CommandGenerateAndSendSmsPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), phoneNo).execute();
     }
 
     public boolean sendSMSMessage(String phoneNo, String msg) {
         if (was.getActiveApplicationToken() == null) {
-            was.renewWhydahApplicationSession();
+            return false;
+//            was.renewWhydahApplicationSession();
         }
 
         if (phoneNo == null || msg == null) {
