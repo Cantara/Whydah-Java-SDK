@@ -54,6 +54,7 @@ public class WhydahApplicationSession {
     private static ScheduledExecutorService renew_scheduler;
 
     private ThreatObserver threatObserver;
+    private boolean isInitialized = false;
 
     static {
         initialize_scheduler = Executors.newScheduledThreadPool(1);
@@ -235,8 +236,7 @@ public class WhydahApplicationSession {
     }
 
 
-
-    public void renewWhydahApplicationSession() {
+    private void renewWhydahApplicationSession() {
         log.trace("Renew WAS: Renew application session called");
         if (applicationToken == null) {
             initializeWhydahApplicationSession();
@@ -301,6 +301,9 @@ public class WhydahApplicationSession {
     private synchronized void initializeWhydahApplicationSession() {
         if (instance == null) {
             return;  //  Block starting threads outside instance scope
+        }
+        if (isInitialized) {
+            return;
         }
         logonAttemptNo = 1;
         String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
