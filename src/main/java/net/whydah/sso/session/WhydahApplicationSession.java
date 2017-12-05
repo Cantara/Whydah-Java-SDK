@@ -134,14 +134,14 @@ public class WhydahApplicationSession {
 
     public ApplicationToken getActiveApplicationToken() {
         if (applicationToken == null) {
-            initializeWhydahApplicationSession();
+//            initializeWhydahApplicationSession();
         }
         return applicationToken;
     }
 
     public String getActiveApplicationTokenId() {
         if (applicationToken == null) {
-            initializeWhydahApplicationSession();
+//            initializeWhydahApplicationSession();
         }
         if (applicationToken == null) {
             return "";
@@ -151,7 +151,7 @@ public class WhydahApplicationSession {
 
     public String getActiveApplicationName() {
         if (applicationToken == null) {
-            initializeWhydahApplicationSession();
+//            initializeWhydahApplicationSession();
         }
         if (applicationToken == null) {
             return "N/A";
@@ -161,7 +161,7 @@ public class WhydahApplicationSession {
 
     public String getActiveApplicationTokenXML() {
         if (applicationToken == null) {
-            initializeWhydahApplicationSession();
+            //           initializeWhydahApplicationSession();
             if (applicationToken == null) {
                 log.warn("WAS: Unable to initialize new Application Session - no ApplicationToken returned");
                 return "";
