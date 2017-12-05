@@ -59,8 +59,8 @@ public class WhydahApplicationSession {
      */
     protected WhydahApplicationSession(String sts, String uas, ApplicationCredential myAppCredential) {
         synchronized (WhydahApplicationSession.class) {
+            log.info("WhydahApplicationSession initializing: sts:{},  uas:{}, myAppCredential:{}", sts, uas, myAppCredential);
             if (instance == null) {
-                log.info("WhydahApplicationSession initializing: sts:{},  uas:{}, myAppCredential:{}", sts, uas, myAppCredential);
                 this.sts = sts;
                 this.uas = uas;
                 this.myAppCredential = myAppCredential;
@@ -72,7 +72,7 @@ public class WhydahApplicationSession {
                 //register more if any
 
                 initializeWhydahApplicationSession();
-                scheduler = Executors.newScheduledThreadPool(1);
+                scheduler = Executors.newScheduledThreadPool(2);
                 ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
                         new Runnable() {
                             public void run() {
@@ -301,7 +301,6 @@ public class WhydahApplicationSession {
             log.info("InitWAS {}: Initialized new application session, applicationTokenId:{}, applicationID: {}, applicationName: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getApplicationName(), applicationToken.getExpiresFormatted());
             logonAttemptNo = 0;
         } else {
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             ScheduledFuture<?> sf = scheduler.schedule(
                     new Runnable() {
                         public void run() {
