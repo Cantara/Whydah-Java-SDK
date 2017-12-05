@@ -195,6 +195,6 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 	
 	private byte[] responseBody;
 	public byte[] getResponseBodyAsByteArray(){
-		return responseBody;
+		return responseBody.clone();
 	}
 }

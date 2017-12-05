@@ -1,14 +1,13 @@
 package net.whydah.sso.commands.extras;
 
-import static junit.framework.TestCase.assertTrue;
-import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.userauth.CommandGenerateAndSendSmsPin;
 import net.whydah.sso.util.SystemTestBaseConfig;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static junit.framework.TestCase.assertTrue;
 
 
 public class CommandSendSMSTest {
@@ -26,10 +25,9 @@ public class CommandSendSMSTest {
     public void testSendSMSPin() throws Exception {
 
         if (config.isSystemTestEnabled()) {
+            config.logOnSystemTestApplication();
 
-            String myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
-            //     public CommandGenerateAndSendSmsPin(URI tokenServiceUri, String appTokenId, String appTokenXml, String phoneNo) {
-            assertTrue(new CommandGenerateAndSendSmsPin(config.tokenServiceUri, config.myApplicationTokenID, myAppTokenXml, SystemTestBaseConfig.SYSTEMTEST_USER_CELLPHONE).execute());
+            assertTrue(new CommandGenerateAndSendSmsPin(config.tokenServiceUri, config.myApplicationTokenID, SystemTestBaseConfig.SYSTEMTEST_USER_CELLPHONE).execute());
         }
 
     }

@@ -1,47 +1,43 @@
 package net.whydah.sso.session.baseclasses;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Properties;
-
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.extras.CommandSendSms;
-import net.whydah.sso.commands.userauth.CommandCreateTicketForUserTokenID;
-import net.whydah.sso.commands.userauth.CommandGenerateAndSendSmsPin;
-import net.whydah.sso.commands.userauth.CommandGetUsertokenByUserticket;
-import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
-import net.whydah.sso.commands.userauth.CommandLogonUserByPhoneNumberPin;
-import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.commands.userauth.CommandReleaseUserToken;
-import net.whydah.sso.commands.userauth.CommandValidateUsertokenId;
+import net.whydah.sso.commands.userauth.*;
 import net.whydah.sso.config.ApplicationMode;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
-
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoExpressionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Properties;
+
 public class BaseDevelopmentWhydahServiceClient {
 
-    static WhydahApplicationSession was = null;
-    protected Logger log;
+
+    private static volatile WhydahApplicationSession was = null;
+    protected static final Logger log;
+    protected static final String TAG;
     protected URI uri_securitytoken_service;
     protected URI uri_useradmin_service;
     protected URI uri_useridentitybackend_service;
     protected URI uri_crm_service;
     protected URI uri_report_service;
-    protected String TAG = "";
-    private static ApplicationCredential applicationCredential;
-    private static String securitytokenserviceurl;
-    private static String useradminserviceurl;
+    private ApplicationCredential applicationCredential;
 
+    static {
+        TAG = BaseDevelopmentWhydahServiceClient.class.getName();
+        log = LoggerFactory.getLogger(TAG);
+
+    }
 
     public BaseDevelopmentWhydahServiceClient(String securitytokenserviceurl,
                                               String useradminserviceurl,
@@ -53,36 +49,24 @@ public class BaseDevelopmentWhydahServiceClient {
 
     public BaseDevelopmentWhydahServiceClient(String securitytokenserviceurl,
                                               String useradminserviceurl,
-                                              ApplicationCredential applicationCredential) throws URISyntaxException {
+                                              ApplicationCredential myApplicationCredential) throws URISyntaxException {
 
-        this.applicationCredential = applicationCredential;
-        this.securitytokenserviceurl = securitytokenserviceurl;
-        this.useradminserviceurl = useradminserviceurl;
-        if (was == null) {
-            was = WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, applicationCredential);
-            was.updateApplinks(true);
-        }
-
+        this.applicationCredential = myApplicationCredential;
         this.uri_securitytoken_service = URI.create(securitytokenserviceurl);
         if (useradminserviceurl != null && useradminserviceurl.length() > 8) {  // UAS is optinal
             this.uri_useradmin_service = URI.create(useradminserviceurl);
         }
+        getWAS();
 
-        this.TAG = this.getClass().getName();
-        this.log = LoggerFactory.getLogger(TAG);
     }
 
     public BaseDevelopmentWhydahServiceClient(ConstrettoConfiguration configuration) {
-        this.TAG = this.getClass().getName();
-        this.log = LoggerFactory.getLogger(TAG);
         try {
             if (configuration.hasValue("securitytokenservice")) {
                 this.uri_securitytoken_service = URI.create(configuration.evaluateToString("securitytokenservice"));
-                this.securitytokenserviceurl = configuration.evaluateToString("securitytokenservice");
             }
             if (configuration.hasValue("useradminservice")) {
                 this.uri_useradmin_service = URI.create(configuration.evaluateToString("useradminservice"));
-                this.useradminserviceurl = configuration.evaluateToString("useradminservice");
             }
             if (configuration.hasValue("crmservice")) {
                 this.uri_crm_service = URI.create(configuration.evaluateToString("crmservice"));
@@ -100,15 +84,7 @@ public class BaseDevelopmentWhydahServiceClient {
             String applicationsecret = configuration.evaluateToString("applicationsecret");
             ApplicationCredential myApplicationCredential = new ApplicationCredential(applicationid, applicationname, applicationsecret);
             this.applicationCredential = myApplicationCredential;
-            String uasUrl = null;
-            if (uri_useradmin_service != null) {
-                uasUrl = uri_useradmin_service.toString();
-
-            }
-            if (was == null) {
-                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, myApplicationCredential);
-                was.updateApplinks();
-            }
+            getWAS();
 
         } catch (ConstrettoExpressionException constrettoExpressionException) {
             log.debug("Some parameters where not found");
@@ -122,18 +98,16 @@ public class BaseDevelopmentWhydahServiceClient {
 
 
     public BaseDevelopmentWhydahServiceClient(Properties properties) {
-        this.TAG = this.getClass().getName();
-        this.log = LoggerFactory.getLogger(TAG);
 
         try {
             if (properties.getProperty("securitytokenservice", null) != null) {
                 this.uri_securitytoken_service = URI.create(properties.getProperty("securitytokenservice"));
-                this.securitytokenserviceurl = properties.getProperty("securitytokenservice");
+//                this.securitytokenserviceurl = properties.getProperty("securitytokenservice");
 
             }
             if (properties.getProperty("useradminservice", null) != null) {
                 this.uri_useradmin_service = URI.create(properties.getProperty("useradminservice"));
-                this.useradminserviceurl = properties.getProperty("useradminservice");
+//                this.useradminserviceurl = properties.getProperty("useradminservice");
 
             }
             if (properties.getProperty("crmservice", null) != null) {
@@ -150,23 +124,16 @@ public class BaseDevelopmentWhydahServiceClient {
             String applicationid = properties.getProperty("applicationid");
             String applicationname = properties.getProperty("applicationname");
             String applicationsecret = properties.getProperty("applicationsecret");
-            ApplicationCredential myApplicationCredential = new ApplicationCredential(applicationid, applicationname, applicationsecret);
-            this.applicationCredential = myApplicationCredential;
+            this.applicationCredential = new ApplicationCredential(applicationid, applicationname, applicationsecret);
 
-            String uasUrl = null;
-            if (uri_useradmin_service != null) {
-                uasUrl = uri_useradmin_service.toString();
-
-            }
-            if (was == null) {
-                was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, myApplicationCredential);
-                if (was != null) {
-                    was.updateApplinks();
-                }
-            }
+            getWAS();
         } catch (Exception ex) {
             throw ex;
         }
+    }
+
+    public static synchronized void setWas(WhydahApplicationSession was) {
+        BaseDevelopmentWhydahServiceClient.was = was;
     }
 
     //GENERAL
@@ -174,7 +141,13 @@ public class BaseDevelopmentWhydahServiceClient {
     public WhydahApplicationSession getWAS() {
 
         if (was == null) {
-            was = WhydahApplicationSession.getInstance(securitytokenserviceurl, useradminserviceurl, applicationCredential);
+            String uasUrl = null;
+            if (uri_useradmin_service != null) {
+                uasUrl = uri_useradmin_service.toString();
+
+            }
+
+            setWas(WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, applicationCredential));
             was.updateApplinks(true);
         }
         return was;

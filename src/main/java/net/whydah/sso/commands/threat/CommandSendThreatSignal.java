@@ -1,18 +1,16 @@
 package net.whydah.sso.commands.threat;
 
 
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.whydah.ThreatSignal;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class CommandSendThreatSignal extends BaseHttpPostHystrixCommand<String> {
@@ -34,7 +32,7 @@ public class CommandSendThreatSignal extends BaseHttpPostHystrixCommand<String> 
             this.threatMessage = threatMessage;
         }
         if (tokenServiceUri == null || myAppTokenId == null) {
-            log.error(TAG + " initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}", tokenServiceUri.toString(), myAppTokenId);
+            log.error(TAG + " initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}", tokenServiceUri, myAppTokenId);
         }
     }
 
@@ -50,7 +48,7 @@ public class CommandSendThreatSignal extends BaseHttpPostHystrixCommand<String> 
             this.threatMessage = threatSignal.getText();
         }
         if (tokenServiceUri == null || myAppTokenId == null) {
-            log.error(TAG + " initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}", tokenServiceUri.toString(), myAppTokenId);
+            log.error(TAG + " initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}", tokenServiceUri, myAppTokenId);
         }
     }
 

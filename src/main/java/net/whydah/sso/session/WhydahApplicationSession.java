@@ -12,6 +12,7 @@ import net.whydah.sso.commands.threat.CommandSendThreatSignal;
 import net.whydah.sso.commands.threat.ThreatDefManyLoginAttemptsFromSameIPAddress;
 import net.whydah.sso.commands.threat.ThreatDefTooManyRequestsForOneEndpoint;
 import net.whydah.sso.commands.threat.ThreatObserver;
+import net.whydah.sso.ddd.model.application.ApplicationTokenID;
 import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.session.baseclasses.CryptoUtil;
 import net.whydah.sso.session.baseclasses.ExchangeableKey;
@@ -321,7 +322,7 @@ public class WhydahApplicationSession {
         }
     }
 
-    private boolean initializeWhydahApplicationSessionThread() {
+    private synchronized boolean initializeWhydahApplicationSessionThread() {
         log.info("Initializing new application session {} with applicationCredential: {}", logonAttemptNo, myAppCredential);
 
         try {
@@ -335,7 +336,7 @@ public class WhydahApplicationSession {
             if (logonAttemptNo > 12) {
                 logonAttemptNo = 1;
             }
-            log.warn("InitWAS {}: Error, unable to initialize new application session, applicationTokenXml:\n{}", logonAttemptNo, applicationTokenXML);
+            log.warn("InitWAS {}: Error, unable to initialize new application session, applicationTokenXml: {}", logonAttemptNo, first50(applicationTokenXML));
             removeApplicationSessionParameters();
             return false;
         }
@@ -345,7 +346,7 @@ public class WhydahApplicationSession {
         return true;
     }
 
-    private void setApplicationSessionParameters(String applicationTokenXML) {
+    private synchronized void setApplicationSessionParameters(String applicationTokenXML) {
         setApplicationToken(ApplicationTokenMapper.fromXml(applicationTokenXML));
         String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), applicationToken.getApplicationTokenId()).execute();
         log.debug("Found exchangeableKeyString: {}", exchangeableKeyString);
@@ -361,7 +362,7 @@ public class WhydahApplicationSession {
     }
 
     private void removeApplicationSessionParameters() {
-        applicationToken = null;
+        setApplicationToken(null);
         log.info("WAS {}: Application session removed for applicationID: {} applicationName: {},", logonAttemptNo, myAppCredential.getApplicationID(), myAppCredential.getApplicationName());
     }
 
@@ -369,7 +370,7 @@ public class WhydahApplicationSession {
      * @return true is session is active and working
      */
     public boolean checkActiveSession() {
-        if (applicationToken == null || getActiveApplicationTokenId() == null || getActiveApplicationTokenId().length() < 4) {
+        if (applicationToken == null || !ApplicationTokenID.isValid(getActiveApplicationTokenId())) {
             return false;
         }
 

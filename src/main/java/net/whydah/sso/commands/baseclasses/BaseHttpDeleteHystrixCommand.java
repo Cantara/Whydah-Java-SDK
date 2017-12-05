@@ -175,7 +175,7 @@ public abstract class BaseHttpDeleteHystrixCommand<R> extends HystrixCommand<R> 
     }
 
     public byte[] getResponseBodyAsByteArray() {
-        return responseBody;
+        return responseBody.clone();
     }
 }
 

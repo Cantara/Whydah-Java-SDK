@@ -14,19 +14,27 @@ public class CommandGenerateAndSendSmsPin extends BaseHttpPostHystrixCommandForB
 
 
     private String phoneNo;
-    private String appTokenXml;
 
+    @Deprecated
     public CommandGenerateAndSendSmsPin(URI tokenServiceUri, String applicationTokenId, String appTokenXml, String phoneNo) {
         super(tokenServiceUri, appTokenXml, applicationTokenId, "SSOAUserAuthGroup");
 
-        if (tokenServiceUri == null || appTokenXml == null || this.appTokenXml == null || !ApplicationTokenID.isValid(applicationTokenId) || this.phoneNo == null) {
+        if (tokenServiceUri == null || appTokenXml == null || !ApplicationTokenID.isValid(applicationTokenId) || phoneNo == null) {
             log.error("{} initialized with null-values - will fail", CommandGenerateAndSendSmsPin.class.getSimpleName());
         }
 
         this.phoneNo = phoneNo;
-        this.appTokenXml = appTokenXml;
     }
 
+    public CommandGenerateAndSendSmsPin(URI tokenServiceUri, String applicationTokenId, String phoneNo) {
+        super(tokenServiceUri, null, applicationTokenId, "SSOAUserAuthGroup");
+
+        if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || phoneNo == null) {
+            log.error("{} initialized with null-values - will fail", CommandGenerateAndSendSmsPin.class.getSimpleName());
+        }
+
+        this.phoneNo = phoneNo;
+    }
     @Override
     protected Boolean dealWithFailedResponse(String responseBody, int statusCode) {
         return false;

@@ -1,14 +1,10 @@
 package net.whydah.sso.commands.extras;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.Date;
-
-import net.whydah.sso.application.mappers.ApplicationTokenMapper;
 import net.whydah.sso.util.SystemTestBaseConfig;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 public class CommandSendScheduledMailTest {
     static SystemTestBaseConfig config;
@@ -27,13 +23,9 @@ public class CommandSendScheduledMailTest {
 
         if (config.isSystemTestEnabled()) {
             config.logOnSystemTestApplication();
-            
-            Thread.sleep(3000);
-            
-            String myAppTokenXml = ApplicationTokenMapper.toXML(config.myApplicationToken);
 
-            long timestamp = new Date().getTime() + 50 * 1000;  // 50 seconds
-            assertTrue(new CommandSendScheduledMail(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), myAppTokenXml, Long.toString(timestamp), SystemTestBaseConfig.SYSTEMTEST_USER_EMAIL, "whydah-email-passwordlogin-subject", "whydah-email-passwordlogin-body").execute());
+            long timestamp = System.currentTimeMillis() + 50 * 1000;  // 50 seconds
+            assertTrue(new CommandSendScheduledMail(config.userAdminServiceUri, config.myApplicationToken.getApplicationTokenId(), Long.toString(timestamp), SystemTestBaseConfig.SYSTEMTEST_USER_EMAIL, "whydah-email-passwordlogin-subject", "whydah-email-passwordlogin-body").execute());
             
         }
     }

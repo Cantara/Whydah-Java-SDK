@@ -19,12 +19,12 @@ public class CommandGetUsertokenByUsertokenId extends BaseHttpPostHystrixCommand
 
 	public CommandGetUsertokenByUsertokenId(URI tokenServiceUri, String applicationTokenId, String myAppTokenXml, String userTokenId) {
 		super(tokenServiceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", 6000);
+		this.usertokenId = userTokenId;
 
 
 		if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || myAppTokenXml == null || !UserTokenId.isValid(userTokenId)) {
-			log.error("CommandGetUsertokenByUsertokenId initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, myAppTokenXml:{}  usertokenId:{}", tokenServiceUri.toString(), myAppTokenId, myAppTokenXml, usertokenId);
+			log.error("CommandGetUsertokenByUsertokenId initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, myAppTokenXml:{}  usertokenId:{}", tokenServiceUri, applicationTokenId, myAppTokenXml, userTokenId);
 		}
-		this.usertokenId = userTokenId;
 
 	}
 

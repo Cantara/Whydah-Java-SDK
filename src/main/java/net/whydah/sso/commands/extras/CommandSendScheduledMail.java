@@ -1,10 +1,10 @@
 package net.whydah.sso.commands.extras;
 
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommandForBooleanType;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommandForBooleanType;
 
 public class CommandSendScheduledMail extends BaseHttpPostHystrixCommandForBooleanType {
 
@@ -14,6 +14,7 @@ public class CommandSendScheduledMail extends BaseHttpPostHystrixCommandForBoole
     private String subject;
     private String msg;
 
+    @Deprecated
     public CommandSendScheduledMail(URI uasServiceUri, String appTokenId, String appTokenXml, String timestamp, String emailaddress, String subject, String msg) {
         super(uasServiceUri, appTokenXml, appTokenId, "SSOAUserAuthGroup");
 
@@ -26,6 +27,17 @@ public class CommandSendScheduledMail extends BaseHttpPostHystrixCommandForBoole
         }
     }
 
+    public CommandSendScheduledMail(URI uasServiceUri, String appTokenId, String timestamp, String emailaddress, String subject, String msg) {
+        super(uasServiceUri, null, appTokenId, "SSOAUserAuthGroup");
+
+        this.timestamp = timestamp;
+        this.emailaddress = emailaddress;
+        this.subject = subject;
+        this.msg = msg;
+        if (uasServiceUri == null || this.emailaddress == null || this.timestamp == null || this.subject == null || this.msg == null) {
+            log.error("{} initialized with null-values - will fail", CommandSendScheduledMail.class.getSimpleName());
+        }
+    }
 
     @Override
     protected Boolean dealWithFailedResponse(String responseBody, int statusCode) {
