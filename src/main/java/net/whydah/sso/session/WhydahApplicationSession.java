@@ -36,7 +36,7 @@ import static net.whydah.sso.util.LoggerUtil.first50;
 public class WhydahApplicationSession {
 
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
-    public static final int SESSION_CHECK_INTERVAL = 10;  // Check every 30 seconds to adapt quickly
+    public static final int APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS = 10;  // Check every 30 seconds to adapt quickly
     private List<Application> applications = new LinkedList<Application>();
     private static volatile WhydahApplicationSession instance = null;
     private static final Object lock = new Object();
@@ -87,7 +87,7 @@ public class WhydahApplicationSession {
                                 }
                             }
                         },
-                        5, SESSION_CHECK_INTERVAL, TimeUnit.SECONDS);
+                        5, APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS, TimeUnit.SECONDS);
             }
         }
     }
@@ -124,7 +124,7 @@ public class WhydahApplicationSession {
         long expiresAt = (timestamp);
         long diffSeconds = (expiresAt - currentTime) / 1000;
         log.debug("expiresBeforeNextSchedule - expiresAt: {} - now: {} - expires in: {} seconds", expiresAt, currentTime, diffSeconds);
-        if (diffSeconds < SESSION_CHECK_INTERVAL * 2) {
+        if (diffSeconds < (APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS * 3)) {
             log.debug("expiresBeforeNextSchedule - re-new application session.. diffseconds: {}", diffSeconds);
             return true;
         }

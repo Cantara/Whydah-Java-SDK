@@ -27,9 +27,9 @@ public class WhydahApplicationSessionTest {
     @Test
     public void testTimecalculations() throws Exception {
         log.trace("testTimecalculations() - starting test");
-        long i = System.currentTimeMillis() + WhydahApplicationSession.SESSION_CHECK_INTERVAL * 2 * 1000 + 200;
+        long i = System.currentTimeMillis() + WhydahApplicationSession.APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS * 3 * 1000 + 200;
         assertTrue(!WhydahApplicationSession.expiresBeforeNextSchedule(i));
-        i = System.currentTimeMillis() + WhydahApplicationSession.SESSION_CHECK_INTERVAL * 1 * 1000;
+        i = System.currentTimeMillis() + WhydahApplicationSession.APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS * 1 * 1000;
         assertTrue(WhydahApplicationSession.expiresBeforeNextSchedule(i));
         log.trace("testTimecalculations() - done");
 
