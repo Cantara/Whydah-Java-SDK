@@ -55,7 +55,7 @@ public class WhydahApplicationSession {
     private static ScheduledExecutorService renew_scheduler;
 
     private ThreatObserver threatObserver;
-    private boolean isInitialized = false;
+    private static boolean isInitialized = false;
 
     static {
         initialize_scheduler = Executors.newScheduledThreadPool(1);
