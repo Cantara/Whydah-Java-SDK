@@ -308,6 +308,7 @@ public class WhydahApplicationSession {
         logonAttemptNo = 1;
         String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
         if (checkApplicationToken(applicationTokenXML)) {
+            isInitialized = true;
             setApplicationSessionParameters(applicationTokenXML);
             log.info("InitWAS {}: Initialized new application session, applicationTokenId:{}, applicationID: {}, applicationName: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getApplicationName(), applicationToken.getExpiresFormatted());
             logonAttemptNo = 0;
@@ -333,6 +334,9 @@ public class WhydahApplicationSession {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        if (isInitialized) {
+            return true;
+        }
         String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
         if (!checkApplicationToken(applicationTokenXML)) {
             logonAttemptNo++;
@@ -341,8 +345,10 @@ public class WhydahApplicationSession {
             }
             log.warn("InitWAS {}: Error, unable to initialize new application session, applicationTokenXml: {}", logonAttemptNo, first50(applicationTokenXML));
             removeApplicationSessionParameters();
+            isInitialized = false;
             return false;
         }
+        isInitialized = true;
         setApplicationSessionParameters(applicationTokenXML);
         log.info("InitWAS {}: Initialized new application session, applicationTokenId:{}, applicationID: {}, applicationName: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getApplicationName(), applicationToken.getExpiresFormatted());
         logonAttemptNo = 0;
@@ -366,6 +372,7 @@ public class WhydahApplicationSession {
 
     private void removeApplicationSessionParameters() {
         setApplicationToken(null);
+        isInitialized = false;
         log.info("WAS {}: Application session removed for applicationID: {} applicationName: {},", logonAttemptNo, myAppCredential.getApplicationID(), myAppCredential.getApplicationName());
     }
 
