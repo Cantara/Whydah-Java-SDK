@@ -346,8 +346,7 @@ public class WhydahApplicationSession {
                     logonAttemptNo = 1;
                 }
                 log.warn("InitWAS {}: Error, unable to initialize new application session, applicationTokenXml: {}", logonAttemptNo, first50(applicationTokenXML));
-                removeApplicationSessionParameters();
-                isInitialized = false;
+//                removeApplicationSessionParameters();
                 return false;
             }
             isInitialized = true;
@@ -371,6 +370,7 @@ public class WhydahApplicationSession {
             log.warn("Unable to update CryptoUtil with new cryptokey", e);
         }
         log.info("WAS {}: New application session created for applicationID: {}, applicationTokenID: {}, expires: {}, key:{}", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted(), CryptoUtil.getActiveKey());
+        isInitialized = true;
     }
 
     private void removeApplicationSessionParameters() {
