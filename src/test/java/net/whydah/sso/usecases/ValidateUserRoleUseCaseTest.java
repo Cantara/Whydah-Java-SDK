@@ -24,18 +24,14 @@ public class ValidateUserRoleUseCaseTest {
     public static SystemTestBaseConfig config;
 
 
-    public static String userName = "admin";
-    public static String password = "whydahadmin";
     private final String roleName = "WhydahUserAdmin";
     private static WhydahApplicationSession applicationSession;
 
     @Before
     public void setUp() throws Exception {
         config = new SystemTestBaseConfig();
-        userName = config.userName;
-        password = config.password;
         if (config.isSystemTestEnabled()) {
-            applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
+            applicationSession = WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.userAdminServiceUri.toString(), config.appCredential);
         }
     }
 
@@ -50,7 +46,7 @@ public class ValidateUserRoleUseCaseTest {
     @Test
     public void test2_logonUser() throws Exception {
         if (config.isSystemTestEnabled()) {
-            UserCredential userCredential = new UserCredential(userName, password);
+            UserCredential userCredential = new UserCredential(config.userName, config.password);
             assertTrue(applicationSession.checkActiveSession());
             String userTokenXml = WhydahUtil.logOnUser(applicationSession, userCredential);
             assertNotNull(userTokenXml);
@@ -62,7 +58,7 @@ public class ValidateUserRoleUseCaseTest {
     @Test   // NB takes 35 minutes to complete......
     public void test2_logonUserSession() throws Exception {
         if (config.isSystemTestEnabled()) {
-            UserCredential userCredential = new UserCredential(userName, password);
+            UserCredential userCredential = new UserCredential(config.userName, config.password);
             assertTrue(applicationSession.checkActiveSession());
             WhydahUserSession userSession = new WhydahUserSession(applicationSession, userCredential);
             assertTrue(userSession.hasActiveSession());
@@ -85,11 +81,11 @@ public class ValidateUserRoleUseCaseTest {
             assertTrue(applicationSession.checkActiveSession());
             String appTokenId = applicationSession.getActiveApplicationTokenId();
             log.trace("appTokenId {}", appTokenId);
-            UserCredential userCredential = new UserCredential(userName, password);
+            UserCredential userCredential = new UserCredential(config.userName, config.password);
             String userTokenXml = WhydahUtil.logOnUser(applicationSession, userCredential);
             assertNotNull(userTokenXml);
             log.trace("userTokenId {}", UserXpathHelper.getUserTokenId(userTokenXml));
-            assertTrue(userTokenXml.contains(userName));
+            assertTrue(userTokenXml.contains(config.userName));
         }
     }
 
@@ -99,11 +95,11 @@ public class ValidateUserRoleUseCaseTest {
             assertTrue(applicationSession.checkActiveSession());
             String appTokenId = applicationSession.getActiveApplicationTokenId();
             log.trace("appTokenId {}", appTokenId);
-            UserCredential userCredential = new UserCredential(userName, password);
+            UserCredential userCredential = new UserCredential(config.userName, config.password);
             String userTokenXml = WhydahUtil.logOnUser(applicationSession, userCredential);
             assertNotNull(userTokenXml);
             log.debug("userTokenXml {}", userTokenXml);
-            assertTrue(userTokenXml.contains(userName));
+            assertTrue(userTokenXml.contains(config.userName));
             String userId = UserXpathHelper.getUserIdFromUserTokenXml(userTokenXml);
             log.trace("userId {}", userId);
             log.trace("userTokenId {}", UserXpathHelper.getUserTokenId(userTokenXml));

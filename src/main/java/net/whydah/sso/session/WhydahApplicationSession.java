@@ -78,7 +78,7 @@ public class WhydahApplicationSession {
                 getThreatObserver().registerDefinition(new ThreatDefTooManyRequestsForOneEndpoint());
                 //register more if any
 
-                initializeWhydahApplicationSession();
+                initializeWhydahApplicationSession(true);
                 ScheduledFuture<?> sf = renew_scheduler.scheduleAtFixedRate(
                         new Runnable() {
                             public void run() {
@@ -228,7 +228,7 @@ public class WhydahApplicationSession {
 
     public synchronized void killApplicationSession() {
         setApplicationToken(null);
-        initializeWhydahApplicationSession();
+        initializeWhydahApplicationSession(false);
     }
 
     public static synchronized void setApplicationToken(ApplicationToken myApplicationToken) {
@@ -239,7 +239,7 @@ public class WhydahApplicationSession {
     private void renewWhydahApplicationSession() {
         log.trace("Renew WAS: Renew application session called");
         if (applicationToken == null) {
-            initializeWhydahApplicationSession();
+            initializeWhydahApplicationSession(false);
             Runtime.getRuntime().removeShutdownHook(Thread.currentThread());
 
         }
@@ -247,7 +247,7 @@ public class WhydahApplicationSession {
             if (applicationToken == null) {
                 log.info("Renew WAS: No active application session, applicationToken:null, myAppCredential:{}, logonAttemptNo:{}", myAppCredential, logonAttemptNo);
             }
-            initializeWhydahApplicationSession();
+            initializeWhydahApplicationSession(false);
         } else {
             log.trace("Renew WAS: Active application session found, applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
 
@@ -280,7 +280,7 @@ public class WhydahApplicationSession {
                         log.info("Renew WAS: Failed to renew applicationsession, attempt:{}, returned response from STS: {}", n, applicationTokenXML);
                         if (n > 2) {
                             // OK, we wont get a renewed session, so we start a new one
-                            initializeWhydahApplicationSession();
+                            initializeWhydahApplicationSession(false);
                             if (logonAttemptNo == 0) {
                                 break;
                             }
@@ -298,8 +298,8 @@ public class WhydahApplicationSession {
         }
     }
 
-    private synchronized void initializeWhydahApplicationSession() {
-        if (instance == null) {
+    private synchronized void initializeWhydahApplicationSession(boolean force) {
+        if (instance == null && force == false) {
             return;  //  Block starting threads outside instance scope
         }
         if (isInitialized) {
