@@ -39,7 +39,8 @@ public class WhydahApplicationSession {
     public static final int APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS = 10;  // Check every 30 seconds to adapt quickly
     private List<Application> applications = new LinkedList<Application>();
     private static volatile WhydahApplicationSession instance = null;
-    private static final Object lock = new Object();
+    private static final Object initialize_lock = new Object();
+    private static final Object logon_lock = new Object();
     private String sts;
     private String uas;
 
@@ -98,7 +99,7 @@ public class WhydahApplicationSession {
     public static WhydahApplicationSession getInstance(String sts, ApplicationCredential appCred) {
         log.info("WhydahApplicationSession getInstance(String sts, ApplicationCredential appCred) called");
         if (instance == null) {
-            synchronized (lock) {
+            synchronized (initialize_lock) {
                 instance = new WhydahApplicationSession(sts, null, appCred);
             }
         }
@@ -108,7 +109,7 @@ public class WhydahApplicationSession {
     public static WhydahApplicationSession getInstance(String sts, String uas, ApplicationCredential appCred) {
         log.info("WhydahApplicationSession getInstance(String sts, String uas, ApplicationCredential appCred) called");
         if (instance == null) {
-            synchronized (lock) {
+            synchronized (initialize_lock) {
                 instance = new WhydahApplicationSession(sts, uas, appCred);
             }
         }
@@ -334,22 +335,24 @@ public class WhydahApplicationSession {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        if (isInitialized) {
-            return true;
-        }
-        String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
-        if (!checkApplicationToken(applicationTokenXML)) {
-            logonAttemptNo++;
-            if (logonAttemptNo > 12) {
-                logonAttemptNo = 1;
+        synchronized (logon_lock) {
+            if (isInitialized) {
+                return true;
             }
-            log.warn("InitWAS {}: Error, unable to initialize new application session, applicationTokenXml: {}", logonAttemptNo, first50(applicationTokenXML));
-            removeApplicationSessionParameters();
-            isInitialized = false;
-            return false;
+            String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
+            if (!checkApplicationToken(applicationTokenXML)) {
+                logonAttemptNo++;
+                if (logonAttemptNo > 12) {
+                    logonAttemptNo = 1;
+                }
+                log.warn("InitWAS {}: Error, unable to initialize new application session, applicationTokenXml: {}", logonAttemptNo, first50(applicationTokenXML));
+                removeApplicationSessionParameters();
+                isInitialized = false;
+                return false;
+            }
+            isInitialized = true;
+            setApplicationSessionParameters(applicationTokenXML);
         }
-        isInitialized = true;
-        setApplicationSessionParameters(applicationTokenXML);
         log.info("InitWAS {}: Initialized new application session, applicationTokenId:{}, applicationID: {}, applicationName: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getApplicationName(), applicationToken.getExpiresFormatted());
         logonAttemptNo = 0;
         return true;
