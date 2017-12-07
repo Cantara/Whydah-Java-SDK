@@ -339,9 +339,12 @@ public class WhydahApplicationSession {
             if (isInitialized) {
                 return true;
             }
+            if (logonAttemptNo == 0) {
+                return true;
+            }
+            logonAttemptNo++;
             String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
             if (!checkApplicationToken(applicationTokenXML)) {
-                logonAttemptNo++;
                 if (logonAttemptNo > 12) {
                     logonAttemptNo = 1;
                 }
