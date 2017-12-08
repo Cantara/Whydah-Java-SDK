@@ -372,7 +372,7 @@ public class WhydahApplicationSession {
         } catch (Exception e) {
             log.warn("Unable to update CryptoUtil with new cryptokey", e);
         }
-        log.info("WAS {}: New application session created for applicationID: {}, applicationTokenID: {}, expires: {}, key:{}", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted(), CryptoUtil.getActiveKey());
+        log.info("WAS setApplicationSessionParameters {}: New application session created for applicationID: {}, applicationTokenID: {}, expires: {}, key:{}", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted(), CryptoUtil.getActiveKey());
         isInitialized = true;
     }
 
