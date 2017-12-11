@@ -28,12 +28,16 @@ public class ExchangeableKey {
 
     public ExchangeableKey(String jsonEncodedKey) {
         log.debug("Constructor called with {}", first50(jsonEncodedKey));
-        String encryptionKeyEncoded = JsonPathHelper.findJsonPathValue(jsonEncodedKey, "$.encryptionKey");
-        String iv = JsonPathHelper.findJsonPathValue(jsonEncodedKey, "$.iv");
-        Base64.Decoder decoder = Base64.getDecoder();
+        try {
+            String encryptionKeyEncoded = JsonPathHelper.findJsonPathValue(jsonEncodedKey, "$.encryptionKey");
+            String iv = JsonPathHelper.findJsonPathValue(jsonEncodedKey, "$.iv");
+            Base64.Decoder decoder = Base64.getDecoder();
 
-        setEncryptionKey(decoder.decode(encryptionKeyEncoded));
-        setIv(new IvParameterSpec(decoder.decode(iv)));
+            setEncryptionKey(decoder.decode(encryptionKeyEncoded));
+            setIv(new IvParameterSpec(decoder.decode(iv)));
+        } catch (Exception e) {
+            log.warn("Error trying to initialize key form string.  Input:", jsonEncodedKey);
+        }
     }
 
     public ExchangeableKey()  {
