@@ -364,9 +364,10 @@ public class WhydahApplicationSession {
         setApplicationToken(ApplicationTokenMapper.fromXml(applicationTokenXML));
         String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), applicationToken.getApplicationTokenId()).execute();
         log.debug("Found exchangeableKeyString: {}", exchangeableKeyString);
-        ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);
-        log.debug("Found exchangeableKey: {}", exchangeableKey);
+
         try {
+            ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);
+            log.debug("Found exchangeableKey: {}", exchangeableKey);
             CryptoUtil.setExchangeableKey(exchangeableKey);
 
         } catch (Exception e) {
