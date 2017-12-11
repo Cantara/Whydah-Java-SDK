@@ -349,7 +349,7 @@ public class WhydahApplicationSession {
                     logonAttemptNo = 1;
                 }
                 log.warn("InitWAS {}: Error, unable to initialize new application session, applicationTokenXml: {}", logonAttemptNo, first50(applicationTokenXML));
-//                removeApplicationSessionParameters();
+                removeApplicationSessionParameters();
                 return false;
             }
             isInitialized = true;
@@ -394,7 +394,11 @@ public class WhydahApplicationSession {
             return false;
         }
 
-        return new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId()).execute();
+        boolean hasActiveSession = new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId()).execute();
+        if (!hasActiveSession) {
+
+        }
+        return hasActiveSession;
     }
 
     /**
