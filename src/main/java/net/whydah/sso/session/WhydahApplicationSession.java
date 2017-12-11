@@ -365,13 +365,15 @@ public class WhydahApplicationSession {
         String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), applicationToken.getApplicationTokenId()).execute();
         log.debug("Found exchangeableKeyString: {}", exchangeableKeyString);
 
-        try {
-            ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);
-            log.debug("Found exchangeableKey: {}", exchangeableKey);
-            CryptoUtil.setExchangeableKey(exchangeableKey);
+        if (exchangeableKeyString != null && exchangeableKeyString.length() > 10) {
+            try {
+                ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);
+                log.debug("Found exchangeableKey: {}", exchangeableKey);
+                CryptoUtil.setExchangeableKey(exchangeableKey);
 
-        } catch (Exception e) {
-            log.warn("Unable to update CryptoUtil with new cryptokey", e);
+            } catch (Exception e) {
+                log.warn("Unable to update CryptoUtil with new cryptokey", e);
+            }
         }
         log.info("WAS setApplicationSessionParameters {}: New application session created for applicationID: {}, applicationTokenID: {}, expires: {}, key:{}", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted(), CryptoUtil.getActiveKey());
         isInitialized = true;
