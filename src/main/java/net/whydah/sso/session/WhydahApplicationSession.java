@@ -406,17 +406,22 @@ public class WhydahApplicationSession {
      */
     public boolean hasActiveSession() {
         if (applicationToken == null || !ApplicationTokenID.isValid(getActiveApplicationTokenId())) {
-        	removeApplicationSessionParameters();
+            removeApplicationSessionParameters();
             return false;
-        } else {
-
-        	boolean hasActiveSession = new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId()).execute();
-        	if (!hasActiveSession) {
-        		log.info("WAS: applicationsession invalid, reset application session, applicationTokenId: {} - for applicationID: {} - expires:{}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
-        		removeApplicationSessionParameters();
-        	}
-        	return hasActiveSession;
         }
+        if (!ApplicationTokenExpires.isValid(applicationToken.getExpires())) {
+            log.info("WAS: applicationsession timeout, reset application session, applicationTokenId: {} - for applicationID: {} - expires:{}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+            removeApplicationSessionParameters();
+        }
+
+        boolean hasActiveSession = new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId()).execute();
+        if (!hasActiveSession) {
+
+            log.info("WAS: applicationsession invalid from STS, reset application session, applicationTokenId: {} - for applicationID: {} - expires:{}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+            removeApplicationSessionParameters();
+        }
+        return hasActiveSession;
+
     }
 
     /**
