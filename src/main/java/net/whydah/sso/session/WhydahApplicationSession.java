@@ -412,6 +412,7 @@ public class WhydahApplicationSession {
         if (!ApplicationTokenExpires.isValid(applicationToken.getExpires())) {
             log.info("WAS: applicationsession timeout, reset application session, applicationTokenId: {} - for applicationID: {} - expires:{}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
             removeApplicationSessionParameters();
+            return false;
         }
 
         boolean hasActiveSession = new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId()).execute();
