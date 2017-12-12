@@ -12,6 +12,7 @@ import net.whydah.sso.commands.threat.CommandSendThreatSignal;
 import net.whydah.sso.commands.threat.ThreatDefManyLoginAttemptsFromSameIPAddress;
 import net.whydah.sso.commands.threat.ThreatDefTooManyRequestsForOneEndpoint;
 import net.whydah.sso.commands.threat.ThreatObserver;
+import net.whydah.sso.ddd.model.application.ApplicationTokenExpires;
 import net.whydah.sso.ddd.model.application.ApplicationTokenID;
 import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
 import net.whydah.sso.session.baseclasses.CryptoUtil;
@@ -245,7 +246,7 @@ public class WhydahApplicationSession {
             Runtime.getRuntime().removeShutdownHook(Thread.currentThread());
 
         }
-        if (!checkActiveSession()) {
+        if (!hasActiveSession()) {
             log.trace("Renew WAS: checkActiveSession() == false - initializeWhydahApplicationSession called");
             if (applicationToken == null) {
                 log.info("Renew WAS: No active application session, applicationToken:null, myAppCredential:{}, logonAttemptNo:{}", myAppCredential, logonAttemptNo);
@@ -261,7 +262,7 @@ public class WhydahApplicationSession {
                     String applicationTokenXML = WhydahUtil.extendApplicationSession(sts, getActiveApplicationTokenId(), 2000 + n * 1000);  // Wait a bit longer on retries
                     if (applicationTokenXML != null && applicationTokenXML.length() > 10) {
                         setApplicationToken(ApplicationTokenMapper.fromXml(applicationTokenXML));
-                        if (checkActiveSession()) {
+                        if (hasActiveSession()) {
                             log.info("Renew WAS: Success in renew applicationsession, applicationTokenId: {} - for applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
                             log.debug("Renew WAS: - expiresAt: {} - now: {} - expires in: {} seconds", applicationToken.getExpires(), System.currentTimeMillis(), (Long.parseLong(applicationToken.getExpires()) - System.currentTimeMillis()) / 1000);
                             String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), applicationToken.getApplicationTokenId()).execute();
@@ -277,6 +278,11 @@ public class WhydahApplicationSession {
                             break;
                         } else {
                             log.info("Renew WAS: received invaled applicationtoken in renew applicationsession, applicationTokenId: {} - for applicationID: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID());
+                            if (!ApplicationTokenExpires.isValid(applicationToken.getExpires())) {
+                                log.info("Renew WAS: applicationsession timeout, reset application session, applicationTokenId: {} - for applicationID: {} - expires:{}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+                                removeApplicationSessionParameters();
+
+                            }
 
                         }
                     } else {
@@ -350,7 +356,7 @@ public class WhydahApplicationSession {
                 if (logonAttemptNo > 12) {
                     logonAttemptNo = 1;
                 }
-                log.warn("InitWAS {}: Error, unable to initialize new application session, applicationTokenXml: {}", logonAttemptNo, first50(applicationTokenXML));
+                log.warn("InitWAS {}: Error, unable to initialize new application session,, reset application session  applicationTokenXml: {}", logonAttemptNo, first50(applicationTokenXML));
                 removeApplicationSessionParameters();
                 return false;
             }
@@ -392,13 +398,22 @@ public class WhydahApplicationSession {
      * @return true is session is active and working
      */
     public boolean checkActiveSession() {
+        return hasActiveSession();
+    }
+
+    /**
+     * @return true is session is active and working
+     */
+    public boolean hasActiveSession() {
         if (applicationToken == null || !ApplicationTokenID.isValid(getActiveApplicationTokenId())) {
             return false;
         }
 
         boolean hasActiveSession = new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId()).execute();
         if (!hasActiveSession) {
+            log.info("WAS: applicationsession invalid, reset application session, applicationTokenId: {} - for applicationID: {} - expires:{}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
 
+            removeApplicationSessionParameters();
         }
         return hasActiveSession;
     }
@@ -409,7 +424,7 @@ public class WhydahApplicationSession {
     public boolean checkApplicationToken(String applicationTokenXML) {
         try {
             ApplicationToken at = ApplicationTokenMapper.fromXml(applicationTokenXML);
-            if (at.getApplicationTokenId().length() > 8) {
+            if (ApplicationTokenID.isValid(at.getApplicationID())) {
                 return true;
             }
         } catch (Exception e) {

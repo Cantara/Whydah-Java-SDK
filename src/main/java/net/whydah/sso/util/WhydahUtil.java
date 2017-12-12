@@ -162,7 +162,7 @@ public class WhydahUtil {
                 " - UAS: " + was.getUAS() + "\"\n" +
                 " - running since: " + getRunningSince() + "\"\n" +
                 " - hasApplicationToken: " + Boolean.toString(was.getActiveApplicationTokenId() != null) + "\n" +
-                " - hasValidApplicationToken: " + Boolean.toString(was.checkActiveSession()) + "\n" +
+                " - hasValidApplicationToken: " + Boolean.toString(was.hasActiveSession()) + "\n" +
                 " - hasApplicationsMetadata:" + Boolean.toString(was.getApplicationList().size() > 2) + "\n";
         return statusString;
 
@@ -174,7 +174,7 @@ public class WhydahUtil {
         boolean hasApplicationsMetadata = false;
         try {
             hasApplicationToken = (was.getActiveApplicationTokenId() != null);
-            hasValidApplicationToken = was.checkActiveSession();
+            hasValidApplicationToken = was.hasActiveSession();
             hasApplicationsMetadata = was.getApplicationList().size() > 2;
 
         } catch (Exception e) {
@@ -209,7 +209,7 @@ public class WhydahUtil {
                 " - UAS: " + was.getUAS() + "\"\n" +
                 " - running since: " + getRunningSince() + "\"\n" +
                 " - hasApplicationToken: " + Boolean.toString(was.getActiveApplicationTokenId() != null) + "\n" +
-                " - hasValidApplicationToken: " + Boolean.toString(was.checkActiveSession()) + "\n" +
+                " - hasValidApplicationToken: " + Boolean.toString(was.hasActiveSession()) + "\n" +
                 " - hasValidAdminUserToken: " + validUser + "\n" +
                 " - hasApplicationsMetadata:" + Boolean.toString(was.getApplicationList().size() > 2) + "\n";
 
@@ -231,7 +231,7 @@ public class WhydahUtil {
                 " - UAS: " + was.getUAS() + "\"\n" +
                 " - running since: " + getRunningSince() + "\"\n" +
                 " - hasApplicationToken: " + Boolean.toString(was.getActiveApplicationTokenId() != null) + "\n" +
-                " - hasValidApplicationToken: " + Boolean.toString(was.checkActiveSession()) + "\n" +
+                " - hasValidApplicationToken: " + Boolean.toString(was.hasActiveSession()) + "\n" +
                 " - hasValidAdminUserToken: " + validUser + "\n" +
                 " - hasApplicationsMetadata:" + Boolean.toString(was.getApplicationList().size() > 2) + "\n";
 
