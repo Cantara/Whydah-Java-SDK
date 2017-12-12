@@ -75,7 +75,16 @@ public class WhydahUtil {
         return myAppTokenXml;
 
     }
-    public static String logOnApplication(String stsURI, ApplicationCredential myAppcredential) {
+
+    /**
+     * Logon your application to Whydah.
+     *
+     * @param stsURI          URI to the Security Token Service, where you do logon
+     * @param myAppcredential The applicationCredential og the application trying to logon to Whydah
+     * @return applicationTokenXML Representing the application. In this you will find the applicationtokenId used as application session     * @param applicationSecret Current, updatet secret of your application's.
+     * for further operations.
+     */
+    public static synchronized String logOnApplication(String stsURI, ApplicationCredential myAppcredential) {
         URI tokenServiceUri = URI.create(stsURI);
         String myAppTokenXml = new CommandLogonApplication(tokenServiceUri, myAppcredential).execute();
         if (myAppTokenXml == null || myAppTokenXml.length() < 10) {
