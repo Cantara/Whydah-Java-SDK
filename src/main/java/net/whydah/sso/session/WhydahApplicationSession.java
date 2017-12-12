@@ -415,9 +415,14 @@ public class WhydahApplicationSession {
             return false;
         }
 
-        boolean hasActiveSession = new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId()).execute();
+        CommandValidateApplicationTokenId commandValidateApplicationTokenId = new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId());
+        boolean hasActiveSession = commandValidateApplicationTokenId.execute();
         if (!hasActiveSession) {
 
+            if (commandValidateApplicationTokenId.isResponseFromFallback()) {
+                log.warn("Got timeout on call to verify applicationTokenID, since applicationtoken is not expired, we return true");
+                return true;
+            }
             log.info("WAS: applicationsession invalid from STS, reset application session, applicationTokenId: {} - for applicationID: {} - expires:{}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
             removeApplicationSessionParameters();
         }
