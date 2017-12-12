@@ -240,12 +240,12 @@ public class WhydahApplicationSession {
 
     private void renewWhydahApplicationSession() {
         log.trace("Renew WAS: Renew application session called");
-        if (applicationToken == null) {
-            log.trace("Renew WAS: applicationToken == null - initializeWhydahApplicationSession called");
-            initializeWhydahApplicationSession(false);
-            Runtime.getRuntime().removeShutdownHook(Thread.currentThread());
-
-        }
+//        if (applicationToken == null) {
+//            log.trace("Renew WAS: applicationToken == null - initializeWhydahApplicationSession called");
+//            initializeWhydahApplicationSession(false);
+//            Runtime.getRuntime().removeShutdownHook(Thread.currentThread());
+//
+//        }
         if (!hasActiveSession()) {
             log.trace("Renew WAS: checkActiveSession() == false - initializeWhydahApplicationSession called");
             if (applicationToken == null) {
@@ -406,16 +406,17 @@ public class WhydahApplicationSession {
      */
     public boolean hasActiveSession() {
         if (applicationToken == null || !ApplicationTokenID.isValid(getActiveApplicationTokenId())) {
+        	removeApplicationSessionParameters();
             return false;
-        }
+        } else {
 
-        boolean hasActiveSession = new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId()).execute();
-        if (!hasActiveSession) {
-            log.info("WAS: applicationsession invalid, reset application session, applicationTokenId: {} - for applicationID: {} - expires:{}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
-
-            removeApplicationSessionParameters();
+        	boolean hasActiveSession = new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId()).execute();
+        	if (!hasActiveSession) {
+        		log.info("WAS: applicationsession invalid, reset application session, applicationTokenId: {} - for applicationID: {} - expires:{}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+        		removeApplicationSessionParameters();
+        	}
+        	return hasActiveSession;
         }
-        return hasActiveSession;
     }
 
     /**
