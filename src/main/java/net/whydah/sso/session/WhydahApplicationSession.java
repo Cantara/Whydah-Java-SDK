@@ -436,7 +436,7 @@ public class WhydahApplicationSession {
     public boolean checkApplicationToken(String applicationTokenXML) {
         try {
             ApplicationToken at = ApplicationTokenMapper.fromXml(applicationTokenXML);
-            if (ApplicationTokenID.isValid(at.getApplicationID())) {
+            if (ApplicationTokenID.isValid(at.getApplicationTokenId())) {
                 return true;
             }
         } catch (Exception e) {
