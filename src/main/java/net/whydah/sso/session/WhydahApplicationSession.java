@@ -240,11 +240,13 @@ public class WhydahApplicationSession {
     private void renewWhydahApplicationSession() {
         log.trace("Renew WAS: Renew application session called");
         if (applicationToken == null) {
+            log.trace("Renew WAS: applicationToken == null - initializeWhydahApplicationSession called");
             initializeWhydahApplicationSession(false);
             Runtime.getRuntime().removeShutdownHook(Thread.currentThread());
 
         }
         if (!checkActiveSession()) {
+            log.trace("Renew WAS: checkActiveSession() == false - initializeWhydahApplicationSession called");
             if (applicationToken == null) {
                 log.info("Renew WAS: No active application session, applicationToken:null, myAppCredential:{}, logonAttemptNo:{}", myAppCredential, logonAttemptNo);
             }
