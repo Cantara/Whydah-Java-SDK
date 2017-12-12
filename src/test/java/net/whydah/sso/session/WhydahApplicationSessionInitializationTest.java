@@ -3,6 +3,7 @@ package net.whydah.sso.session;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 
@@ -25,6 +26,7 @@ public class WhydahApplicationSessionInitializationTest {
 
 
     @Test
+    @Ignore
     public void testTimeoutOnSystest() throws Exception {
         if (config.isSystemTestEnabled()) {
 
