@@ -137,7 +137,7 @@ public class ThreatActivityLogCollector {
 							_sortByIPAddress.get(log.getIpAddress()).remove(log.getId());
 						}
 						if(_sortByEndpoint.containsKey(log.getEndPoint())){
-							_sortByIPAddress.get(log.getEndPoint()).remove(log.getId());
+							_sortByEndpoint.get(log.getEndPoint()).remove(log.getId());
 						}
 						_threatLogCollection.remove(uid);
 					}
