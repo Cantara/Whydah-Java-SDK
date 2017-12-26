@@ -13,7 +13,7 @@ public class CommandValidateApplicationTokenId extends BaseHttpGetHystrixCommand
 
 
 	public CommandValidateApplicationTokenId(String tokenServiceUri, String applicationTokenId) {
-		super(URI.create(tokenServiceUri), "", applicationTokenId, "STSApplicationAuthGroup");
+		super(URI.create(tokenServiceUri), "", applicationTokenId, "STSApplicationAuthGroup", 3000);
 
 		if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
 			log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}", tokenServiceUri, applicationTokenId);
@@ -21,7 +21,7 @@ public class CommandValidateApplicationTokenId extends BaseHttpGetHystrixCommand
 	}
 
     public CommandValidateApplicationTokenId(URI tokenServiceUri, String applicationTokenId) {
-        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup");
+        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", 3000);
 
 		if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
 			log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}", tokenServiceUri, applicationTokenId);
