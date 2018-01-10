@@ -120,7 +120,7 @@ public class WhydahUserSession {
                 }
                 // If we keep failing, let us force renew of application session too
                 if (n > 3) {
-                    was.killApplicationSession();
+                    was.resetApplicationSession();
                     n = 0;
                 }
             }
