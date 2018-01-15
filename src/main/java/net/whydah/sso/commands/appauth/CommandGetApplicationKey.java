@@ -12,7 +12,7 @@ public class CommandGetApplicationKey extends BaseHttpGetHystrixCommand<String> 
 
 
     public CommandGetApplicationKey(URI tokenServiceUri, String applicationTokenId) {
-        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", 30000);
+        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", 6000);
 
         if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
             log.error(TAG + " initialized with null-values - will fail tokenServiceUri={} || applicationTokenId={}", tokenServiceUri, applicationTokenId);

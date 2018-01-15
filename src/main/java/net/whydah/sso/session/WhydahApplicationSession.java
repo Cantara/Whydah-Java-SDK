@@ -40,6 +40,7 @@ public class WhydahApplicationSession {
 
 	private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
 	public static final int APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS = 10;  // Check every 30 seconds to adapt quickly
+	public static final int APPLICATION_UPDATE_CHECK_INTERVAL_IN_SECONDS = 10;  // Check every 30 seconds to adapt quickly
 	private List<Application> applications = new LinkedList<Application>();
 	private static volatile WhydahApplicationSession instance = null;
 	private String sts;
@@ -55,6 +56,7 @@ public class WhydahApplicationSession {
 	//private static final int[] FIBONACCI = new int[]{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144};
 	//private ScheduledExecutorService initialize_scheduler;
 	private ScheduledExecutorService renew_scheduler;
+	private ScheduledExecutorService app_update_scheduler;
 
 	private ThreatObserver threatObserver;
 	private boolean isInitialized = false;
@@ -79,7 +81,7 @@ public class WhydahApplicationSession {
 				//register more if any
 				//try log-on first
 				initializeWhydahApplicationSession();
-				ScheduledFuture<?> sf = renew_scheduler.scheduleAtFixedRate(
+				renew_scheduler.scheduleAtFixedRate(
 						new Runnable() {
 							public void run() {
 								try {
@@ -90,6 +92,22 @@ public class WhydahApplicationSession {
 							}
 						},
 						5, APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS, TimeUnit.SECONDS);
+
+				//update application list
+				//used for STS, OIDSSO and other services
+				if (uas != null && uas.length() > 8 && applicationToken != null) { //UAS will skip this check since it has uas=null
+					app_update_scheduler.scheduleAtFixedRate(
+							new Runnable() {
+								public void run() {
+									try {
+										updateApplinks();
+									} catch (Exception ex) {
+										ex.printStackTrace();
+									}
+								}
+							},
+							5, APPLICATION_UPDATE_CHECK_INTERVAL_IN_SECONDS, TimeUnit.SECONDS);
+				}
 			}
 		}
 	}
@@ -235,12 +253,6 @@ public class WhydahApplicationSession {
 
 	private void renewWhydahApplicationSession() {
 		log.trace("Renew WAS: Renew application session called");
-		//        if (applicationToken == null) {
-		//            log.trace("Renew WAS: applicationToken == null - initializeWhydahApplicationSession called");
-		//            initializeWhydahApplicationSession(false);
-		//            Runtime.getRuntime().removeShutdownHook(Thread.currentThread());
-		//
-		//        }
 		if (!hasActiveSession()) {
 			log.trace("Renew WAS: checkActiveSession() == false - initializeWhydahApplicationSession called");
 			if (applicationToken == null) {
@@ -257,28 +269,22 @@ public class WhydahApplicationSession {
 					String applicationTokenXML = WhydahUtil.extendApplicationSession(sts, getActiveApplicationTokenId(), 2000 + n * 1000);  // Wait a bit longer on retries
 					if (applicationTokenXML != null && applicationTokenXML.length() > 10) {
 						setApplicationToken(ApplicationTokenMapper.fromXml(applicationTokenXML));
-						if (hasActiveSession()) {
-							log.info("Renew WAS: Success in renew applicationsession, applicationTokenId: {} - for applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
-							log.debug("Renew WAS: - expiresAt: {} - now: {} - expires in: {} seconds", applicationToken.getExpires(), System.currentTimeMillis(), (Long.parseLong(applicationToken.getExpires()) - System.currentTimeMillis()) / 1000);
-							String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), applicationToken.getApplicationTokenId()).execute();
+						log.info("Renew WAS: Success in renew applicationsession, applicationTokenId: {} - for applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+						log.debug("Renew WAS: - expiresAt: {} - now: {} - expires in: {} seconds", applicationToken.getExpires(), System.currentTimeMillis(), (Long.parseLong(applicationToken.getExpires()) - System.currentTimeMillis()) / 1000);
+						String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), getActiveApplicationTokenId()).execute();
+						if(exchangeableKeyString!=null){
 							log.debug("Found exchangeableKeyString: {}", exchangeableKeyString);
 							ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);
 							log.debug("Found exchangeableKey: {}", exchangeableKey);
 							try {
 								CryptoUtil.setExchangeableKey(exchangeableKey);
-
 							} catch (Exception e) {
 								log.warn("Unable to update CryptoUtil with new cryptokey", e);
 							}
 							break;
 						} else {
-							log.info("Renew WAS: received invaled applicationtoken in renew applicationsession, applicationTokenId: {} - for applicationID: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID());
-							if (!ApplicationTokenExpires.isValid(applicationToken.getExpires())) {
-								log.info("Renew WAS: applicationsession timeout, reset application session, applicationTokenId: {} - for applicationID: {} - expires:{}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
-								removeApplicationSessionParameters();
-
-							}
-
+							//try again now
+							log.error("Key not found exchangeableKeyString{}", exchangeableKeyString);
 						}
 					} else {
 						log.info("Renew WAS: Failed to renew applicationsession, attempt:{}, returned response from STS: {}", n, applicationTokenXML);
@@ -296,9 +302,6 @@ public class WhydahApplicationSession {
 					}
 				}
 			}
-		}
-		if (uas != null && uas.length() > 8) {
-			startThreadAndUpdateAppLinks();
 		}
 	}
 
@@ -549,30 +552,30 @@ public class WhydahApplicationSession {
 		applications = newapplications;
 	}
 
+	Lock updateLock = new Lock();
 	public void updateApplinks() {
-		if (uas == null || uas.length() < 8 || applicationToken == null) {
-			log.warn("Called updateAppLinks without was initialized uas: {}, applicationToken: {} - aborting", uas, applicationToken);
-			return;
-		}
-		URI userAdminServiceUri = URI.create(uas);
-
-		if (applications == null || applications.size() < 2) {
-			String applicationsJson = new CommandListApplications(userAdminServiceUri, applicationToken.getApplicationTokenId()).execute();
-			log.debug("WAS: updateApplinks (initial): AppLications returned:" + applicationsJson);
-			if (applicationsJson != null) {
-				if (applicationsJson.length() > 20) {
-					setAppLinks(ApplicationMapper.fromJsonList(applicationsJson));
+		if(!updateLock.isLocked()){
+			try{
+				updateLock.lock();
+				if (uas == null || uas.length() < 8 || applicationToken == null) {
+					log.warn("Called updateAppLinks without was initialized uas: {}, applicationToken: {} - aborting", uas, applicationToken);
+					return;
 				}
-			}
+				URI userAdminServiceUri = URI.create(uas);
 
-		}
-		if ((ApplicationModelUtil.shouldUpdate(5) || getApplicationList() == null || getApplicationList().size() < 2) && applicationToken != null) {
-			String applicationsJson = new CommandListApplications(userAdminServiceUri, applicationToken.getApplicationTokenId()).execute();
-			log.debug("WAS: updateApplinks: AppLications returned:" + first50(applicationsJson));
-			if (applicationsJson != null) {
-				if (applicationsJson.length() > 20) {
-					setAppLinks(ApplicationMapper.fromJsonList(applicationsJson));
+				if ((ApplicationModelUtil.shouldUpdate(5) || getApplicationList() == null || getApplicationList().size() < 2) && applicationToken != null) {
+					String applicationsJson = new CommandListApplications(userAdminServiceUri, applicationToken.getApplicationTokenId()).execute();
+					log.debug("WAS: updateApplinks: AppLications returned:" + first50(applicationsJson));
+					if (applicationsJson != null) {
+						if (applicationsJson.length() > 20) {
+							setAppLinks(ApplicationMapper.fromJsonList(applicationsJson));
+						}
+					}
 				}
+			}catch(Exception ex){
+				ex.printStackTrace();
+			} finally{
+				updateLock.unlock();
 			}
 		}
 	}
@@ -604,34 +607,6 @@ public class WhydahApplicationSession {
 			}
 		}
 	}
-
-	private void startThreadAndUpdateAppLinks() {
-		if (disableUpdateAppLink) {
-			return;
-		}
-		if (uas == null || uas.length() < 8) {
-			log.info("Started WAS without UAS configuration, wont keep an updated applicationlist");
-			return;
-		} else {
-			ExecutorService executorService = Executors.newSingleThreadExecutor();
-			executorService.execute(new Runnable() {
-				public void run() {
-					updateApplinks();
-					log.debug("WAS: Asynchronous startThreadAndUpdateAppLinks task executed");
-				}
-			});
-			executorService.shutdown();
-		}
-	}
-
-	public boolean isDisableUpdateAppLink() {
-		return disableUpdateAppLink;
-	}
-
-	public void setDisableUpdateAppLink(boolean disableUpdateAppLink) {
-		this.disableUpdateAppLink = disableUpdateAppLink;
-	}
-
 	/**
 	 * @return the threatObserver
 	 */
