@@ -70,6 +70,7 @@ public class WhydahApplicationSession {
 			if (instance == null) {
 				//this.initialize_scheduler = Executors.newScheduledThreadPool(1);
 				this.renew_scheduler = Executors.newScheduledThreadPool(1);
+				this.app_update_scheduler = Executors.newScheduledThreadPool(1);
 				this.sts = sts;
 				this.uas = uas;
 				this.myAppCredential = myAppCredential;
