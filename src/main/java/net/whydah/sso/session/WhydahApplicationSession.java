@@ -96,7 +96,7 @@ public class WhydahApplicationSession {
 
 				//update application list
 				//used for STS, OIDSSO and other services
-				if (uas != null && uas.length() > 8 && applicationToken != null) { //UAS will skip this check since it has uas=null
+				if (!disableUpdateAppLink && uas != null && uas.length() > 8 && applicationToken != null) { //UAS will skip this check since it has uas=null
 					app_update_scheduler.scheduleAtFixedRate(
 							new Runnable() {
 								public void run() {
@@ -385,10 +385,10 @@ public class WhydahApplicationSession {
 	private synchronized void setApplicationSessionParameters(String applicationTokenXML) {
 		setApplicationToken(ApplicationTokenMapper.fromXml(applicationTokenXML));
 		String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), applicationToken.getApplicationTokenId()).execute();
-		log.debug("Found exchangeableKeyString: {}", exchangeableKeyString);
 
 		if (exchangeableKeyString != null && exchangeableKeyString.length() > 10) {
 			try {
+				log.debug("Found exchangeableKeyString: {}", exchangeableKeyString);
 				ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);
 				log.debug("Found exchangeableKey: {}", exchangeableKey);
 				CryptoUtil.setExchangeableKey(exchangeableKey);
@@ -397,8 +397,9 @@ public class WhydahApplicationSession {
 			} catch (Exception e) {
 				log.warn("Unable to update CryptoUtil with new cryptokey", e);
 			}
+		} else {
+			log.error("WAS {}- No key found for applicationID: {}, applicationTokenID: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted());
 		}
-		log.info("WAS - setApplicationSessionParameters {}: New application session created for applicationID: {}, applicationTokenID: {}, expires: {}, key:NoKey", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted());
 		isInitialized = true;
 	}
 
@@ -615,5 +616,12 @@ public class WhydahApplicationSession {
 		return threatObserver;
 	}
 
+	public boolean isDisableUpdateAppLink() {
+		return disableUpdateAppLink;
+	}
+
+	public void setDisableUpdateAppLink(boolean disableUpdateAppLink) {
+		this.disableUpdateAppLink = disableUpdateAppLink;
+	}
 
 }
