@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.whydah.sso</groupId>
     <artifactId>Whydah-Java-SDK</artifactId>
-    <version>2.4.43-SNAPSHOT</version>
+    <version>2.4.45-SNAPSHOT</version>
     <name>Whydah-Java-SDK</name>
     <packaging>jar</packaging>
     <url>https://wiki.cantara.no/display/iam/Whydah-Java-SDK</url>
@@ -22,7 +22,7 @@
 
     <properties>
         <service.name>Whydah-Java-SDK</service.name>
-        <whydah-typelib-version>2.4.28</whydah-typelib-version>
+        <whydah-typelib-version>2.4.30</whydah-typelib-version>
         <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
 
