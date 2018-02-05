@@ -154,7 +154,7 @@ public class BaseDevelopmentWhydahServiceClient {
     }
 
     public static Integer calculateTokenRemainingLifetimeInSeconds(String userTokenXml) {
-        Integer tokenLifespanMs = UserTokenXpathHelper.getLifespan(userTokenXml);
+        Long tokenLifespanMs = UserTokenXpathHelper.getLifespan(userTokenXml);
         Long tokenTimestampMsSinceEpoch = UserTokenXpathHelper.getTimestamp(userTokenXml);
 
         if (tokenLifespanMs == null || tokenTimestampMsSinceEpoch == null) {
