@@ -6,6 +6,7 @@ import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.util.WhydahUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,7 @@ public class WhydahUserSession {
     }
 
     public static Integer calculateTokenRemainingLifetimeInSeconds(String userTokenXml) {
-        Integer tokenLifespanMs = UserTokenXpathHelper.getLifespan(userTokenXml);
+        Long tokenLifespanMs = UserTokenXpathHelper.getLifespan(userTokenXml);
         Long tokenTimestampMsSinceEpoch = UserTokenXpathHelper.getTimestamp(userTokenXml);
 
         if (tokenLifespanMs == null || tokenTimestampMsSinceEpoch == null) {
