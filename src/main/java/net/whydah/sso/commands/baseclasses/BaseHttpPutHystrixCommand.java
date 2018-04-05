@@ -28,7 +28,11 @@ public abstract class BaseHttpPutHystrixCommand<R> extends HystrixCommand<R> {
     protected HttpRequest request;
 
     private static HystrixThreadPoolProperties.Setter threadProperties;
-
+	private int statusCode;
+	public int getStatusCode() {
+		return statusCode;
+	}
+	
     static {
         threadProperties = HystrixThreadPoolProperties.Setter();
         threadProperties.withCoreSize(10);

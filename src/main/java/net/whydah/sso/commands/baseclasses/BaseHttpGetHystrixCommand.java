@@ -27,6 +27,7 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 	public String TAG="";
 	public HttpRequest request;
 	private static HystrixThreadPoolProperties.Setter threadProperties;
+	private int statusCode;
 
 	static {
 		threadProperties = HystrixThreadPoolProperties.Setter();
@@ -107,7 +108,7 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 			
 			responseBody = request.bytes();
 			byte[] responseBodyCopy = responseBody.clone();
-			int statusCode = request.code();
+			statusCode = request.code();
 			 String responseAsText = StringConv.UTF8(responseBodyCopy);
 	            if (responseBodyCopy.length > 0) {
 	                log.trace("resposeBody: {}", responseBodyCopy);
@@ -196,5 +197,12 @@ public abstract class BaseHttpGetHystrixCommand<R> extends HystrixCommand<R>{
 	private byte[] responseBody;
 	public byte[] getResponseBodyAsByteArray(){
 		return responseBody.clone();
+	}
+
+	/**
+	 * @return the statusCode
+	 */
+	public int getStatusCode() {
+		return statusCode;
 	}
 }

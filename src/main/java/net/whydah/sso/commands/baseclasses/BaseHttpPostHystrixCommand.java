@@ -27,7 +27,11 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 	protected String myAppTokenXml="";
 	protected String TAG="";
 	protected HttpRequest request;
-
+	private int statusCode;
+	public int getStatusCode() {
+		return statusCode;
+	}
+	
     private static HystrixThreadPoolProperties.Setter threadProperties;
 
     static {
@@ -102,7 +106,7 @@ public abstract class BaseHttpPostHystrixCommand<R> extends HystrixCommand<R>{
 			
 			responseBody = request.bytes();
             byte[] responseBodyCopy = responseBody.clone();
-            int statusCode = request.code();
+            statusCode = request.code();
 //            String responseAsText = StringConv.UTF8(responseBodyCopy);
 //            if (responseBodyCopy.length > 0) {
 //                log.trace("resposeBody: {}", responseBodyCopy);

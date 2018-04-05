@@ -27,6 +27,7 @@ public abstract class BaseHttpDeleteHystrixCommand<R> extends HystrixCommand<R> 
     protected String TAG = "";
     protected HttpRequest request;
     private byte[] responseBody;
+    private int statusCode;
 
     private static HystrixThreadPoolProperties.Setter threadProperties;
 
@@ -97,7 +98,7 @@ public abstract class BaseHttpDeleteHystrixCommand<R> extends HystrixCommand<R> 
 
             responseBody = request.bytes();
             byte[] responseBodyCopy = responseBody.clone();
-            int statusCode = request.code();
+            statusCode = request.code();
 //            String responseAsText = StringConv.UTF8(responseBodyCopy);
 //            if (responseBodyCopy.length > 0) {
 //                log.trace("resposeBody: {}", responseBodyCopy);
@@ -177,5 +178,10 @@ public abstract class BaseHttpDeleteHystrixCommand<R> extends HystrixCommand<R> 
     public byte[] getResponseBodyAsByteArray() {
         return responseBody.clone();
     }
+
+	public int getStatusCode() {
+		return statusCode;
+	}
+
 }
 
