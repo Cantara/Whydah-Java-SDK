@@ -101,7 +101,7 @@ public abstract class BaseHttpPutHystrixCommand<R> extends HystrixCommand<R> {
             request = dealWithRequestBeforeSend(request);
 
             responseBody = request.bytes();
-			int statusCode = request.code();
+			statusCode = request.code();
             byte[] responseBodyCopy = responseBody.clone();
 //            String responseAsText = StringConv.UTF8(responseBodyCopy);
 //            if (responseBodyCopy.length > 0) {
