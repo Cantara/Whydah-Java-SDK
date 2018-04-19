@@ -5,28 +5,24 @@ import java.time.Instant;
 
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 
-public class CommandGetUsersStats extends BaseHttpGetHystrixCommand<String> {
+public class CommandGetUserActivityStats extends BaseHttpGetHystrixCommand<String> {
 	
 	private final String prefix;
-
-	private String adminUserTokenId;
 	private Instant startTime = null;
 	private Instant endTime = null;
+	private final String activityName;
+	private final String userId;
 
-
-	public CommandGetUsersStats(URI statisticsServiceUri, String myAppTokenId, String adminUserTokenId, Instant startTime, Instant endTime) {
-		super(statisticsServiceUri, "", myAppTokenId, "StatisticsExtensionGroup", 3000);
-
-
-		this.adminUserTokenId = adminUserTokenId;
+	public CommandGetUserActivityStats(URI statisticsServiceUri, String prefix, String activityName, String userId, Instant startTime, Instant endTime) {
+		super(statisticsServiceUri, null, null, "StatisticsExtensionGroup", 10000);
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.prefix = "All";
-		//        if (statisticsServiceUri == null || myAppTokenId == null || adminUserTokenId == null || userid == null) {
+		this.prefix = prefix;
+		this.activityName = activityName;
+		this.userId = userId;
 		if (statisticsServiceUri == null) {
 			log.error("CommandGetUsersStats initialized with null-values - will fail");
 		}
-
 	}
 
 	@Override
@@ -61,7 +57,7 @@ public class CommandGetUsersStats extends BaseHttpGetHystrixCommand<String> {
 
 	@Override
 	protected String getTargetPath() {
-		return "observe/statistics/" + prefix + "/userlogon";
+		return "observe/statistics/" + prefix + "/" + activityName + ((userId!=null && userId.trim().length()>0)? userId : "") ;
 	}
 
 

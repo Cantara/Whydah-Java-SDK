@@ -27,7 +27,6 @@ public class CommandListUserLoginsTest {
     }
 
 
-    @Ignore  // we currently do not register login-events, we have expanded to UserActivity events
     @Test
     public void testUserLoginsCustomerCommand() throws Exception {
         if (config.isStatisticsExtensionSystemtestEnabled()) {
@@ -41,7 +40,7 @@ public class CommandListUserLoginsTest {
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
             assertTrue(userTokenId.length() > 10);
 
-            String userLogins = new CommandListUserLogins(config.statisticsServiceUri, myApplicationTokenID, userTokenId, config.userName).execute();
+            String userLogins = new CommandListUserLogins(config.statisticsServiceUri, "whydah", config.userName).execute();
             log.debug("Returned list of userlogins: " + userLogins);
             assertTrue(userLogins != null);
             assertTrue(userLogins.length() > 10);

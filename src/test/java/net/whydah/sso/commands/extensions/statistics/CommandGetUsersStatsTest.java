@@ -3,6 +3,7 @@ package net.whydah.sso.commands.extensions.statistics;
 import static org.junit.Assert.assertTrue;
 
 import java.time.Instant;
+import java.time.temporal.TemporalUnit;
 import java.util.UUID;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
@@ -42,9 +43,9 @@ public class CommandGetUsersStatsTest {
             assertTrue(userTokenId.length() > 10);
 
             Instant now = Instant.now();
-            Instant lessOneHour = now.minusSeconds(60 * 60);
-            String userStats = new CommandGetUsersStats(config.statisticsServiceUri, myApplicationTokenID, userTokenId, lessOneHour, now).execute();
-            log.debug("Returned list of userlogins: " + userStats);
+            Instant startFrom = now.minusSeconds(60*60);
+            String userStats = new CommandGetUserActivityStats(config.statisticsServiceUri, "whydah", "usersession", null, startFrom, now).execute();
+            log.debug("Returned list of userlogins: " + userStats);     
             assertTrue(userStats != null);
             assertTrue(userStats.length() > 10);
         }
