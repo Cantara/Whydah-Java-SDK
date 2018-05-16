@@ -9,9 +9,10 @@ public class CommandSendPhoneVerificationPin extends BaseHttpGetHystrixCommandFo
     private final String personRef;
     private final String userTokenId;
     private String phoneNo;
-
+    public static int DEFAULT_TIMEOUT = 6000;
+    
     public CommandSendPhoneVerificationPin(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String phoneNo) {
-        super(crmServiceUri, appTokenXml, "", "CrmExtensionGroup");
+        super(crmServiceUri, appTokenXml, "", "CrmExtensionGroup", DEFAULT_TIMEOUT);
         
       
         this.userTokenId = userTokenId;
@@ -21,6 +22,19 @@ public class CommandSendPhoneVerificationPin extends BaseHttpGetHystrixCommandFo
             log.error(TAG + " initialized with null-values - will fail");
         }
     }
+    
+    public CommandSendPhoneVerificationPin(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String phoneNo, int timeout) {
+        super(crmServiceUri, appTokenXml, "", "CrmExtensionGroup", timeout);
+        
+      
+        this.userTokenId = userTokenId;
+        this.personRef = personRef;
+        this.phoneNo = phoneNo;
+        if (crmServiceUri == null || appTokenXml == null || this.phoneNo == null) {
+            log.error(TAG + " initialized with null-values - will fail");
+        }
+    }
+
 
 //    @Override
 //    protected Boolean run() {

@@ -10,13 +10,25 @@ import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommandForBooleanT
 //TODO:make test
 public class CommandSendSmsPin extends BaseHttpPostHystrixCommandForBooleanType {
 
-
+	public static int DEFAULT_TIMEOUT = 6000;
     private String phoneNo;
     private String pin;
     private String appTokenXml;
 
     public CommandSendSmsPin(URI tokenServiceUri, String appTokenId, String appTokenXml, String phoneNo, String pin) {
-        super(tokenServiceUri, appTokenXml, appTokenId, "SSOAUserAuthGroup");
+        super(tokenServiceUri, appTokenXml, appTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
+
+
+        this.phoneNo = phoneNo;
+        this.pin = pin;
+        this.appTokenXml = appTokenXml;
+        if (tokenServiceUri == null || appTokenXml == null || this.appTokenXml == null || this.phoneNo == null || this.pin == null) {
+            log.error("{} initialized with null-values - will fail", CommandSendSmsPin.class.getSimpleName());
+        }
+    }
+    
+    public CommandSendSmsPin(URI tokenServiceUri, String appTokenId, String appTokenXml, String phoneNo, String pin, int timeout) {
+        super(tokenServiceUri, appTokenXml, appTokenId, "SSOAUserAuthGroup", timeout);
 
 
         this.phoneNo = phoneNo;

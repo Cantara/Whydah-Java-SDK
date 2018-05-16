@@ -25,9 +25,24 @@ public class CommandVerifyDeliveryAddress extends BaseHttpGetHystrixCommand<Stri
     private static byte[] key;
     private static String googleMapsClientID;
     private String deliveryAddress;
-
+    public static int DEFAULT_TIMEOUT = 6000;
+    
     public CommandVerifyDeliveryAddress(String streetAddress, String googleMapsClientID, byte[] googlemapapikey) {
-    	super(URI.create("https://maps-api-ssl.google.com/maps/api/geocode/xml?address=Frankfurstein+ring+105a,M%C3%BCnchen,de,80000,&sensor=false&client=gme-kickzag&signature=RD8P7J07rJbfmClUeMEY4adIoTs="), "","", "STSApplicationAdminGroup", 3000);
+    	super(URI.create("https://maps-api-ssl.google.com/maps/api/geocode/xml?address=Frankfurstein+ring+105a,M%C3%BCnchen,de,80000,&sensor=false&client=gme-kickzag&signature=RD8P7J07rJbfmClUeMEY4adIoTs="), "","", "STSApplicationAdminGroup", DEFAULT_TIMEOUT);
+      
+        this.deliveryAddress = streetAddress;
+        this.key = googlemapapikey;
+        this.googleMapsClientID = googleMapsClientID;
+
+
+        if (streetAddress == null) {
+            log.error(TAG + " initialized with null-values - will fail");
+        }
+
+
+    }
+    public CommandVerifyDeliveryAddress(String streetAddress, String googleMapsClientID, byte[] googlemapapikey, int timeout) {
+    	super(URI.create("https://maps-api-ssl.google.com/maps/api/geocode/xml?address=Frankfurstein+ring+105a,M%C3%BCnchen,de,80000,&sensor=false&client=gme-kickzag&signature=RD8P7J07rJbfmClUeMEY4adIoTs="), "","", "STSApplicationAdminGroup", timeout);
       
         this.deliveryAddress = streetAddress;
         this.key = googlemapapikey;

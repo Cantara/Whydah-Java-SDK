@@ -11,9 +11,17 @@ public class CommandListApplications extends BaseHttpGetHystrixCommand<String> {
 
     int retryCnt = 0;
 
-
+    public static int DEFAULT_TIMEOUT = 6000;
+    
     public CommandListApplications(URI userAdminServiceUri, String applicationTokenId) {
-        super(userAdminServiceUri, "", applicationTokenId, "UASUserAdminGroup", 6000);
+        super(userAdminServiceUri, "", applicationTokenId, "UASUserAdminGroup", DEFAULT_TIMEOUT);
+        if (userAdminServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
+            log.error(TAG + " initialized with null-values - will fail - userAdminServiceUri={}, myAppTokenId={}", userAdminServiceUri, applicationTokenId);
+        }
+    }
+
+    public CommandListApplications(URI userAdminServiceUri, String applicationTokenId, int timeout) {
+        super(userAdminServiceUri, "", applicationTokenId, "UASUserAdminGroup", timeout);
         if (userAdminServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
             log.error(TAG + " initialized with null-values - will fail - userAdminServiceUri={}, myAppTokenId={}", userAdminServiceUri, applicationTokenId);
         }

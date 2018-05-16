@@ -14,12 +14,23 @@ public class CommandGetUsertokenByUserticket extends BaseHttpPostHystrixCommand<
 
     private static final Logger log = LoggerFactory.getLogger(CommandGetUsertokenByUserticket.class);
 
-    
+    public static int DEFAULT_TIMEOUT = 6000;
     private String userticket;
     int retryCnt = 0;
 
     public CommandGetUsertokenByUserticket(URI tokenServiceUri, String applicationTokenId, String myAppTokenXml, String userticket) {
-        super(tokenServiceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", 1500);
+        super(tokenServiceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
+
+
+        if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || myAppTokenXml == null || userticket == null) {
+            log.error(TAG + " initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, myAppTokenXml:{}, userCredential:*****", tokenServiceUri, applicationTokenId, myAppTokenXml, userticket);
+        }
+        this.userticket = userticket;
+
+    }
+    
+    public CommandGetUsertokenByUserticket(URI tokenServiceUri, String applicationTokenId, String myAppTokenXml, String userticket, int timeout) {
+        super(tokenServiceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", timeout);
 
 
         if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || myAppTokenXml == null || userticket == null) {

@@ -8,12 +8,12 @@ import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommandForBooleanT
 
 public class CommandSendSms extends BaseHttpPostHystrixCommandForBooleanType {
     
-    
+	public static int DEFAULT_TIMEOUT = 6000;
     private String phoneNo;
     private String msg;
 
     public CommandSendSms(URI tokenServiceUri, String appTokenId, String appTokenXml, String phoneNo, String msg) {
-    	super(tokenServiceUri, appTokenXml, appTokenId, "SSOAUserAuthGroup");
+    	super(tokenServiceUri, appTokenXml, appTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
         
         
         this.phoneNo = phoneNo;
@@ -23,7 +23,17 @@ public class CommandSendSms extends BaseHttpPostHystrixCommandForBooleanType {
         }
     }
 
-
+    public CommandSendSms(URI tokenServiceUri, String appTokenId, String appTokenXml, String phoneNo, String msg, int timeout) {
+    	super(tokenServiceUri, appTokenXml, appTokenId, "SSOAUserAuthGroup", timeout);
+        
+        
+        this.phoneNo = phoneNo;
+        this.msg = msg;
+        if (tokenServiceUri == null || appTokenXml == null || this.phoneNo == null || this.msg == null) {
+            log.error("{} initialized with null-values - will fail", CommandSendSms.class.getSimpleName());
+        }
+    }
+    
     @Override
     protected Boolean dealWithFailedResponse(String responseBody, int statusCode) {
     	return false;

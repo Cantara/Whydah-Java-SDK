@@ -14,10 +14,19 @@ public class CommandLogonUserByUserCredential  extends BaseHttpPostHystrixComman
 
     private UserCredential userCredential;
     private String userticket;
-
+    public static int DEFAULT_TIMEOUT = 6000;
 
     public CommandLogonUserByUserCredential(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, UserCredential userCredential) {
-        super(tokenServiceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", 6000);
+        super(tokenServiceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
+        this.userCredential=userCredential;
+        this.userticket= UUID.randomUUID().toString();  // Create new UUID ticket if not provided
+        if (tokenServiceUri == null || myAppTokenId == null || userCredential == null) {
+            log.error("CommandLogonUserByUserCredential initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, myAppTokenXml:{}, userCredential:*****", tokenServiceUri, myAppTokenId, myAppTokenXml, userCredential);
+        }
+    }
+    
+    public CommandLogonUserByUserCredential(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, UserCredential userCredential, int timeout) {
+        super(tokenServiceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", timeout);
         this.userCredential=userCredential;
         this.userticket= UUID.randomUUID().toString();  // Create new UUID ticket if not provided
         if (tokenServiceUri == null || myAppTokenId == null || userCredential == null) {
@@ -26,12 +35,22 @@ public class CommandLogonUserByUserCredential  extends BaseHttpPostHystrixComman
     }
 
     public CommandLogonUserByUserCredential(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml ,UserCredential userCredential,String userticket) {
-        this(tokenServiceUri,myAppTokenId,myAppTokenXml,userCredential);
+        this(tokenServiceUri,myAppTokenId,myAppTokenXml,userCredential, DEFAULT_TIMEOUT);
         this.userticket=userticket;
     }
 
     public CommandLogonUserByUserCredential(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, String userCredentialXml, String userticket) {
-        this(tokenServiceUri, myAppTokenId, myAppTokenXml, UserCredentialMapper.fromXml(userCredentialXml));
+        this(tokenServiceUri, myAppTokenId, myAppTokenXml, UserCredentialMapper.fromXml(userCredentialXml), DEFAULT_TIMEOUT);
+        this.userticket = userticket;
+    }
+
+    public CommandLogonUserByUserCredential(URI tokenServiceUri,String myAppTokenId,String myAppTokenXml ,UserCredential userCredential,String userticket, int timeout) {
+        this(tokenServiceUri,myAppTokenId,myAppTokenXml,userCredential, timeout);
+        this.userticket=userticket;
+    }
+
+    public CommandLogonUserByUserCredential(URI tokenServiceUri, String myAppTokenId, String myAppTokenXml, String userCredentialXml, String userticket, int timeout) {
+        this(tokenServiceUri, myAppTokenId, myAppTokenXml, UserCredentialMapper.fromXml(userCredentialXml), timeout);
         this.userticket = userticket;
     }
 

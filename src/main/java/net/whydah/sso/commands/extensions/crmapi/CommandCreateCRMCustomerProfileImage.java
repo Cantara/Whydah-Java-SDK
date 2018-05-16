@@ -14,10 +14,22 @@ public class CommandCreateCRMCustomerProfileImage extends BaseHttpPostHystrixCom
     private String customerRefId;
     private String contentType;
     private byte[] imageData;
-
+    public static int DEFAULT_TIMEOUT = 6000;
 
     public CommandCreateCRMCustomerProfileImage(URI crmServiceUri, String applicationTokenId, String userTokenId, String customerRefId, String contentType, byte[] imageData) {
-        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", 6000);
+        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", DEFAULT_TIMEOUT);
+        
+        this.userTokenId = userTokenId;
+        this.customerRefId = customerRefId;
+        this.imageData = imageData;
+        this.contentType = contentType;
+        if (crmServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId) || customerRefId == null || imageData == null || contentType == null) {
+            log.error(TAG + " initialized with null-values - will fail");
+        }
+
+    }
+    public CommandCreateCRMCustomerProfileImage(URI crmServiceUri, String applicationTokenId, String userTokenId, String customerRefId, String contentType, byte[] imageData, int timeout) {
+        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", timeout);
         
         this.userTokenId = userTokenId;
         this.customerRefId = customerRefId;

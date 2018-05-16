@@ -9,10 +9,18 @@ import java.net.URI;
 
 public class CommandGetApplicationKey extends BaseHttpGetHystrixCommand<String> {
     private static final Logger log = LoggerFactory.getLogger(CommandGetApplicationIdFromApplicationTokenId.class);
-
+    public static int DEFAULT_TIMEOUT = 6000;
 
     public CommandGetApplicationKey(URI tokenServiceUri, String applicationTokenId) {
-        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", 6000);
+        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", DEFAULT_TIMEOUT);
+
+        if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
+            log.error(TAG + " initialized with null-values - will fail tokenServiceUri={} || applicationTokenId={}", tokenServiceUri, applicationTokenId);
+        }
+    }
+    
+    public CommandGetApplicationKey(URI tokenServiceUri, String applicationTokenId, int timeout) {
+        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", timeout);
 
         if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
             log.error(TAG + " initialized with null-values - will fail tokenServiceUri={} || applicationTokenId={}", tokenServiceUri, applicationTokenId);

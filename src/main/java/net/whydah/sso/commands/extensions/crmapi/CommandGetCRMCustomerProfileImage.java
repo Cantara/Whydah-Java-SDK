@@ -10,10 +10,10 @@ public class CommandGetCRMCustomerProfileImage extends BaseHttpGetHystrixCommand
 
     private String userTokenId;
     private String customerRefId;
-
+    public static int DEFAULT_TIMEOUT = 6000;
 
     public CommandGetCRMCustomerProfileImage(URI crmServiceUri, String applicationTokenId, String userTokenId, String personRef) {
-        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", 6000);
+        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", DEFAULT_TIMEOUT);
 
         if (crmServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId) || personRef == null) {
             log.error(TAG + " initialized with null-values - will fail");
@@ -23,6 +23,18 @@ public class CommandGetCRMCustomerProfileImage extends BaseHttpGetHystrixCommand
 
     }
 
+    public CommandGetCRMCustomerProfileImage(URI crmServiceUri, String applicationTokenId, String userTokenId, String personRef, int timeout) {
+        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", timeout);
+
+        if (crmServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId) || personRef == null) {
+            log.error(TAG + " initialized with null-values - will fail");
+        }
+        this.userTokenId = userTokenId;
+        this.customerRefId = personRef;
+
+    }
+
+    
 //    @Override
 //    protected byte[] run() {
 //        log.trace("CommandGetCRMCustomerProfileImage - myAppTokenId={}", myAppTokenId);

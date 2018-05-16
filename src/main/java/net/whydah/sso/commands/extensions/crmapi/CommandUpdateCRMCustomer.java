@@ -13,10 +13,23 @@ public class CommandUpdateCRMCustomer extends BaseHttpPutHystrixCommand<String> 
     private String userTokenId;
     private String personRef;
     private String customerJson;
-
+    public static int DEFAULT_TIMEOUT = 6000;
 
     public CommandUpdateCRMCustomer(URI crmServiceUri, String applicationTokenId, String userTokenId, String personRef, String customerJson) {
-        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", 6000);
+        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", DEFAULT_TIMEOUT);
+
+
+        if (crmServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId) || !PersonRef.isValid(personRef) || customerJson == null) {
+            log.error("CommandUpdateCRMCustomer initialized with null-values - will fail - crmServiceUri:{} myAppTokenId:{} userTokenId:{} personRef:{}", crmServiceUri, applicationTokenId, userTokenId, personRef);
+        }
+        this.userTokenId = userTokenId;
+        this.personRef = personRef;
+        this.customerJson = customerJson;
+
+    }
+    
+    public CommandUpdateCRMCustomer(URI crmServiceUri, String applicationTokenId, String userTokenId, String personRef, String customerJson, int timeout) {
+        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", timeout);
 
 
         if (crmServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId) || !PersonRef.isValid(personRef) || customerJson == null) {

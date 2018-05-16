@@ -8,10 +8,17 @@ import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommandForBooleanT
 
 public class CommandReleaseUserToken extends BaseHttpPostHystrixCommandForBooleanType{
 
+	public static int DEFAULT_TIMEOUT = 6000;
 	String userTokenId;
 	public CommandReleaseUserToken(URI serviceUri, String myAppTokenId,
 			String myAppTokenXml, String userTokenId) {
-		super(serviceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup");
+		super(serviceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
+		this.userTokenId = userTokenId; 
+	}
+	
+	public CommandReleaseUserToken(URI serviceUri, String myAppTokenId,
+			String myAppTokenXml, String userTokenId, int timeout) {
+		super(serviceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", timeout);
 		this.userTokenId = userTokenId; 
 	}
 

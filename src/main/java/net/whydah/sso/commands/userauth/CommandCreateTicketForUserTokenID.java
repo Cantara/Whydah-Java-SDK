@@ -12,10 +12,12 @@ public class CommandCreateTicketForUserTokenID extends BaseHttpPostHystrixComman
 
 	String userTicket;
 	String userTokenID;
+	public static int DEFAULT_TIMEOUT = 6000;
+	
 	
 	public CommandCreateTicketForUserTokenID(URI serviceUri,
                                              String applicationTokenId, String myAppTokenXml, String userTicket, String userTokenId) {
-        super(serviceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup");
+        super(serviceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
 
         if (serviceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId)) {
             log.error(TAG + " initialized with null-values - will fail");
@@ -25,6 +27,20 @@ public class CommandCreateTicketForUserTokenID extends BaseHttpPostHystrixComman
 		this.userTicket = userTicket;
 		this.userTokenID = userTokenId;
 	}
+	
+	public CommandCreateTicketForUserTokenID(URI serviceUri,
+            String applicationTokenId, String myAppTokenXml, String userTicket, String userTokenId, int timeout) {
+super(serviceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", timeout);
+
+if (serviceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId)) {
+log.error(TAG + " initialized with null-values - will fail");
+log.error("CommandCreateTicketForUserTokenID initialized with null-values - will fail - crmServiceUri:{} myAppTokenId:{} userTokenId:{} personRef:{}", serviceUri, applicationTokenId, userTokenId);
+}
+
+this.userTicket = userTicket;
+this.userTokenID = userTokenId;
+}
+
 
 	@Override
 	protected String getTargetPath() {

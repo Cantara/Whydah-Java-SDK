@@ -11,9 +11,15 @@ import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommand;
 public class CommandReceiveASmsDotComResponseParser extends BaseHttpPostHystrixCommand<String> {
 
 	private String searchText="";
-
+	public static int DEFAULT_TIMEOUT = 6000;
+	
 	public CommandReceiveASmsDotComResponseParser(String searchText) {
-		super(URI.create("https://receive-a-sms.com/"), null, null, "SMSReceiver", 10000);
+		super(URI.create("https://receive-a-sms.com/"), null, null, "SMSReceiver", DEFAULT_TIMEOUT);
+		this.searchText = searchText;
+	}
+	
+	public CommandReceiveASmsDotComResponseParser(String searchText, int timeout) {
+		super(URI.create("https://receive-a-sms.com/"), null, null, "SMSReceiver", timeout);
 		this.searchText = searchText;
 	}
 

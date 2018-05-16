@@ -8,12 +8,12 @@ import java.net.URI;
 
 public class CommandValidateApplicationTokenId extends BaseHttpGetHystrixCommandForBooleanType {
 
-
+	public static int DEFAULT_TIMEOUT = 6000;
 	int retryCnt = 0;
 
 
 	public CommandValidateApplicationTokenId(String tokenServiceUri, String applicationTokenId) {
-		super(URI.create(tokenServiceUri), "", applicationTokenId, "STSApplicationAuthGroup", 3000);
+		super(URI.create(tokenServiceUri), "", applicationTokenId, "STSApplicationAuthGroup", DEFAULT_TIMEOUT);
 
 		if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
 			log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}", tokenServiceUri, applicationTokenId);
@@ -21,7 +21,23 @@ public class CommandValidateApplicationTokenId extends BaseHttpGetHystrixCommand
 	}
 
     public CommandValidateApplicationTokenId(URI tokenServiceUri, String applicationTokenId) {
-        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", 3000);
+        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", DEFAULT_TIMEOUT);
+
+		if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
+			log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}", tokenServiceUri, applicationTokenId);
+        }
+    }
+    
+	public CommandValidateApplicationTokenId(String tokenServiceUri, String applicationTokenId, int timeout) {
+		super(URI.create(tokenServiceUri), "", applicationTokenId, "STSApplicationAuthGroup", timeout);
+
+		if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
+			log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}", tokenServiceUri, applicationTokenId);
+		}
+	}
+
+    public CommandValidateApplicationTokenId(URI tokenServiceUri, String applicationTokenId, int timeout) {
+        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", timeout);
 
 		if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {
 			log.error(TAG + " initialized with null-values - will fail - tokenServiceUri={}, applicationTokenId={}", tokenServiceUri, applicationTokenId);

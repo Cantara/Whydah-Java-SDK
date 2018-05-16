@@ -12,9 +12,22 @@ public class CommandVerifyEmailByToken extends BaseHttpGetHystrixCommandForBoole
     private final String userTokenId;
     private String emailaddress;
     private String emailverificationtoken;
-
+    public static int DEFAULT_TIMEOUT = 6000;
+    
     public CommandVerifyEmailByToken(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String emailaddress, String emailverificationtoken) {
-        super(crmServiceUri, appTokenXml, "", "CrmExtensionGroup");
+        super(crmServiceUri, appTokenXml, "", "CrmExtensionGroup", DEFAULT_TIMEOUT);
+
+        if (crmServiceUri == null || appTokenXml == null || !UserTokenId.isValid(userTokenId) || !PersonRef.isValid(personRef) || emailaddress == null || emailverificationtoken == null) {
+            log.error("{} initialized with null-values - will fail", TAG);
+        }
+        this.userTokenId = userTokenId;
+        this.personRef = personRef;
+        this.emailaddress = emailaddress;
+        this.emailverificationtoken = emailverificationtoken;
+    }
+    
+    public CommandVerifyEmailByToken(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String emailaddress, String emailverificationtoken, int timeout) {
+        super(crmServiceUri, appTokenXml, "", "CrmExtensionGroup", timeout);
 
         if (crmServiceUri == null || appTokenXml == null || !UserTokenId.isValid(userTokenId) || !PersonRef.isValid(personRef) || emailaddress == null || emailverificationtoken == null) {
             log.error("{} initialized with null-values - will fail", TAG);

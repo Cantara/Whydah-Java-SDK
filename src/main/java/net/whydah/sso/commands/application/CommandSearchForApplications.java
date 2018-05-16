@@ -9,15 +9,23 @@ public class CommandSearchForApplications extends BaseHttpGetHystrixCommand<Stri
 
 
     private String applicationQuery;
+    public static int DEFAULT_TIMEOUT = 6000;
 
     public CommandSearchForApplications(URI userAdminServiceUri, String applicationTokenId, String applicationQuery) {
-        super(userAdminServiceUri, "", applicationTokenId, "ApplicationQueryGroup", 6000);
+        super(userAdminServiceUri, "", applicationTokenId, "ApplicationQueryGroup", DEFAULT_TIMEOUT);
         this.applicationQuery = applicationQuery;
         if (userAdminServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || applicationQuery == null) {
             log.error(TAG + " initialized with null-values - will fail");
         }
     }
 
+    public CommandSearchForApplications(URI userAdminServiceUri, String applicationTokenId, String applicationQuery, int timeout) {
+        super(userAdminServiceUri, "", applicationTokenId, "ApplicationQueryGroup", timeout);
+        this.applicationQuery = applicationQuery;
+        if (userAdminServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || applicationQuery == null) {
+            log.error(TAG + " initialized with null-values - will fail");
+        }
+    }
 
     @Override
     protected String getTargetPath() {

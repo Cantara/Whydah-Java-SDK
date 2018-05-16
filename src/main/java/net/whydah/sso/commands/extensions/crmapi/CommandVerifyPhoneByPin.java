@@ -13,9 +13,22 @@ public class CommandVerifyPhoneByPin extends BaseHttpGetHystrixCommandForBoolean
    
     private String phoneNo;
     private String pin;
-
+    public static int DEFAULT_TIMEOUT = 6000;
+    
     public CommandVerifyPhoneByPin(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String phoneNo, String pin) {
-    	super(crmServiceUri, appTokenXml, "","CrmExtensionGroup");
+    	super(crmServiceUri, appTokenXml, "","CrmExtensionGroup", DEFAULT_TIMEOUT);
+
+        if (crmServiceUri == null || appTokenXml == null || !UserTokenId.isValid(userTokenId) || !PersonRef.isValid(personRef) || phoneNo == null || pin == null) {
+            log.error("{} initialized with null-values - will fail", CommandVerifyPhoneByPin.class.getSimpleName());
+        }
+        this.userTokenId = userTokenId;
+        this.personRef = personRef;
+        this.phoneNo = phoneNo;
+        this.pin = pin;
+    }
+    
+    public CommandVerifyPhoneByPin(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String phoneNo, String pin, int timeout) {
+    	super(crmServiceUri, appTokenXml, "","CrmExtensionGroup", timeout);
 
         if (crmServiceUri == null || appTokenXml == null || !UserTokenId.isValid(userTokenId) || !PersonRef.isValid(personRef) || phoneNo == null || pin == null) {
             log.error("{} initialized with null-values - will fail", CommandVerifyPhoneByPin.class.getSimpleName());

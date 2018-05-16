@@ -9,13 +9,18 @@ import java.net.URI;
 
 public class CommandListUsers extends BaseHttpGetHystrixCommand<String> {
    
-
+	public static int DEFAULT_TIMEOUT = 6000;
+	
     private String adminUserTokenId;
     private String userQuery;
 
 
     public CommandListUsers(URI userAdminServiceUri, String applicationTokenId, String adminUserTokenId, String userQuery) {
-        super(userAdminServiceUri, "", applicationTokenId, "UASUserAdminGroup", 3000);
+       this(userAdminServiceUri, applicationTokenId, adminUserTokenId, userQuery, DEFAULT_TIMEOUT);
+    }
+    
+    public CommandListUsers(URI userAdminServiceUri, String applicationTokenId, String adminUserTokenId, String userQuery, int timeout) {
+        super(userAdminServiceUri, "", applicationTokenId, "UASUserAdminGroup", timeout);
 
         if (userAdminServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(adminUserTokenId) || userQuery == null) {
             log.error("CommandListUsers initialized with null-values - will fail - userAdminServiceUri:{}, myAppTokenId:{}, adminUserTokenId:{}, userQuery:{}", userAdminServiceUri, applicationTokenId, adminUserTokenId, userQuery);

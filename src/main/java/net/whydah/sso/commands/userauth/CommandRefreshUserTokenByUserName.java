@@ -9,10 +9,19 @@ import java.util.Map;
 
 public class CommandRefreshUserTokenByUserName extends BaseHttpPostHystrixCommand<String>{
 
+	public static int DEFAULT_TIMEOUT = 6000;
 	String userName;
 	public CommandRefreshUserTokenByUserName(URI serviceUri, String myAppTokenId,
 			String myAppTokenXml, String userName) {
-		super(serviceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", 3000);
+		super(serviceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
+		if (UserName.isValid(userName)) {
+			this.userName = userName;
+		}
+	}
+	
+	public CommandRefreshUserTokenByUserName(URI serviceUri, String myAppTokenId,
+			String myAppTokenXml, String userName, int timeout) {
+		super(serviceUri, myAppTokenXml, myAppTokenId, "SSOAUserAuthGroup", timeout);
 		if (UserName.isValid(userName)) {
 			this.userName = userName;
 		}

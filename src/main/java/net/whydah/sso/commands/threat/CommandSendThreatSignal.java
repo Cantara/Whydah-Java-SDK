@@ -20,10 +20,24 @@ public class CommandSendThreatSignal extends BaseHttpPostHystrixCommand<String> 
     private String myAppTokenId;
     private String threatMessage;
     private static final ObjectMapper mapper = new ObjectMapper();
-
+    public static int DEFAULT_TIMEOUT = 6000;
 
     public CommandSendThreatSignal(URI tokenServiceUri, String myAppTokenId, String threatMessage) {
-    	super(tokenServiceUri, "", myAppTokenId,"WhydahThreat",1000);
+    	super(tokenServiceUri, "", myAppTokenId,"WhydahThreat", DEFAULT_TIMEOUT);
+        this.myAppTokenId = myAppTokenId;
+
+        try {
+            this.threatMessage = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(WhydahApplicationSession.createThreat(threatMessage));
+        } catch (Exception e) {
+            this.threatMessage = threatMessage;
+        }
+        if (tokenServiceUri == null || myAppTokenId == null) {
+            log.error(TAG + " initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}", tokenServiceUri, myAppTokenId);
+        }
+    }
+    
+    public CommandSendThreatSignal(URI tokenServiceUri, String myAppTokenId, String threatMessage, int timeout) {
+    	super(tokenServiceUri, "", myAppTokenId,"WhydahThreat", timeout);
         this.myAppTokenId = myAppTokenId;
 
         try {
@@ -38,7 +52,22 @@ public class CommandSendThreatSignal extends BaseHttpPostHystrixCommand<String> 
 
 
     public CommandSendThreatSignal(URI tokenServiceUri, String myAppTokenId, ThreatSignal threatSignal) {
-        super(tokenServiceUri, "", myAppTokenId, "WhydahThreat", 1000);
+        super(tokenServiceUri, "", myAppTokenId, "WhydahThreat", DEFAULT_TIMEOUT);
+        this.myAppTokenId = myAppTokenId;
+
+
+        try {
+            this.threatMessage = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(threatSignal);
+        } catch (Exception e) {
+            this.threatMessage = threatSignal.getText();
+        }
+        if (tokenServiceUri == null || myAppTokenId == null) {
+            log.error(TAG + " initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}", tokenServiceUri, myAppTokenId);
+        }
+    }
+    
+    public CommandSendThreatSignal(URI tokenServiceUri, String myAppTokenId, ThreatSignal threatSignal, int timeout) {
+        super(tokenServiceUri, "", myAppTokenId, "WhydahThreat", timeout);
         this.myAppTokenId = myAppTokenId;
 
 

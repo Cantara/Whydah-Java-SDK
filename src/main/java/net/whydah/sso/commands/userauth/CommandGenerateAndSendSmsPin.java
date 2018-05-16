@@ -12,12 +12,12 @@ import java.util.Map;
  */
 public class CommandGenerateAndSendSmsPin extends BaseHttpPostHystrixCommandForBooleanType {
 
-
+	public static int DEFAULT_TIMEOUT = 6000;
     private String phoneNo;
 
     @Deprecated
     public CommandGenerateAndSendSmsPin(URI tokenServiceUri, String applicationTokenId, String appTokenXml, String phoneNo) {
-        super(tokenServiceUri, appTokenXml, applicationTokenId, "SSOAUserAuthGroup");
+        super(tokenServiceUri, appTokenXml, applicationTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
 
         if (tokenServiceUri == null || appTokenXml == null || !ApplicationTokenID.isValid(applicationTokenId) || phoneNo == null) {
             log.error("{} initialized with null-values - will fail", CommandGenerateAndSendSmsPin.class.getSimpleName());
@@ -25,9 +25,19 @@ public class CommandGenerateAndSendSmsPin extends BaseHttpPostHystrixCommandForB
 
         this.phoneNo = phoneNo;
     }
-
+    
     public CommandGenerateAndSendSmsPin(URI tokenServiceUri, String applicationTokenId, String phoneNo) {
-        super(tokenServiceUri, null, applicationTokenId, "SSOAUserAuthGroup");
+        super(tokenServiceUri, null, applicationTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
+
+        if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || phoneNo == null) {
+            log.error("{} initialized with null-values - will fail", CommandGenerateAndSendSmsPin.class.getSimpleName());
+        }
+
+        this.phoneNo = phoneNo;
+    }
+
+    public CommandGenerateAndSendSmsPin(URI tokenServiceUri, String applicationTokenId, String phoneNo, int timeout) {
+        super(tokenServiceUri, null, applicationTokenId, "SSOAUserAuthGroup", timeout);
 
         if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || phoneNo == null) {
             log.error("{} initialized with null-values - will fail", CommandGenerateAndSendSmsPin.class.getSimpleName());

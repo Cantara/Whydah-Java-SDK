@@ -10,9 +10,23 @@ public class CommandSendEmailVerificationToken extends BaseHttpGetHystrixCommand
     private final String userTokenId;
     private final String linkurl;
     private String emailaddress;
-
+    public static int DEFAULT_TIMEOUT = 6000;
+    
     public CommandSendEmailVerificationToken(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String emailaddress, String linkurl) {
-    	super(crmServiceUri, appTokenXml, "", "CrmExtensionGroup");
+    	super(crmServiceUri, appTokenXml, "", "CrmExtensionGroup", DEFAULT_TIMEOUT);
+   
+        this.userTokenId = userTokenId;
+        this.personRef = personRef;
+        this.emailaddress = emailaddress;
+        this.linkurl = linkurl;
+
+        if (crmServiceUri == null || appTokenXml == null || this.emailaddress == null || this.linkurl == null) {
+            log.error(TAG + " initialized with null-values - will fail");
+        }
+    }
+    
+    public CommandSendEmailVerificationToken(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String emailaddress, String linkurl, int timeout) {
+    	super(crmServiceUri, appTokenXml, "", "CrmExtensionGroup", timeout);
    
         this.userTokenId = userTokenId;
         this.personRef = personRef;

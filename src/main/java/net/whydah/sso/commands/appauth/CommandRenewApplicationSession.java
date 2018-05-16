@@ -9,7 +9,7 @@ import net.whydah.sso.ddd.model.application.ApplicationTokenID;
 import java.net.URI;
 
 public class CommandRenewApplicationSession extends BaseHttpPostHystrixCommand<String> {
-
+	public static int DEFAULT_TIMEOUT = 6000;
 
     public CommandRenewApplicationSession(URI tokenServiceUri, String applicationTokenId, int millisecondwait) {
         super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", millisecondwait);
@@ -25,7 +25,7 @@ public class CommandRenewApplicationSession extends BaseHttpPostHystrixCommand<S
     }
 
     public CommandRenewApplicationSession(URI tokenServiceUri, String applicationTokenId) {
-        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", 3000);
+        super(tokenServiceUri, "", applicationTokenId, "STSApplicationAuthGroup", DEFAULT_TIMEOUT);
 
 
         if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId)) {

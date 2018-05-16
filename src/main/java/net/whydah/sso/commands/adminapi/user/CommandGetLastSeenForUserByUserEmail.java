@@ -9,17 +9,21 @@ import java.net.URI;
 
 public class CommandGetLastSeenForUserByUserEmail extends BaseHttpGetHystrixCommand<String> {
 
+	public static int DEFAULT_TIMEOUT = 6000;
     private String userEmail;
-
-
-    public CommandGetLastSeenForUserByUserEmail(URI tokenServiceUri, String applicationTokenId, String userEmail) {
-        super(tokenServiceUri, "", applicationTokenId, "STSUserQueries", 6000);
+    
+    public CommandGetLastSeenForUserByUserEmail(URI tokenServiceUri, String applicationTokenId, String userEmail, int timeout) {
+        super(tokenServiceUri, "", applicationTokenId, "STSUserQueries", timeout);
 
         if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !Email.isValid(userEmail)) {
             log.error(TAG + " initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, userEmail:{}", tokenServiceUri, applicationTokenId, userEmail);
         }
         this.userEmail = userEmail;
 
+    }
+    
+    public CommandGetLastSeenForUserByUserEmail(URI tokenServiceUri, String applicationTokenId, String userEmail) {
+        this(tokenServiceUri, applicationTokenId, userEmail, DEFAULT_TIMEOUT);
     }
 
 	@Override

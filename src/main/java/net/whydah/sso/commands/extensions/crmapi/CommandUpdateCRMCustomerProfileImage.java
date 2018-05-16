@@ -14,10 +14,24 @@ public class CommandUpdateCRMCustomerProfileImage extends BaseHttpPutHystrixComm
     private String personRef;
     private String contentType;
     private byte[] imageData;
-
+    public static int DEFAULT_TIMEOUT = 6000;
 
     public CommandUpdateCRMCustomerProfileImage(URI crmServiceUri, String applicationTokenId, String userTokenId, String personRef, String contentType, byte[] imageData) {
-        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", 3000);
+        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", DEFAULT_TIMEOUT);
+
+
+        if (crmServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId) || !PersonRef.isValid(personRef) || imageData == null || contentType == null) {
+            log.error("CommandUpdateCRMCustomerProfileImage initialized with null-values - will fail");
+        }
+
+        this.userTokenId = userTokenId;
+        this.personRef = personRef;
+        this.imageData = imageData;
+        this.contentType = contentType;
+    }
+    
+    public CommandUpdateCRMCustomerProfileImage(URI crmServiceUri, String applicationTokenId, String userTokenId, String personRef, String contentType, byte[] imageData, int timeout) {
+        super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", timeout);
 
 
         if (crmServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId) || !PersonRef.isValid(personRef) || imageData == null || contentType == null) {

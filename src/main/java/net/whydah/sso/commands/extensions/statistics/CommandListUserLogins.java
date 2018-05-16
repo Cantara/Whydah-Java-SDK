@@ -9,10 +9,16 @@ public class CommandListUserLogins extends BaseHttpGetHystrixCommand<String> {
     
     private final String prefix;
     private String userid;
-
+    public static int DEFAULT_TIMEOUT = 6000;
 
     public CommandListUserLogins(URI statisticsServiceUri, String prefix, String userid) {
-    	super(statisticsServiceUri, null, null, "StatisticsExtensionGroup", 10000);       
+    	super(statisticsServiceUri, null, null, "StatisticsExtensionGroup", DEFAULT_TIMEOUT);       
+        this.userid = userid;
+        this.prefix = prefix;
+    }
+    
+    public CommandListUserLogins(URI statisticsServiceUri, String prefix, String userid, int timeout) {
+    	super(statisticsServiceUri, null, null, "StatisticsExtensionGroup", timeout);       
         this.userid = userid;
         this.prefix = prefix;
     }

@@ -9,14 +9,19 @@ import com.github.kevinsawicki.http.HttpRequest;
 
 public class CommandSendSMSToUser extends BaseHttpGetHystrixCommand<String> {
     
-
+	public static int DEFAULT_TIMEOUT = 6000;
+	
     private String smsMessage;
     private String cellNo;
     private String queryparam;
 
 
     public CommandSendSMSToUser(String serviceURL, String serviceAccount, String username, String password, String queryParam, String cellNo, String smsMessage) {
-    	super(URI.create(serviceURL), "","", "CommandSendSMSToUser", 3000);
+    	this(serviceURL, serviceAccount, username, password, queryParam, cellNo, smsMessage, DEFAULT_TIMEOUT);
+    }
+    
+    public CommandSendSMSToUser(String serviceURL, String serviceAccount, String username, String password, String queryParam, String cellNo, String smsMessage, int timeout) {
+    	super(URI.create(serviceURL), "","", "CommandSendSMSToUser", timeout);
         
         this.smsMessage = smsMessage;
         this.cellNo = cellNo;

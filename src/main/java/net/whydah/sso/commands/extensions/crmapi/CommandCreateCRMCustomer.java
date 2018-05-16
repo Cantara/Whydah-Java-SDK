@@ -13,10 +13,25 @@ public class CommandCreateCRMCustomer extends BaseHttpPostHystrixCommand<String>
 	private String userTokenId;
 	private String customerRefId;
 	private String customerJson;
-
+	public static int DEFAULT_TIMEOUT = 6000;
 
 	public CommandCreateCRMCustomer(URI crmServiceUri, String applicationTokenId, String userTokenId, String customerRefId, String customerJson) {
-		super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", 6000);
+		super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", DEFAULT_TIMEOUT);
+
+
+		if (crmServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId)) {
+			log.error(TAG + " initialized with null-values - will fail");
+			log.error("CommandCreateCRMCustomer initialized with null-values - will fail - crmServiceUri:{} myAppTokenId:{} userTokenId:{} personRef:{}", crmServiceUri, applicationTokenId, userTokenId, customerRefId);
+
+		}
+		this.userTokenId = userTokenId;
+		this.customerRefId = customerRefId;
+		this.customerJson = customerJson;
+
+	}
+	
+	public CommandCreateCRMCustomer(URI crmServiceUri, String applicationTokenId, String userTokenId, String customerRefId, String customerJson, int timeout) {
+		super(crmServiceUri, "", applicationTokenId, "CrmExtensionGroup", timeout);
 
 
 		if (crmServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId)) {

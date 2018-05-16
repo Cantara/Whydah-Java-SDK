@@ -15,10 +15,21 @@ public class CommandGetUsertokenByUsertokenId extends BaseHttpPostHystrixCommand
    // private static final Logger log = LoggerFactory.getLogger(CommandGetUsertokenByUsertokenId.class);
 
     private String usertokenId;
-
+    public static int DEFAULT_TIMEOUT = 6000;
 
 	public CommandGetUsertokenByUsertokenId(URI tokenServiceUri, String applicationTokenId, String myAppTokenXml, String userTokenId) {
-		super(tokenServiceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", 6000);
+		super(tokenServiceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
+		this.usertokenId = userTokenId;
+
+
+		if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || myAppTokenXml == null || !UserTokenId.isValid(userTokenId)) {
+			log.error("CommandGetUsertokenByUsertokenId initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, myAppTokenXml:{}  usertokenId:{}", tokenServiceUri, applicationTokenId, myAppTokenXml, userTokenId);
+		}
+
+	}
+	
+	public CommandGetUsertokenByUsertokenId(URI tokenServiceUri, String applicationTokenId, String myAppTokenXml, String userTokenId, int timeout) {
+		super(tokenServiceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", timeout);
 		this.usertokenId = userTokenId;
 
 

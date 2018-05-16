@@ -17,9 +17,36 @@ public class CommandLogonUserByPhoneNumberPin extends BaseHttpPostHystrixCommand
 	private String phoneNo;
 	private String pin;
 	private String userticket;
-
+	public static int DEFAULT_TIMEOUT = 6000;
+	
 	public CommandLogonUserByPhoneNumberPin(URI serviceUri, String applicationTokenId, String myAppTokenXml, String adminUserTokenId, String phoneNo, String pin, String userTicket) {
-		super(serviceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", 8000);
+		super(serviceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
+		this.phoneNo = phoneNo;
+		this.pin = pin;
+		this.userticket = userTicket;
+		this.adminUserTokenId = adminUserTokenId;
+
+
+		if (serviceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(adminUserTokenId) || phoneNo == null || pin == null) {
+			log.error("CommandLogonUserByPhoneNumberPin initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}, myAppTokenXml:{}, ", adminUserTokenId, myAppTokenId, myAppTokenXml);
+		}
+		this.phoneNo = phoneNo;
+		this.pin = pin;
+		this.userticket = userTicket;
+		this.adminUserTokenId = adminUserTokenId;
+
+        if (phoneNo.length() > 16 || phoneNo.length() < 7) {
+            log.warn("Attempting to access with illegal phone number: {}", phoneNo);
+        }
+        if (pin.length() > 7 || phoneNo.length() < 3) {
+            log.warn("Attempting to access with illegal pin code: {}", phoneNo);
+        }
+
+
+	}
+	
+	public CommandLogonUserByPhoneNumberPin(URI serviceUri, String applicationTokenId, String myAppTokenXml, String adminUserTokenId, String phoneNo, String pin, String userTicket, int timeout) {
+		super(serviceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", timeout);
 		this.phoneNo = phoneNo;
 		this.pin = pin;
 		this.userticket = userTicket;

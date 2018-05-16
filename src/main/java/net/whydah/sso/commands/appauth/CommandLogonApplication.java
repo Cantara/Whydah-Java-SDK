@@ -9,14 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandLogonApplication extends BaseHttpPostHystrixCommand<String> {
-
+	public static int DEFAULT_TIMEOUT = 6000;
 
 	private URI tokenServiceUri;
 	private ApplicationCredential appCredential;
     int retryCnt = 0;
 
 	public CommandLogonApplication(URI tokenServiceUri, ApplicationCredential appCredential) {
-        super(tokenServiceUri, "", "", "STSApplicationAuthGroup", 8000);
+        super(tokenServiceUri, "", "", "STSApplicationAuthGroup", DEFAULT_TIMEOUT);
         this.appCredential = appCredential;
         this.tokenServiceUri = tokenServiceUri;
         if (tokenServiceUri == null || appCredential == null) {

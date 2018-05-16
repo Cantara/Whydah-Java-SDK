@@ -12,9 +12,22 @@ public class CommandGetUserActivityStats extends BaseHttpGetHystrixCommand<Strin
 	private Instant endTime = null;
 	private final String activityName;
 	private final String userId;
-
+	public static int DEFAULT_TIMEOUT = 6000;
+	
 	public CommandGetUserActivityStats(URI statisticsServiceUri, String prefix, String activityName, String userId, Instant startTime, Instant endTime) {
-		super(statisticsServiceUri, null, null, "StatisticsExtensionGroup", 10000);
+		super(statisticsServiceUri, null, null, "StatisticsExtensionGroup", DEFAULT_TIMEOUT);
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.prefix = prefix;
+		this.activityName = activityName;
+		this.userId = userId;
+		if (statisticsServiceUri == null) {
+			log.error("CommandGetUsersStats initialized with null-values - will fail");
+		}
+	}
+	
+	public CommandGetUserActivityStats(URI statisticsServiceUri, String prefix, String activityName, String userId, Instant startTime, Instant endTime, int timeout) {
+		super(statisticsServiceUri, null, null, "StatisticsExtensionGroup", timeout);
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.prefix = prefix;
