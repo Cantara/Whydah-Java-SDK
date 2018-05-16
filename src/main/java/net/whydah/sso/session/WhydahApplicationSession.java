@@ -556,6 +556,9 @@ public class WhydahApplicationSession {
 
 	Lock updateLock = new Lock();
 	public void updateApplinks() {
+		if (disableUpdateAppLink) {
+			return;
+		}
 		if(!updateLock.isLocked()){
 			try{
 				updateLock.lock();
