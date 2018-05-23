@@ -5,6 +5,8 @@ import net.whydah.sso.util.ExceptionUtil;
 
 import java.net.URI;
 
+//still work but please use CommandGetUserLogon instead
+@Deprecated
 public class CommandListUserLogins extends BaseHttpGetHystrixCommand<String> {
     
     private final String prefix;

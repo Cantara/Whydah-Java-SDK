@@ -44,7 +44,7 @@ public class CommandGetUsersStatsTest {
 
             Instant now = Instant.now();
             Instant startFrom = now.minusSeconds(60*60);
-            String userStats = new CommandGetUserActivityStats(config.statisticsServiceUri, "whydah", "usersession", null, startFrom, now).execute();
+            String userStats = new CommandGetActivityStats(config.statisticsServiceUri, "whydah", "usersession", null, startFrom, now).execute();
             log.debug("Returned list of userlogins: " + userStats);     
             assertTrue(userStats != null);
             assertTrue(userStats.length() > 10);

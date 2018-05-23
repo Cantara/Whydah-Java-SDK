@@ -5,7 +5,7 @@ import java.time.Instant;
 
 import net.whydah.sso.commands.baseclasses.BaseHttpGetHystrixCommand;
 
-public class CommandGetUserActivityStats extends BaseHttpGetHystrixCommand<String> {
+class CommandGetActivityStats extends BaseHttpGetHystrixCommand<String> {
 	
 	private final String prefix;
 	private Instant startTime = null;
@@ -14,7 +14,7 @@ public class CommandGetUserActivityStats extends BaseHttpGetHystrixCommand<Strin
 	private final String userId;
 	public static int DEFAULT_TIMEOUT = 6000;
 	
-	public CommandGetUserActivityStats(URI statisticsServiceUri, String prefix, String activityName, String userId, Instant startTime, Instant endTime) {
+	public CommandGetActivityStats(URI statisticsServiceUri, String prefix, String activityName, String userId, Instant startTime, Instant endTime) {
 		super(statisticsServiceUri, null, null, "StatisticsExtensionGroup", DEFAULT_TIMEOUT);
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -26,7 +26,7 @@ public class CommandGetUserActivityStats extends BaseHttpGetHystrixCommand<Strin
 		}
 	}
 	
-	public CommandGetUserActivityStats(URI statisticsServiceUri, String prefix, String activityName, String userId, Instant startTime, Instant endTime, int timeout) {
+	public CommandGetActivityStats(URI statisticsServiceUri, String prefix, String activityName, String userId, Instant startTime, Instant endTime, int timeout) {
 		super(statisticsServiceUri, null, null, "StatisticsExtensionGroup", timeout);
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -70,7 +70,7 @@ public class CommandGetUserActivityStats extends BaseHttpGetHystrixCommand<Strin
 
 	@Override
 	protected String getTargetPath() {
-		return "observe/statistics/" + prefix + "/" + activityName + ((userId!=null && userId.trim().length()>0)? userId : "") ;
+		return "observe/statistics/" + prefix + "/" + activityName + ((userId!=null && userId.trim().length()>0)? "/" + userId : "") ;
 	}
 
 

@@ -60,7 +60,7 @@ public class MapAndFilterUserStatsTest {
             String userTokenId = userSession2.getActiveUserTokenId();
             assertTrue(UserTokenId.isValid(userTokenId));
 
-            String usersssions = new CommandGetUserActivityStats(config.statisticsServiceUri, "whydah", "usersession", null, null, null).execute();
+            String usersssions = new CommandGetActivityStats(config.statisticsServiceUri, "whydah", "usersession", null, null, null).execute();
             assertTrue(usersssions != null);
             log.debug("Returned list {} of usersssions: {}", usersssions.length(), usersssions);
             assertTrue(usersssions.length() > 10);
