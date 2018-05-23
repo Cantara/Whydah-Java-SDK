@@ -3,6 +3,7 @@ package net.whydah.sso.commands.extensions.statistics;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.whydah.sso.basehelpers.JsonPathHelper;
+import net.whydah.sso.ddd.model.sso.UserTokenLifespan;
 import net.whydah.sso.ddd.model.user.UserTokenId;
 import net.whydah.sso.extensions.useractivity.helpers.UserActivityHelper;
 import net.whydah.sso.session.WhydahApplicationSession;
@@ -16,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -59,8 +62,13 @@ public class MapAndFilterUserStatsTest {
             WhydahUserSession userSession2 = new WhydahUserSession(applicationSession, userCredential);
             String userTokenId = userSession2.getActiveUserTokenId();
             assertTrue(UserTokenId.isValid(userTokenId));
-
-            String usersssions = new CommandGetActivityStats(config.statisticsServiceUri, "whydah", "usersession", null, null, null).execute();
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, -1);
+            java.util.Date dt = cal.getTime();
+            Instant from = dt.toInstant();
+            
+           
+            String usersssions = new CommandGetActivityStats(config.statisticsServiceUri, "whydah", "usersession", config.userName, from, Instant.now()).execute();
             assertTrue(usersssions != null);
             log.debug("Returned list {} of usersssions: {}", usersssions.length(), usersssions);
             assertTrue(usersssions.length() > 10);
@@ -68,7 +76,7 @@ public class MapAndFilterUserStatsTest {
 //            log.debug("Mapped:  {} getFilteredUserSessionsJsonFromUserActivityJson: {}", mappedUL.length(), mappedUL);
 
             
-            String json = UserActivityHelper.getTimedUserSessionsJsonFromUserActivityJson(usersssions, config.userName, config.TEMPORARY_APPLICATION_ID);
+            String json = UserActivityHelper.getUserSessionsJsonFromUserActivityJson(usersssions, config.userName, SystemTestBaseConfig.TEMPORARY_APPLICATION_ID);
             assertTrue(json!=null && json.contains(config.userName));
             assertTrue(json!=null  && json.contains(config.TEMPORARY_APPLICATION_ID));
             
