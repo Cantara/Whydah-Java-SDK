@@ -10,29 +10,30 @@ public class CommandSendEmailVerificationToken extends BaseHttpGetHystrixCommand
     private final String userTokenId;
     private final String linkurl;
     private String emailaddress;
+    private String ticket;
     public static int DEFAULT_TIMEOUT = 6000;
     
-    public CommandSendEmailVerificationToken(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String emailaddress, String linkurl) {
+    public CommandSendEmailVerificationToken(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String emailaddress, String linkurl, String ticket) {
     	super(crmServiceUri, appTokenXml, "", "CrmExtensionGroup", DEFAULT_TIMEOUT);
    
         this.userTokenId = userTokenId;
         this.personRef = personRef;
         this.emailaddress = emailaddress;
         this.linkurl = linkurl;
-
+        this.ticket = ticket;
         if (crmServiceUri == null || appTokenXml == null || this.emailaddress == null || this.linkurl == null) {
             log.error(TAG + " initialized with null-values - will fail");
         }
     }
     
-    public CommandSendEmailVerificationToken(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String emailaddress, String linkurl, int timeout) {
+    public CommandSendEmailVerificationToken(URI crmServiceUri, String appTokenXml, String userTokenId, String personRef, String emailaddress, String linkurl, String ticket, int timeout) {
     	super(crmServiceUri, appTokenXml, "", "CrmExtensionGroup", timeout);
    
         this.userTokenId = userTokenId;
         this.personRef = personRef;
         this.emailaddress = emailaddress;
         this.linkurl = linkurl;
-
+        this.ticket = ticket;
         if (crmServiceUri == null || appTokenXml == null || this.emailaddress == null || this.linkurl == null) {
             log.error(TAG + " initialized with null-values - will fail");
         }
@@ -74,7 +75,7 @@ public class CommandSendEmailVerificationToken extends BaseHttpGetHystrixCommand
 
     @Override
     protected Object[] getQueryParameters() {
-    	return new String[]{"email", emailaddress, "linkurl", linkurl};
+    	return new String[]{"email", emailaddress, "linkurl", linkurl, "userticket", ticket};
     }
 	@Override
 	protected String getTargetPath() {
