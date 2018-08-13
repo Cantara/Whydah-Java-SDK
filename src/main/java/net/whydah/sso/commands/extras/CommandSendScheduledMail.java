@@ -13,6 +13,8 @@ public class CommandSendScheduledMail extends BaseHttpPostHystrixCommandForBoole
     private String emailaddress;
     private String subject;
     private String msg;
+    private String templateName;
+    private String templateParams;
     public static int DEFAULT_TIMEOUT = 6000;
     
     @Deprecated
@@ -28,6 +30,20 @@ public class CommandSendScheduledMail extends BaseHttpPostHystrixCommandForBoole
         }
     }
 
+    public CommandSendScheduledMail(URI uasServiceUri, String appTokenId, String timestamp, String emailaddress, String subject, String templateName, String templateParamsJson, int timeout) {
+        super(uasServiceUri, null, appTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
+
+        this.timestamp = timestamp;
+        this.emailaddress = emailaddress;
+        this.subject = subject;
+        this.templateName = templateName;
+        this.templateParams = templateParamsJson;
+        
+        if (uasServiceUri == null || this.emailaddress == null || this.timestamp == null || this.subject == null || this.msg == null) {
+            log.error("{} initialized with null-values - will fail", CommandSendScheduledMail.class.getSimpleName());
+        }
+    }
+    
     public CommandSendScheduledMail(URI uasServiceUri, String appTokenId, String timestamp, String emailaddress, String subject, String msg) {
         super(uasServiceUri, null, appTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
 
@@ -69,6 +85,8 @@ public class CommandSendScheduledMail extends BaseHttpPostHystrixCommandForBoole
         data.put("emailaddress", emailaddress);
         data.put("subject", subject);
         data.put("emailMessage", msg);
+        data.put("templateName", templateName);
+        data.put("templateParams", templateParams); 
         return data;
     }
 
