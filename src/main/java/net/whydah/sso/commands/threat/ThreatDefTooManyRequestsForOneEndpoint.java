@@ -6,6 +6,14 @@ public class ThreatDefTooManyRequestsForOneEndpoint extends IThreatDefinition {
 
 	public static int COUNT = 1000000; //1 million requests in one hour?
 	
+	public ThreatDefTooManyRequestsForOneEndpoint() {
+		
+	}
+	
+	public ThreatDefTooManyRequestsForOneEndpoint(int limit) {
+		COUNT = limit;
+	}
+	
 	public int getCode() {
 		return IThreatDefinition.DEF_CODE_MANY_REQUESTS_IN_A_SHORT_PERIOD;
 	}

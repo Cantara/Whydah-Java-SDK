@@ -9,8 +9,8 @@ import java.util.HashMap;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-public class ThreatDefManyLoginAttemptsFromSameIPAddressTest {
-	 private static final Logger logger = getLogger(ThreatDefManyLoginAttemptsFromSameIPAddressTest.class);
+public class ThreatDefManyGetPinAttemptsFromSamePhoneNumberTest {
+	 private static final Logger logger = getLogger(ThreatDefManyGetPinAttemptsFromSamePhoneNumberTest.class);
 	 boolean found = false;
 	 
 	 @Test
@@ -23,23 +23,21 @@ public class ThreatDefManyLoginAttemptsFromSameIPAddressTest {
 				super.commitThreat(info);
 			}
 		 };
-		 ob.registerDefinition(new ThreatDefManyLoginAttemptsFromSameIPAddress());
+		 ob.registerDefinition(new ThreatDefManyGetPinAttemptsFromSamePhoneNumber(5));
 		 
-		 for(int i = 0; i < 10; i++){
-			 ThreatActivityLog log = new ThreatActivityLog().setEndPoint("login").setIpAddress("171.250.110.30").setRequestTime(Long.toString(System.currentTimeMillis()));
+		 for(int i = 0; i < 4; i++){
+			 ThreatActivityLog log = new ThreatActivityLog("getPin", "171.250.110.30", Long.toString(System.currentTimeMillis()), new Object[] {"phoneNo", "59441023"});
 			 ob.addLogForDetection(log);
 		 }
 		
 		 assertFalse(found);
 		 
-		 for(int i = 0; i < 25; i++){
-			 ThreatActivityLog log = new ThreatActivityLog().setEndPoint("login").setIpAddress("171.250.110.30").setRequestTime(Long.toString(System.currentTimeMillis()));
-			 ob.addLogForDetection(log);
-		 }
+		 //try one more
+		 ThreatActivityLog log = new ThreatActivityLog("getPin", "171.250.110.30", Long.toString(System.currentTimeMillis()), new Object[] {"phoneNo", "59441023"});
+		 ob.addLogForDetection(log);
 		 
 		 
 		 waitForAllDetectionsToFinish(ob);
-		 
 		 
 		 
 		 assertTrue(found);

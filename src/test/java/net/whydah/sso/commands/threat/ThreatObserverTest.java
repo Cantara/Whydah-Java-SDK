@@ -6,6 +6,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class ThreatObserverTest {
 
 	    @Test
 	    public void testAddLogForDetectionWhenHavingNoThreatDefinition() {
-	    	ThreatObserver ob = new ThreatObserver(null);
+	    	ThreatObserver ob = new ThreatObserver();
 	    	//some login activity
 	    	ThreatActivityLog log = new ThreatActivityLog().
 	    	setEndPoint("login").setIpAddress("171.250.110.28").setRequestTime(Long.toString(System.currentTimeMillis()));
@@ -152,9 +153,38 @@ public class ThreatObserverTest {
 	    	waitForAllDetectionsToFinish(ob);
 	    	
 	    	assertTrue(suspicion >= 2);
+	    	assertTrue(ob.isBlackListed("171.250.110.31"));
+	    	assertTrue(ob.isBlackListed("171.250.110.30"));
 	    	
+
 	    }
 
+	    @Test
+	    public void testCleanupOldLogs() {
+	    	
+	    	ThreatObserver ob = new ThreatObserver();
+	    	ob.registerDefinition(testingThreatDef);
+	    	for(int i = 0; i < 10; i++){
+	    		
+	    		ThreatActivityLog log = new ThreatActivityLog().setEndPoint("login").setIpAddress("171.250.110.28").setRequestTime(Long.toString(System.currentTimeMillis()));
+	    		ob.addLogForDetection(log);
+	    	}
+	    	
+	    	ob.collector.REMOVAL_TIME_FOR_OLD_LOGS = 1000;
+	    	
+	    	try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+	    	ob.collector.cleanOldThreats();
+	    	
+	    	//make sure no memory leak, old logs must be cleaned up
+	    	assertTrue(ob.collector.get_AllLogCollection().size()==0);
+	    	assertTrue(ob.collector._blackList.size()==0);
+	    }
 
 		private void waitForAllDetectionsToFinish(ThreatObserver ob) {
 			while(!ob.isAllDetectionDone()){

@@ -1,6 +1,7 @@
 package net.whydah.sso.commands.threat;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,12 +17,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @JsonPropertyOrder({
         "def-code",
         "suspect",
+        "appId",
         "detail",
         "activity-log"
         
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ThreatSignalInfo {
+public class ThreatSignalInfo implements Serializable  {
 	
 	@JsonProperty("def-code")
 	private
@@ -29,11 +31,15 @@ public class ThreatSignalInfo {
 	
 	@JsonProperty("suspect") //if any
 	private
-	String responsibleIPAddress="";
+	String suspect="";
 	
 	@JsonProperty("detail") //if any
 	private
 	String suspiciousDetail="";
+	
+	@JsonProperty("appId") //if any
+	private
+	String appId="";
 	
 	@JsonProperty("activity-log") //if any
 	private
@@ -43,7 +49,7 @@ public class ThreatSignalInfo {
 	public ThreatSignalInfo(int code, String responsibleIpAddress, String suspiciousDetail, List<ThreatActivityLog> activityLogList){
 		this.setThreatDefinitionCode(code);
 		this.setSuspiciousDetail(suspiciousDetail);
-		this.setResponsibleIPAddress(responsibleIpAddress);
+		this.setSuspect(responsibleIpAddress);
 		this.activityLogList = activityLogList;
 	}
 	
@@ -88,15 +94,15 @@ public class ThreatSignalInfo {
 	 * @return the responsibleIdentities
 	 */
     @JsonProperty("suspect") 
-	public String getResponsibleIPAddress() {
-		return responsibleIPAddress;
+	public String getSuspect() {
+		return suspect;
 	}
 	/**
-	 * @param responsibleIdentities the responsibleIdentities to set
+	 * @param suspect the responsibleIdentities to set
 	 */
     @JsonProperty("suspect") 
-	public void setResponsibleIPAddress(String responsibleIdentities) {
-		this.responsibleIPAddress = responsibleIdentities;
+	public void setSuspect(String suspect) {
+		this.suspect = suspect;
 	}
 	/**
 	 * @return the activityLogList
@@ -125,6 +131,20 @@ public class ThreatSignalInfo {
 	@JsonProperty("detail")
 	public void setSuspiciousDetail(String suspiciousDetail) {
 		this.suspiciousDetail = suspiciousDetail;
+	}
+	/**
+	 * @return the appId
+	 */
+	@JsonProperty("appId")
+	public String getAppId() {
+		return appId;
+	}
+	/**
+	 * @param appId the appId to set
+	 */
+	@JsonProperty("appId")
+	public void setAppId(String appId) {
+		this.appId = appId;
 	}
 	
 }

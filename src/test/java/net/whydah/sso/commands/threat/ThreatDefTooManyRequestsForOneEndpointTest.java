@@ -4,6 +4,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import java.util.HashMap;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 

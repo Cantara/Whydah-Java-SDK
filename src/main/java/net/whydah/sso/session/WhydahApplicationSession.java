@@ -1,10 +1,12 @@
 package net.whydah.sso.session;
 
 import net.whydah.sso.application.mappers.ApplicationMapper;
+import net.whydah.sso.application.mappers.ApplicationTagMapper;
 import net.whydah.sso.application.mappers.ApplicationTokenMapper;
 import net.whydah.sso.application.types.Application;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.application.types.ApplicationToken;
+import net.whydah.sso.application.types.Tag;
 import net.whydah.sso.commands.appauth.CommandGetApplicationKey;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.application.CommandListApplications;
@@ -30,6 +32,8 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -58,8 +62,8 @@ public class WhydahApplicationSession {
 	private ScheduledExecutorService renew_scheduler;
 	private ScheduledExecutorService app_update_scheduler;
 
-	private ThreatObserver threatObserver;
 	private boolean isInitialized = false;
+	public static final String INN_WHITE_LIST = "INNWHITELIST";
 
 	/**
 	 * Protected singleton constructors
@@ -75,10 +79,6 @@ public class WhydahApplicationSession {
 				this.uas = uas;
 				this.myAppCredential = myAppCredential;
 
-				//register threat definitions here
-				threatObserver = new ThreatObserver(this);
-				getThreatObserver().registerDefinition(new ThreatDefManyLoginAttemptsFromSameIPAddress());
-				getThreatObserver().registerDefinition(new ThreatDefTooManyRequestsForOneEndpoint());
 				//register more if any
 				//try log-on first
 				initializeWhydahApplicationSession();
@@ -612,12 +612,6 @@ public class WhydahApplicationSession {
 			}
 		}
 	}
-	/**
-	 * @return the threatObserver
-	 */
-	public ThreatObserver getThreatObserver() {
-		return threatObserver;
-	}
 
 	public boolean isDisableUpdateAppLink() {
 		return disableUpdateAppLink;
@@ -625,6 +619,32 @@ public class WhydahApplicationSession {
 
 	public void setDisableUpdateAppLink(boolean disableUpdateAppLink) {
 		this.disableUpdateAppLink = disableUpdateAppLink;
+	}
+
+
+	
+	public boolean isWhiteListed(String suspect) {
+		for(Application app: applications) {
+			if(app.getId().equals(getMyApplicationCredential().getApplicationID())) {
+				
+				if(app.getTags()!=null && app.getTags().length()>0 && app.getTags().contains(INN_WHITE_LIST)) {
+	        		List<Tag> tagList = ApplicationTagMapper.getTagList(app.getTags());
+	        		for (Tag tag : tagList) {
+	        			if (tag.getName().equalsIgnoreCase(INN_WHITE_LIST) && tag.getValue()!= null && tag.getValue().length()>0) {
+	        				
+	        				String[] ids = tag.getValue().split("\\s*[,;:\\s+]\\s*");
+	        				for(String id : ids) {
+	        					if(id.equalsIgnoreCase(suspect)) {
+	        						return true;
+	        					}
+	        				}
+	        			}
+	        		}
+	        	}
+			}
+		}
+		
+		return false;
 	}
 
 }

@@ -4,11 +4,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.whydah.sso.util.Lock;
 
@@ -18,48 +21,108 @@ public class ThreatActivityLogCollector {
 	
 	private static final Logger logger = getLogger(ThreatActivityLogCollector.class);
 	
-	private Map<String, ThreatActivityLog> _threatLogCollection = new ConcurrentHashMap <>();
-	private Map<String, ConcurrentLinkedQueue<String>> _sortByIPAddress = new ConcurrentHashMap <String, ConcurrentLinkedQueue<String>>();
-	private Map<String, ConcurrentLinkedQueue<String>> _sortByEndpoint = new ConcurrentHashMap<String, ConcurrentLinkedQueue<String>>();
+	protected Map<String, ThreatActivityLog> _threatLogCollection = new ConcurrentHashMap <>(); //item: log-unique-id and its log
+	protected Map<String, Long> _blackList = new ConcurrentHashMap<String, Long>(); //item: suspect (phone number/ip-address) and the lastRequestTime
 	
 	Lock lock = new Lock();
+	
+	public ThreatActivityLogCollector() {
+	
+	}
+	
+	
+	public ThreatActivityLogCollector(Map<String, ThreatActivityLog> logs, Map<String, Long> blackList) {
+		this._threatLogCollection = logs;
+		this._blackList = blackList;
+	}
 	
 	public List<ThreatActivityLog> getAll(){
 		return new ArrayList<>(Collections.unmodifiableCollection(_threatLogCollection.values()));
 	}
 	
 	public List<String> getAllEndPoints(){
-		return new ArrayList<>(Collections.unmodifiableCollection(_sortByEndpoint.keySet()));
-	}
-	
-	public List<String> getAllIpAddresses(){
-		return new ArrayList<>(Collections.unmodifiableCollection(_sortByIPAddress.keySet()));
-	}
-	
-	
-	public List<ThreatActivityLog> getActivityLogByIPAddress(String ipAddress){
-		List<ThreatActivityLog> result = new ArrayList<>();
-		if(_sortByIPAddress.containsKey(ipAddress)){
-			//List<String> logIds = new ArrayList<>(Collections.unmodifiableList(_sortByIPAddress.get(ipAddress)));
-			for(String logId : _sortByIPAddress.get(ipAddress)){
-				if(_threatLogCollection.containsKey(logId)){
-					result.add(_threatLogCollection.get(logId));
-				}
+		List<String> result = new ArrayList<>();
+		for(String id : new ArrayList<>(_threatLogCollection.keySet())) {
+			String endPoint = _threatLogCollection.get(id).getEndPoint().toLowerCase();
+			if(!result.contains(endPoint)) {
+				result.add(endPoint);
 			}
 		}
 		return result;
 	}
 	
-	public List<ThreatActivityLog> getActivityLogByEndPoint(String endpoint){
-		List<ThreatActivityLog> result = new ArrayList<>();
-		if(_sortByEndpoint.containsKey(endpoint)){
-			List<String> logIds = new ArrayList<>(_sortByEndpoint.get(endpoint));
-			for(String logId : logIds){
-				if(_threatLogCollection.containsKey(logId)){
-					result.add(_threatLogCollection.get(logId));
-				}
+	public List<String> getAllIpAddresses(){
+		List<String> result = new ArrayList<>();
+		for(String id : new ArrayList<>(_threatLogCollection.keySet())) {
+			String ip = _threatLogCollection.get(id).getIpAddress().toLowerCase();
+			if(!result.contains(ip)) {
+				result.add(ip);
 			}
 		}
+		return result;
+	}
+	
+	
+	public List<ThreatActivityLog> getActivityLogByIPAddress(String ipAddress){
+		List<ThreatActivityLog> result = new ArrayList<>();
+		for(String id : new ArrayList<>(_threatLogCollection.keySet())) {
+			if(_threatLogCollection.get(id).getIpAddress().equalsIgnoreCase(ipAddress)) {
+				result.add(_threatLogCollection.get(id));
+			}
+		}
+		Collections.sort(result, new Comparator<ThreatActivityLog>() {
+
+			@Override
+			public int compare(ThreatActivityLog t1, ThreatActivityLog t2) {
+				
+				long rt1 = Long.parseLong(t1.getRequestTime());
+				long rt2 =  Long.parseLong(t2.getRequestTime());
+				return rt1<rt2?-1:(rt1>rt2)?1:0;
+			}
+			
+		});
+		return result;
+	}
+	
+	public List<ThreatActivityLog> getActivityLogByEndPoint(String endpoint){
+		List<ThreatActivityLog> result = new ArrayList<>();
+		for(String id : new ArrayList<>(_threatLogCollection.keySet())) {
+			
+			    endpoint = endpoint.replaceAll("\\*", "(.*?)");
+	            Pattern pattern = Pattern.compile(endpoint, Pattern.CASE_INSENSITIVE);
+	            Matcher matcher = pattern.matcher(_threatLogCollection.get(id).getEndPoint());
+	            if (matcher.find()) {
+	            	result.add(_threatLogCollection.get(id));
+	            }
+	            /*
+			
+			if(_threatLogCollection.get(id).getEndPoint().equalsIgnoreCase(endpoint)) {
+				result.add(_threatLogCollection.get(id));
+			} else {
+				if(endpoint.contains("*")) {
+		            endpoint = endpoint.replaceAll("\\*", "(.*?)");
+		            Pattern pattern = Pattern.compile(endpoint, Pattern.CASE_INSENSITIVE);
+		            Matcher matcher = pattern.matcher(_threatLogCollection.get(id).getEndPoint());
+		            if (matcher.find()) {
+		            	result.add(_threatLogCollection.get(id));
+		            }
+				}
+		        
+			}*/
+			
+			
+		}
+		Collections.sort(result, new Comparator<ThreatActivityLog>() {
+
+			@Override
+			public int compare(ThreatActivityLog t1, ThreatActivityLog t2) {
+				
+				long rt1 = Long.parseLong(t1.getRequestTime());
+				long rt2 =  Long.parseLong(t2.getRequestTime());
+				return rt1>rt2?-1:(rt1<rt2)?1:0;
+			}
+			
+		});
 		return result;
 	}
 	
@@ -70,16 +133,6 @@ public class ThreatActivityLogCollector {
 			log.setId(UUID.randomUUID().toString());
 		}
 		_threatLogCollection.put(log.getId(), log);
-		
-		if(!_sortByIPAddress.containsKey(log.getIpAddress())){
-			_sortByIPAddress.put(log.getIpAddress(), new ConcurrentLinkedQueue<>());
-		}
-		_sortByIPAddress.get(log.getIpAddress()).add(log.getId());
-		
-		if(!_sortByEndpoint.containsKey(log.getEndPoint())){
-			_sortByEndpoint.put(log.getEndPoint(), new ConcurrentLinkedQueue<>());
-		}
-		_sortByEndpoint.get(log.getEndPoint()).add(log.getId());
 	}
 
 
@@ -92,38 +145,14 @@ public class ThreatActivityLogCollector {
 	}
 
 
-	/**
-	 * @return the RAW _sortByIPAddress
-	 */
-	//USE WITH CARE
-	public Map<String, ConcurrentLinkedQueue<String>> get_AllLogSortedByIPAddress() {
-		return _sortByIPAddress;
-	}
-
-
-
-	/**
-	 * @return the RAW _sortByEndpoint
-	 */
-	//USE WITH CARE
-	public Map<String, ConcurrentLinkedQueue<String>> get_AllLogSortedByEndpoint() {
-		return _sortByEndpoint;
-	}
-
 	public void removeLogs(List<ThreatActivityLog> logList) {
 		for(ThreatActivityLog log : logList){
-			if(_sortByIPAddress.containsKey(log.getIpAddress())){
-				_sortByIPAddress.get(log.getIpAddress()).remove(log.getId());
-			}
-			if(_sortByEndpoint.containsKey(log.getEndPoint())){
-				_sortByEndpoint.get(log.getEndPoint()).remove(log.getId());
-			}
 			_threatLogCollection.remove(log.getId());
 		}
 	}
 
 	public int REMOVAL_TIME_FOR_OLD_LOGS = 1000*60*60; //1 hour old
-	public void cleanOldLogs() {
+	public void cleanOldThreats() {
 		
 		if(!lock.isLocked()){
 			try{
@@ -132,24 +161,34 @@ public class ThreatActivityLogCollector {
 				for(String uid : new ArrayList<String>(Collections.unmodifiableSet(_threatLogCollection.keySet()))){
 					ThreatActivityLog log = _threatLogCollection.get(uid);
 					if(System.currentTimeMillis() - Long.valueOf(log.getRequestTime())>= REMOVAL_TIME_FOR_OLD_LOGS){
-
-						if(_sortByIPAddress.containsKey(log.getIpAddress())){
-							_sortByIPAddress.get(log.getIpAddress()).remove(log.getId());
-						}
-						if(_sortByEndpoint.containsKey(log.getEndPoint())){
-							_sortByEndpoint.get(log.getEndPoint()).remove(log.getId());
-						}
 						_threatLogCollection.remove(uid);
 					}
-
-				}}catch(Exception ex){
-					ex.printStackTrace();
-					logger.error("Error when cleaning old logs - " + ex.getMessage());
-				} finally{
-					lock.unlock();
 				}
+				
+				for(String k: new ArrayList<String>(Collections.unmodifiableSet(_blackList.keySet()))) {
+					if(System.currentTimeMillis() - Long.valueOf(_blackList.get(k))>= REMOVAL_TIME_FOR_OLD_LOGS){
+						_blackList.remove(k);
+					}
+				}
+				
+			}catch(Exception ex){
+				ex.printStackTrace();
+				logger.error("Error when cleaning old logs - " + ex.getMessage());
+			} finally{
+				lock.unlock();
+			}
 		}
 
+	}
+
+
+	
+	public void addToBlackList(ThreatSignalInfo info) {
+		if(info.getSuspect()==null||info.getSuspect().isEmpty()) {
+			return;
+		}
+		logger.warn("Threat found and added to blacklist: {}", ThreatSignalInfo.toJson(info) );
+		_blackList.put(info.getSuspect(), info.getActivityLogList().size()>0? Long.parseLong(info.getActivityLogList().get(info.getActivityLogList().size()-1).getRequestTime()): System.currentTimeMillis());
 	}
 
 
