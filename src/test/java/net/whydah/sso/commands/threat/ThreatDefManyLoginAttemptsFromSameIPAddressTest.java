@@ -26,14 +26,14 @@ public class ThreatDefManyLoginAttemptsFromSameIPAddressTest {
 		 ob.registerDefinition(new ThreatDefManyLoginAttemptsFromSameIPAddress());
 		 
 		 for(int i = 0; i < 10; i++){
-			 ThreatActivityLog log = new ThreatActivityLog().setEndPoint("login").setIpAddress("171.250.110.30").setRequestTime(Long.toString(System.currentTimeMillis()));
+			 ThreatActivityLog log = new ThreatActivityLog().setEndPoint("/action").setIpAddress("171.250.110.30").setRequestTime(Long.toString(System.currentTimeMillis()));
 			 ob.addLogForDetection(log);
 		 }
 		
 		 assertFalse(found);
 		 
 		 for(int i = 0; i < 25; i++){
-			 ThreatActivityLog log = new ThreatActivityLog().setEndPoint("login").setIpAddress("171.250.110.30").setRequestTime(Long.toString(System.currentTimeMillis()));
+			 ThreatActivityLog log = new ThreatActivityLog().setEndPoint("/action").setIpAddress("171.250.110.30").setRequestTime(Long.toString(System.currentTimeMillis()));
 			 ob.addLogForDetection(log);
 		 }
 		 

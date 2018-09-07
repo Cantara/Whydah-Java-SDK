@@ -26,14 +26,14 @@ public class ThreatDefManyGetPinAttemptsFromSamePhoneNumberTest {
 		 ob.registerDefinition(new ThreatDefManyGetPinAttemptsFromSamePhoneNumber(5));
 		 
 		 for(int i = 0; i < 4; i++){
-			 ThreatActivityLog log = new ThreatActivityLog("getPin", "171.250.110.30", Long.toString(System.currentTimeMillis()), new Object[] {"phoneNo", "59441023"});
+			 ThreatActivityLog log = new ThreatActivityLog("/getPin", "171.250.110.30", Long.toString(System.currentTimeMillis()), new Object[] {"phoneNo", "59441023"});
 			 ob.addLogForDetection(log);
 		 }
 		
 		 assertFalse(found);
 		 
 		 //try one more
-		 ThreatActivityLog log = new ThreatActivityLog("getPin", "171.250.110.30", Long.toString(System.currentTimeMillis()), new Object[] {"phoneNo", "59441023"});
+		 ThreatActivityLog log = new ThreatActivityLog("/getPin", "171.250.110.30", Long.toString(System.currentTimeMillis()), new Object[] {"phoneNo", "59441023"});
 		 ob.addLogForDetection(log);
 		 
 		 

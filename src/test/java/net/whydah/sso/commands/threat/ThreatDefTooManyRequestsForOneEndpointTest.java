@@ -30,14 +30,14 @@ public class ThreatDefTooManyRequestsForOneEndpointTest {
 		ob.registerDefinition(new ThreatDefTooManyRequestsForOneEndpoint());
 
 		for(int i = 0; i < 10; i++){
-			ThreatActivityLog log = new ThreatActivityLog().setEndPoint("login").setIpAddress("171.250.110.30").setRequestTime(Long.toString(System.currentTimeMillis()));
+			ThreatActivityLog log = new ThreatActivityLog().setEndPoint("/user-data").setIpAddress("171.250.110.30").setRequestTime(Long.toString(System.currentTimeMillis()));
 			ob.addLogForDetection(log);
 		}
 
 		assertFalse(found);
 
 		for(int i = 0; i < ThreatDefTooManyRequestsForOneEndpoint.COUNT; i++){
-			ThreatActivityLog log = new ThreatActivityLog().setEndPoint("login").setIpAddress("171.250.110.*").setRequestTime(Long.toString(System.currentTimeMillis()));
+			ThreatActivityLog log = new ThreatActivityLog().setEndPoint("/user-data").setIpAddress("171.250.110.*").setRequestTime(Long.toString(System.currentTimeMillis()));
 			ob.addLogForDetection(log);
 		}
 
