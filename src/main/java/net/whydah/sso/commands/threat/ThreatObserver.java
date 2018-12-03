@@ -130,6 +130,9 @@ public class ThreatObserver {
 
 
 	public boolean isAllDetectionDone(){
+		if(startAnotherDetection) {
+			return false;
+		}
 		for(IThreatDefinition def : threatDefs){
 			if(def.lock.isLocked()){//there is a lock inside to make sure the trigger is fired only one time
 				return false;
