@@ -18,7 +18,7 @@ public class ThreatDefTooManyRequestsForOneEndpointTest {
 	public void testOperation() throws InterruptedException
 	{
 		ThreatDefTooManyRequestsForOneEndpoint.COUNT = 100;
-		
+
 		ThreatObserver ob = new ThreatObserver(){
 			@Override
 			public void commitThreat(ThreatSignalInfo info) {
@@ -26,7 +26,7 @@ public class ThreatDefTooManyRequestsForOneEndpointTest {
 				super.commitThreat(info);
 			}
 		};
-		
+
 		ob.registerDefinition(new ThreatDefTooManyRequestsForOneEndpoint());
 
 		for(int i = 0; i < 10; i++){
@@ -35,7 +35,7 @@ public class ThreatDefTooManyRequestsForOneEndpointTest {
 		}
 
 		waitForDetectionProcessTriggered(ob);
-		
+
 		assertFalse(found);
 
 		for(int i = 0; i < ThreatDefTooManyRequestsForOneEndpoint.COUNT; i++){
@@ -51,14 +51,17 @@ public class ThreatDefTooManyRequestsForOneEndpointTest {
 		assertTrue(found);
 
 	}
-	 private void waitForDetectionProcessTriggered(ThreatObserver ob) {
-			while(!ob.isDetectionDone()){
-	    		try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					
-				} 
-	    	}
+	private void waitForDetectionProcessTriggered(ThreatObserver ob) throws InterruptedException {
+		//have to wait for the next schedule
+		Thread.sleep(ThreatObserver.LOGS_CHECK_INTERVAL*1000+2000);
+		//just wait for the result if detection process is running
+		while(!ob.isDetectionDone()){
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+
+			} 
+		}
 	}
 
 }
