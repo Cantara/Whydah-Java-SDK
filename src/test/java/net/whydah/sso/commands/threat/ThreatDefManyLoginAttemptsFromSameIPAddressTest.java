@@ -30,6 +30,8 @@ public class ThreatDefManyLoginAttemptsFromSameIPAddressTest {
 			 ob.addLogForDetection(log);
 		 }
 		
+		 waitForDetectionProcessTriggered(ob);
+		 
 		 assertFalse(found);
 		 
 		 for(int i = 0; i < 25; i++){
@@ -38,28 +40,23 @@ public class ThreatDefManyLoginAttemptsFromSameIPAddressTest {
 		 }
 		 
 		 
-		 waitForAllDetectionsToFinish(ob);
-		 
+		 waitForDetectionProcessTriggered(ob);
 		 
 		 
 		 assertTrue(found);
 
 	 }
 	 
-	 private void waitForAllDetectionsToFinish(ThreatObserver ob) {
-			while(!ob.isAllDetectionDone()){
-	    		try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					
-				} 
-	    	}
+	 private void waitForDetectionProcessTriggered(ThreatObserver ob) throws InterruptedException {
+		 //have to wait for the next schedule
+		 Thread.sleep(ThreatObserver.LOGS_CHECK_INTERVAL*1000+2000);
+		 //just wait for the result if detection process is running
+		 while(!ob.isDetectionDone()){
+			 try {
+				 Thread.sleep(10);
+			 } catch (InterruptedException e) {
 
-	    	try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+			 } 
+		 }
+	}
 }

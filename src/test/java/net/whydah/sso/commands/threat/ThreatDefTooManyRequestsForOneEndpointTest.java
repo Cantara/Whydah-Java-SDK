@@ -34,6 +34,8 @@ public class ThreatDefTooManyRequestsForOneEndpointTest {
 			ob.addLogForDetection(log);
 		}
 
+		waitForDetectionProcessTriggered(ob);
+		
 		assertFalse(found);
 
 		for(int i = 0; i < ThreatDefTooManyRequestsForOneEndpoint.COUNT; i++){
@@ -42,30 +44,21 @@ public class ThreatDefTooManyRequestsForOneEndpointTest {
 		}
 
 
-		waitForAllDetectionsToFinish(ob);
+		waitForDetectionProcessTriggered(ob);
 
 
 
 		assertTrue(found);
 
 	}
-
-	private void waitForAllDetectionsToFinish(ThreatObserver ob) {
-		while(!ob.isAllDetectionDone()){
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-
-			} 
-		}
-
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	 private void waitForDetectionProcessTriggered(ThreatObserver ob) {
+			while(!ob.isDetectionDone()){
+	    		try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					
+				} 
+	    	}
 	}
-
 
 }

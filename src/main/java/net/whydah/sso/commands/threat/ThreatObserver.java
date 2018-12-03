@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.util.Lock;
@@ -22,9 +25,24 @@ public class ThreatObserver {
 	List<IThreatDefinition> threatDefs = new ArrayList<>();
 	ThreatActivityLogCollector collector = new ThreatActivityLogCollector();
 	WhydahApplicationSession was = null;
-	ExecutorService executor = Executors.newSingleThreadExecutor();
 	ThreatObserver me = this;
-	
+	public static int LOGS_CHECK_INTERVAL = 5;
+	ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
+             new Runnable() {
+                 public void run() {
+                	 try {
+                		
+                		detect();
+                		
+                	 } catch(Exception ex) {
+                		 logger.error("Detection process failed! - message: " + ex.getMessage());
+                		 ex.printStackTrace();
+                	 }
+                 }
+             },
+             1, LOGS_CHECK_INTERVAL, TimeUnit.SECONDS);
+    
 	public ThreatObserver(){
 		
 	}
@@ -80,61 +98,41 @@ public class ThreatObserver {
 
 
 	Lock lock = new Lock();
-	boolean startAnotherDetection = false;
+
 	public void addLogForDetection(ThreatActivityLog log){
 		collector.addLogForDetection(log);
-		if(!lock.isLocked()){
-			executeDetection();
-		} else {
-			startAnotherDetection = true;
-		}
-
 	}
 
-	private void executeDetection() {
-		executor.execute(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					lock.lock();
-					detect();
-					if(startAnotherDetection){
-						startAnotherDetection = false;
-						detect();
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} finally{
-					lock.unlock();
-				}
-			}
-		});
-
-	}
 
 	private void detect() {
-
-		long start = System.currentTimeMillis();
-		logger.debug("detecting  " + collector.get_AllLogCollection().size() + " request records");
-		//clean up first, remove logs having 1 hour old request time
-		collector.cleanOldThreats();
-		//trigger detection
-		for(IThreatDefinition def : threatDefs){
-			def.triggerDetection(collector, me); 
+		if(lock.isLocked()) {
+			return;
 		}
-		
-		logger.debug("detection done in " + String.valueOf(((System.currentTimeMillis() - start)/1000)) + " seconds");
-		
+		try {
+			lock.lock();
+			long start = System.currentTimeMillis();
+			logger.debug("detecting  " + collector.get_AllLogCollection().size() + " request records");
+			//clean up first, remove logs having 1 hour old request time
+			collector.cleanOldThreats();
+			//trigger detection
+			for(IThreatDefinition def : threatDefs){
+				def.triggerDetection(collector, me); 
+			}
+
+			logger.debug("detection done in " + String.valueOf(((System.currentTimeMillis() - start)/1000)) + " seconds");
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			lock.unlock();
+		}
 
 	}
 
 
-	public boolean isAllDetectionDone(){
-		if(startAnotherDetection) {
-			return false;
-		}
+	public boolean isDetectionDone(){
+	
 		for(IThreatDefinition def : threatDefs){
-			if(def.lock.isLocked()){//there is a lock inside to make sure the trigger is fired only one time
+			if(def.isDetecting()){//there is a lock inside to make sure the trigger is fired only one time
 				return false;
 			}
 		}

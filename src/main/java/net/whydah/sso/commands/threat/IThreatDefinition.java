@@ -28,5 +28,9 @@ public abstract class IThreatDefinition {
 	}
 
 	abstract void detect(ThreatActivityLogCollector collector, ThreatObserver observer);
+	
+	public boolean isDetecting() {
+		return lock.isLocked();
+	}
 
 }

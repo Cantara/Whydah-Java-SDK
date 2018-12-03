@@ -150,7 +150,7 @@ public class ThreatObserverTest {
 	    		now = now + 300; //0.3 seconds each request
 	    	}
 	    	
-	    	waitForAllDetectionsToFinish(ob);
+	    	waitForDetectionProcessTriggered(ob);
 	    	
 	    	assertTrue(suspicion >= 2);
 	    	assertTrue(ob.isBlackListed("171.250.110.31"));
@@ -186,21 +186,22 @@ public class ThreatObserverTest {
 	    	assertTrue(ob.collector._blackList.size()==0);
 	    }
 
-		private void waitForAllDetectionsToFinish(ThreatObserver ob) {
-			while(!ob.isAllDetectionDone()){
-	    		try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					
-				} 
-	    	}
-
-	    	try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
+	    private void waitForDetectionProcessTriggered(ThreatObserver ob) {
+			 //have to wait for the next schedule
+			 try {
+				Thread.sleep(ThreatObserver.LOGS_CHECK_INTERVAL*1000+2000);
+			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e1.printStackTrace();
 			}
+			 //just wait for the result if detection process is running
+			 while(!ob.isDetectionDone()){
+				 try {
+					 Thread.sleep(10);
+				 } catch (InterruptedException e) {
+
+				 } 
+			 }
 		}
 
 	    
