@@ -416,7 +416,8 @@ public class WhydahApplicationSession {
 		return hasActiveSession();
 	}
 	
-	long lastTimeChecked = 0;
+	private long lastTimeChecked = 0;
+	private boolean hasActiveSession = false;
 	/**
 	 * @return true is session is active and working
 	 */
@@ -435,7 +436,7 @@ public class WhydahApplicationSession {
 		if(System.currentTimeMillis() - lastTimeChecked > APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS) {
 			lastTimeChecked = System.currentTimeMillis();
 			CommandValidateApplicationTokenId commandValidateApplicationTokenId = new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId());
-			boolean hasActiveSession = commandValidateApplicationTokenId.execute();
+			hasActiveSession = commandValidateApplicationTokenId.execute();
 			if (!hasActiveSession) {
 
 				if (commandValidateApplicationTokenId.isResponseFromFallback()) {
@@ -445,10 +446,9 @@ public class WhydahApplicationSession {
 				log.info("WAS: applicationsession invalid from STS, reset application session, applicationTokenId: {} - for applicationID: {} - expires:{}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
 				removeApplicationSessionParameters();
 			}
-			return hasActiveSession;
-		} else {
-			return true; 
 		}
+		
+		return hasActiveSession;
 
 	}
 
