@@ -415,7 +415,8 @@ public class WhydahApplicationSession {
 	public boolean checkActiveSession() {
 		return hasActiveSession();
 	}
-
+	
+	long lastTimeChecked = 0;
 	/**
 	 * @return true is session is active and working
 	 */
@@ -430,18 +431,24 @@ public class WhydahApplicationSession {
 			return false;
 		}
 
-		CommandValidateApplicationTokenId commandValidateApplicationTokenId = new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId());
-		boolean hasActiveSession = commandValidateApplicationTokenId.execute();
-		if (!hasActiveSession) {
+		//don't call this check too often
+		if(System.currentTimeMillis() - lastTimeChecked > APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS) {
+			lastTimeChecked = System.currentTimeMillis();
+			CommandValidateApplicationTokenId commandValidateApplicationTokenId = new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId());
+			boolean hasActiveSession = commandValidateApplicationTokenId.execute();
+			if (!hasActiveSession) {
 
-			if (commandValidateApplicationTokenId.isResponseFromFallback()) {
-				log.warn("Got timeout on call to verify applicationTokenID, since applicationtoken is not expired, we return true");
-				return true;
+				if (commandValidateApplicationTokenId.isResponseFromFallback()) {
+					log.warn("Got timeout on call to verify applicationTokenID, since applicationtoken is not expired, we return true");
+					return true;
+				}
+				log.info("WAS: applicationsession invalid from STS, reset application session, applicationTokenId: {} - for applicationID: {} - expires:{}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+				removeApplicationSessionParameters();
 			}
-			log.info("WAS: applicationsession invalid from STS, reset application session, applicationTokenId: {} - for applicationID: {} - expires:{}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
-			removeApplicationSessionParameters();
+			return hasActiveSession;
+		} else {
+			return true; 
 		}
-		return hasActiveSession;
 
 	}
 
