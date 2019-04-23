@@ -433,10 +433,12 @@ public class WhydahApplicationSession {
 		}
 
 		//don't call this check too often
-		if(System.currentTimeMillis() - lastTimeChecked > APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS) {
-			lastTimeChecked = System.currentTimeMillis();
+		if(System.currentTimeMillis() - lastTimeChecked > APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS * 1000) {
+			
 			CommandValidateApplicationTokenId commandValidateApplicationTokenId = new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId());
 			hasActiveSession = commandValidateApplicationTokenId.execute();
+			lastTimeChecked = System.currentTimeMillis(); //last time check is et after the command is executed
+			
 			if (!hasActiveSession) {
 
 				if (commandValidateApplicationTokenId.isResponseFromFallback()) {
