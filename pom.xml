@@ -87,7 +87,7 @@
         <dependency>
             <groupId>com.github.kevinsawicki</groupId>
             <artifactId>http-request2</artifactId>
-            <version>6.0.2</version>
+            <version>6.0.3</version>
         </dependency>
 
         <dependency>
