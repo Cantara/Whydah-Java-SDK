@@ -22,7 +22,7 @@
 
     <properties>
         <service.name>Whydah-Java-SDK</service.name>
-        <whydah-typelib-version>2.5.29</whydah-typelib-version>
+        <whydah-typelib-version>2.5.30</whydah-typelib-version>
         <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
 
@@ -45,8 +45,8 @@
             <roles>
                 <role>Developer</role>
             </roles>
-            <organization>Capra Consulting AS</organization>
-            <organizationUrl>http://www.capraconsulting.no/</organizationUrl>
+            <organization>Cantara </organization>
+            <organizationUrl>https://wiki.cantara.no/</organizationUrl>
         </developer>
         <developer>
             <id>kimcs</id>
