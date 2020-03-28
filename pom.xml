@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.whydah.sso</groupId>
     <artifactId>Whydah-Java-SDK</artifactId>
-    <version>2.5.36-SNAPSHOT</version>
+    <version>2.5.36</version>
     <name>Whydah-Java-SDK</name>
     <packaging>jar</packaging>
     <url>https://wiki.cantara.no/display/iam/Whydah-Java-SDK</url>
@@ -17,7 +17,7 @@
         <developerConnection>scm:git:ssh://git@github.com/cantara/Whydah-Java-SDK.git</developerConnection>
         <connection>scm:git:https://github.com/cantara/Whydah-Java-SDK.git</connection>
         <url>https://github.com/cantara/Whydah-Java-SDK</url>
-      <tag>HEAD</tag>
+      <tag>Whydah-Java-SDK-2.5.36</tag>
   </scm>
 
     <properties>
