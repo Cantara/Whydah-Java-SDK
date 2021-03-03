@@ -11,9 +11,6 @@ import net.whydah.sso.commands.appauth.CommandGetApplicationKey;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.application.CommandListApplications;
 import net.whydah.sso.commands.threat.CommandSendThreatSignal;
-import net.whydah.sso.commands.threat.ThreatDefManyLoginAttemptsFromSameIPAddress;
-import net.whydah.sso.commands.threat.ThreatDefTooManyRequestsForOneEndpoint;
-import net.whydah.sso.commands.threat.ThreatObserver;
 import net.whydah.sso.ddd.model.application.ApplicationTokenExpires;
 import net.whydah.sso.ddd.model.application.ApplicationTokenID;
 import net.whydah.sso.session.baseclasses.ApplicationModelUtil;
@@ -26,17 +23,16 @@ import net.whydah.sso.util.WhydahUtil;
 import net.whydah.sso.whydah.DEFCON;
 import net.whydah.sso.whydah.ThreatSignal;
 import net.whydah.sso.whydah.ThreatSignal.SeverityLevel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static net.whydah.sso.util.LoggerUtil.first50;
 
@@ -63,6 +59,8 @@ public class WhydahApplicationSession {
 	private ScheduledExecutorService app_update_scheduler;
 
 	private boolean isInitialized = false;
+	// TODO  regactor this to be Whydah generic
+
 	public static final String INN_WHITE_LIST = "INNWHITELIST";
 
 	/**
