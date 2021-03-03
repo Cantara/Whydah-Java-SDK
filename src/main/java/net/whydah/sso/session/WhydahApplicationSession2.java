@@ -248,7 +248,7 @@ public class WhydahApplicationSession2 {
 
     private void renewWAS2() {
         log.trace("Renew WAS: Renew application session called");
-        if (!hasActiveSession()) {
+        if (!hasActiveSession() || !WhydahUtil.isAdminSdk()) {
             log.trace("Renew WAS: checkActiveSession() == false - initializeWAS2 called");
             if (applicationToken == null) {
                 log.info("Renew WAS: No active application session, applicationToken:null, myAppCredential:{}, logonAttemptNo:{}", myAppCredential);

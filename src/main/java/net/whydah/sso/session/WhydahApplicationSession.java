@@ -563,11 +563,11 @@ public class WhydahApplicationSession {
 
 	Lock updateLock = new Lock();
 	public void updateApplinks() {
-		if (disableUpdateAppLink) {
+		if (disableUpdateAppLink || !WhydahUtil.isAdminSdk()) {
 			return;
 		}
-		if(!updateLock.isLocked()){
-			try{
+		if (!updateLock.isLocked()) {
+			try {
 				updateLock.lock();
 				if (uas == null || uas.length() < 8 || applicationToken == null) {
 					log.warn("Called updateAppLinks without was initialized uas: {}, applicationToken: {} - aborting", uas, applicationToken);
