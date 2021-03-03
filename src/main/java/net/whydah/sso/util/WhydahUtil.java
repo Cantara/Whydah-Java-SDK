@@ -33,6 +33,17 @@ import java.util.UUID;
 public class WhydahUtil {
     private static final Logger log = LoggerFactory.getLogger(WhydahUtil.class);
 
+    public static boolean isAdminSdk() {
+        try {
+            Class.forName("net.whydah.sso.session.baseclasses.BaseAdminWhydahServiceClient", false, WhydahUtil.class.getClassLoader());
+        } catch (ClassNotFoundException cfe) {
+            return false;
+        } catch (Exception e) {
+            // Some other issues... we do not really know if adminsdk or not, safer to return false
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Logon your application to Whydah.
