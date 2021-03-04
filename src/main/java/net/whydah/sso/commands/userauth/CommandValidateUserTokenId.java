@@ -7,20 +7,20 @@ import net.whydah.sso.ddd.model.user.UserTokenId;
 import java.net.HttpURLConnection;
 import java.net.URI;
 
-public class CommandValidateUsertokenId extends BaseHttpGetHystrixCommandForBooleanType {
+public class CommandValidateUserTokenId extends BaseHttpGetHystrixCommandForBooleanType {
 
     private String usertokenid;
     public static int DEFAULT_TIMEOUT = 6000;
-    
-    public CommandValidateUsertokenId(URI tokenServiceUri, String applicationTokenId, String userTokenId) {
+
+    public CommandValidateUserTokenId(URI tokenServiceUri, String applicationTokenId, String userTokenId) {
         super(tokenServiceUri, "", applicationTokenId, "SSOUserAuthGroup", DEFAULT_TIMEOUT);
         if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId)) {
             log.error("CommandValidateUsertokenId initialized with null-values - will fail");
         }
         this.usertokenid = userTokenId;
     }
-    
-    public CommandValidateUsertokenId(URI tokenServiceUri, String applicationTokenId, String userTokenId, int timeout) {
+
+    public CommandValidateUserTokenId(URI tokenServiceUri, String applicationTokenId, String userTokenId, int timeout) {
         super(tokenServiceUri, "", applicationTokenId, "SSOUserAuthGroup", timeout);
         if (tokenServiceUri == null || !ApplicationTokenID.isValid(applicationTokenId) || !UserTokenId.isValid(userTokenId)) {
             log.error("CommandValidateUsertokenId initialized with null-values - will fail");
@@ -29,7 +29,7 @@ public class CommandValidateUsertokenId extends BaseHttpGetHystrixCommandForBool
     }
 
 
-	int retryCnt=0;
+    int retryCnt = 0;
     
     @Override
     protected Boolean dealWithFailedResponse(String responseBody, int statusCode) {

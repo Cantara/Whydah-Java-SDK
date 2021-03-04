@@ -6,9 +6,9 @@ import net.whydah.sso.application.mappers.ApplicationCredentialMapper;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.commands.appauth.CommandRenewApplicationSession;
-import net.whydah.sso.commands.userauth.CommandGetUsertokenByUsertokenId;
+import net.whydah.sso.commands.userauth.CommandGetUserTokenByUserTokenId;
 import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.commands.userauth.CommandValidateUsertokenId;
+import net.whydah.sso.commands.userauth.CommandValidateUserTokenId;
 import net.whydah.sso.ddd.model.application.ApplicationTokenID;
 import net.whydah.sso.session.WhydahApplicationSession2;
 import net.whydah.sso.user.helpers.UserXpathHelper;
@@ -168,7 +168,7 @@ public class WhydahUtil2 {
 
     public static String getUserTokenByUserTokenId(String stsUri, String myAppTokenId, String myAppTokenXml, String userTokenId) {
         URI tokenServiceUri = URI.create(stsUri);
-        String userTokenXml = new CommandGetUsertokenByUsertokenId(tokenServiceUri, myAppTokenId, myAppTokenXml, userTokenId).execute();
+        String userTokenXml = new CommandGetUserTokenByUserTokenId(tokenServiceUri, myAppTokenId, myAppTokenXml, userTokenId).execute();
         return userTokenXml;
     }
 
@@ -221,7 +221,7 @@ public class WhydahUtil2 {
         String userticket = UUID.randomUUID().toString();
         String userToken = new CommandLogonUserByUserCredential(URI.create(was.getSTS()), was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userCredential, userticket).execute();
         String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-        boolean validUser = new CommandValidateUsertokenId(URI.create(was.getSTS()), was.getActiveApplicationTokenId(), userTokenId).execute();
+        boolean validUser = new CommandValidateUserTokenId(URI.create(was.getSTS()), was.getActiveApplicationTokenId(), userTokenId).execute();
 
 
         String statusString = "Whydah session:\n" +
@@ -243,7 +243,7 @@ public class WhydahUtil2 {
      */
     public static String getPrintableStatus(WhydahApplicationSession2 was, String userTokenId) {
 
-        boolean validUser = new CommandValidateUsertokenId(URI.create(was.getSTS()), was.getActiveApplicationTokenId(), userTokenId).execute();
+        boolean validUser = new CommandValidateUserTokenId(URI.create(was.getSTS()), was.getActiveApplicationTokenId(), userTokenId).execute();
 
 
         String statusString = "Whydah session:\n" +
@@ -276,7 +276,7 @@ public class WhydahUtil2 {
      */
     public static boolean hasValidAdminSession(WhydahApplicationSession2 was, String userTokenId) {
 
-        boolean validUser = new CommandValidateUsertokenId(URI.create(was.getSTS()), was.getActiveApplicationTokenId(), userTokenId).execute();
+        boolean validUser = new CommandValidateUserTokenId(URI.create(was.getSTS()), was.getActiveApplicationTokenId(), userTokenId).execute();
         return validUser && (was.getActiveApplicationTokenId() != null) && was.checkActiveSession() && (was.getApplicationList().size() > 2);
     }
 

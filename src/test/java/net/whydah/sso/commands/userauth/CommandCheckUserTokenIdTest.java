@@ -39,7 +39,7 @@ public class CommandCheckUserTokenIdTest {
             String userToken = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential).execute();
 
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-            boolean isvalidToken = new CommandValidateUsertokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
+            boolean isvalidToken = new CommandValidateUserTokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
             assertTrue("Error: usertokenid NOT verified successfully", isvalidToken);
 
         }
@@ -61,15 +61,15 @@ public class CommandCheckUserTokenIdTest {
             String userToken = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential).execute();
 
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-            boolean isvalidToken = new CommandValidateUsertokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
+            boolean isvalidToken = new CommandValidateUserTokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
             assertTrue("Error: usertokenid NOT verified successfully", isvalidToken);
-            isvalidToken = new CommandValidateUsertokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
+            isvalidToken = new CommandValidateUserTokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
             assertTrue("Error: usertokenid NOT verified successfully", isvalidToken);
-            isvalidToken = new CommandValidateUsertokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
+            isvalidToken = new CommandValidateUserTokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
             assertTrue("Error: usertokenid NOT verified successfully", isvalidToken);
-            isvalidToken = new CommandValidateUsertokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
+            isvalidToken = new CommandValidateUserTokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
             assertTrue("Error: usertokenid NOT verified successfully", isvalidToken);
-            isvalidToken = new CommandValidateUsertokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
+            isvalidToken = new CommandValidateUserTokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute();
             assertTrue("Error: usertokenid NOT verified successfully", isvalidToken);
 
         }

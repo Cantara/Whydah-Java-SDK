@@ -172,11 +172,11 @@ public class BaseDevelopmentWhydahServiceClient {
 
     public String getUserTokenXml(String userTokenId) throws URISyntaxException {
 
-        String userTokenXML = new CommandGetUsertokenByUsertokenId(new URI(was.getSTS()),
+        String userTokenXML = new CommandGetUserTokenByUserTokenId(new URI(was.getSTS()),
                 was.getActiveApplicationTokenId(),
                 was.getActiveApplicationTokenXML(),
                 userTokenId).
-                                    execute();
+                execute();
         getWAS().updateDefcon(userTokenXML);
         return userTokenXML;
     }
@@ -205,7 +205,7 @@ public class BaseDevelopmentWhydahServiceClient {
 //            was.renewWhydahApplicationSession();
         }
 
-        String userTokenXML = new CommandGetUsertokenByUsertokenId(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userTokenId).execute();
+        String userTokenXML = new CommandGetUserTokenByUserTokenId(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userTokenId).execute();
         getWAS().updateDefcon(userTokenXML);
         return userTokenXML;
     }
@@ -213,7 +213,7 @@ public class BaseDevelopmentWhydahServiceClient {
     //SSO LOGIN SERVICE
 
     public String getUserTokenByUserTicket(String userticket) {
-        String userTokenXML = new CommandGetUsertokenByUserticket(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userticket).execute();
+        String userTokenXML = new CommandGetUserTokenByUserTicket(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userticket).execute();
         getWAS().updateDefcon(userTokenXML);
         return userTokenXML;
     }
@@ -286,7 +286,7 @@ public class BaseDevelopmentWhydahServiceClient {
             return null;
 //            was.renewWhydahApplicationSession();
         }
-        String userTokenXML = new CommandGetUsertokenByUsertokenId(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), usertokenId).execute();
+        String userTokenXML = new CommandGetUserTokenByUserTokenId(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), usertokenId).execute();
         getWAS().updateDefcon(userTokenXML);
         return userTokenXML;
     }
@@ -306,7 +306,7 @@ public class BaseDevelopmentWhydahServiceClient {
             log.trace("verifyUserTokenId - Called with bogus usertokenid={}. return false", usertokenid);
             return false;
         }
-        return new CommandValidateUsertokenId(uri_securitytoken_service, was.getActiveApplicationTokenId(), usertokenid).execute();
+        return new CommandValidateUserTokenId(uri_securitytoken_service, was.getActiveApplicationTokenId(), usertokenid).execute();
     }
 
     public boolean sendUserSMSPin(String phoneNo) {

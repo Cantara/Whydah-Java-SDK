@@ -10,15 +10,15 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandGetUsertokenByUserticket extends BaseHttpPostHystrixCommand<String> {
+public class CommandGetUserTokenByUserTicket extends BaseHttpPostHystrixCommand<String> {
 
-    private static final Logger log = LoggerFactory.getLogger(CommandGetUsertokenByUserticket.class);
+    private static final Logger log = LoggerFactory.getLogger(CommandGetUserTokenByUserTicket.class);
 
     public static int DEFAULT_TIMEOUT = 6000;
     private String userticket;
     int retryCnt = 0;
 
-    public CommandGetUsertokenByUserticket(URI tokenServiceUri, String applicationTokenId, String myAppTokenXml, String userticket) {
+    public CommandGetUserTokenByUserTicket(URI tokenServiceUri, String applicationTokenId, String myAppTokenXml, String userticket) {
         super(tokenServiceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
 
 
@@ -28,8 +28,8 @@ public class CommandGetUsertokenByUserticket extends BaseHttpPostHystrixCommand<
         this.userticket = userticket;
 
     }
-    
-    public CommandGetUsertokenByUserticket(URI tokenServiceUri, String applicationTokenId, String myAppTokenXml, String userticket, int timeout) {
+
+    public CommandGetUserTokenByUserTicket(URI tokenServiceUri, String applicationTokenId, String myAppTokenXml, String userticket, int timeout) {
         super(tokenServiceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", timeout);
 
 

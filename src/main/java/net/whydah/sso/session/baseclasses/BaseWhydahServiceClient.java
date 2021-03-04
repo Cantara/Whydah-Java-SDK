@@ -178,7 +178,7 @@ public class BaseWhydahServiceClient {
     }
 
     public String getUserTokenXml(String userTokenId) throws URISyntaxException {
-        return new CommandGetUsertokenByUsertokenId(new URI(getWAS().getSTS()),
+        return new CommandGetUserTokenByUserTokenId(new URI(getWAS().getSTS()),
                 getWAS().getActiveApplicationTokenId(),
                 getWAS().getActiveApplicationTokenXML(),
                 userTokenId).
@@ -195,13 +195,13 @@ public class BaseWhydahServiceClient {
     }
 
     public String getUserTokenFromUserTokenId(String userTokenId) {
-        return new CommandGetUsertokenByUsertokenId(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userTokenId).execute();
+        return new CommandGetUserTokenByUserTokenId(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userTokenId).execute();
     }
 
     //SSO LOGIN SERVICE
 
     public String getUserTokenByUserTicket(String userticket) {
-        return new CommandGetUsertokenByUserticket(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userticket).execute();
+        return new CommandGetUserTokenByUserTicket(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), userticket).execute();
     }
 
     /**
@@ -242,7 +242,7 @@ public class BaseWhydahServiceClient {
     }
 
     public String getUserTokenByUserTokenID(String usertokenId) {
-        String userTokenXML = new CommandGetUsertokenByUsertokenId(uri_securitytoken_service, getWAS().getActiveApplicationTokenId(), getWAS().getActiveApplicationTokenXML(), usertokenId).execute();
+        String userTokenXML = new CommandGetUserTokenByUserTokenId(uri_securitytoken_service, getWAS().getActiveApplicationTokenId(), getWAS().getActiveApplicationTokenXML(), usertokenId).execute();
         getWAS().updateDefcon(userTokenXML);
         return userTokenXML;
     }
@@ -262,7 +262,7 @@ public class BaseWhydahServiceClient {
             log.trace("verifyUserTokenId - Called with bogus usertokenid={}. return false", usertokenid);
             return false;
         }
-        return new CommandValidateUsertokenId(uri_securitytoken_service, getWAS().getActiveApplicationTokenId(), usertokenid).execute();
+        return new CommandValidateUserTokenId(uri_securitytoken_service, getWAS().getActiveApplicationTokenId(), usertokenid).execute();
     }
 
     public boolean sendUserSMSPin(String phoneNo) {

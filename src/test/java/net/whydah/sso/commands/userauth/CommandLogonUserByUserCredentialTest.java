@@ -1,12 +1,6 @@
 package net.whydah.sso.commands.userauth;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-
+import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.user.helpers.UserXpathHelper;
@@ -15,12 +9,14 @@ import net.whydah.sso.user.types.UserToken;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import net.whydah.sso.util.WhydahUtil;
 import net.whydah.sso.whydah.DEFCON;
-
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+
+import static org.junit.Assert.*;
 
 public class CommandLogonUserByUserCredentialTest {
 
@@ -57,11 +53,11 @@ public class CommandLogonUserByUserCredentialTest {
             assertTrue(myUserToken.getDefcon().equalsIgnoreCase(DEFCON.DEFCON5.toString()));
 
 
-            assertTrue(new CommandValidateUsertokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute());
+            assertTrue(new CommandValidateUserTokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute());
 
             myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
-            String userToken2XML = new CommandGetUsertokenByUserticket(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userticket).execute();
+            String userToken2XML = new CommandGetUserTokenByUserTicket(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userticket).execute();
             assertTrue(userToken2XML.contains("DEFCON5"));
 
         }
@@ -92,8 +88,8 @@ public class CommandLogonUserByUserCredentialTest {
                 String userticket = UUID.randomUUID().toString();
                 String userToken = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential, userticket).execute();
                 String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-                assertTrue(new CommandValidateUsertokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute());
-                String userToken2 = new CommandGetUsertokenByUserticket(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userticket).execute();
+                assertTrue(new CommandValidateUserTokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute());
+                String userToken2 = new CommandGetUserTokenByUserTicket(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userticket).execute();
                 assertEquals(userToken, userToken2);
             } finally {
                 context.shutdown();
@@ -111,10 +107,10 @@ public class CommandLogonUserByUserCredentialTest {
                 String userticket = UUID.randomUUID().toString();
                 String userToken = new CommandLogonUserByUserCredential(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, config.userCredential, userticket).execute();
                 String userTokenId = UserXpathHelper.getUserTokenId(userToken);
-                if (!new CommandValidateUsertokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute()){
-                    throw new ExecutionException("",null);
+                if (!new CommandValidateUserTokenId(config.tokenServiceUri, myApplicationTokenID, userTokenId).execute()) {
+                    throw new ExecutionException("", null);
                 }
-                String userToken2 = new CommandGetUsertokenByUserticket(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userticket).execute();
+                String userToken2 = new CommandGetUserTokenByUserTicket(config.tokenServiceUri, myApplicationTokenID, myAppTokenXml, userticket).execute();
 //                assertEquals(userToken, userToken2);
             } finally {
                 context.shutdown();

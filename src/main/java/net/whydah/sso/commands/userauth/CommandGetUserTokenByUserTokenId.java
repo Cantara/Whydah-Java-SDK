@@ -10,14 +10,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class CommandGetUsertokenByUsertokenId extends BaseHttpPostHystrixCommand<String> {
+public class CommandGetUserTokenByUserTokenId extends BaseHttpPostHystrixCommand<String> {
 
-   // private static final Logger log = LoggerFactory.getLogger(CommandGetUsertokenByUsertokenId.class);
+	// private static final Logger log = LoggerFactory.getLogger(CommandGetUsertokenByUsertokenId.class);
 
-    private String usertokenId;
-    public static int DEFAULT_TIMEOUT = 6000;
+	private String usertokenId;
+	public static int DEFAULT_TIMEOUT = 6000;
 
-	public CommandGetUsertokenByUsertokenId(URI tokenServiceUri, String applicationTokenId, String myAppTokenXml, String userTokenId) {
+	public CommandGetUserTokenByUserTokenId(URI tokenServiceUri, String applicationTokenId, String myAppTokenXml, String userTokenId) {
 		super(tokenServiceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", DEFAULT_TIMEOUT);
 		this.usertokenId = userTokenId;
 
@@ -27,8 +27,8 @@ public class CommandGetUsertokenByUsertokenId extends BaseHttpPostHystrixCommand
 		}
 
 	}
-	
-	public CommandGetUsertokenByUsertokenId(URI tokenServiceUri, String applicationTokenId, String myAppTokenXml, String userTokenId, int timeout) {
+
+	public CommandGetUserTokenByUserTokenId(URI tokenServiceUri, String applicationTokenId, String myAppTokenXml, String userTokenId, int timeout) {
 		super(tokenServiceUri, myAppTokenXml, applicationTokenId, "SSOAUserAuthGroup", timeout);
 		this.usertokenId = userTokenId;
 
