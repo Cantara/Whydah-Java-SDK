@@ -41,7 +41,10 @@ public class CommandUserExists extends BaseHttpGetHystrixCommandForBooleanType {
     
     @Override
     protected Boolean dealWithResponse(String response) {
-    	return response.length() > 32;
+        if (!response.contains(userQuery)) {
+            return false;
+        }
+        return response.length() > 32;
     }
 
 
