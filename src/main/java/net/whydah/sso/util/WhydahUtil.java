@@ -18,12 +18,10 @@ import net.whydah.sso.user.types.UserToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.URI;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
@@ -32,6 +30,8 @@ import java.util.UUID;
 
 public class WhydahUtil {
     private static final Logger log = LoggerFactory.getLogger(WhydahUtil.class);
+
+    private static final String runningSince = Instant.now().toString();
 
     public static boolean isAdminSdk() {
         try {
@@ -306,8 +306,9 @@ public class WhydahUtil {
     }
 
     public static String getRunningSince() {
-        long uptimeInMillis = ManagementFactory.getRuntimeMXBean().getUptime();
-        return Instant.now().minus(uptimeInMillis, ChronoUnit.MILLIS).toString();
+        return runningSince;
+//        long uptimeInMillis = ManagementFactory.getRuntimeMXBean().getUptime();
+//        return Instant.now().minus(uptimeInMillis, ChronoUnit.MILLIS).toString();
     }
 
     public static String getMyIPAddresssesString() {
