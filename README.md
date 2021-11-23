@@ -2,6 +2,7 @@ Whydah-Java-SDK
 ===============
 
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/Cantara/Whydah-Java-SDK) ![Build Status](https://jenkins.quadim.ai/buildStatus/icon?job=Whydah-Java-SDK) - [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) - 
+[![CodeQL](https://github.com/Cantara/Whydah-Java-SDK/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Cantara/Whydah-Java-SDK/actions/workflows/codeql-analysis.yml) -
 [![Known Vulnerabilities](https://snyk.io/test/github/Cantara/Whydah-Java-SDK/badge.svg)](https://snyk.io/test/github/Cantara/Whydah-Java-SDK)
 
 
