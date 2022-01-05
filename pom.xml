@@ -47,13 +47,13 @@
         </developer>
         <developer>
             <id>kimcs</id>
-            <name>Kim Christian Swenson</name>
-            <email>kim.christian.swenson@gmail.com</email>
+            <name>Kim Christian Gaarder</name>
+            <email>kim.christian.gaarder@gmail.com</email>
             <roles>
                 <role>Developer</role>
             </roles>
-            <organization>Capra Consulting AS</organization>
-            <organizationUrl>http://www.capraconsulting.no/</organizationUrl>
+            <organization>Cantara</organization>
+            <organizationUrl>https://wiki.cantara.no/</organizationUrl>
         </developer>
     </developers>
 
