@@ -18,16 +18,21 @@ public class ApplicationModelUtil {
     public static final String minDEFCON = "$.security.minDEFCON";
     public static final String minSecurityLevel = "$.security.minSecurityLevel";
     private static final Logger log = LoggerFactory.getLogger(ApplicationModelUtil.class);
-    private static List<Application> applications = new ArrayList<Application>();
+
+    private static final List<Application> applications = new ArrayList<>();
 
     public static List<Application> getApplicationList() {
-        return applications;
+        synchronized (applications) {
+            return new ArrayList<>(applications);
+        }
     }
 
     public static Application getApplication(String applicationID) {
-        for (Application application : applications) {
-            if (application.getId().equalsIgnoreCase(applicationID)) {
-                return application;
+        synchronized (applications) {
+            for (Application application : applications) {
+                if (application.getId().equalsIgnoreCase(applicationID)) {
+                    return application;
+                }
             }
         }
         return null;
@@ -36,14 +41,13 @@ public class ApplicationModelUtil {
 
     // JsonPath query against Application.json to find value, empty string if not found
     public static String getParameterForApplication(String param, String applicationID) {
-        if (applications == null) {
-            return "";
-        }
         try {
-            for (Application application : applications) {
-                if (applicationID.equalsIgnoreCase(application.getId())) {
-                    log.debug("Found application, looking for ", param);
-                    return JsonPathHelper.findJsonPathValue(ApplicationMapper.toJson(application), param);
+            synchronized (applications) {
+                for (Application application : applications) {
+                    if (applicationID.equalsIgnoreCase(application.getId())) {
+                        log.debug("Found application, looking for ", param);
+                        return JsonPathHelper.findJsonPathValue(ApplicationMapper.toJson(application), param);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -88,8 +92,11 @@ public class ApplicationModelUtil {
         }
     }
 
-    private static synchronized void updateApplications(List<Application> newapplications) {
-        applications = newapplications;
+    private static void updateApplications(List<Application> newapplications) {
+        synchronized (applications) {
+            applications.clear();
+            applications.addAll(newapplications);
+        }
     }
 
     public static boolean shouldUpdate() {
