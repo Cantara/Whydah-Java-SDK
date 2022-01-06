@@ -1,6 +1,7 @@
 package net.whydah.sso.commands.threat;
 
-import static org.slf4j.LoggerFactory.getLogger;
+import net.whydah.sso.util.Lock;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,25 +10,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.whydah.sso.util.Lock;
-
-import org.slf4j.Logger;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class ThreatActivityLogCollector {
 	
 	private static final Logger logger = getLogger(ThreatActivityLogCollector.class);
 	
-	protected Map<String, ThreatActivityLog> _threatLogCollection = new ConcurrentHashMap <>(); //item: log-unique-id and its log
-	protected Map<String, Long> _blackList = new ConcurrentHashMap<String, Long>(); //item: suspect (phone number/ip-address) and the lastRequestTime
+	protected final Map<String, ThreatActivityLog> _threatLogCollection; //item: log-unique-id and its log
+	protected final Map<String, Long> _blackList; //item: suspect (phone number/ip-address) and the lastRequestTime
 	
-	Lock lock = new Lock();
+	final Lock lock = new Lock();
 	
 	public ThreatActivityLogCollector() {
-	
+		_threatLogCollection = new ConcurrentHashMap <>();
+		_blackList = new ConcurrentHashMap<>();
 	}
 	
 	
