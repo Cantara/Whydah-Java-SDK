@@ -1,13 +1,11 @@
 package net.whydah.sso.commands.threat;
 
+import org.junit.Test;
+import org.slf4j.Logger;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
-
-import java.util.HashMap;
-
-import org.junit.Test;
-import org.slf4j.Logger;
 
 public class ThreatDefTooManyRequestsForOneEndpointTest {
 
@@ -17,8 +15,6 @@ public class ThreatDefTooManyRequestsForOneEndpointTest {
 	@Test
 	public void testOperation() throws InterruptedException
 	{
-		ThreatDefTooManyRequestsForOneEndpoint.COUNT = 100;
-
 		ThreatObserver ob = new ThreatObserver(){
 			@Override
 			public void commitThreat(ThreatSignalInfo info) {
@@ -27,7 +23,7 @@ public class ThreatDefTooManyRequestsForOneEndpointTest {
 			}
 		};
 
-		ob.registerDefinition(new ThreatDefTooManyRequestsForOneEndpoint());
+		ob.registerDefinition(new ThreatDefTooManyRequestsForOneEndpoint(100));
 
 		for(int i = 0; i < 10; i++){
 			ThreatActivityLog log = new ThreatActivityLog().setEndPoint("/user-data").setIpAddress("171.250.110.30").setRequestTime(Long.toString(System.currentTimeMillis()));
@@ -38,7 +34,7 @@ public class ThreatDefTooManyRequestsForOneEndpointTest {
 
 		assertFalse(found);
 
-		for(int i = 0; i < ThreatDefTooManyRequestsForOneEndpoint.COUNT; i++){
+		for(int i = 0; i < 100; i++){
 			ThreatActivityLog log = new ThreatActivityLog().setEndPoint("/user-data").setIpAddress("171.250.110.*").setRequestTime(Long.toString(System.currentTimeMillis()));
 			ob.addLogForDetection(log);
 		}

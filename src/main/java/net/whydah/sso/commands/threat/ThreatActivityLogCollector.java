@@ -153,9 +153,13 @@ public class ThreatActivityLogCollector {
 	public int REMOVAL_TIME_FOR_OLD_LOGS = 1000*60*60; //1 hour old
 	public void cleanOldThreats() {
 		
-		if(!lock.isLocked()){
-			try{
-				lock.lock();
+		if(lock.isLocked()) {
+			return;
+		}
+
+		try {
+			lock.lock();
+			try {
 				logger.debug("start cleaning logs with (" + String.valueOf(REMOVAL_TIME_FOR_OLD_LOGS/(60000)) + ") minutes old");
 				for(String uid : new ArrayList<String>(Collections.unmodifiableSet(_threatLogCollection.keySet()))){
 					ThreatActivityLog log = _threatLogCollection.get(uid);
@@ -163,19 +167,20 @@ public class ThreatActivityLogCollector {
 						_threatLogCollection.remove(uid);
 					}
 				}
-				
+
 				for(String k: new ArrayList<String>(Collections.unmodifiableSet(_blackList.keySet()))) {
 					if(System.currentTimeMillis() - Long.valueOf(_blackList.get(k))>= REMOVAL_TIME_FOR_OLD_LOGS){
 						_blackList.remove(k);
 					}
 				}
-				
-			}catch(Exception ex){
-				ex.printStackTrace();
-				logger.error("Error when cleaning old logs - " + ex.getMessage());
+
+			} catch(Exception ex){
+				logger.error("Error when cleaning old logs - " + ex.getMessage(), ex);
 			} finally{
 				lock.unlock();
 			}
+		} catch(InterruptedException ex) {
+			logger.error("Interrupted while attempting to get lock - " + ex.getMessage(), ex);
 		}
 
 	}

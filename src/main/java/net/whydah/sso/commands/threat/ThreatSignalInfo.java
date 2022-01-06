@@ -1,10 +1,5 @@
 package net.whydah.sso.commands.threat;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,6 +7,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -52,26 +52,28 @@ public class ThreatSignalInfo implements Serializable  {
 		this.setSuspect(responsibleIpAddress);
 		this.activityLogList = activityLogList;
 	}
-	
+
+	private static final ObjectMapper deserializeMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
 	public static ThreatSignalInfo fromJson(String json) {
         if (json == null) {
             return null;
         }
-        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         try {
-            return mapper.readValue(json, ThreatSignalInfo.class);
+            return deserializeMapper.readValue(json, ThreatSignalInfo.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+	private static final ObjectMapper serializeMapper = new ObjectMapper();
+
     public static String toJson(ThreatSignalInfo threatSignalInfo) {
         if (threatSignalInfo == null) {
             return "{}";
         }
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.writeValueAsString(threatSignalInfo);
+            return serializeMapper.writeValueAsString(threatSignalInfo);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

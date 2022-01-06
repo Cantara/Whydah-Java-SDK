@@ -4,14 +4,14 @@ import java.util.List;
 
 public class ThreatDefTooManyRequestsForOneEndpoint extends IThreatDefinition {
 
-	public static int COUNT = 1000000; //1 million requests in one hour?
+	public final int COUNT;
 	
 	public ThreatDefTooManyRequestsForOneEndpoint() {
-		
+		this.COUNT = 1000000; //1 million requests in one hour?
 	}
 	
 	public ThreatDefTooManyRequestsForOneEndpoint(int limit) {
-		COUNT = limit;
+		this.COUNT = limit;
 	}
 	
 	public int getCode() {

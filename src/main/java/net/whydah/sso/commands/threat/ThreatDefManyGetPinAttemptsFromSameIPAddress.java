@@ -1,7 +1,5 @@
 package net.whydah.sso.commands.threat;
 
-import java.util.List;
-
 public class ThreatDefManyGetPinAttemptsFromSameIPAddress extends IThreatDefTooManyRequestsForOneEndPointFromSameIPAddress {
 
 	public ThreatDefManyGetPinAttemptsFromSameIPAddress() {
