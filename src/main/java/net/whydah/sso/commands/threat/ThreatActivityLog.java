@@ -1,10 +1,5 @@
 package net.whydah.sso.commands.threat;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,6 +10,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "id",
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ThreatActivityLog implements Serializable  {
-	
+
 	private static final long serialVersionUID = 1L;
 	
 	@JsonProperty("id")
@@ -126,11 +126,12 @@ public class ThreatActivityLog implements Serializable  {
         return this;
     }
 
+	private static final ObjectMapper mapper = new ObjectMapper();
+
     public static String toJson(ThreatActivityLog log) {
         if (log == null) {
             return "{}";
         }
-        ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.writeValueAsString(log);
         } catch (JsonProcessingException e) {
