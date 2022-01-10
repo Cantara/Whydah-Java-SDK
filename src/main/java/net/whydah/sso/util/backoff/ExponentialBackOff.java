@@ -177,11 +177,11 @@ public class ExponentialBackOff implements BackOff {
     }
 
 
-    private class ExponentialBackOffExecution implements BackOffExecution {
+    protected class ExponentialBackOffExecution implements BackOffExecution {
 
-        private long currentInterval = -1;
+        protected long currentInterval = -1;
 
-        private long currentElapsedTime = 0;
+        protected long currentElapsedTime = 0;
 
         @Override
         public long nextBackOff() {
@@ -194,7 +194,7 @@ public class ExponentialBackOff implements BackOff {
             return nextInterval;
         }
 
-        private long computeNextInterval() {
+        protected long computeNextInterval() {
             long maxInterval = getMaxInterval();
             if (this.currentInterval >= maxInterval) {
                 return maxInterval;
