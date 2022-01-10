@@ -4,14 +4,19 @@ import net.whydah.sso.application.types.Application;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.extras.CommandSendSms;
-import net.whydah.sso.commands.userauth.*;
+import net.whydah.sso.commands.userauth.CommandCreateTicketForUserTokenID;
+import net.whydah.sso.commands.userauth.CommandGenerateAndSendSmsPin;
+import net.whydah.sso.commands.userauth.CommandGetUserTokenByUserTicket;
+import net.whydah.sso.commands.userauth.CommandGetUserTokenByUserTokenId;
+import net.whydah.sso.commands.userauth.CommandLogonUserByPhoneNumberPin;
+import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
+import net.whydah.sso.commands.userauth.CommandReleaseUserToken;
+import net.whydah.sso.commands.userauth.CommandValidateUserTokenId;
 import net.whydah.sso.config.ApplicationMode;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.user.types.UserCredential;
 import org.constretto.ConstrettoConfiguration;
-import org.constretto.exception.ConstrettoConversionException;
-import org.constretto.exception.ConstrettoExpressionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,25 +24,24 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static java.util.Optional.ofNullable;
 
 public class BaseDevelopmentWhydahServiceClient {
 
+    private static final Logger log = LoggerFactory.getLogger(BaseDevelopmentWhydahServiceClient.class);
 
-    private static volatile WhydahApplicationSession was = null;
-    protected static final Logger log;
-    protected static final String TAG;
-    protected URI uri_securitytoken_service;
-    protected URI uri_useradmin_service;
-    protected URI uri_useridentitybackend_service;
-    protected URI uri_crm_service;
-    protected URI uri_report_service;
-    private ApplicationCredential applicationCredential;
+    private static final AtomicReference<WhydahApplicationSession> wasRef = new AtomicReference<>();
 
-    static {
-        TAG = BaseDevelopmentWhydahServiceClient.class.getName();
-        log = LoggerFactory.getLogger(TAG);
+    protected static final String TAG = BaseDevelopmentWhydahServiceClient.class.getName();
 
-    }
+    protected final URI uri_securitytoken_service;
+    protected final URI uri_useradmin_service;
+    protected final URI uri_useridentitybackend_service;
+    protected final URI uri_crm_service;
+    protected final URI uri_report_service;
+    private final ApplicationCredential applicationCredential;
 
     public BaseDevelopmentWhydahServiceClient(String securitytokenserviceurl,
                                               String useradminserviceurl,
@@ -55,100 +59,94 @@ public class BaseDevelopmentWhydahServiceClient {
         this.uri_securitytoken_service = URI.create(securitytokenserviceurl);
         if (useradminserviceurl != null && useradminserviceurl.length() > 8) {  // UAS is optinal
             this.uri_useradmin_service = URI.create(useradminserviceurl);
+        } else {
+            this.uri_useradmin_service = null;
         }
+        this.uri_useridentitybackend_service = null;
+        this.uri_crm_service = null;
+        this.uri_report_service = null;
         getWAS();
 
     }
 
     public BaseDevelopmentWhydahServiceClient(ConstrettoConfiguration configuration) {
-        try {
-            if (configuration.hasValue("securitytokenservice")) {
-                this.uri_securitytoken_service = URI.create(configuration.evaluateToString("securitytokenservice"));
-            }
-            if (configuration.hasValue("useradminservice")) {
-                this.uri_useradmin_service = URI.create(configuration.evaluateToString("useradminservice"));
-            }
-            if (configuration.hasValue("crmservice")) {
-                this.uri_crm_service = URI.create(configuration.evaluateToString("crmservice"));
-            }
-            if (configuration.hasValue("reportservice")) {
-                this.uri_report_service = URI.create(configuration.evaluateToString("reportservice"));
-            }
-            if (configuration.hasValue("useridentitybackend")) {
-                this.uri_useridentitybackend_service = URI.create(configuration.evaluateToString("useridentitybackend"));
-            }
-
-
-            String applicationid = configuration.evaluateToString("applicationid");
-            String applicationname = configuration.evaluateToString("applicationname");
-            String applicationsecret = configuration.evaluateToString("applicationsecret");
+        this.uri_securitytoken_service = ofNullable(WhydahInternalConstrettoUtils.getStringOrDefault(configuration, "securitytokenservice", null))
+                .map(URI::create)
+                .orElse(null);
+        this.uri_useradmin_service = ofNullable(WhydahInternalConstrettoUtils.getStringOrDefault(configuration, "useradminservice", null))
+                .map(URI::create)
+                .orElse(null);
+        this.uri_crm_service = ofNullable(WhydahInternalConstrettoUtils.getStringOrDefault(configuration, "crmservice", null))
+                .map(URI::create)
+                .orElse(null);
+        this.uri_report_service = ofNullable(WhydahInternalConstrettoUtils.getStringOrDefault(configuration, "reportservice", null))
+                .map(URI::create)
+                .orElse(null);
+        this.uri_useridentitybackend_service = ofNullable(WhydahInternalConstrettoUtils.getStringOrDefault(configuration, "useridentitybackend", null))
+                .map(URI::create)
+                .orElse(null);
+        String applicationid = WhydahInternalConstrettoUtils.getStringOrDefault(configuration, "applicationid", null);
+        String applicationname = WhydahInternalConstrettoUtils.getStringOrDefault(configuration, "applicationname", null);
+        String applicationsecret = WhydahInternalConstrettoUtils.getStringOrDefault(configuration, "applicationsecret", null);
+        if (applicationid == null || applicationname == null || applicationsecret == null) {
+            this.applicationCredential = null;
+        } else {
             ApplicationCredential myApplicationCredential = new ApplicationCredential(applicationid, applicationname, applicationsecret);
             this.applicationCredential = myApplicationCredential;
             getWAS();
-
-        } catch (ConstrettoExpressionException constrettoExpressionException) {
-            log.debug("Some parameters where not found");
-        } catch (ConstrettoConversionException cce) {
-            log.debug("Some parameters where not found");
-
-        } catch (Exception ex) {
-            throw ex;
         }
     }
 
 
     public BaseDevelopmentWhydahServiceClient(Properties properties) {
-
-        try {
-            if (properties.getProperty("securitytokenservice", null) != null) {
-                this.uri_securitytoken_service = URI.create(properties.getProperty("securitytokenservice"));
-//                this.securitytokenserviceurl = properties.getProperty("securitytokenservice");
-
-            }
-            if (properties.getProperty("useradminservice", null) != null) {
-                this.uri_useradmin_service = URI.create(properties.getProperty("useradminservice"));
-//                this.useradminserviceurl = properties.getProperty("useradminservice");
-
-            }
-            if (properties.getProperty("crmservice", null) != null) {
-                this.uri_crm_service = URI.create(properties.getProperty("crmservice"));
-            }
-            if (properties.getProperty("reportservice", null) != null) {
-                this.uri_report_service = URI.create(properties.getProperty("reportservice"));
-            }
-            if (properties.getProperty("useridentitybackend", null) != null) {
-                this.uri_useridentitybackend_service = URI.create(properties.getProperty("useridentitybackend"));
-            }
-
-
-            String applicationid = properties.getProperty("applicationid");
-            String applicationname = properties.getProperty("applicationname");
-            String applicationsecret = properties.getProperty("applicationsecret");
-            this.applicationCredential = new ApplicationCredential(applicationid, applicationname, applicationsecret);
-
-            getWAS();
-        } catch (Exception ex) {
-            throw ex;
-        }
+        this.uri_securitytoken_service = ofNullable(properties.getProperty("securitytokenservice"))
+                .map(URI::create)
+                .orElse(null);
+        this.uri_useradmin_service = ofNullable(properties.getProperty("useradminservice"))
+                .map(URI::create)
+                .orElse(null);
+        this.uri_crm_service = ofNullable(properties.getProperty("crmservice"))
+                .map(URI::create)
+                .orElse(null);
+        this.uri_report_service = ofNullable(properties.getProperty("reportservice"))
+                .map(URI::create)
+                .orElse(null);
+        this.uri_useridentitybackend_service = ofNullable(properties.getProperty("useridentitybackend"))
+                .map(URI::create)
+                .orElse(null);
+        String applicationid = properties.getProperty("applicationid");
+        String applicationname = properties.getProperty("applicationname");
+        String applicationsecret = properties.getProperty("applicationsecret");
+        this.applicationCredential = new ApplicationCredential(applicationid, applicationname, applicationsecret);
+        getWAS();
     }
 
-    public static synchronized void setWas(WhydahApplicationSession was) {
-        BaseDevelopmentWhydahServiceClient.was = was;
+    public static void setWas(WhydahApplicationSession was) {
+        wasRef.set(was);
     }
 
     //GENERAL
 
     public WhydahApplicationSession getWAS() {
 
+        WhydahApplicationSession was = wasRef.get();
         if (was == null) {
-            String uasUrl = null;
-            if (uri_useradmin_service != null) {
-                uasUrl = uri_useradmin_service.toString();
+            synchronized (wasRef) {
+                while (was == null) {
+                    String uasUrl = null;
+                    if (uri_useradmin_service != null) {
+                        uasUrl = uri_useradmin_service.toString();
 
+                    }
+
+                    was = WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, applicationCredential);
+                    if (wasRef.compareAndSet(null, was)) {
+                        was.updateApplinks(true);
+                    } else {
+                        was = wasRef.get();
+                    }
+                }
             }
-
-            setWas(WhydahApplicationSession.getInstance(uri_securitytoken_service.toString(), uasUrl, applicationCredential));
-            was.updateApplinks(true);
         }
         return was;
     }
@@ -167,14 +165,14 @@ public class BaseDevelopmentWhydahServiceClient {
 
 
     public Boolean isApplicationTokenIdValid(String applicationTokenId) {
-        return new CommandValidateApplicationTokenId(was.getSTS(), applicationTokenId).execute();
+        return new CommandValidateApplicationTokenId(getWAS().getSTS(), applicationTokenId).execute();
     }
 
     public String getUserTokenXml(String userTokenId) throws URISyntaxException {
 
-        String userTokenXML = new CommandGetUserTokenByUserTokenId(new URI(was.getSTS()),
-                was.getActiveApplicationTokenId(),
-                was.getActiveApplicationTokenXML(),
+        String userTokenXML = new CommandGetUserTokenByUserTokenId(new URI(getWAS().getSTS()),
+                getWAS().getActiveApplicationTokenId(),
+                getWAS().getActiveApplicationTokenXML(),
                 userTokenId).
                 execute();
         getWAS().updateDefcon(userTokenXML);
@@ -183,24 +181,24 @@ public class BaseDevelopmentWhydahServiceClient {
 
 
     public String getMyAppTokenID() {
-        if (was.getActiveApplicationToken() == null) {
+        if (getWAS().getActiveApplicationToken() == null) {
             return null;
 //            was.renewWhydahApplicationSession();
         }
-        return was.getActiveApplicationTokenId();
+        return getWAS().getActiveApplicationTokenId();
     }
 
     public String getMyAppTokenXml() {
 
-        if (was.getActiveApplicationToken() == null) {
+        if (getWAS().getActiveApplicationToken() == null) {
             return null;
 //          was.renewWhydahApplicationSession();
         }
-        return was.getActiveApplicationTokenXML();
+        return getWAS().getActiveApplicationTokenXML();
     }
 
     public String getUserTokenFromUserTokenId(String userTokenId) {
-        if (was.getActiveApplicationToken() == null) {
+        if (getWAS().getActiveApplicationToken() == null) {
             return null;
 //            was.renewWhydahApplicationSession();
         }
@@ -231,12 +229,12 @@ public class BaseDevelopmentWhydahServiceClient {
         if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
             return getDummyToken();
         }
-        if (was.getActiveApplicationToken() == null) {
+        if (getWAS().getActiveApplicationToken() == null) {
             return null;
 //            was.renewWhydahApplicationSession();
         }
         log.debug("getUserTokenByPin() - Application logon OK. applicationTokenId={}. Log on with user adminUserTokenId {}.", getMyAppTokenID(), adminUserTokenId);
-        String userTokenXML = new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenId, phoneNo, pin, userTicket).execute();
+        String userTokenXML = new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, getWAS().getActiveApplicationTokenId(), getWAS().getActiveApplicationTokenXML(), adminUserTokenId, phoneNo, pin, userTicket).execute();
         getWAS().updateDefcon(userTokenXML);
         return userTokenXML;
     }
@@ -246,47 +244,47 @@ public class BaseDevelopmentWhydahServiceClient {
         if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
             return getDummyToken();
         }
-        if (was.getActiveApplicationToken() == null) {
+        if (getWAS().getActiveApplicationToken() == null) {
             return null;
 //          was.renewWhydahApplicationSession();
         }
-        log.debug("getUserTokenByPin() - Application logon OK. applicationTokenId={}. Log on with user phoneno {}.", was.getActiveApplicationTokenId(), phoneNo);
-        return new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), adminUserTokenId, phoneNo, pin, userTicket).execute();
+        log.debug("getUserTokenByPin() - Application logon OK. applicationTokenId={}. Log on with user phoneno {}.", getWAS().getActiveApplicationTokenId(), phoneNo);
+        return new CommandLogonUserByPhoneNumberPin(uri_securitytoken_service, getWAS().getActiveApplicationTokenId(), getWAS().getActiveApplicationTokenXML(), adminUserTokenId, phoneNo, pin, userTicket).execute();
     }
 
     public String getUserToken(UserCredential user, String userticket) {
         if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
             return getDummyToken();
         }
-        if (was.getActiveApplicationToken() == null) {
+        if (getWAS().getActiveApplicationToken() == null) {
             return null;
 //            was.renewWhydahApplicationSession();
         }
-        log.debug("getUserToken - Application logon OK. applicationTokenId={}. Log on with user credentials {}.", was.getActiveApplicationTokenId(), user.toString());
+        log.debug("getUserToken - Application logon OK. applicationTokenId={}. Log on with user credentials {}.", getWAS().getActiveApplicationTokenId(), user.toString());
         String userTokenXML = new CommandLogonUserByUserCredential(uri_securitytoken_service, getMyAppTokenID(), getMyAppTokenXml(), user, userticket).execute();
         getWAS().updateDefcon(userTokenXML);
         return userTokenXML;
     }
 
     public boolean createTicketForUserTokenID(String userTicket, String userTokenID) {
-        log.debug("createTicketForUserTokenID - apptokenid: {}", was.getActiveApplicationTokenId());
+        log.debug("createTicketForUserTokenID - apptokenid: {}", getWAS().getActiveApplicationTokenId());
         log.debug("createTicketForUserTokenID - userticket: {} userTokenID: {}", userTicket, userTokenID);
-        if (was.getActiveApplicationToken() == null) {
+        if (getWAS().getActiveApplicationToken() == null) {
             return false;
 //            was.renewWhydahApplicationSession();
         }
-        return new CommandCreateTicketForUserTokenID(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userTicket, userTokenID).execute();
+        return new CommandCreateTicketForUserTokenID(uri_securitytoken_service, getWAS().getActiveApplicationTokenId(), getWAS().getActiveApplicationTokenXML(), userTicket, userTokenID).execute();
     }
 
     public String getUserTokenByUserTokenID(String usertokenId) {
         if (ApplicationMode.DEV.equals(ApplicationMode.getApplicationMode())) {
             return getDummyToken();
         }
-        if (was.getActiveApplicationToken() == null) {
+        if (getWAS().getActiveApplicationToken() == null) {
             return null;
 //            was.renewWhydahApplicationSession();
         }
-        String userTokenXML = new CommandGetUserTokenByUserTokenId(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), usertokenId).execute();
+        String userTokenXML = new CommandGetUserTokenByUserTokenId(uri_securitytoken_service, getWAS().getActiveApplicationTokenId(), getWAS().getActiveApplicationTokenXML(), usertokenId).execute();
         getWAS().updateDefcon(userTokenXML);
         return userTokenXML;
     }
@@ -294,7 +292,7 @@ public class BaseDevelopmentWhydahServiceClient {
     public void releaseUserToken(String userTokenId) {
         log.trace("Releasing userTokenId={}", userTokenId);
 
-        if (new CommandReleaseUserToken(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), userTokenId).execute()) {
+        if (new CommandReleaseUserToken(uri_securitytoken_service, getWAS().getActiveApplicationTokenId(), getWAS().getActiveApplicationTokenXML(), userTokenId).execute()) {
             log.trace("Released userTokenId={}", userTokenId);
         } else {
             log.warn("releaseUserToken failed for userTokenId={}", userTokenId);
@@ -306,25 +304,25 @@ public class BaseDevelopmentWhydahServiceClient {
             log.trace("verifyUserTokenId - Called with bogus usertokenid={}. return false", usertokenid);
             return false;
         }
-        return new CommandValidateUserTokenId(uri_securitytoken_service, was.getActiveApplicationTokenId(), usertokenid).execute();
+        return new CommandValidateUserTokenId(uri_securitytoken_service, getWAS().getActiveApplicationTokenId(), usertokenid).execute();
     }
 
     public boolean sendUserSMSPin(String phoneNo) {
-        if (was.getActiveApplicationToken() == null) {
+        if (getWAS().getActiveApplicationToken() == null) {
             return false;
 //            was.renewWhydahApplicationSession();
         }
         if (phoneNo == null) {
             return false;
         }
-        log.debug("sendUserSMSPin - apptokenid: {}", was.getActiveApplicationTokenId());
+        log.debug("sendUserSMSPin - apptokenid: {}", getWAS().getActiveApplicationTokenId());
         log.debug("sendUserSMSPin - phoneNo: {} ", phoneNo);
 
-        return new CommandGenerateAndSendSmsPin(uri_securitytoken_service, was.getActiveApplicationTokenId(), phoneNo).execute();
+        return new CommandGenerateAndSendSmsPin(uri_securitytoken_service, getWAS().getActiveApplicationTokenId(), phoneNo).execute();
     }
 
     public boolean sendSMSMessage(String phoneNo, String msg) {
-        if (was.getActiveApplicationToken() == null) {
+        if (getWAS().getActiveApplicationToken() == null) {
             return false;
 //            was.renewWhydahApplicationSession();
         }
@@ -332,10 +330,10 @@ public class BaseDevelopmentWhydahServiceClient {
         if (phoneNo == null || msg == null) {
             return false;
         }
-        log.debug("sendSMSMessage - apptokenid: {}", was.getActiveApplicationTokenId());
+        log.debug("sendSMSMessage - apptokenid: {}", getWAS().getActiveApplicationTokenId());
         log.debug("sendSMSMessage - phoneNo: {} msg: {}", phoneNo, msg);
 
-        return new CommandSendSms(uri_securitytoken_service, was.getActiveApplicationTokenId(), was.getActiveApplicationTokenXML(), phoneNo, msg).execute();
+        return new CommandSendSms(uri_securitytoken_service, getWAS().getActiveApplicationTokenId(), getWAS().getActiveApplicationTokenXML(), phoneNo, msg).execute();
     }
 
     public String appendTicketToRedirectURI(String redirectURI, String userticket) {
@@ -346,10 +344,10 @@ public class BaseDevelopmentWhydahServiceClient {
 
 
     public List<Application> getApplicationList() {
-        if (was.getApplicationList() == null) {
-            was.updateApplinks();
+        if (getWAS().getApplicationList() == null) {
+            getWAS().updateApplinks();
         }
-        return was.getApplicationList();
+        return getWAS().getApplicationList();
     }
 
 

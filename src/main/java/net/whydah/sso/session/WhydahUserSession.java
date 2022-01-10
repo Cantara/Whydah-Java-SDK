@@ -14,16 +14,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class WhydahUserSession {
 
 
     private static final Logger log = LoggerFactory.getLogger(WhydahUserSession.class);
     private static final int SESSION_CHECK_INTERVAL = 60;
-    private WhydahApplicationSession was;
-    private UserCredential userCredential;
-    private String userTokenId;
-    private String userTokenXML;
+
+    private final AtomicReference<WhydahApplicationSession> was = new AtomicReference<>();
+    private final AtomicReference<UserCredential> userCredential = new AtomicReference<>();
+    private final AtomicReference<String> userTokenId = new AtomicReference<>();
+    private final AtomicReference<String> userTokenXML = new AtomicReference<>();
 
     private WhydahUserSession() {
 
@@ -36,8 +38,8 @@ public class WhydahUserSession {
             return;
         }
 
-        this.was = was;
-        this.userCredential = userCredential;
+        this.was.set(was);
+        this.userCredential.set(userCredential);
         initializeUserSession();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
@@ -74,19 +76,19 @@ public class WhydahUserSession {
     }
 
     public String getActiveUserTokenId() {
-        return userTokenId;
+        return userTokenId.get();
     }
 
     public String getActiveUserToken() {
-        return userTokenXML;
+        return userTokenXML.get();
     }
 
     public boolean hasRole(String roleName) {
-        return UserXpathHelper.hasRoleFromUserToken(userTokenXML, was.getActiveApplicationTokenId(), roleName);
+        return UserXpathHelper.hasRoleFromUserToken(userTokenXML.get(), was.get().getActiveApplicationTokenId(), roleName);
     }
 
     public boolean hasUASAccessAdminRole() {
-        return WhydahUtil.hasUASAccessAdminRole(userTokenXML);
+        return WhydahUtil.hasUASAccessAdminRole(userTokenXML.get());
     }
 
 
@@ -94,12 +96,12 @@ public class WhydahUserSession {
     * @return true is session is active and working
      */
     public boolean hasActiveSession() {
-        if (userTokenXML == null || userTokenXML.length() < 4) {
+        if (userTokenXML.get() == null || userTokenXML.get().length() < 4) {
             return false;
         }
         try {
-            URI stsURI = new URI(was.getSTS());
-            return new CommandValidateUserTokenId(stsURI, was.getActiveApplicationTokenId(), getActiveUserTokenId()).execute();
+            URI stsURI = new URI(was.get().getSTS());
+            return new CommandValidateUserTokenId(stsURI, was.get().getActiveApplicationTokenId(), getActiveUserTokenId()).execute();
         } catch (Exception e) {
             return false;
         }
@@ -108,11 +110,11 @@ public class WhydahUserSession {
 
     private void renewWhydahUserSession() {
         log.info("Renew user session");
-        userTokenXML = WhydahUtil.logOnUser(was, userCredential);
+        userTokenXML.set(WhydahUtil.logOnUser(was.get(), userCredential.get()));
         if (!hasActiveSession()) {
-            log.error("Error, unable to initialize new user session, userTokenXML:" + userTokenXML);
+            log.error("Error, unable to initialize new user session, userTokenXML:" + userTokenXML.get());
             for (int n = 0; n < 7 || hasActiveSession(); n++) {
-                userTokenXML = WhydahUtil.logOnUser(was, userCredential);
+                userTokenXML.set(WhydahUtil.logOnUser(was.get(), userCredential.get()));
                 log.warn("Retrying renewing user session");
                 try {
                     Thread.sleep(1000 * n);
@@ -120,17 +122,17 @@ public class WhydahUserSession {
                 }
                 // If we keep failing, let us force renew of application session too
                 if (n > 3) {
-                    was.resetApplicationSession();
+                    was.get().resetApplicationSession();
                     n = 0;
                 }
             }
 
         } else {
-            log.info("Renew user session successfull.  userTokenXml:" + userTokenXML);
-            Long expires = UserXpathHelper.getTimestampFromUserTokenXml(userTokenXML) + UserXpathHelper.getLifespanFromUserTokenXml(userTokenXML);
+            log.info("Renew user session successfull.  userTokenXml:" + userTokenXML.get());
+            Long expires = UserXpathHelper.getTimestampFromUserTokenXml(userTokenXML.get()) + UserXpathHelper.getLifespanFromUserTokenXml(userTokenXML.get());
             if (expiresBeforeNextSchedule(expires)) {
-                this.userTokenXML = WhydahUtil.extendUserSession(was, userCredential);
-                userTokenId = UserXpathHelper.getUserTokenId(this.userTokenXML);
+                this.userTokenXML.set(WhydahUtil.extendUserSession(was.get(), userCredential.get()));
+                userTokenId.set(UserXpathHelper.getUserTokenId(this.userTokenXML.get()));
             }
         }
 
@@ -138,12 +140,12 @@ public class WhydahUserSession {
 
     private void initializeUserSession() {
         log.info("Initializing new user session");
-        userTokenXML = WhydahUtil.logOnUser(was, userCredential);
-        if (userTokenXML == null || userTokenXML.length() < 4) {
-            log.error("Error, unable to initialize new user session, userTokenXML:" + userTokenXML);
+        userTokenXML.set(WhydahUtil.logOnUser(was.get(), userCredential.get()));
+        if (userTokenXML.get() == null || userTokenXML.get().length() < 4) {
+            log.error("Error, unable to initialize new user session, userTokenXML:" + userTokenXML.get());
         } else {
-            log.info("Initializing user session successfull.  userTokenXml:" + userTokenXML);
-            userTokenId = UserXpathHelper.getUserTokenId(this.userTokenXML);
+            log.info("Initializing user session successfull.  userTokenXml:" + userTokenXML.get());
+            userTokenId.set(UserXpathHelper.getUserTokenId(this.userTokenXML.get()));
         }
     }
 }

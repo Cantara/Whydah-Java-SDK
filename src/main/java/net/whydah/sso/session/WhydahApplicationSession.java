@@ -28,102 +28,121 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static net.whydah.sso.util.LoggerUtil.first50;
 
 public class WhydahApplicationSession {
 
-	private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
+	public static final String INN_WHITE_LIST = "INNWHITELIST";
 	public static final int APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS = 10;  // Check every 30 seconds to adapt quickly
 	public static final int APPLICATION_UPDATE_CHECK_INTERVAL_IN_SECONDS = 10;  // Check every 30 seconds to adapt quickly
-	private List<Application> applications = new LinkedList<Application>();
-	private static volatile WhydahApplicationSession instance = null;
-	private String sts;
-	private String uas;
 
-	private ApplicationCredential myAppCredential;
-	private int logonAttemptNo = 0;
-	private ApplicationToken applicationToken;
-	private DEFCON defcon = DEFCON.DEFCON5;
-	private boolean disableUpdateAppLink = false;
+	private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
 
-	//HUY: NO NEED, renewWhydahApplicationSession() will take care of this sleeping nature 
+	private static final AtomicReference<WhydahApplicationSession> instanceRef = new AtomicReference<>();
+
+	private final List<Application> applications = new LinkedList<>();
+	private final String sts;
+	private final String uas;
+
+	private final ApplicationCredential myAppCredential;
+
+	private final AtomicInteger logonAttemptNo = new AtomicInteger(0);
+
+	private final AtomicReference<ApplicationToken> applicationTokenRef = new AtomicReference<>();
+	private final AtomicReference<DEFCON> defconRef = new AtomicReference<>(DEFCON.DEFCON5);
+	private final AtomicBoolean disableUpdateAppLink = new AtomicBoolean(false);
+
+	//HUY: NO NEED, renewWhydahApplicationSession() will take care of this sleeping nature
 	//private static final int[] FIBONACCI = new int[]{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144};
 	//private ScheduledExecutorService initialize_scheduler;
-	private ScheduledExecutorService renew_scheduler;
-	private ScheduledExecutorService app_update_scheduler;
+	private final ScheduledExecutorService renew_scheduler;
+	private final ScheduledExecutorService app_update_scheduler;
 
-	private boolean isInitialized = false;
-	// TODO  regactor this to be Whydah generic
-
-	public static final String INN_WHITE_LIST = "INNWHITELIST";
+	private final AtomicBoolean isInitialized = new AtomicBoolean(false);
+	// TODO  refactor this to be Whydah generic
 
 	/**
 	 * Protected singleton constructors
 	 */
 	protected WhydahApplicationSession(String sts, String uas, ApplicationCredential myAppCredential) {
-		synchronized (WhydahApplicationSession.class) {
-			log.info("WhydahApplicationSession initializing: sts:{},  uas:{}, myAppCredential:{}", sts, uas, myAppCredential);
-			if (instance == null) {
-				//this.initialize_scheduler = Executors.newScheduledThreadPool(1);
-				this.renew_scheduler = Executors.newScheduledThreadPool(1);
-				this.app_update_scheduler = Executors.newScheduledThreadPool(1);
-				this.sts = sts;
-				this.uas = uas;
-				this.myAppCredential = myAppCredential;
+		log.info("WhydahApplicationSession initializing: sts:{},  uas:{}, myAppCredential:{}", sts, uas, myAppCredential);
+		//this.initialize_scheduler = Executors.newScheduledThreadPool(1);
+		this.renew_scheduler = Executors.newScheduledThreadPool(1);
+		this.app_update_scheduler = Executors.newScheduledThreadPool(1);
+		this.sts = sts;
+		this.uas = uas;
+		this.myAppCredential = myAppCredential;
 
-				//register more if any
-				//try log-on first
-				initializeWhydahApplicationSession();
-				renew_scheduler.scheduleAtFixedRate(
-						new Runnable() {
-							public void run() {
-								try {
-									renewWhydahApplicationSession();
-								} catch (Exception ex) {
-									ex.printStackTrace();
-								}
+		//register more if any
+		//try log-on first
+		initializeWhydahApplicationSession();
+		renew_scheduler.scheduleAtFixedRate(
+				new Runnable() {
+					public void run() {
+						try {
+							renewWhydahApplicationSession();
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
+				},
+				5, APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS, TimeUnit.SECONDS);
+
+		//update application list
+		//used for STS, OIDSSO and other services
+		if (!disableUpdateAppLink.get() && uas != null && uas.length() > 8 && applicationTokenRef.get() != null) { //UAS will skip this check since it has uas=null
+			app_update_scheduler.scheduleAtFixedRate(
+					new Runnable() {
+						public void run() {
+							try {
+								updateApplinks();
+							} catch (Exception ex) {
+								ex.printStackTrace();
 							}
-						},
-						5, APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS, TimeUnit.SECONDS);
-
-				//update application list
-				//used for STS, OIDSSO and other services
-				if (!disableUpdateAppLink && uas != null && uas.length() > 8 && applicationToken != null) { //UAS will skip this check since it has uas=null
-					app_update_scheduler.scheduleAtFixedRate(
-							new Runnable() {
-								public void run() {
-									try {
-										updateApplinks();
-									} catch (Exception ex) {
-										ex.printStackTrace();
-									}
-								}
-							},
-							5, APPLICATION_UPDATE_CHECK_INTERVAL_IN_SECONDS, TimeUnit.SECONDS);
-				}
-			}
+						}
+					},
+					5, APPLICATION_UPDATE_CHECK_INTERVAL_IN_SECONDS, TimeUnit.SECONDS);
 		}
 	}
 
 
 	public static WhydahApplicationSession getInstance(String sts, ApplicationCredential appCred) {
 		log.info("WhydahApplicationSession getInstance(String sts, ApplicationCredential appCred) called");
+		WhydahApplicationSession instance = instanceRef.get();
 		if (instance == null) {
-			instance = new WhydahApplicationSession(sts, null, appCred);
+			synchronized (instanceRef) {
+				instance = instanceRef.get();
+				if (instance == null) {
+					instance = new WhydahApplicationSession(sts, null, appCred);
+					instanceRef.set(instance);
+				}
+			}
 		}
 		return instance;
 	}
 
 	public static WhydahApplicationSession getInstance(String sts, String uas, ApplicationCredential appCred) {
 		log.info("WhydahApplicationSession getInstance(String sts, String uas, ApplicationCredential appCred) called");
+		WhydahApplicationSession instance = instanceRef.get();
 		if (instance == null) {
-			instance = new WhydahApplicationSession(sts, uas, appCred);
+			synchronized (instanceRef) {
+				instance = instanceRef.get();
+				if (instance == null) {
+					instance = new WhydahApplicationSession(sts, uas, appCred);
+					instanceRef.set(instance);
+				}
+			}
 		}
 		return instance;
 	}
@@ -147,6 +166,7 @@ public class WhydahApplicationSession {
 	}
 
 	public ApplicationToken getActiveApplicationToken() {
+		ApplicationToken applicationToken = applicationTokenRef.get();
 		if (applicationToken == null) {
 			//            initializeWhydahApplicationSession();
 		}
@@ -154,6 +174,7 @@ public class WhydahApplicationSession {
 	}
 
 	public String getActiveApplicationTokenId() {
+		ApplicationToken applicationToken = applicationTokenRef.get();
 		if (applicationToken == null) {
 			//            initializeWhydahApplicationSession();
 		}
@@ -164,6 +185,7 @@ public class WhydahApplicationSession {
 	}
 
 	public String getActiveApplicationName() {
+		ApplicationToken applicationToken = applicationTokenRef.get();
 		if (applicationToken == null) {
 			//            initializeWhydahApplicationSession();
 		}
@@ -174,6 +196,7 @@ public class WhydahApplicationSession {
 	}
 
 	public String getActiveApplicationTokenXML() {
+		ApplicationToken applicationToken = applicationTokenRef.get();
 		if (applicationToken == null) {
 			//           initializeWhydahApplicationSession();
 			if (applicationToken == null) {
@@ -193,11 +216,11 @@ public class WhydahApplicationSession {
 	}
 
 	public DEFCON getDefcon() {
-		return defcon;
+		return defconRef.get();
 	}
 
 	public void setDefcon(DEFCON defcon) {
-		this.defcon = defcon;
+		this.defconRef.set(defcon);
 		DEFCONHandler.handleDefcon(defcon);
 
 	}
@@ -206,47 +229,29 @@ public class WhydahApplicationSession {
 		return WhydahUtil.hasUASAccessAdminRole(userToken);
 	}
 
-
 	public void updateDefcon(String userTokenXml) {
 		String tokendefcon = UserTokenXpathHelper.getDEFCONLevel(userTokenXml);
-		if (DEFCON.DEFCON5.equals(tokendefcon)) {
-			defcon = DEFCON.DEFCON5;
-			DEFCONHandler.handleDefcon(defcon);
+		DEFCON defcon;
+		try {
+			defcon = DEFCON.valueOf(tokendefcon);
+		} catch (IllegalArgumentException e) {
+			return;
 		}
-		if (DEFCON.DEFCON4.equals(tokendefcon)) {
-			log.warn("DEFCON lecel is now DEFCON4");
-			defcon = DEFCON.DEFCON4;
-			DEFCONHandler.handleDefcon(defcon);
-
+		if (defcon != DEFCON.DEFCON5) {
+			log.warn("DEFCON level is now {}", defcon);
 		}
-		if (DEFCON.DEFCON3.equals(tokendefcon)) {
-			log.error("DEFCON lecel is now DEFCON3");
-			defcon = DEFCON.DEFCON3;
-			DEFCONHandler.handleDefcon(defcon);
-
-		}
-		if (DEFCON.DEFCON2.equals(tokendefcon)) {
-			log.error("DEFCON lecel is now DEFCON2");
-			defcon = DEFCON.DEFCON2;
-			DEFCONHandler.handleDefcon(defcon);
-
-		}
-		if (DEFCON.DEFCON1.equals(tokendefcon)) {
-			log.error("DEFCON lecel is now DEFCON1");
-			defcon = DEFCON.DEFCON1;
-			DEFCONHandler.handleDefcon(defcon);
-		}
-
+		this.defconRef.set(defcon);
+		DEFCONHandler.handleDefcon(defcon);
 	}
 
-	public synchronized void resetApplicationSession() {
+	public void resetApplicationSession() {
 		setApplicationToken(null);
-		isInitialized = false;
+		isInitialized.set(false);
 		initializeWhydahApplicationSession();
 	}
 
-	public synchronized void setApplicationToken(ApplicationToken myApplicationToken) {
-		applicationToken = myApplicationToken;
+	public void setApplicationToken(ApplicationToken myApplicationToken) {
+		applicationTokenRef.set(myApplicationToken);
 	}
 
 
@@ -254,11 +259,13 @@ public class WhydahApplicationSession {
 		log.trace("Renew WAS: Renew application session called");
 		if (!hasActiveSession()) {
 			log.trace("Renew WAS: checkActiveSession() == false - initializeWhydahApplicationSession called");
+			ApplicationToken applicationToken = applicationTokenRef.get();
 			if (applicationToken == null) {
-				log.info("Renew WAS: No active application session, applicationToken:null, myAppCredential:{}, logonAttemptNo:{}", myAppCredential, logonAttemptNo);
+				log.info("Renew WAS: No active application session, applicationToken:null, myAppCredential:{}, logonAttemptNo:{}", myAppCredential, logonAttemptNo.get());
 			}
 			initializeWhydahApplicationSession();
 		} else {
+			ApplicationToken applicationToken = applicationTokenRef.get();
 			log.trace("Renew WAS: Active application session found, applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
 
 			Long expires = Long.parseLong(applicationToken.getExpires());
@@ -290,7 +297,7 @@ public class WhydahApplicationSession {
 						if (n > 2) {
 							// OK, we wont get a renewed session, so we start a new one
 							initializeWhydahApplicationSession();
-							if (isInitialized) {
+							if (isInitialized.get()) {
 								break;
 							}
 						}
@@ -304,25 +311,26 @@ public class WhydahApplicationSession {
 		}
 	}
 
-	private synchronized void initializeWhydahApplicationSession() {
-		if (isInitialized) {
+	private void initializeWhydahApplicationSession() {
+		if (isInitialized.get()) {
 			return;
 		}
 		if(!logon_lock.isLocked()){
 			try{
 				logon_lock.lock();
-				++logonAttemptNo;
+				logonAttemptNo.incrementAndGet();
 				String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
 				if (checkApplicationToken(applicationTokenXML)) {
-					isInitialized = true;
+					isInitialized.set(true);
 					setApplicationSessionParameters(applicationTokenXML);
-					log.info("InitWAS {}: Initialized new application session, applicationTokenId:{}, applicationID: {}, applicationName: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getApplicationName(), applicationToken.getExpiresFormatted());
-					logonAttemptNo = 0;
+					ApplicationToken applicationToken = applicationTokenRef.get();
+					log.info("InitWAS {}: Initialized new application session, applicationTokenId:{}, applicationID: {}, applicationName: {}, expires: {}", logonAttemptNo.get(), applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getApplicationName(), applicationToken.getExpiresFormatted());
+					logonAttemptNo.set(0);
 				} else {
 
 					//NOTHING TO DO, renewWhydahApplicationSession() will activate log-on again
 
-					log.warn("InitWAS {}: Error, unable to initialize new application session,, reset application session  applicationTokenXml: {}", logonAttemptNo, first50(applicationTokenXML));
+					log.warn("InitWAS {}: Error, unable to initialize new application session,, reset application session  applicationTokenXml: {}", logonAttemptNo.get(), first50(applicationTokenXML));
 					removeApplicationSessionParameters();
 
 
@@ -346,7 +354,7 @@ public class WhydahApplicationSession {
 		}
 	}
 
-	Lock logon_lock = new Lock();
+	final Lock logon_lock = new Lock();
 	//	private boolean initializeWhydahApplicationSessionThread() {
 	//		log.info("Initializing new application session {} with applicationCredential: {}", logonAttemptNo, myAppCredential);
 	//
@@ -380,8 +388,9 @@ public class WhydahApplicationSession {
 	//		return true;
 	//	}
 
-	private synchronized void setApplicationSessionParameters(String applicationTokenXML) {
+	private void setApplicationSessionParameters(String applicationTokenXML) {
 		setApplicationToken(ApplicationTokenMapper.fromXml(applicationTokenXML));
+		ApplicationToken applicationToken = applicationTokenRef.get();
 		String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), applicationToken.getApplicationTokenId()).execute();
 
 		if (exchangeableKeyString != null && exchangeableKeyString.length() > 10) {
@@ -390,21 +399,21 @@ public class WhydahApplicationSession {
 				ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);
 				log.debug("Found exchangeableKey: {}", exchangeableKey);
 				CryptoUtil.setExchangeableKey(exchangeableKey);
-				log.info("WAS - setApplicationSessionParameters {}: New application session created for applicationID: {}, applicationTokenID: {}, expires: {}, key:{}", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted(), CryptoUtil.getActiveKey());
+				log.info("WAS - setApplicationSessionParameters {}: New application session created for applicationID: {}, applicationTokenID: {}, expires: {}, key:{}", logonAttemptNo.get(), applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted(), CryptoUtil.getActiveKey());
 
 			} catch (Exception e) {
 				log.warn("Unable to update CryptoUtil with new cryptokey", e);
 			}
 		} else {
-			log.error("WAS {}- No key found for applicationID: {}, applicationTokenID: {}, expires: {}", logonAttemptNo, applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted());
+			log.error("WAS {}- No key found for applicationID: {}, applicationTokenID: {}, expires: {}", logonAttemptNo.get(), applicationToken.getApplicationID(), applicationToken.getApplicationTokenId(), applicationToken.getExpiresFormatted());
 		}
-		isInitialized = true;
+		isInitialized.set(true);
 	}
 
 	private void removeApplicationSessionParameters() {
 		setApplicationToken(null);
-		isInitialized = false;
-		log.info("WAS {}: Application session removed for applicationID: {} applicationName: {},", logonAttemptNo, myAppCredential.getApplicationID(), myAppCredential.getApplicationName());
+		isInitialized.set(false);
+		log.info("WAS {}: Application session removed for applicationID: {} applicationName: {},", logonAttemptNo.get(), myAppCredential.getApplicationID(), myAppCredential.getApplicationName());
 	}
 
 	/**
@@ -413,13 +422,14 @@ public class WhydahApplicationSession {
 	public boolean checkActiveSession() {
 		return hasActiveSession();
 	}
-	
-	private long lastTimeChecked = 0;
-	private boolean hasActiveSession = false;
+
+	private final AtomicLong lastTimeChecked = new AtomicLong(0);
+	private final AtomicBoolean hasActiveSession = new AtomicBoolean(false);
 	/**
 	 * @return true is session is active and working
 	 */
 	public boolean hasActiveSession() {
+		ApplicationToken applicationToken = applicationTokenRef.get();
 		if (applicationToken == null || !ApplicationTokenID.isValid(getActiveApplicationTokenId())) {
 			removeApplicationSessionParameters();
 			return false;
@@ -431,13 +441,13 @@ public class WhydahApplicationSession {
 		}
 
 		//don't call this check too often
-		if(System.currentTimeMillis() - lastTimeChecked > APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS * 1000) {
-			
+		if(System.currentTimeMillis() - lastTimeChecked.get() > APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS * 1000) {
+
 			CommandValidateApplicationTokenId commandValidateApplicationTokenId = new CommandValidateApplicationTokenId(getSTS(), getActiveApplicationTokenId());
-			hasActiveSession = commandValidateApplicationTokenId.execute();
-			lastTimeChecked = System.currentTimeMillis(); //last time check is et after the command is executed
-			
-			if (!hasActiveSession) {
+			hasActiveSession.set(commandValidateApplicationTokenId.execute());
+			lastTimeChecked.set(System.currentTimeMillis()); //last time check is et after the command is executed
+
+			if (!hasActiveSession.get()) {
 
 				if (commandValidateApplicationTokenId.isResponseFromFallback()) {
 					log.warn("Got timeout on call to verify applicationTokenID, since applicationtoken is not expired, we return true");
@@ -447,8 +457,8 @@ public class WhydahApplicationSession {
 				removeApplicationSessionParameters();
 			}
 		}
-		
-		return hasActiveSession;
+
+		return hasActiveSession.get();
 
 	}
 
@@ -503,6 +513,7 @@ public class WhydahApplicationSession {
 
 	public static ThreatSignal createThreat(String clientIpAddress, String source, String text, Object[] additionalProperties, SeverityLevel severity, boolean isImmediateThreat) {
 		ThreatSignal threatSignal = new ThreatSignal();
+		WhydahApplicationSession instance = instanceRef.get();
 		if (instance != null) {
 			threatSignal.setSignalEmitter(instance.getActiveApplicationName() + " [" + WhydahUtil.getMyIPAddresssesString() + "]");
 			threatSignal.setAdditionalProperty("DEFCON", instance.getDefcon());
@@ -554,21 +565,27 @@ public class WhydahApplicationSession {
 	 */
 
 	public List<Application> getApplicationList() {
-		return applications;
+		synchronized (applications) {
+    		return new ArrayList<>(applications);
+		}
 	}
 
 	private void setAppLinks(List<Application> newapplications) {
-		applications = newapplications;
+        synchronized (applications) {
+            applications.clear();
+            applications.addAll(newapplications);
+        }
 	}
 
-	Lock updateLock = new Lock();
+	final Lock updateLock = new Lock();
 	public void updateApplinks() {
-		if (disableUpdateAppLink || !WhydahUtil.isAdminSdk()) {
+		if (disableUpdateAppLink.get() || !WhydahUtil.isAdminSdk()) {
 			return;
 		}
 		if (!updateLock.isLocked()) {
 			try {
 				updateLock.lock();
+				ApplicationToken applicationToken = applicationTokenRef.get();
 				if (uas == null || uas.length() < 8 || applicationToken == null) {
 					log.warn("Called updateAppLinks without was initialized uas: {}, applicationToken: {} - aborting", uas, applicationToken);
 					return;
@@ -593,14 +610,11 @@ public class WhydahApplicationSession {
 	}
 
 	public boolean hasApplicationMetaData() {
-		if (applications == null) {
-			return false;
-		}
 		return getApplicationList().size() > 2;
 	}
 
 	public void updateApplinks(boolean forceUpdate) {
-		if (disableUpdateAppLink) {
+		if (disableUpdateAppLink.get()) {
 			return;
 		}
 		if (uas == null || uas.length() < 8) {
@@ -609,6 +623,7 @@ public class WhydahApplicationSession {
 		}
 		URI userAdminServiceUri = URI.create(uas);
 
+		ApplicationToken applicationToken = applicationTokenRef.get();
 		if (forceUpdate && applicationToken != null) {
 			String applicationsJson = new CommandListApplications(userAdminServiceUri, applicationToken.getApplicationTokenId()).execute();
 			log.debug("WAS: updateApplinks: AppLications returned:" + first50(applicationsJson));
@@ -621,24 +636,24 @@ public class WhydahApplicationSession {
 	}
 
 	public boolean isDisableUpdateAppLink() {
-		return disableUpdateAppLink;
+		return disableUpdateAppLink.get();
 	}
 
 	public void setDisableUpdateAppLink(boolean disableUpdateAppLink) {
-		this.disableUpdateAppLink = disableUpdateAppLink;
+		this.disableUpdateAppLink.set(disableUpdateAppLink);
 	}
 
 
-	
+
 	public boolean isWhiteListed(String suspect) {
-		for(Application app: applications) {
+		for(Application app: getApplicationList()) {
 			if(app.getId().equals(getMyApplicationCredential().getApplicationID())) {
-				
+
 				if(app.getTags()!=null && app.getTags().length()>0 && app.getTags().contains(INN_WHITE_LIST)) {
 	        		List<Tag> tagList = ApplicationTagMapper.getTagList(app.getTags());
 	        		for (Tag tag : tagList) {
 	        			if (tag.getName().equalsIgnoreCase(INN_WHITE_LIST) && tag.getValue()!= null && tag.getValue().length()>0) {
-	        				
+
 	        				String[] ids = tag.getValue().split("\\s*[,;:\\s+]\\s*");
 	        				for(String id : ids) {
 	        					if(id.equalsIgnoreCase(suspect)) {
@@ -650,7 +665,7 @@ public class WhydahApplicationSession {
 	        	}
 			}
 		}
-		
+
 		return false;
 	}
 
