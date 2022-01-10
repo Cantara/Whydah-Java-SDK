@@ -15,12 +15,11 @@
         <developerConnection>scm:git:ssh://git@github.com/cantara/Whydah-Java-SDK.git</developerConnection>
         <connection>scm:git:https://github.com/cantara/Whydah-Java-SDK.git</connection>
         <url>https://github.com/cantara/Whydah-Java-SDK</url>
-        <tag>Whydah-Java-SDK-2.9.24</tag>
     </scm>
 
     <properties>
         <service.name>Whydah-Java-SDK</service.name>
-        <whydah-typelib-version>2.9.29</whydah-typelib-version>
+        <whydah-typelib-version>2.10.0</whydah-typelib-version>
         <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
 
