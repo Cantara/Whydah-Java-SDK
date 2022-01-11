@@ -117,18 +117,23 @@ public class WhydahUserSession2 {
         userTokenXMLRef.set(userTokenXML);
         if (!hasActiveSession()) {
             log.error("Error, unable to initialize new user session, userTokenXML:" + userTokenXML);
-            for (int n = 0; n < 7 || hasActiveSession(); n++) {
+            for (int n = 0; n < 7; n++) {
+                log.warn("Retrying renewing user session");
+                if (n > 0) {
+                    try {
+                        Thread.sleep(1000 * n);
+                    } catch (InterruptedException ie) {
+                    }
+                }
                 userTokenXML = WhydahUtil2.logOnUser(was, userCredential);
                 userTokenXMLRef.set(userTokenXML);
-                log.warn("Retrying renewing user session");
-                try {
-                    Thread.sleep(1000 * n);
-                } catch (InterruptedException ie) {
+                if (userTokenXML != null && userTokenXML.length() >= 4) {
+                    return; // got valid userTokenXML - no need to re-check validity remotely
                 }
                 // If we keep failing, let us force renew of application session too
                 if (n > 3) {
                     was.resetApplicationSession();
-                    n = 0;
+                    n = 0; // TODO potential for-ever loop ?
                 }
             }
 
