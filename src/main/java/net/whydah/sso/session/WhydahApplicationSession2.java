@@ -20,6 +20,8 @@ import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.user.types.UserToken;
 import net.whydah.sso.util.Lock;
 import net.whydah.sso.util.WhydahUtil;
+import net.whydah.sso.util.backoff.BackOffExecution;
+import net.whydah.sso.util.backoff.JitteryExponentialBackOff;
 import net.whydah.sso.whydah.DEFCON;
 import net.whydah.sso.whydah.ThreatSignal;
 import net.whydah.sso.whydah.ThreatSignal.SeverityLevel;
@@ -190,8 +192,6 @@ public class WhydahApplicationSession2 {
 
     private final AtomicBoolean disableUpdateAppLink = new AtomicBoolean(false);
 
-    //private ScheduledExecutorService initialize_scheduler;
-
     private final ScheduledExecutorService renew_scheduler;
     private final ScheduledExecutorService app_update_scheduler;
 
@@ -208,34 +208,33 @@ public class WhydahApplicationSession2 {
         logOnApp();
 
         //a loop to renew the app token
-        renew_scheduler.scheduleAtFixedRate(
-                new Runnable() {
-                    public void run() {
-                        try {
-                            renewWAS2();
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                },
-                5, APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS, TimeUnit.SECONDS);
+        renew_scheduler.schedule(this::doRenewSessionTask, 5, TimeUnit.SECONDS); // initial renew task
 
         //a loop to update applications
         if (!disableUpdateAppLink.get() && uas != null && uas.length() > 8) { //UAS will skip this check since it has uas=null
-            app_update_scheduler.scheduleAtFixedRate(
-                    new Runnable() {
-                        public void run() {
-                            try {
-                                updateApplinks();
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-                    },
-                    5, APPLICATION_UPDATE_CHECK_INTERVAL_IN_SECONDS, TimeUnit.SECONDS);
+            app_update_scheduler.schedule(this::doUpdateApplicationsTask, 5, TimeUnit.SECONDS);
         }
     }
 
+    private void doRenewSessionTask() {
+        try {
+            renewWAS2();
+        } catch (Exception ex) {
+            log.error("", ex);
+        } finally {
+            renew_scheduler.schedule(this::doRenewSessionTask, APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS, TimeUnit.SECONDS);
+        }
+    }
+
+    private void doUpdateApplicationsTask() {
+        try {
+            updateApplinks();
+        } catch (Exception ex) {
+            log.error("", ex);
+        } finally {
+            app_update_scheduler.schedule(this::doUpdateApplicationsTask, APPLICATION_UPDATE_CHECK_INTERVAL_IN_SECONDS, TimeUnit.SECONDS);
+        }
+    }
 
     public ApplicationCredential getMyApplicationCredential() {
         return myAppCredential;
@@ -330,10 +329,16 @@ public class WhydahApplicationSession2 {
             log.trace("Renew WAS: Active application session found, applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
             Long expires = Long.parseLong(applicationToken.getExpires());
             if (expiresBeforeNextSchedule(expires)) {
+                JitteryExponentialBackOff extendSessionBackoff = new JitteryExponentialBackOff(3_000, 1.5, 1000);
+                extendSessionBackoff.setMaxInterval(10_000);
+                BackOffExecution extendSessionBackoffExecution = extendSessionBackoff.start();
+                JitteryExponentialBackOff renewAttemptBackoff = new JitteryExponentialBackOff(1_000, 2, 200);
+                renewAttemptBackoff.setMaxInterval(10_000);
+                BackOffExecution renewAttemptBackOffExecution = renewAttemptBackoff.start();
                 log.info("Renew WAS: Active session expires before next check, re-new - applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
                 for (int n = 0; n < 5; n++) {
                     applicationToken = applicationTokenRef.get();
-                    String applicationTokenXML = WhydahUtil.extendApplicationSession(sts, getActiveApplicationTokenId(), 2000 + n * 1000);  // Wait a bit longer on retries
+                    String applicationTokenXML = WhydahUtil.extendApplicationSession(sts, getActiveApplicationTokenId(), (int) extendSessionBackoffExecution.nextBackOff());  // Wait a bit longer on retries
                     if (applicationTokenXML != null && applicationTokenXML.length() > 10) {
                         setApplicationToken(ApplicationTokenMapper.fromXml(applicationTokenXML));
                         log.info("Renew WAS: Success in renew applicationsession, applicationTokenId: {} - for applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
@@ -356,11 +361,13 @@ public class WhydahApplicationSession2 {
                     } else {
                         log.info("Renew WAS: Failed to renew applicationsession, attempt:{}, returned response from STS: {}", n, applicationTokenXML);
                         if (n > 2) {
-                            logOnApp();
+                            if (logOnApp()) {
+                                break;
+                            }
                         }
                     }
                     try {
-                        Thread.sleep(1000 * n);
+                        Thread.sleep(renewAttemptBackOffExecution.nextBackOff());
                     } catch (InterruptedException ie) {
                     }
                 }
@@ -370,18 +377,25 @@ public class WhydahApplicationSession2 {
 
     final Lock logon_lock = new Lock();
 
-    private void logOnApp() {
+    private boolean logOnApp() {
         if (!logon_lock.isLocked()) {
             try {
                 logon_lock.lock();
+            } catch (InterruptedException e) {
+                log.error("", e);
+                return false;
+            }
+            try {
                 String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
                 if (checkApplicationToken(applicationTokenXML)) {
                     setApplicationSessionParameters(applicationTokenXML);
                     ApplicationToken applicationToken = applicationTokenRef.get();
                     log.info("logOnApp : Initialized new application session, applicationTokenId:{}, applicationID: {}, applicationName: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getApplicationName(), applicationToken.getExpiresFormatted());
+                    return true;
                 } else {
                     log.warn("logOnApp : Error, unable to initialize new application session, reset application session  applicationTokenXml: {}", first50(applicationTokenXML));
                     removeApplicationSessionParameters();
+                    return false;
                 }
             } catch (Exception ex) {
                 log.error("", ex);
@@ -389,6 +403,7 @@ public class WhydahApplicationSession2 {
                 logon_lock.unlock();
             }
         }
+        return false;
     }
 
     private void setApplicationSessionParameters(String applicationTokenXML) {
