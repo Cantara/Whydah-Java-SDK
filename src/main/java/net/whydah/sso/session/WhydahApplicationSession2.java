@@ -407,8 +407,8 @@ public class WhydahApplicationSession2 {
     }
 
     private void setApplicationSessionParameters(String applicationTokenXML) {
-        ApplicationToken applicationToken = applicationTokenRef.get();
         setApplicationToken(ApplicationTokenMapper.fromXml(applicationTokenXML));
+        ApplicationToken applicationToken = applicationTokenRef.get();
         String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), applicationToken.getApplicationTokenId()).execute();
 
         if (exchangeableKeyString != null && exchangeableKeyString.length() > 10) {
