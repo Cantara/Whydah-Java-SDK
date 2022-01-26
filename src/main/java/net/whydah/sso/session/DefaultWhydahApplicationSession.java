@@ -169,6 +169,8 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     private final Lock updateLock = new Lock();
 
+    private final AtomicBoolean closed = new AtomicBoolean(false);
+
     protected DefaultWhydahApplicationSession(String sts, String uas, ApplicationCredential myAppCredential, int applicationSessionCheckIntervalInSeconds, int applicationUpdateCheckIntervalInSeconds) {
         log.info("WAS initializing: sts:{},  uas:{}, myAppCredential:{}", sts, uas, myAppCredential);
 
@@ -193,6 +195,9 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
     }
 
     private void doRenewSessionTask() {
+        if (closed.get()) {
+            return; // break loop
+        }
         try {
             renewWAS();
         } catch (Exception ex) {
@@ -203,6 +208,9 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
     }
 
     private void doUpdateApplicationsTask() {
+        if (closed.get()) {
+            return; // break loop
+        }
         try {
             updateApplinks();
         } catch (Exception ex) {
@@ -214,11 +222,17 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public boolean expiresBeforeNextScheduledSessionCheck(Long timestamp) {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         return new ExpireChecker(applicationSessionCheckIntervalInSeconds).expiresBeforeNextScheduledSessionCheck(timestamp);
     }
 
     @Override
     public ThreatSignalBuilder threatSignalBuilder() {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         return new DefaultThreatSignalBuilder();
     }
 
@@ -272,6 +286,9 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
         @Override
         public ThreatSignal build() {
+            if (closed.get()) {
+                throw new WhydahApplicationSessionClosedException();
+            }
             ThreatSignal threatSignal = new ThreatSignal();
             threatSignal.setSignalEmitter(getActiveApplicationName() + " [" + WhydahUtil.getMyIPAddresssesString() + "]");
             threatSignal.setAdditionalProperty("DEFCON", getDefcon());
@@ -303,12 +320,18 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public ApplicationToken getActiveApplicationToken() {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         ApplicationToken applicationToken = applicationTokenRef.get();
         return applicationToken;
     }
 
     @Override
     public String getActiveApplicationTokenId() {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         ApplicationToken applicationToken = applicationTokenRef.get();
         if (applicationToken == null) {
             return "";
@@ -318,6 +341,9 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public String getActiveApplicationName() {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         ApplicationToken applicationToken = applicationTokenRef.get();
         if (applicationToken == null) {
             return "N/A";
@@ -327,6 +353,9 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public String getActiveApplicationTokenXML() {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         ApplicationToken applicationToken = applicationTokenRef.get();
         if (applicationToken == null) {
             log.warn("WAS: Unable to initialize new Application Session - no ApplicationToken returned");
@@ -352,6 +381,9 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public void setDefcon(DEFCON defcon) {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         this.defcon.set(defcon);
         DEFCONHandler.handleDefcon(defcon);
     }
@@ -363,6 +395,9 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public void updateDefcon(String userTokenXml) {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         String tokendefcon = UserTokenXpathHelper.getDEFCONLevel(userTokenXml);
         DEFCON defcon;
         try {
@@ -379,12 +414,18 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public void resetApplicationSession() {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         setApplicationToken(null);
         logOnApp();
     }
 
     @Override
     public void setApplicationToken(ApplicationToken myApplicationToken) {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         applicationTokenRef.set(myApplicationToken);
     }
 
@@ -504,11 +545,17 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public boolean checkActiveSession() {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         return hasActiveSession();
     }
 
     @Override
     public boolean hasActiveSession() {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         ApplicationToken applicationToken = applicationTokenRef.get();
         if (applicationToken == null || !ApplicationTokenID.isValid(getActiveApplicationTokenId())) {
             removeApplicationSessionParameters();
@@ -544,6 +591,9 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public boolean checkApplicationToken(String applicationTokenXML) {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         try {
             ApplicationToken at = ApplicationTokenMapper.fromXml(applicationTokenXML);
             if (ApplicationTokenID.isValid(at.getApplicationTokenId())) {
@@ -557,6 +607,9 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public void reportThreatSignal(ThreatSignal threatSignal) {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         try {
             new CommandSendThreatSignal(URI.create(getSTS()), getActiveApplicationTokenId(), threatSignal).queue();
         } catch (Exception e) {
@@ -570,6 +623,9 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public List<Application> getApplicationList() {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         return protectedApplications.getCopy();
     }
 
@@ -579,6 +635,9 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public void updateApplinks() {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         if (disableUpdateAppLink.get()) {
             return;
         }
@@ -609,11 +668,17 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public boolean hasApplicationMetaData() {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         return protectedApplications.hasMetaData();
     }
 
     @Override
     public void updateApplinks(boolean forceUpdate) {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         if (disableUpdateAppLink.get()) {
             return;
         }
@@ -642,11 +707,17 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public void setDisableUpdateAppLink(boolean disableUpdateAppLink) {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         this.disableUpdateAppLink.set(disableUpdateAppLink);
     }
 
     @Override
     public boolean isWhiteListed(String suspect) {
+        if (closed.get()) {
+            throw new WhydahApplicationSessionClosedException();
+        }
         List<Application> applications = protectedApplications.getCopy();
         for (Application app : applications) {
             if (app.getId().equals(getMyApplicationCredential().getApplicationID())) {
@@ -690,8 +761,10 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     @Override
     public void close() {
-        shutdownAndAwaitTermination(renew_scheduler);
-        shutdownAndAwaitTermination(app_update_scheduler);
+        if (closed.compareAndSet(false, true)) {
+            shutdownAndAwaitTermination(renew_scheduler);
+            shutdownAndAwaitTermination(app_update_scheduler);
+        }
     }
 }
 
