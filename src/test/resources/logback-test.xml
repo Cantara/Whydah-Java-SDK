@@ -6,6 +6,7 @@
         </encoder>
     </appender>
     <logger name="net.whydah.sso" level="debug"></logger>
+    <logger name="net.whydah.sso.application.helpers.ApplicationTokenXpathHelper" level="info"></logger>
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
