@@ -18,7 +18,6 @@ import net.whydah.sso.session.baseclasses.ExchangeableKey;
 import net.whydah.sso.session.experimental.WhydahApplicationSession3;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
 import net.whydah.sso.user.types.UserToken;
-import net.whydah.sso.util.Lock;
 import net.whydah.sso.util.WhydahUtil;
 import net.whydah.sso.util.backoff.BackOffExecution;
 import net.whydah.sso.util.backoff.JitteryExponentialBackOff;
@@ -40,6 +39,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static net.whydah.sso.util.LoggerUtil.first50;
 
@@ -163,11 +164,11 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
     private final ScheduledExecutorService renew_scheduler;
     private final ScheduledExecutorService app_update_scheduler;
 
-    private final Lock logon_lock = new Lock();
+    private final Lock logon_lock = new ReentrantLock();
 
     private final AtomicLong lastTimeChecked = new AtomicLong(0);
 
-    private final Lock updateLock = new Lock();
+    private final Lock updateLock = new ReentrantLock();
 
     private final AtomicBoolean closed = new AtomicBoolean(false);
 
@@ -490,30 +491,24 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
     }
 
     private boolean logOnApp() {
-        if (!logon_lock.isLocked()) {
-            try {
-                logon_lock.lock();
-            } catch (InterruptedException e) {
-                log.error("", e);
-                return false;
+        if (!logon_lock.tryLock()) {
+            return false;
+        }
+        try {
+            String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
+            if (checkApplicationToken(applicationTokenXML)) {
+                setApplicationSessionParameters(applicationTokenXML);
+                ApplicationToken applicationToken = applicationTokenRef.get();
+                log.info("logOnApp : Initialized new application session, applicationTokenId:{}, applicationID: {}, applicationName: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getApplicationName(), applicationToken.getExpiresFormatted());
+                return true;
+            } else {
+                log.warn("logOnApp : Error, unable to initialize new application session, reset application session  applicationTokenXml: {}", first50(applicationTokenXML));
+                removeApplicationSessionParameters();
             }
-            try {
-                String applicationTokenXML = WhydahUtil.logOnApplication(sts, myAppCredential);
-                if (checkApplicationToken(applicationTokenXML)) {
-                    setApplicationSessionParameters(applicationTokenXML);
-                    ApplicationToken applicationToken = applicationTokenRef.get();
-                    log.info("logOnApp : Initialized new application session, applicationTokenId:{}, applicationID: {}, applicationName: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getApplicationName(), applicationToken.getExpiresFormatted());
-                    return true;
-                } else {
-                    log.warn("logOnApp : Error, unable to initialize new application session, reset application session  applicationTokenXml: {}", first50(applicationTokenXML));
-                    removeApplicationSessionParameters();
-                    return false;
-                }
-            } catch (Exception ex) {
-                log.error("", ex);
-            } finally {
-                logon_lock.unlock();
-            }
+        } catch (Exception ex) {
+            log.error("", ex);
+        } finally {
+            logon_lock.unlock();
         }
         return false;
     }
@@ -641,28 +636,28 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
         if (disableUpdateAppLink.get()) {
             return;
         }
-        if (!updateLock.isLocked()) {
-            try {
-                updateLock.lock();
-                ApplicationToken applicationToken = applicationTokenRef.get();
-                if (uas == null || uas.length() < 8 || applicationToken == null) {
-                    log.warn("Called updateAppLinks without was initialized uas: {}, applicationToken: {} - aborting", uas, applicationToken);
-                    return;
-                }
-                URI userAdminServiceUri = URI.create(uas);
-
-                String applicationsJson = new CommandListApplications(userAdminServiceUri, applicationToken.getApplicationTokenId()).execute();
-                log.debug("WAS: updateApplinks: AppLications returned:" + first50(applicationsJson));
-                if (applicationsJson != null) {
-                    if (applicationsJson.length() > 20) {
-                        setAppLinks(ApplicationMapper.fromJsonList(applicationsJson));
-                    }
-                }
-            } catch (Exception ex) {
-                log.error("", ex);
-            } finally {
-                updateLock.unlock();
+        if (!updateLock.tryLock()) {
+            return;
+        }
+        try {
+            ApplicationToken applicationToken = applicationTokenRef.get();
+            if (uas == null || uas.length() < 8 || applicationToken == null) {
+                log.warn("Called updateAppLinks without was initialized uas: {}, applicationToken: {} - aborting", uas, applicationToken);
+                return;
             }
+            URI userAdminServiceUri = URI.create(uas);
+
+            String applicationsJson = new CommandListApplications(userAdminServiceUri, applicationToken.getApplicationTokenId()).execute();
+            log.debug("WAS: updateApplinks: AppLications returned:" + first50(applicationsJson));
+            if (applicationsJson != null) {
+                if (applicationsJson.length() > 20) {
+                    setAppLinks(ApplicationMapper.fromJsonList(applicationsJson));
+                }
+            }
+        } catch (Exception ex) {
+            log.error("", ex);
+        } finally {
+            updateLock.unlock();
         }
     }
 
