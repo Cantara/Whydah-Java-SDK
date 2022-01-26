@@ -6,6 +6,8 @@ import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.application.types.ApplicationToken;
 import net.whydah.sso.session.DefaultWhydahApplicationSession;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.Spark;
 
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class WhydahSimulator implements AutoCloseable {
+
+    private static final Logger log = LoggerFactory.getLogger(WhydahSimulator.class);
 
     public static Builder builder() {
         return new Builder();
@@ -66,7 +70,7 @@ public class WhydahSimulator implements AutoCloseable {
 
     public void initRoutes() {
         Spark.post("/sts/logon", (req, res) -> {
-            System.out.printf("WHYDAH-SIMULATOR: logon%n");
+            log.info("WHYDAH-SIMULATOR: logon");
             if (logonsAttempted.incrementAndGet() > maxNumberOfAllowedLogons) {
                 errors.add(new RuntimeException(String.format("More than %d number of logons attempted", maxNumberOfAllowedLogons)));
                 firstErrorCountDownLatch.countDown();
@@ -84,24 +88,24 @@ public class WhydahSimulator implements AutoCloseable {
             return xml;
         });
         Spark.post("/sts/:applicationTokenId/renew_applicationtoken", (req, res) -> {
-            System.out.printf("WHYDAH-SIMULATOR: renew_applicationtoken%n");
+            log.info("WHYDAH-SIMULATOR: renew_applicationtoken");
             return "";
         });
         Spark.get("/sts/:applicationTokenId/get_application_key", (req, res) -> {
-            System.out.printf("WHYDAH-SIMULATOR: get_application_key%n");
+            log.info("WHYDAH-SIMULATOR: get_application_key");
             return "";
         });
         Spark.get("/sts/:applicationTokenId/validate", (req, res) -> {
             String applicationTokenId = req.params(":applicationTokenId");
-            System.out.printf("WHYDAH-SIMULATOR: %s/validate%n", applicationTokenId);
+            log.info("WHYDAH-SIMULATOR: {}/validate", applicationTokenId);
             return "";
         });
         Spark.get("/sts/threat/:applicationTokenId/signal", (req, res) -> {
-            System.out.printf("WHYDAH-SIMULATOR: threat/.../signal%n");
+            log.info("WHYDAH-SIMULATOR: threat/.../signal");
             return "";
         });
         Spark.get("/uas/:applicationTokenId/applications", (req, res) -> {
-            System.out.printf("WHYDAH-SIMULATOR: applications%n");
+            log.info("WHYDAH-SIMULATOR: applications");
             return "";
         });
     }
