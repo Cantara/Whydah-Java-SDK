@@ -187,11 +187,11 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
         logOnApp();
 
         //a loop to renew the app token
-        renew_scheduler.schedule(this::doRenewSessionTask, 5, TimeUnit.SECONDS); // initial renew task
+        renew_scheduler.schedule(this::doRenewSessionTask, applicationSessionCheckIntervalInSeconds, TimeUnit.SECONDS); // initial renew task
 
         //a loop to update applications
         if (!disableUpdateAppLink.get() && uas != null && uas.length() > 8) { //UAS will skip this check since it has uas=null
-            app_update_scheduler.schedule(this::doUpdateApplicationsTask, 5, TimeUnit.SECONDS);
+            app_update_scheduler.schedule(this::doUpdateApplicationsTask, Math.max(1, applicationUpdateCheckIntervalInSeconds / 5), TimeUnit.SECONDS);
         }
     }
 
