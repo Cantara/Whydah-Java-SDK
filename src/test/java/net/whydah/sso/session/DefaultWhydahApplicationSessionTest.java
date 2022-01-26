@@ -6,6 +6,9 @@ import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 public class DefaultWhydahApplicationSessionTest {
 
     @Test
@@ -14,10 +17,9 @@ public class DefaultWhydahApplicationSessionTest {
                 .withMaxNumberOfAllowedLogons(1)
                 .build()) {
             WhydahApplicationSession3 was = simulator.createNewSession(builder -> builder.withApplicationSessionCheckIntervalInSeconds(1));
-            String activeApplicationTokenId = was.getActiveApplicationTokenId();
-            was.hasActiveSession();
-            simulator.expectPeriodWithoutAnyErrors(15, TimeUnit.SECONDS);
-            System.out.printf("SUCCESS: activeApplicationTokenId: %s%n", activeApplicationTokenId);
+            assertTrue(was.hasActiveSession());
+            simulator.expectPeriodWithoutAnyErrors(3, TimeUnit.SECONDS);
+            assertNotNull(was.getActiveApplicationTokenId());
         }
     }
 }
