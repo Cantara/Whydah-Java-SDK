@@ -23,6 +23,7 @@ import net.whydah.sso.util.backoff.BackOffExecution;
 import net.whydah.sso.util.backoff.JitteryExponentialBackOff;
 import net.whydah.sso.whydah.DEFCON;
 import net.whydah.sso.whydah.ThreatSignal;
+import net.whydah.sso.whydah.ThreatSignal.SeverityLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,6 @@ import static net.whydah.sso.util.LoggerUtil.first50;
 
 public class WhydahApplicationSession {
 
-
     private static final Logger log = LoggerFactory.getLogger(WhydahApplicationSession.class);
 
     public static final int APPLICATION_SESSION_CHECK_INTERVAL_IN_SECONDS = 10;  // Check every 10 seconds to adapt quickly
@@ -55,9 +55,9 @@ public class WhydahApplicationSession {
         private final static WhydahApplicationSession instance;
 
         static {
-            WhydahApplicationSession.WASConfiguration wasConfiguration = was2InitializationConfigurationRef.get();
+            WASConfiguration wasConfiguration = wasInitializationConfigurationRef.get();
             if (wasConfiguration == null) {
-                throw new IllegalStateException("was2InitializationConfigurationRef was not set");
+                throw new IllegalStateException("wasInitializationConfigurationRef was not set");
             }
             instance = new WhydahApplicationSession(wasConfiguration.sts, wasConfiguration.uas, wasConfiguration.appCred);
         }
@@ -79,7 +79,7 @@ public class WhydahApplicationSession {
         }
     }
 
-    private static final AtomicReference<WhydahApplicationSession.WASConfiguration> was2InitializationConfigurationRef = new AtomicReference<>();
+    private static final AtomicReference<WASConfiguration> wasInitializationConfigurationRef = new AtomicReference<>();
 
     //HUY: NO NEED, renewWAS() will take care of this sleeping nature
     //private static final int[] FIBONACCI = new int[]{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144};
@@ -87,14 +87,14 @@ public class WhydahApplicationSession {
 
     public static WhydahApplicationSession getInstance(String sts, ApplicationCredential appCred) {
         log.info("WAS getInstance(String sts, ApplicationCredential appCred) called");
-        was2InitializationConfigurationRef.set(new WhydahApplicationSession.WASConfiguration(sts, null, appCred));
-        return WhydahApplicationSession.WhydahApplicationSessionSingleton.getInstance();
+        wasInitializationConfigurationRef.set(new WASConfiguration(sts, null, appCred));
+        return WhydahApplicationSessionSingleton.getInstance();
     }
 
     public static WhydahApplicationSession getInstance(String sts, String uas, ApplicationCredential appCred) {
         log.info("WAS getInstance(String sts, String uas, ApplicationCredential appCred) called");
-        was2InitializationConfigurationRef.set(new WhydahApplicationSession.WASConfiguration(sts, uas, appCred));
-        return WhydahApplicationSession.WhydahApplicationSessionSingleton.getInstance();
+        wasInitializationConfigurationRef.set(new WASConfiguration(sts, uas, appCred));
+        return WhydahApplicationSessionSingleton.getInstance();
     }
 
     public static boolean expiresBeforeNextSchedule(Long timestamp) {
@@ -110,10 +110,10 @@ public class WhydahApplicationSession {
         return false;
     }
 
-    public static ThreatSignal createThreat(String clientIpAddress, String source, String text, Object[] additionalProperties, ThreatSignal.SeverityLevel severity, boolean isImmediateThreat) {
+    public static ThreatSignal createThreat(String clientIpAddress, String source, String text, Object[] additionalProperties, SeverityLevel severity, boolean isImmediateThreat) {
         ThreatSignal threatSignal = new ThreatSignal();
-        if (was2InitializationConfigurationRef.get() != null) {
-            WhydahApplicationSession instance = WhydahApplicationSession.WhydahApplicationSessionSingleton.getInstance();
+        if (wasInitializationConfigurationRef.get() != null) {
+            WhydahApplicationSession instance = WhydahApplicationSessionSingleton.getInstance();
             threatSignal.setSignalEmitter(instance.getActiveApplicationName() + " [" + WhydahUtil.getMyIPAddresssesString() + "]");
             threatSignal.setAdditionalProperty("DEFCON", instance.getDefcon());
         }
@@ -138,23 +138,23 @@ public class WhydahApplicationSession {
     }
 
     public static ThreatSignal createThreat(String clientIpAddress, String source, String text) {
-        return createThreat(clientIpAddress, source, text, null, ThreatSignal.SeverityLevel.LOW, true);
+        return createThreat(clientIpAddress, source, text, null, SeverityLevel.LOW, true);
     }
 
     public static ThreatSignal createThreat(String clientIpAddress, String source, String text, Object[] details) {
-        return createThreat(clientIpAddress, source, text, details, ThreatSignal.SeverityLevel.LOW, true);
+        return createThreat(clientIpAddress, source, text, details, SeverityLevel.LOW, true);
     }
 
-    public static ThreatSignal createThreat(String clientIpAddress, String source, String text, Object[] details, ThreatSignal.SeverityLevel severity) {
+    public static ThreatSignal createThreat(String clientIpAddress, String source, String text, Object[] details, SeverityLevel severity) {
         return createThreat(clientIpAddress, source, text, details, severity, true);
     }
 
     public static ThreatSignal createThreat(String text) {
-        return createThreat("", "", text, null, ThreatSignal.SeverityLevel.LOW, true);
+        return createThreat("", "", text, null, SeverityLevel.LOW, true);
     }
 
     public static ThreatSignal createThreat(String text, Object[] details) {
-        return createThreat("", "", text, details, ThreatSignal.SeverityLevel.LOW, true);
+        return createThreat("", "", text, details, SeverityLevel.LOW, true);
     }
 
     private static class ProtectedApplications {
@@ -180,7 +180,7 @@ public class WhydahApplicationSession {
         }
     }
 
-    private final WhydahApplicationSession.ProtectedApplications protectedApplications = new WhydahApplicationSession.ProtectedApplications();
+    private final ProtectedApplications protectedApplications = new ProtectedApplications();
 
     private final String sts;
     private final String uas;
@@ -510,7 +510,7 @@ public class WhydahApplicationSession {
         reportThreatSignal(createThreat(clientIpAddress, source, threatMessage, details));
     }
 
-    public void reportThreatSignal(String clientIpAddress, String source, String threatMessage, Object[] details, ThreatSignal.SeverityLevel severity) {
+    public void reportThreatSignal(String clientIpAddress, String source, String threatMessage, Object[] details, SeverityLevel severity) {
         reportThreatSignal(createThreat(clientIpAddress, source, threatMessage, details, severity));
     }
 

@@ -1,6 +1,5 @@
 package net.whydah.sso.session;
 
-
 import net.whydah.sso.application.mappers.ApplicationMapper;
 import net.whydah.sso.application.mappers.ApplicationTagMapper;
 import net.whydah.sso.application.mappers.ApplicationTokenMapper;
@@ -52,15 +51,15 @@ public class WhydahApplicationSession2 {
     // TODO refactor this to be Whydah generic
     public static final String INN_WHITE_LIST = "INNWHITELIST";
 
-    private static class WhydahApplicationSession2Singleton {
+    private static class WhydahApplicationSessionSingleton {
         private final static WhydahApplicationSession2 instance;
 
         static {
-            WAS2Configuration was2Configuration = was2InitializationConfigurationRef.get();
-            if (was2Configuration == null) {
-                throw new IllegalStateException("was2InitializationConfigurationRef was not set");
+            WASConfiguration wasConfiguration = wasInitializationConfigurationRef.get();
+            if (wasConfiguration == null) {
+                throw new IllegalStateException("wasInitializationConfigurationRef was not set");
             }
-            instance = new WhydahApplicationSession2(was2Configuration.sts, was2Configuration.uas, was2Configuration.appCred);
+            instance = new WhydahApplicationSession2(wasConfiguration.sts, wasConfiguration.uas, wasConfiguration.appCred);
         }
 
         private static WhydahApplicationSession2 getInstance() {
@@ -68,34 +67,34 @@ public class WhydahApplicationSession2 {
         }
     }
 
-    private static class WAS2Configuration {
+    private static class WASConfiguration {
         private final String sts;
         private final String uas;
         private final ApplicationCredential appCred;
 
-        private WAS2Configuration(String sts, String uas, ApplicationCredential appCred) {
+        private WASConfiguration(String sts, String uas, ApplicationCredential appCred) {
             this.sts = sts;
             this.uas = uas;
             this.appCred = appCred;
         }
     }
 
-    private static final AtomicReference<WAS2Configuration> was2InitializationConfigurationRef = new AtomicReference<>();
+    private static final AtomicReference<WASConfiguration> wasInitializationConfigurationRef = new AtomicReference<>();
 
-    //HUY: NO NEED, renewWAS2() will take care of this sleeping nature
+    //HUY: NO NEED, renewWAS() will take care of this sleeping nature
     //private static final int[] FIBONACCI = new int[]{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144};
 
 
     public static WhydahApplicationSession2 getInstance(String sts, ApplicationCredential appCred) {
-        log.info("WAS2 getInstance(String sts, ApplicationCredential appCred) called");
-        was2InitializationConfigurationRef.set(new WAS2Configuration(sts, null, appCred));
-        return WhydahApplicationSession2Singleton.getInstance();
+        log.info("WAS getInstance(String sts, ApplicationCredential appCred) called");
+        wasInitializationConfigurationRef.set(new WASConfiguration(sts, null, appCred));
+        return WhydahApplicationSessionSingleton.getInstance();
     }
 
     public static WhydahApplicationSession2 getInstance(String sts, String uas, ApplicationCredential appCred) {
-        log.info("WAS2 getInstance(String sts, String uas, ApplicationCredential appCred) called");
-        was2InitializationConfigurationRef.set(new WAS2Configuration(sts, uas, appCred));
-        return WhydahApplicationSession2Singleton.getInstance();
+        log.info("WAS getInstance(String sts, String uas, ApplicationCredential appCred) called");
+        wasInitializationConfigurationRef.set(new WASConfiguration(sts, uas, appCred));
+        return WhydahApplicationSessionSingleton.getInstance();
     }
 
     public static boolean expiresBeforeNextSchedule(Long timestamp) {
@@ -113,8 +112,8 @@ public class WhydahApplicationSession2 {
 
     public static ThreatSignal createThreat(String clientIpAddress, String source, String text, Object[] additionalProperties, SeverityLevel severity, boolean isImmediateThreat) {
         ThreatSignal threatSignal = new ThreatSignal();
-        if (was2InitializationConfigurationRef.get() != null) {
-            WhydahApplicationSession2 instance = WhydahApplicationSession2Singleton.getInstance();
+        if (wasInitializationConfigurationRef.get() != null) {
+            WhydahApplicationSession2 instance = WhydahApplicationSessionSingleton.getInstance();
             threatSignal.setSignalEmitter(instance.getActiveApplicationName() + " [" + WhydahUtil.getMyIPAddresssesString() + "]");
             threatSignal.setAdditionalProperty("DEFCON", instance.getDefcon());
         }
@@ -196,7 +195,7 @@ public class WhydahApplicationSession2 {
     private final ScheduledExecutorService app_update_scheduler;
 
     protected WhydahApplicationSession2(String sts, String uas, ApplicationCredential myAppCredential) {
-        log.info("WAS2 initializing: sts:{},  uas:{}, myAppCredential:{}", sts, uas, myAppCredential);
+        log.info("WAS initializing: sts:{},  uas:{}, myAppCredential:{}", sts, uas, myAppCredential);
 
         this.renew_scheduler = Executors.newScheduledThreadPool(1);
         this.app_update_scheduler = Executors.newScheduledThreadPool(1);
@@ -218,7 +217,7 @@ public class WhydahApplicationSession2 {
 
     private void doRenewSessionTask() {
         try {
-            renewWAS2();
+            renewWAS();
         } catch (Exception ex) {
             log.error("", ex);
         } finally {
@@ -316,11 +315,11 @@ public class WhydahApplicationSession2 {
     }
 
 
-    private void renewWAS2() {
+    private void renewWAS() {
         log.trace("Renew WAS: Renew application session called");
         ApplicationToken applicationToken = applicationTokenRef.get();
         if (!hasActiveSession() || !WhydahUtil.isAdminSdk()) {
-            log.trace("Renew WAS: checkActiveSession() == false - initializeWAS2 called");
+            log.trace("Renew WAS: checkActiveSession() == false - initializeWAS called");
             if (applicationToken == null) {
                 log.info("Renew WAS: No active application session, applicationToken:null, myAppCredential:{}, logonAttemptNo:{}", myAppCredential);
             }
@@ -628,3 +627,5 @@ public class WhydahApplicationSession2 {
         return false;
     }
 }
+
+
