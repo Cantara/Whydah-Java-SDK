@@ -577,6 +577,7 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
                 }
                 log.info("WAS: applicationsession invalid from STS, reset application session, applicationTokenId: {} - for applicationID: {} - expires:{}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
                 removeApplicationSessionParameters();
+                return false;
             }
         }
 
