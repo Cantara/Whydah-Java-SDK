@@ -58,9 +58,11 @@ public class WhydahSimulator implements AutoCloseable {
     }
 
     public void expectPeriodWithoutAnyErrors(long timeout, TimeUnit unit) throws InterruptedException {
+        long start = System.nanoTime();
         if (firstErrorCountDownLatch.await(timeout, unit)) {
+            long duration = (System.nanoTime() - start) / 1_000_000;
             errors.get(0).printStackTrace();
-            Assert.fail("Error: " + errors.get(0).getMessage());
+            Assert.fail(String.format("Error after %d ms: %s", duration, errors.get(0).getMessage()));
         }
     }
 
