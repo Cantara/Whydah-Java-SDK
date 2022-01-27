@@ -434,8 +434,8 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
     private void renewWAS() {
         log.trace("Renew WAS: Renew application session called");
         ApplicationToken applicationToken = applicationTokenRef.get();
-        if (!hasActiveSession() || !WhydahUtil.isAdminSdk()) {
-            log.trace("Renew WAS: checkActiveSession() == false - initializeWAS called");
+        if (!hasActiveSession()) {
+            log.trace("Renew WAS: hasActiveSession() == false - initializeWAS called");
             if (applicationToken == null) {
                 log.info("Renew WAS: No active application session, applicationToken:null, myAppCredential:{}, logonAttemptNo:{}", myAppCredential);
             }
