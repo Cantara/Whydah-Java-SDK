@@ -1,20 +1,19 @@
 package net.whydah.sso.commands.threat;
 
-import static org.junit.Assert.assertTrue;
-
-import java.time.Instant;
-
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
 import net.whydah.sso.commands.appauth.CommandLogonApplication;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import net.whydah.sso.util.WhydahUtil;
 import net.whydah.sso.whydah.ThreatSignal;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.Instant;
+
+import static org.junit.Assert.assertTrue;
 
 public class CommandSendThreatSignalTest {
 
@@ -74,6 +73,8 @@ public class CommandSendThreatSignalTest {
             myAppTokenXml = new CommandLogonApplication(config.tokenServiceUri, config.appCredential).execute();
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
+
+            WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
 
             ThreatSignal threatSignal = WhydahApplicationSession.createThreat("Threatsignal from Systests 3");
 
