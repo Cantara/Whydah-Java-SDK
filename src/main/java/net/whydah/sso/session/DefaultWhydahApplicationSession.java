@@ -110,11 +110,23 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
         }
 
         public Builder withApplicationSessionCheckIntervalInSeconds(int applicationSessionCheckIntervalInSeconds) {
+            if (applicationSessionCheckIntervalInSeconds <= 0) {
+                throw new IllegalArgumentException("Value out of range, must be > 0, value: " + applicationSessionCheckIntervalInSeconds);
+            }
+            if (applicationSessionCheckIntervalInSeconds > 60 * 60) {
+                throw new IllegalArgumentException("Value out of range, must be no more than 1 hour, value: " + applicationSessionCheckIntervalInSeconds);
+            }
             this.applicationSessionCheckIntervalInSeconds = applicationSessionCheckIntervalInSeconds;
             return this;
         }
 
         public Builder withApplicationUpdateCheckIntervalInSeconds(int applicationUpdateCheckIntervalInSeconds) {
+            if (applicationUpdateCheckIntervalInSeconds <= 0) {
+                throw new IllegalArgumentException("Value out of range, must be > 0, value: " + applicationUpdateCheckIntervalInSeconds);
+            }
+            if (applicationUpdateCheckIntervalInSeconds > 60 * 60) {
+                throw new IllegalArgumentException("Value out of range, must be no more than 1 hour, value: " + applicationUpdateCheckIntervalInSeconds);
+            }
             this.applicationUpdateCheckIntervalInSeconds = applicationUpdateCheckIntervalInSeconds;
             return this;
         }
@@ -170,6 +182,8 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
 
     private final Lock updateLock = new ReentrantLock();
 
+    private final AtomicReference<BackOffExecution> renewBackoffRef = new AtomicReference<>();
+
     private final AtomicBoolean closed = new AtomicBoolean(false);
 
     protected DefaultWhydahApplicationSession(String sts, String uas, ApplicationCredential myAppCredential, int applicationSessionCheckIntervalInSeconds, int applicationUpdateCheckIntervalInSeconds) {
@@ -204,7 +218,16 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
         } catch (Exception ex) {
             log.error("", ex);
         } finally {
-            renew_scheduler.schedule(this::doRenewSessionTask, applicationSessionCheckIntervalInSeconds, TimeUnit.SECONDS);
+            try {
+                int waitTimeMs = applicationSessionCheckIntervalInSeconds * 1000;
+                BackOffExecution backOffExecution = renewBackoffRef.get();
+                if (backOffExecution != null) {
+                    waitTimeMs = (int) backOffExecution.nextBackOff();
+                }
+                renew_scheduler.schedule(this::doRenewSessionTask, waitTimeMs, TimeUnit.MILLISECONDS);
+            } catch (Throwable t) {
+                log.error("renew-session loop stopped!", t);
+            }
         }
     }
 
@@ -437,9 +460,21 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
         if (!hasActiveSession()) {
             log.trace("Renew WAS: hasActiveSession() == false - initializeWAS called");
             if (applicationToken == null) {
-                log.info("Renew WAS: No active application session, applicationToken:null, myAppCredential:{}, logonAttemptNo:{}", myAppCredential);
+                log.debug("Renew WAS: No active application session, applicationToken:null, myAppCredential:{}, logonAttemptNo:{}", myAppCredential);
             }
-            logOnApp();
+            if (logOnApp()) {
+                log.debug("Renew WAS: logon succeeded after failing before, disabling exponential backoff");
+                renewBackoffRef.set(null); // reset backoff on successful logon
+            } else {
+                BackOffExecution backOffExecution = renewBackoffRef.get();
+                if (backOffExecution == null) {
+                    log.debug("Renew WAS: logon failed, starting exponential backoff");
+                    JitteryExponentialBackOff jitteryExponentialBackOff = new JitteryExponentialBackOff(Math.round(1000 * applicationSessionCheckIntervalInSeconds * Math.E), Math.E, 30_000); // randomize by +- 30 seconds to avoid distributed synchronized repeating renew patterns
+                    jitteryExponentialBackOff.setMaxInterval(Math.min(15 * 60 * 1000,  90 * applicationSessionCheckIntervalInSeconds * 1000)); // at most 15 minutes
+                    backOffExecution = jitteryExponentialBackOff.start();
+                    renewBackoffRef.set(backOffExecution);
+                }
+            }
             return;
         }
         log.trace("Renew WAS: Active application session found, applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());

@@ -28,7 +28,8 @@ public class WhydahSimulator implements AutoCloseable {
 
     public static class Builder {
 
-        private int maxNumberOfAllowedLogons;
+        private int maxNumberOfAllowedLogons = Integer.MAX_VALUE;
+        private boolean applicationLogonAlwaysFailing = false;
 
         private Builder() {
         }
@@ -38,19 +39,26 @@ public class WhydahSimulator implements AutoCloseable {
             return this;
         }
 
+        public Builder withApplicationLogonAlwaysFailing(boolean applicationLogonAlwaysFailing) {
+            this.applicationLogonAlwaysFailing = applicationLogonAlwaysFailing;
+            return this;
+        }
+
         public WhydahSimulator build() {
-            return new WhydahSimulator(maxNumberOfAllowedLogons);
+            return new WhydahSimulator(maxNumberOfAllowedLogons, applicationLogonAlwaysFailing);
         }
     }
 
     private final int maxNumberOfAllowedLogons;
+    private final boolean applicationLogonAlwaysFailing;
     private final AtomicInteger logonsAttempted = new AtomicInteger(0);
     private final List<DefaultWhydahApplicationSession> sessions = new CopyOnWriteArrayList<>();
     private final List<Throwable> errors = new CopyOnWriteArrayList<>();
     private final CountDownLatch firstErrorCountDownLatch = new CountDownLatch(1);
 
-    private WhydahSimulator(int maxNumberOfAllowedLogons) {
+    private WhydahSimulator(int maxNumberOfAllowedLogons, boolean applicationLogonAlwaysFailing) {
         this.maxNumberOfAllowedLogons = maxNumberOfAllowedLogons;
+        this.applicationLogonAlwaysFailing = applicationLogonAlwaysFailing;
         Spark.port(0);
         initRoutes();
         Spark.init();
@@ -76,6 +84,9 @@ public class WhydahSimulator implements AutoCloseable {
             if (logonsAttempted.incrementAndGet() > maxNumberOfAllowedLogons) {
                 errors.add(new RuntimeException(String.format("More than %d number of logons attempted", maxNumberOfAllowedLogons)));
                 firstErrorCountDownLatch.countDown();
+                return "";
+            }
+            if (applicationLogonAlwaysFailing) {
                 return "";
             }
             String applicationcredentialXml = req.raw().getParameter("applicationcredential");
