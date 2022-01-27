@@ -36,6 +36,8 @@ public class CommandSendThreatSignalTest {
             String myApplicationTokenID = ApplicationXpathHelper.getAppTokenIdFromAppTokenXml(myAppTokenXml);
             assertTrue(myApplicationTokenID != null && myApplicationTokenID.length() > 5);
 
+            WhydahApplicationSession.getInstance(config.tokenServiceUri.toString(), config.appCredential);
+
             String threatResult = new CommandSendThreatSignal(config.tokenServiceUri, myApplicationTokenID, "Systest - test threat signal 1 - Instant: " + WhydahUtil.getRunningSince()).execute();
             assertTrue(threatResult.length() == 0);
         }
