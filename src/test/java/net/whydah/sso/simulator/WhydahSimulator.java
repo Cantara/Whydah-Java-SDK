@@ -157,6 +157,7 @@ public class WhydahSimulator implements AutoCloseable {
             t.printStackTrace();
         } finally {
             Spark.stop();
+            Spark.awaitStop();
         }
     }
 }
