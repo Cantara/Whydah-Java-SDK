@@ -440,52 +440,53 @@ public class DefaultWhydahApplicationSession implements WhydahApplicationSession
                 log.info("Renew WAS: No active application session, applicationToken:null, myAppCredential:{}, logonAttemptNo:{}", myAppCredential);
             }
             logOnApp();
-        } else {
-            log.trace("Renew WAS: Active application session found, applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
-            Long expires = Long.parseLong(applicationToken.getExpires());
-            if (expiresBeforeNextScheduledSessionCheck(expires)) {
-                JitteryExponentialBackOff extendSessionBackoff = new JitteryExponentialBackOff(3_000, 1.5, 1000);
-                extendSessionBackoff.setMaxInterval(10_000);
-                BackOffExecution extendSessionBackoffExecution = extendSessionBackoff.start();
-                JitteryExponentialBackOff renewAttemptBackoff = new JitteryExponentialBackOff(1_000, 2, 200);
-                renewAttemptBackoff.setMaxInterval(10_000);
-                BackOffExecution renewAttemptBackOffExecution = renewAttemptBackoff.start();
-                log.info("Renew WAS: Active session expires before next check, re-new - applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
-                for (int n = 0; n < 5; n++) {
-                    applicationToken = applicationTokenRef.get();
-                    String applicationTokenXML = WhydahUtil.extendApplicationSession(sts, getActiveApplicationTokenId(), (int) extendSessionBackoffExecution.nextBackOff());  // Wait a bit longer on retries
-                    if (applicationTokenXML != null && applicationTokenXML.length() > 10) {
-                        setApplicationToken(ApplicationTokenMapper.fromXml(applicationTokenXML));
-                        log.info("Renew WAS: Success in renew applicationsession, applicationTokenId: {} - for applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
-                        log.debug("Renew WAS: - expiresAt: {} - now: {} - expires in: {} seconds", applicationToken.getExpires(), System.currentTimeMillis(), (Long.parseLong(applicationToken.getExpires()) - System.currentTimeMillis()) / 1000);
-                        String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), getActiveApplicationTokenId()).execute();
-                        if (exchangeableKeyString != null) {
-                            log.debug("Found exchangeableKeyString: {}", exchangeableKeyString);
-                            ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);
-                            log.debug("Found exchangeableKey: {}", exchangeableKey);
-                            try {
-                                CryptoUtil.setExchangeableKey(exchangeableKey);
-                            } catch (Exception e) {
-                                log.warn("Unable to update CryptoUtil with new cryptokey", e);
-                            }
-                            break;
-                        } else {
-                            //try again now
-                            log.error("Key not found exchangeableKeyString{}", exchangeableKeyString);
-                        }
-                    } else {
-                        log.info("Renew WAS: Failed to renew applicationsession, attempt:{}, returned response from STS: {}", n, applicationTokenXML);
-                        if (n > 2) {
-                            if (logOnApp()) {
-                                break;
-                            }
-                        }
-                    }
+            return;
+        }
+        log.trace("Renew WAS: Active application session found, applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+        Long expires = Long.parseLong(applicationToken.getExpires());
+        if (!expiresBeforeNextScheduledSessionCheck(expires)) {
+            return; // Current token is will last long enough, not need to extend session
+        }
+        JitteryExponentialBackOff extendSessionBackoff = new JitteryExponentialBackOff(3_000, 1.5, 1000);
+        extendSessionBackoff.setMaxInterval(10_000);
+        BackOffExecution extendSessionBackoffExecution = extendSessionBackoff.start();
+        JitteryExponentialBackOff renewAttemptBackoff = new JitteryExponentialBackOff(1_000, 2, 200);
+        renewAttemptBackoff.setMaxInterval(10_000);
+        BackOffExecution renewAttemptBackOffExecution = renewAttemptBackoff.start();
+        log.info("Renew WAS: Active session expires before next check, re-new - applicationTokenId: {},  applicationID: {},  expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+        for (int n = 0; n < 5; n++) {
+            applicationToken = applicationTokenRef.get();
+            String applicationTokenXML = WhydahUtil.extendApplicationSession(sts, getActiveApplicationTokenId(), (int) extendSessionBackoffExecution.nextBackOff());  // Wait a bit longer on retries
+            if (applicationTokenXML != null && applicationTokenXML.length() > 10) {
+                setApplicationToken(ApplicationTokenMapper.fromXml(applicationTokenXML));
+                log.info("Renew WAS: Success in renew applicationsession, applicationTokenId: {} - for applicationID: {}, expires: {}", applicationToken.getApplicationTokenId(), applicationToken.getApplicationID(), applicationToken.getExpiresFormatted());
+                log.debug("Renew WAS: - expiresAt: {} - now: {} - expires in: {} seconds", applicationToken.getExpires(), System.currentTimeMillis(), (Long.parseLong(applicationToken.getExpires()) - System.currentTimeMillis()) / 1000);
+                String exchangeableKeyString = new CommandGetApplicationKey(URI.create(sts), getActiveApplicationTokenId()).execute();
+                if (exchangeableKeyString != null) {
+                    log.debug("Found exchangeableKeyString: {}", exchangeableKeyString);
+                    ExchangeableKey exchangeableKey = new ExchangeableKey(exchangeableKeyString);
+                    log.debug("Found exchangeableKey: {}", exchangeableKey);
                     try {
-                        Thread.sleep(renewAttemptBackOffExecution.nextBackOff());
-                    } catch (InterruptedException ie) {
+                        CryptoUtil.setExchangeableKey(exchangeableKey);
+                    } catch (Exception e) {
+                        log.warn("Unable to update CryptoUtil with new cryptokey", e);
+                    }
+                    break;
+                } else {
+                    //try again now
+                    log.error("Key not found exchangeableKeyString{}", exchangeableKeyString);
+                }
+            } else {
+                log.info("Renew WAS: Failed to renew applicationsession, attempt:{}, returned response from STS: {}", n, applicationTokenXML);
+                if (n > 2) {
+                    if (logOnApp()) {
+                        break;
                     }
                 }
+            }
+            try {
+                Thread.sleep(renewAttemptBackOffExecution.nextBackOff());
+            } catch (InterruptedException ie) {
             }
         }
     }
