@@ -119,23 +119,43 @@ public interface WhydahApplicationSession extends AutoCloseable {
     boolean checkApplicationToken(String applicationTokenXML);
 
     default void reportThreatSignal(String threatMessage) {
-        reportThreatSignal(createThreat(threatMessage));
+        reportThreatSignal(((DefaultWhydahApplicationSession) this).threatSignalBuilder()
+                .withText(threatMessage)
+                .build());
     }
 
     default void reportThreatSignal(String threatMessage, Object[] details) {
-        reportThreatSignal(createThreat(threatMessage, details));
+        reportThreatSignal(((DefaultWhydahApplicationSession) this).threatSignalBuilder()
+                .withText(threatMessage)
+                .withAdditionalProperties(details)
+                .build());
     }
 
     default void reportThreatSignal(String clientIpAddress, String source, String threatMessage) {
-        reportThreatSignal(createThreat(clientIpAddress, source, threatMessage));
+        reportThreatSignal(((DefaultWhydahApplicationSession) this).threatSignalBuilder()
+                .withClientIpAddress(clientIpAddress)
+                .withSource(source)
+                .withText(threatMessage)
+                .build());
     }
 
     default void reportThreatSignal(String clientIpAddress, String source, String threatMessage, Object[] details) {
-        reportThreatSignal(createThreat(clientIpAddress, source, threatMessage, details));
+        reportThreatSignal(((DefaultWhydahApplicationSession) this).threatSignalBuilder()
+                .withClientIpAddress(clientIpAddress)
+                .withSource(source)
+                .withText(threatMessage)
+                .withAdditionalProperties(details)
+                .build());
     }
 
     default void reportThreatSignal(String clientIpAddress, String source, String threatMessage, Object[] details, SeverityLevel severity) {
-        reportThreatSignal(createThreat(clientIpAddress, source, threatMessage, details, severity));
+        reportThreatSignal(((DefaultWhydahApplicationSession) this).threatSignalBuilder()
+                .withClientIpAddress(clientIpAddress)
+                .withSource(source)
+                .withText(threatMessage)
+                .withAdditionalProperties(details)
+                .withSeverity(severity)
+                .build());
     }
 
     void reportThreatSignal(ThreatSignal threatSignal);
