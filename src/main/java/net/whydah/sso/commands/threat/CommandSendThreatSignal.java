@@ -22,50 +22,29 @@ public class CommandSendThreatSignal extends BaseHttpPostHystrixCommand<String> 
     private static final ObjectMapper mapper = new ObjectMapper();
     public static int DEFAULT_TIMEOUT = 6000;
 
+    /**
+     * @deprecated use variants with strongly-typed threat-message passed as argument. This constructor relies on WAS
+     * static-singleton, which is not a good idea.
+     */
+    @Deprecated
     public CommandSendThreatSignal(URI tokenServiceUri, String myAppTokenId, String threatMessage) {
-    	super(tokenServiceUri, "", myAppTokenId,"WhydahThreat", DEFAULT_TIMEOUT);
-        this.myAppTokenId = myAppTokenId;
-
-        try {
-            this.threatMessage = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(WhydahApplicationSession.createThreat(threatMessage));
-        } catch (Exception e) {
-            this.threatMessage = threatMessage;
-        }
-        if (tokenServiceUri == null || myAppTokenId == null) {
-            log.error(TAG + " initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}", tokenServiceUri, myAppTokenId);
-        }
+        this(tokenServiceUri, myAppTokenId, WhydahApplicationSession.createThreat(threatMessage)); // TODO Remove dependency on static WAS singleton
     }
-    
-    public CommandSendThreatSignal(URI tokenServiceUri, String myAppTokenId, String threatMessage, int timeout) {
-    	super(tokenServiceUri, "", myAppTokenId,"WhydahThreat", timeout);
-        this.myAppTokenId = myAppTokenId;
 
-        try {
-            this.threatMessage = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(WhydahApplicationSession.createThreat(threatMessage));
-        } catch (Exception e) {
-            this.threatMessage = threatMessage;
-        }
-        if (tokenServiceUri == null || myAppTokenId == null) {
-            log.error(TAG + " initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}", tokenServiceUri, myAppTokenId);
-        }
+    /**
+     * @deprecated use variants with strongly-typed threat-message passed as argument. This constructor relies on WAS
+     * static-singleton, which is not a good idea.
+     */
+    @Deprecated
+    public CommandSendThreatSignal(URI tokenServiceUri, String myAppTokenId, String threatMessage, int timeout) {
+        this(tokenServiceUri, myAppTokenId, WhydahApplicationSession.createThreat(threatMessage), timeout); // TODO Remove dependency on static WAS singleton
     }
 
 
     public CommandSendThreatSignal(URI tokenServiceUri, String myAppTokenId, ThreatSignal threatSignal) {
-        super(tokenServiceUri, "", myAppTokenId, "WhydahThreat", DEFAULT_TIMEOUT);
-        this.myAppTokenId = myAppTokenId;
-
-
-        try {
-            this.threatMessage = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(threatSignal);
-        } catch (Exception e) {
-            this.threatMessage = threatSignal.getText();
-        }
-        if (tokenServiceUri == null || myAppTokenId == null) {
-            log.error(TAG + " initialized with null-values - will fail tokenServiceUri:{} myAppTokenId:{}", tokenServiceUri, myAppTokenId);
-        }
+        this(tokenServiceUri, myAppTokenId, threatSignal, DEFAULT_TIMEOUT);
     }
-    
+
     public CommandSendThreatSignal(URI tokenServiceUri, String myAppTokenId, ThreatSignal threatSignal, int timeout) {
         super(tokenServiceUri, "", myAppTokenId, "WhydahThreat", timeout);
         this.myAppTokenId = myAppTokenId;
@@ -84,26 +63,26 @@ public class CommandSendThreatSignal extends BaseHttpPostHystrixCommand<String> 
 
     @Override
     protected String dealWithResponse(String response) {
-    	return "";
+        return "";
     }
-    
+
     @Override
     protected String dealWithFailedResponse(String responseBody, int statusCode) {
-    	return "";
+        return "";
     }
 
-	@Override
-	protected Map<String, String> getFormParameters() {
-		Map<String, String> data = new HashMap<String, String>();
-		data.put("signal", threatMessage);
-		return data;
-	}
+    @Override
+    protected Map<String, String> getFormParameters() {
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("signal", threatMessage);
+        return data;
+    }
 
 
     @Override
-	protected String getTargetPath() {
-		return "threat/" + myAppTokenId + "/signal";
-	}
+    protected String getTargetPath() {
+        return "threat/" + myAppTokenId + "/signal";
+    }
 
 
 }
