@@ -241,7 +241,9 @@ public class SystemTestBaseConfig {
     }
 
     protected static void setEnv(Map<String, String> newenv) {
-        try {
+    	EnvironmentVariableMocker.connect(newenv);
+        /*
+    	try {
             Class<?> processEnvironmentClass = Class.forName("java.lang.ProcessEnvironment");
             Field theEnvironmentField = processEnvironmentClass.getDeclaredField("theEnvironment");
             theEnvironmentField.setAccessible(true);
@@ -270,7 +272,7 @@ public class SystemTestBaseConfig {
             }
         } catch (Exception e1) {
             e1.printStackTrace();
-        }
+        }*/
     }
 
 

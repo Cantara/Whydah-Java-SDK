@@ -2,6 +2,7 @@ package net.whydah.sso.commands.extensions.statistics;
 
 import static org.junit.Assert.assertTrue;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import net.whydah.sso.application.helpers.ApplicationXpathHelper;
@@ -40,7 +41,7 @@ public class CommandListUserLoginsTest {
             String userTokenId = UserXpathHelper.getUserTokenId(userToken);
             assertTrue(userTokenId.length() > 10);
 
-            String userLogins = new CommandListUserLogins(config.statisticsServiceUri, "whydah", config.userName).execute();
+            String userLogins = new CommandGetUserLogonStats(config.statisticsServiceUri, config.userName, Instant.now(), Instant.now().plusSeconds(30)).execute();
             log.debug("Returned list of userlogins: " + userLogins);
             assertTrue(userLogins != null);
             assertTrue(userLogins.length() > 10);

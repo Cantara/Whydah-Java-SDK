@@ -2,6 +2,7 @@ package net.whydah.sso.commands.extras;
 
 import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -18,6 +19,7 @@ public class CommandSendScheduledMailTest {
     }
 
 
+    @Ignore
     @Test
     public void testCommandSendScheduledMailTest() throws Exception {
 
