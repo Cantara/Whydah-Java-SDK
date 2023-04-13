@@ -20,7 +20,7 @@
 
     <properties>
         <service.name>Whydah-Java-SDK</service.name>
-        <whydah-typelib-version>2.18.5</whydah-typelib-version>
+        <whydah-typelib-version>2.18.7</whydah-typelib-version>
         <additionalparam>-Xdoclint:none</additionalparam>
 	<maven.javadoc.skip>true</maven.javadoc.skip>    
     </properties>
