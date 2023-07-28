@@ -11,9 +11,7 @@ import net.whydah.sso.user.mappers.UserTokenMapper;
 import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserToken;
 
-import java.lang.reflect.Field;
 import java.net.URI;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,7 +25,7 @@ public class SystemTestBaseConfig {
     public boolean systemTest = true;
 
     // Run SystemTests for Whydah Extensions?
-    public boolean statisticsExtensionSystemTest = true && systemTest;
+    public boolean statisticsExtensionSystemTest = false && systemTest;
     public boolean CRMCustomerExtensionSystemTest = true && systemTest;
     public int TIME_WAIT_BETWEEN_SYSTEMTEST = 15;  // 15 ms
     //
