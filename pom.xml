@@ -21,7 +21,11 @@
     <properties>
         <service.name>Whydah-Java-SDK</service.name>
         <whydah-typelib-version>2.21.14</whydah-typelib-version>
-        <additionalparam>-Xdoclint:none</additionalparam>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.release>11</maven.compiler.release>
+	<java.version>11</java.version>
+	<additionalparam>-Xdoclint:none</additionalparam>
 	<maven.javadoc.skip>true</maven.javadoc.skip>    
     </properties>
 
