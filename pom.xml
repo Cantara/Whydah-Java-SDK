@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.whydah.sso</groupId>
     <artifactId>Whydah-Java-SDK</artifactId>
@@ -15,8 +16,8 @@
         <developerConnection>scm:git:ssh://git@github.com/cantara/Whydah-Java-SDK.git</developerConnection>
         <connection>scm:git:https://github.com/cantara/Whydah-Java-SDK.git</connection>
         <url>https://github.com/cantara/Whydah-Java-SDK</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <service.name>Whydah-Java-SDK</service.name>
@@ -24,9 +25,9 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.release>11</maven.compiler.release>
-	<java.version>11</java.version>
-	<additionalparam>-Xdoclint:none</additionalparam>
-	<maven.javadoc.skip>true</maven.javadoc.skip>    
+        <java.version>11</java.version>
+        <additionalparam>-Xdoclint:none</additionalparam>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>
 
     <developers>
@@ -47,7 +48,7 @@
             <roles>
                 <role>Developer</role>
             </roles>
-            <organization>Cantara </organization>
+            <organization>Cantara</organization>
             <organizationUrl>https://wiki.cantara.no/</organizationUrl>
         </developer>
         <developer>
@@ -61,8 +62,6 @@
             <organizationUrl>https://wiki.cantara.no/</organizationUrl>
         </developer>
     </developers>
-
-
 
 
     <dependencies>
@@ -129,13 +128,22 @@
             <version>5.4.0</version>
             <scope>test</scope>
         </dependency>
-        <!-- users of library should be able to choose log implementation -->
+
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.4.14</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.11</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.11</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.skyscreamer</groupId>
             <artifactId>jsonassert</artifactId>
@@ -149,70 +157,70 @@
             <scope>test</scope>
         </dependency>
         <!--  Since Java 11 javax.xml.bind is not contained anymore in the system library and has to be added as dependency with this one -->
-        
-		<!-- API, java.xml.bind module -->
-		<dependency>
-		    <groupId>jakarta.xml.bind</groupId>
-		    <artifactId>jakarta.xml.bind-api</artifactId>
-		    <version>2.3.3</version>
-		</dependency>
-		
-		<!-- Runtime, com.sun.xml.bind module -->
-		<dependency>
-		    <groupId>org.glassfish.jaxb</groupId>
-		    <artifactId>jaxb-runtime</artifactId>
-		    <version>2.3.9</version>
-		</dependency>
-		
-		 <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter</artifactId>
-        <version>5.9.2</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-junit-jupiter</artifactId>
-        <version>5.2.0</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-inline</artifactId>
-        <version>5.2.0</version>
-      </dependency>
-      <dependency>
-    <groupId>net.jcip</groupId>
-    <artifactId>jcip-annotations</artifactId>
-    <version>1.0</version>
-    <optional>true</optional>
-</dependency>
-<dependency>
-    <groupId>com.github.spotbugs</groupId>
-    <artifactId>spotbugs-annotations</artifactId>
-    <version>4.8.3</version>
-    <optional>true</optional>
-</dependency>
-<dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <version>5.9.2</version>
-        <scope>test</scope>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-commons -->
-<dependency>
-    <groupId>org.junit.platform</groupId>
-    <artifactId>junit-platform-commons</artifactId>
-    <version>1.10.1</version>
-</dependency>
-    <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-engine -->
-<dependency>
-    <groupId>org.junit.platform</groupId>
-    <artifactId>junit-platform-engine</artifactId>
-    <version>1.10.1</version>
-    <scope>test</scope>
-</dependency>
-    
+
+        <!-- API, java.xml.bind module -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.3</version>
+        </dependency>
+
+        <!-- Runtime, com.sun.xml.bind module -->
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>5.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.jcip</groupId>
+            <artifactId>jcip-annotations</artifactId>
+            <version>1.0</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+            <version>4.8.3</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.9.2</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-commons -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-commons</artifactId>
+            <version>1.10.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-engine -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
+            <version>1.10.1</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -236,9 +244,6 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                        <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
