@@ -49,6 +49,11 @@ public class ValidateUserRoleUseCaseTest {
             UserCredential userCredential = new UserCredential(config.userName, config.password);
             assertTrue(applicationSession.checkActiveSession());
             String userTokenXml = WhydahUtil.logOnUser(applicationSession, userCredential);
+            // re-try to check if that is all which is needed after a whydah full reboot scenario
+            if (userTokenXml == null) {
+                Thread.sleep(2000);
+                userTokenXml = WhydahUtil.logOnUser(applicationSession, userCredential);
+            }
             assertNotNull(userTokenXml);
             assertTrue(userTokenXml.contains(config.userEmail));
         }
