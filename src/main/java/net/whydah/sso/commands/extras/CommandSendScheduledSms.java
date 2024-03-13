@@ -1,12 +1,10 @@
 package net.whydah.sso.commands.extras;
 
+import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommandForBooleanType;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter.DEFAULT;
-
-import net.whydah.sso.commands.baseclasses.BaseHttpPostHystrixCommandForBooleanType;
 
 public class CommandSendScheduledSms extends BaseHttpPostHystrixCommandForBooleanType {
 
