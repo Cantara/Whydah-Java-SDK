@@ -230,6 +230,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
+                    <argLine>-XX:+EnableDynamicAgentLoading</argLine>
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
                 </configuration>
