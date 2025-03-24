@@ -12,7 +12,6 @@ import net.whydah.sso.user.types.UserCredential;
 import net.whydah.sso.user.types.UserToken;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -55,9 +54,10 @@ public class SystemTestBaseConfig {
     public SystemTestBaseConfig() {
         appCredential = new ApplicationCredential(TEMPORARY_APPLICATION_ID, TEMPORARY_APPLICATION_NAME, TEMPORARY_APPLICATION_SECRET);
         userCredential = new UserCredential(userName, password);
-        Map<String, String> addToEnv = new HashMap<>();
-        addToEnv.put("IAM_MODE", "TEST");
-        setEnv(addToEnv);
+
+        // Use system property directly
+        System.setProperty("IAM_MODE", "TEST");
+
         SSLTool.disableCertificateValidation();
         //
         setRemoteTest();
@@ -65,6 +65,14 @@ public class SystemTestBaseConfig {
             //setLocalTest();
         }
         //setLocalTest();
+    }
+
+    // Simplified setEnv method
+    protected static void setEnv(Map<String, String> newenv) {
+        // Just set system properties instead of trying to mock environment variables
+        for (Map.Entry<String, String> entry : newenv.entrySet()) {
+            System.setProperty(entry.getKey(), entry.getValue());
+        }
     }
 
     public void setRemoteTest(){
@@ -238,7 +246,7 @@ public class SystemTestBaseConfig {
 
     }
 
-    protected static void setEnv(Map<String, String> newenv) {
+    protected static void setEnvOld(Map<String, String> newenv) {
     	EnvironmentVariableMocker.connect(newenv);
         /*
     	try {

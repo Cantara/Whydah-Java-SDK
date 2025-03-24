@@ -1,137 +1,138 @@
 package net.whydah.sso.user;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.slf4j.LoggerFactory.getLogger;
-
-import java.util.List;
-
 import net.whydah.sso.user.helpers.UserHelper;
 import net.whydah.sso.user.helpers.UserRoleJsonPathHelper;
 import net.whydah.sso.user.helpers.UserRoleXpathHelper;
 import net.whydah.sso.user.helpers.UserXpathHelper;
 import net.whydah.sso.user.types.UserApplicationRoleEntry;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 
+import java.util.List;
+
+import static org.junit.Assert.*;
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class UserTokenXpathHelperTest {
     private static final Logger log = getLogger(UserTokenXpathHelperTest.class);
 
-    String userTokenXML = "<usertoken xmlns:ns2=\"http://www.w3.org/1999/xhtml\" id=\"a96a517f-cef3-4be7-92f5-f059b65e4071\">\n" +
-            "    <uid></uid>\n" +
-            "    <timestamp></timestamp>\n" +
-            "    <lifespan>3600000</lifespan>\n" +
-            "    <issuer>/token/issuer/tokenverifier</issuer>\n" +
-            "    <securitylevel>0</securitylevel>\n" +
-            "    <username>test</username>\n" +
-            "    <firstname>Olav</firstname>\n" +
-            "    <lastname>Nordmann</lastname>\n" +
-            "    <email></email>\n" +
-            "    <personRef></personRef>\n" +
-            "    <lastSeen></lastSeen>  <!-- Whydah 2.1 date and time of last registered user session -->\n" +
-            "    <application ID=\"2349785543\">\n" +
-            "        <applicationName>Whydah.net</applicationName>\n" +
-            "           <organizationName>Kunde 3</organizationName>\n" +
-            "              <role name=\"styremedlem\" value=\"\"/>\n" +
-            "              <role name=\"president\" value=\"\"/>\n" +
-            "           <organizationName>Kunde 4</organizationName>\n" +
-            "              <role name=\"styremedlem\" value=\"\"/>\n" +
-            "    </application>\n" +
-            "    <application ID=\"appa\">\n" +
-            "        <applicationName>whydag.org</applicationName>\n" +
-            "        <organizationName>Kunde 1</organizationName>\n" +
-            "        <role name=\"styremedlem\" value=\"Valla\"/>\n" +
-            "    </application>\n" +
-            " \n" +
-            "    <ns2:link type=\"application/xml\" href=\"/\" rel=\"self\"/>\n" +
-            "    <hash type=\"MD5\">8a37ef9624ed93db4873035b0de3d1ca</hash>\n" +
-            "</usertoken>";
+    String userTokenXML = """
+            <usertoken xmlns:ns2="http://www.w3.org/1999/xhtml" id="a96a517f-cef3-4be7-92f5-f059b65e4071">
+                <uid></uid>
+                <timestamp></timestamp>
+                <lifespan>3600000</lifespan>
+                <issuer>/token/issuer/tokenverifier</issuer>
+                <securitylevel>0</securitylevel>
+                <username>test</username>
+                <firstname>Olav</firstname>
+                <lastname>Nordmann</lastname>
+                <email></email>
+                <personRef></personRef>
+                <lastSeen></lastSeen>  <!-- Whydah 2.1 date and time of last registered user session -->
+                <application ID="2349785543">
+                    <applicationName>Whydah.net</applicationName>
+                       <organizationName>Kunde 3</organizationName>
+                          <role name="styremedlem" value=""/>
+                          <role name="president" value=""/>
+                       <organizationName>Kunde 4</organizationName>
+                          <role name="styremedlem" value=""/>
+                </application>
+                <application ID="appa">
+                    <applicationName>whydag.org</applicationName>
+                    <organizationName>Kunde 1</organizationName>
+                    <role name="styremedlem" value="Valla"/>
+                </application>
+            \s
+                <ns2:link type="application/xml" href="/" rel="self"/>
+                <hash type="MD5">8a37ef9624ed93db4873035b0de3d1ca</hash>
+            </usertoken>""";
 
-    String userAggregateXML = "\n" +
-            "<whydahuser>\n" +
-            "    <identity>\n" +
-            "        <username>admin</username>\n" +
-            "        <cellPhone>+1555406789</cellPhone>\n" +
-            "        <email>useradmin@getwhydah.com</email>\n" +
-            "        <firstname>User</firstname>\n" +
-            "        <lastname>Admin</lastname>\n" +
-            "        <personRef>0</personRef>\n" +
-            "        <UID>useradmin</UID>\n" +
-            "    </identity>\n" +
-            "    <applications>\n" +
-            "        <application>\n" +
-            "            <appId>19</appId>\n" +
-            "            <applicationName>UserAdminWebApplication</applicationName>\n" +
-            "            <orgName>Support</orgName>\n" +
-            "            <roleName>WhydahUserAdmin</roleName>\n" +
-            "            <roleValue>1</roleValue>\n" +
-            "        </application>\n" +
-            "        <application>\n" +
-            "            <appId>19</appId>\n" +
-            "            <applicationName>UserAdminWebApplication</applicationName>\n" +
-            "            <orgName>Support</orgName>\n" +
-            "            <roleName>Manager</roleName>\n" +
-            "            <roleValue>true</roleValue>\n" +
-            "        </application>\n" +
-            "        <application>\n" +
-            "            <appId>19</appId>\n" +
-            "            <applicationName>UserAdminWebApplication</applicationName>\n" +
-            "            <orgName>Company</orgName>\n" +
-            "            <roleName>WhydahUserAdmin</roleName>\n" +
-            "            <roleValue>1</roleValue>\n" +
-            "        </application>\n" +
-            "    </applications>\n" +
-            "</whydahuser>";
+    String userAggregateXML = """
+            
+            <whydahuser>
+                <identity>
+                    <username>admin</username>
+                    <cellPhone>+1555406789</cellPhone>
+                    <email>useradmin@getwhydah.com</email>
+                    <firstname>User</firstname>
+                    <lastname>Admin</lastname>
+                    <personRef>0</personRef>
+                    <UID>useradmin</UID>
+                </identity>
+                <applications>
+                    <application>
+                        <appId>19</appId>
+                        <applicationName>UserAdminWebApplication</applicationName>
+                        <orgName>Support</orgName>
+                        <roleName>WhydahUserAdmin</roleName>
+                        <roleValue>1</roleValue>
+                    </application>
+                    <application>
+                        <appId>19</appId>
+                        <applicationName>UserAdminWebApplication</applicationName>
+                        <orgName>Support</orgName>
+                        <roleName>Manager</roleName>
+                        <roleValue>true</roleValue>
+                    </application>
+                    <application>
+                        <appId>19</appId>
+                        <applicationName>UserAdminWebApplication</applicationName>
+                        <orgName>Company</orgName>
+                        <roleName>WhydahUserAdmin</roleName>
+                        <roleValue>1</roleValue>
+                    </application>
+                </applications>
+            </whydahuser>""";
 
-    String userAggregateJson = "{\n" +
-            "  \"uid\": \"uid\",\n" +
-            "  \"username\": \"usernameABC\",\n" +
-            "  \"firstName\": \"firstName\",\n" +
-            "  \"lastName\": \"lastName\",\n" +
-            "  \"personRef\": \"personRef\",\n" +
-            "  \"email\": \"email\",\n" +
-            "  \"cellPhone\": \"12345678\",\n" +
-            "  \"password\": \"password\",\n" +
-            "  \"roles\": [\n" +
-            "    {\n" +
-            "      \"applicationId\": \"applicationId\",\n" +
-            "      \"applicationName\": \"applicationName\",\n" +
-            "      \"organizationId\": \"organizationId\",\n" +
-            "      \"organizationName\": \"organizationName\",\n" +
-            "      \"applicationRoleName\": \"roleName\",\n" +
-            "      \"applicationRoleValue\": \"email\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"applicationId\": \"applicationId123\",\n" +
-            "      \"applicationName\": \"applicationName123\",\n" +
-            "      \"organizationId\": \"organizationId123\",\n" +
-            "      \"organizationName\": \"organizationName123\",\n" +
-            "      \"applicationRoleName\": \"roleName123\",\n" +
-            "      \"applicationRoleValue\": \"roleValue123\"\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}";
+    String userAggregateJson = """
+            {
+              "uid": "uid",
+              "username": "usernameABC",
+              "firstName": "firstName",
+              "lastName": "lastName",
+              "personRef": "personRef",
+              "email": "email",
+              "cellPhone": "12345678",
+              "password": "password",
+              "roles": [
+                {
+                  "applicationId": "applicationId",
+                  "applicationName": "applicationName",
+                  "organizationId": "organizationId",
+                  "organizationName": "organizationName",
+                  "applicationRoleName": "roleName",
+                  "applicationRoleValue": "email"
+                },
+                {
+                  "applicationId": "applicationId123",
+                  "applicationName": "applicationName123",
+                  "organizationId": "organizationId123",
+                  "organizationName": "organizationName123",
+                  "applicationRoleName": "roleName123",
+                  "applicationRoleValue": "roleValue123"
+                }
+              ]
+            }\
+            """;
 
-    String rolesXml = "<applications>\n" +
-            "        <application>\n" +
-            "            <appId>19</appId>\n" +
-            "            <applicationName>UserAdminWebApplication</applicationName>\n" +
-            "            <orgName>Support</orgName>\n" +
-            "            <roleName>WhydahUserAdmin</roleName>\n" +
-            "            <roleValue>1</roleValue>\n" +
-            "        </application>\n" +
-            "        <application>\n" +
-            "            <appId>19</appId>\n" +
-            "            <applicationName>UserAdminWebApplication</applicationName>\n" +
-            "            <orgName>Company</orgName>\n" +
-            "            <roleName>WhydahUserAdmin</roleName>\n" +
-            "            <roleValue>1</roleValue>\n" +
-            "        </application>\n" +
-            "    </applications>";
+    String rolesXml = """
+            <applications>
+                    <application>
+                        <appId>19</appId>
+                        <applicationName>UserAdminWebApplication</applicationName>
+                        <orgName>Support</orgName>
+                        <roleName>WhydahUserAdmin</roleName>
+                        <roleValue>1</roleValue>
+                    </application>
+                    <application>
+                        <appId>19</appId>
+                        <applicationName>UserAdminWebApplication</applicationName>
+                        <orgName>Company</orgName>
+                        <roleName>WhydahUserAdmin</roleName>
+                        <roleValue>1</roleValue>
+                    </application>
+                </applications>""";
 
 
     @Before
@@ -152,8 +153,8 @@ public class UserTokenXpathHelperTest {
         List<UserApplicationRoleEntry> roles = UserRoleXpathHelper.getUserRoleFromUserAggregateXml(userAggregateXML);
         assertNotNull(roles);
         assertEquals(3, roles.size());
-        assertTrue("19".equals(roles.get(0).getApplicationId()));
-        assertEquals("WhydahUserAdmin", roles.get(0).getRoleName());
+        assertTrue("19".equals(roles.getFirst().getApplicationId()));
+        assertEquals("WhydahUserAdmin", roles.getFirst().getRoleName());
         assertEquals("Manager", roles.get(1).getRoleName());
         assertEquals("WhydahUserAdmin", roles.get(2).getRoleName());
         assertTrue("Company".equals(roles.get(2).getOrgName()));

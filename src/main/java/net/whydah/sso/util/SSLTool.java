@@ -1,12 +1,12 @@
 package net.whydah.sso.util;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import net.whydah.sso.config.ApplicationMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.*;
+import java.io.*;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -16,19 +16,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import net.whydah.sso.config.ApplicationMode;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SSLTool {
 
@@ -135,7 +122,7 @@ public class SSLTool {
 
             //load cacerts keystore
             cacertsIs = new FileInputStream(cacertsFile);
-            final KeyStore cacerts = KeyStore.getInstance(KeyStore.getDefaultType());
+            final KeyStore cacerts = KeyStore.getInstance("jks");
             cacerts.load(cacertsIs, CACERTS_PASSWORD.toCharArray());
             cacertsIs.close();
 
@@ -169,7 +156,7 @@ public class SSLTool {
 
         //load cacerts keystore
         FileInputStream cacertsIs = new FileInputStream(cacertsFile);
-        final KeyStore cacerts = KeyStore.getInstance(KeyStore.getDefaultType());
+        final KeyStore cacerts = KeyStore.getInstance("jks");
         cacerts.load(cacertsIs, CACERTS_PASSWORD.toCharArray());
         Enumeration<String> aliases = cacerts.aliases();
         while (aliases.hasMoreElements()) {

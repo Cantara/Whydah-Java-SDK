@@ -1,13 +1,13 @@
 package net.whydah.sso.user;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import net.whydah.sso.user.helpers.UserHelper;
 import net.whydah.sso.user.helpers.UserRoleXpathHelper;
 import net.whydah.sso.user.helpers.UserXpathHelper;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by baardl on 19.06.15.
@@ -16,32 +16,35 @@ public class UserXpathHelperTest {
 
     private static String userTokenXML = UserHelper.getDummyUserToken();
     private static String userIdentityXML = UserHelper.userDummyIdentityXML();
-    private static String roleXml = "<application>            <id>b6767d13-4ca7-432c-8356-2b7c15cebc9a</id>\n" +
-            "            <uid>_temp_username4Role_1434726891061</uid>\n" +
-            "            <appId>201</appId>\n" +
-            "            <applicationName></applicationName>\n" +
-            "            <orgName>testOrg</orgName>\n" +
-            "            <roleName>testRoleName</roleName>\n" +
-            "            <roleValue>true</roleValue>\n" +
-            "        </application>";
-    private static String userAdminTokenXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-            "<usertoken xmlns:ns2=\"http://www.w3.org/1999/xhtml\" id=\"9739d138-6a42-4fbd-8281-c7775e77c110\">\n" +
-            "    <uid>useradmin</uid>\n" +
-            "    <timestamp>1435317025896</timestamp>\n" +
-            "    <lifespan>1209600000</lifespan>\n" +
-            "    <issuer>http://localhost:9998/tokenservice/user/ac627ab1ccbdb62ec96e702f07f6425b/validate_usertokenid/9739d138-6a42-4fbd-8281-c7775e77c110</issuer>\n" +
-            "    <securitylevel>1</securitylevel>\n" +
-            "    <DEFCON>DEFCON5</DEFCON>\n" +
-            "    <username>admin</username>\n" +
-            "    <firstname>User</firstname>\n" +
-            "    <lastname>Admin</lastname>\n" +
-            "    <email>useradmin@altran.com</email>\n" +
-            "    <personRef>0</personRef>\n" +
-            "\n" +
-            "    <ns2:link type=\"application/xml\" href=\"http://localhost:9998/tokenservice/user/ac627ab1ccbdb62ec96e702f07f6425b/validate_usertokenid/9739d138-6a42-4fbd-8281-c7775e77c110\" rel=\"self\"/>\n" +
-            "    <hash type=\"MD5\">59afe7053257ea6559e1819047ff2223</hash>\n" +
-            "</usertoken>\n" +
-            "\n";
+    private static String roleXml = """
+            <application>            <id>b6767d13-4ca7-432c-8356-2b7c15cebc9a</id>
+                        <uid>_temp_username4Role_1434726891061</uid>
+                        <appId>201</appId>
+                        <applicationName></applicationName>
+                        <orgName>testOrg</orgName>
+                        <roleName>testRoleName</roleName>
+                        <roleValue>true</roleValue>
+                    </application>""";
+    private static String userAdminTokenXml = """
+            <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+            <usertoken xmlns:ns2="http://www.w3.org/1999/xhtml" id="9739d138-6a42-4fbd-8281-c7775e77c110">
+                <uid>useradmin</uid>
+                <timestamp>1435317025896</timestamp>
+                <lifespan>1209600000</lifespan>
+                <issuer>http://localhost:9998/tokenservice/user/ac627ab1ccbdb62ec96e702f07f6425b/validate_usertokenid/9739d138-6a42-4fbd-8281-c7775e77c110</issuer>
+                <securitylevel>1</securitylevel>
+                <DEFCON>DEFCON5</DEFCON>
+                <username>admin</username>
+                <firstname>User</firstname>
+                <lastname>Admin</lastname>
+                <email>useradmin@altran.com</email>
+                <personRef>0</personRef>
+            
+                <ns2:link type="application/xml" href="http://localhost:9998/tokenservice/user/ac627ab1ccbdb62ec96e702f07f6425b/validate_usertokenid/9739d138-6a42-4fbd-8281-c7775e77c110" rel="self"/>
+                <hash type="MD5">59afe7053257ea6559e1819047ff2223</hash>
+            </usertoken>
+            
+            """;
     private static String userWithRolesXML = UserHelper.getDummyUserToken();
 
     @Before

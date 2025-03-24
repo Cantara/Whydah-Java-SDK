@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class ApplicationModelUtil {
@@ -101,12 +102,12 @@ public class ApplicationModelUtil {
 
     public static boolean shouldUpdate() {
         int max = 100;
-        return (5 >= ((int) (Math.random() * max)));  // update on 5 percent of requests
+        return (5 >= ((int) (ThreadLocalRandom.current().nextDouble() * max)));  // update on 5 percent of requests
     }
 
     public static boolean shouldUpdate(int percentage) {
         int max = 100;
-        return (percentage >= ((int) (Math.random() * max)));  // update on 5 percent of requests
+        return (percentage >= ((int) (ThreadLocalRandom.current().nextDouble() * max)));  // update on 5 percent of requests
     }
 
 }

@@ -4,14 +4,7 @@ import net.whydah.sso.application.types.Application;
 import net.whydah.sso.application.types.ApplicationCredential;
 import net.whydah.sso.commands.appauth.CommandValidateApplicationTokenId;
 import net.whydah.sso.commands.extras.CommandSendSms;
-import net.whydah.sso.commands.userauth.CommandCreateTicketForUserTokenID;
-import net.whydah.sso.commands.userauth.CommandGenerateAndSendSmsPin;
-import net.whydah.sso.commands.userauth.CommandGetUserTokenByUserTicket;
-import net.whydah.sso.commands.userauth.CommandGetUserTokenByUserTokenId;
-import net.whydah.sso.commands.userauth.CommandLogonUserByPhoneNumberPin;
-import net.whydah.sso.commands.userauth.CommandLogonUserByUserCredential;
-import net.whydah.sso.commands.userauth.CommandReleaseUserToken;
-import net.whydah.sso.commands.userauth.CommandValidateUserTokenId;
+import net.whydah.sso.commands.userauth.*;
 import net.whydah.sso.config.ApplicationMode;
 import net.whydah.sso.session.WhydahApplicationSession;
 import net.whydah.sso.user.helpers.UserTokenXpathHelper;
@@ -352,40 +345,41 @@ public class BaseDevelopmentWhydahServiceClient {
 
 
     public static String getDummyToken() {
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-                "<usertoken xmlns:ns2=\"http://www.w3.org/1999/xhtml\" id=\"759799fe-2e2f-4c8e-b096-d5796733d4d2\">\n" +
-                "    <uid>7583278592730985723</uid>\n" +
-                "    <securitylevel>0</securitylevel>\n" +
-                "    <personRef></personRef>\n" +
-                "    <firstname>Olav</firstname>\n" +
-                "    <lastname>Nordmann</lastname>\n" +
-                "    <email></email>\n" +
-                "    <timestamp>7982374982374</timestamp>\n" +
-                "    <lifespan>3600000</lifespan>\n" +
-                "    <issuer>/iam/issuer/tokenverifier</issuer>\n" +
-                "    <application ID=\"2349785543\">\n" +
-                "        <applicationName>MyApp</applicationName>\n" +
-                "        <organization ID=\"2349785543\">\n" +
-                "            <organizationName>myCompany</organizationName>\n" +
-                "            <role name=\"janitor\" value=\"Employed\"/>\n" +
-                "            <role name=\"board\" value=\"President\"/>\n" +
-                "        </organization>\n" +
-                "        <organization ID=\"0078\">\n" +
-                "            <organizationName>myDayJobCompany</organizationName>\n" +
-                "            <role name=\"board\" value=\"\"/>\n" +
-                "        </organization>\n" +
-                "    </application>\n" +
-                "    <application ID=\"appa\">\n" +
-                "        <applicationName>App A</applicationName>\n" +
-                "        <organization ID=\"1078\">\n" +
-                "            <organizationName>myFotballClub</organizationName>\n" +
-                "            <role name=\"janitor\" value=\"Employed\"/>\n" +
-                "        </organization>\n" +
-                "    </application>\n" +
-                "\n" +
-                "    <ns2:link type=\"application/xml\" href=\"/\" rel=\"self\"/>\n" +
-                "    <hash type=\"MD5\">7671ec2d5bac82d1e70b33c59b5c96a3</hash>\n" +
-                "</usertoken>";
+        return """
+                <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+                <usertoken xmlns:ns2="http://www.w3.org/1999/xhtml" id="759799fe-2e2f-4c8e-b096-d5796733d4d2">
+                    <uid>7583278592730985723</uid>
+                    <securitylevel>0</securitylevel>
+                    <personRef></personRef>
+                    <firstname>Olav</firstname>
+                    <lastname>Nordmann</lastname>
+                    <email></email>
+                    <timestamp>7982374982374</timestamp>
+                    <lifespan>3600000</lifespan>
+                    <issuer>/iam/issuer/tokenverifier</issuer>
+                    <application ID="2349785543">
+                        <applicationName>MyApp</applicationName>
+                        <organization ID="2349785543">
+                            <organizationName>myCompany</organizationName>
+                            <role name="janitor" value="Employed"/>
+                            <role name="board" value="President"/>
+                        </organization>
+                        <organization ID="0078">
+                            <organizationName>myDayJobCompany</organizationName>
+                            <role name="board" value=""/>
+                        </organization>
+                    </application>
+                    <application ID="appa">
+                        <applicationName>App A</applicationName>
+                        <organization ID="1078">
+                            <organizationName>myFotballClub</organizationName>
+                            <role name="janitor" value="Employed"/>
+                        </organization>
+                    </application>
+                
+                    <ns2:link type="application/xml" href="/" rel="self"/>
+                    <hash type="MD5">7671ec2d5bac82d1e70b33c59b5c96a3</hash>
+                </usertoken>""";
 
     }
 

@@ -69,8 +69,8 @@ public class WhydahSimulator implements AutoCloseable {
         long start = System.nanoTime();
         if (firstErrorCountDownLatch.await(timeout, unit)) {
             long duration = (System.nanoTime() - start) / 1_000_000;
-            errors.get(0).printStackTrace();
-            Assert.fail(String.format("Error after %d ms: %s", duration, errors.get(0).getMessage()));
+            errors.getFirst().printStackTrace();
+            Assert.fail("Error after %d ms: %s".formatted(duration, errors.getFirst().getMessage()));
         }
     }
 
@@ -82,7 +82,7 @@ public class WhydahSimulator implements AutoCloseable {
         Spark.post("/sts/logon", (req, res) -> {
             log.info("WHYDAH-SIMULATOR: logon");
             if (logonsAttempted.incrementAndGet() > maxNumberOfAllowedLogons) {
-                errors.add(new RuntimeException(String.format("More than %d number of logons attempted", maxNumberOfAllowedLogons)));
+                errors.add(new RuntimeException("More than %d number of logons attempted".formatted(maxNumberOfAllowedLogons)));
                 firstErrorCountDownLatch.countDown();
                 return "";
             }
@@ -124,11 +124,11 @@ public class WhydahSimulator implements AutoCloseable {
     }
 
     public String sts() {
-        return String.format("http://localhost:%d/sts/", Spark.port());
+        return "http://localhost:%d/sts/".formatted(Spark.port());
     }
 
     public String uas() {
-        return String.format("http://localhost:%d/uas/", Spark.port());
+        return "http://localhost:%d/uas/".formatted(Spark.port());
     }
 
     public DefaultWhydahApplicationSession createNewSession(Consumer<DefaultWhydahApplicationSession.Builder> sessionBuilderConsumer) {

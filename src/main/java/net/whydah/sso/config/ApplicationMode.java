@@ -1,9 +1,9 @@
 package net.whydah.sso.config;
 
-import java.util.Arrays;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 /**
  * Get application mode from os environment or system property.
@@ -17,12 +17,15 @@ public class ApplicationMode {
 
     private static final Logger log = LoggerFactory.getLogger(ApplicationMode.class);
 
-
     public static String getApplicationMode() {
-        String appMode = System.getenv(IAM_MODE_KEY);
+        // Try system property first (this is the key change)
+        String appMode = System.getProperty(IAM_MODE_KEY);
+
+        // Fall back to environment variable if property not set
         if(appMode == null) {
-            appMode = System.getProperty(IAM_MODE_KEY);
+            appMode = System.getenv(IAM_MODE_KEY);
         }
+
         if(appMode == null) {
             System.err.println(IAM_MODE_KEY + " not defined in environment");
             System.exit(4);

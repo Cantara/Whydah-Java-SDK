@@ -5,10 +5,8 @@ import net.whydah.sso.application.types.ApplicationToken;
 import net.whydah.sso.basehelpers.JsonPathHelper;
 import net.whydah.sso.session.baseclasses.CryptoUtil;
 import net.whydah.sso.session.baseclasses.ExchangeableKey;
-import net.whydah.sso.util.AESUtils;
 import net.whydah.sso.util.StringConv;
 import net.whydah.sso.util.SystemTestBaseConfig;
-
 import org.apache.commons.codec.binary.Hex;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -16,7 +14,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 
 import javax.crypto.spec.IvParameterSpec;
-
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -83,10 +80,12 @@ public class EncryptedPayloadAndKeyhandlingTests {
 
     @Test
     public void testUnmashallingExchangableKey() throws Exception {
-        String jsonEncodedKey = "{  \n" +
-                "   \"encryptionKey\":\"EhFw9E7XeCdhvG1ovt68pYh+00mGLLNR+Gv0neyRccM=\",\n" +
-                "   \"iv\":\"SPSK0jqxW7syp5nV0TQsGQ==\"\n" +
-                "}";
+        String jsonEncodedKey = """
+                { \s
+                   "encryptionKey":"EhFw9E7XeCdhvG1ovt68pYh+00mGLLNR+Gv0neyRccM=",
+                   "iv":"SPSK0jqxW7syp5nV0TQsGQ=="
+                }\
+                """;
 
 
         ExchangeableKey ekey = new ExchangeableKey();
@@ -118,15 +117,16 @@ public class EncryptedPayloadAndKeyhandlingTests {
     @Test
     @Ignore  // The real payload is too old to verify DDS
     public void testRealPayload() throws Exception {
-        String payload = "<applicationtoken>\n" +
-                "     <params>\n" +
-                "         <applicationtokenID>a9cc89d942ac4af8a9123fcdbc6fa911</applicationtokenID>\n" +
-                "         <applicationid>9999</applicationid>\n" +
-                "         <applicationname>Whydah-Jenkins</applicationname>\n" +
-                "         <expires>1506107910829</expires>\n" +
-                "     </params> \n" +
-                "     <Url type=\"application/xml\" method=\"POST\"                 template=\"https://whydahdev.cantara.no/tokenservice/user/a9cc89d942ac4af8a9123fcdbc6fa911/get_usertoken_by_usertokenid\"/> \n" +
-                " </applicationtoken>";
+        String payload = """
+                <applicationtoken>
+                     <params>
+                         <applicationtokenID>a9cc89d942ac4af8a9123fcdbc6fa911</applicationtokenID>
+                         <applicationid>9999</applicationid>
+                         <applicationname>Whydah-Jenkins</applicationname>
+                         <expires>1506107910829</expires>
+                     </params>\s
+                     <Url type="application/xml" method="POST"                 template="https://whydahdev.cantara.no/tokenservice/user/a9cc89d942ac4af8a9123fcdbc6fa911/get_usertoken_by_usertokenid"/>\s
+                 </applicationtoken>""";
 
         CryptoUtil.setEncryptionSecretAndIv(config.appCredential.getApplicationSecret(), new IvParameterSpec("01234567890ABCDE".getBytes()));
         String encryptedText = encrypt(payload);
@@ -145,15 +145,16 @@ public class EncryptedPayloadAndKeyhandlingTests {
     @Test
     @Ignore
     public void testCryptoSecretFunctiion() throws Exception {
-        String payload = "<applicationtoken>\n" +
-                "     <params>\n" +
-                "         <applicationtokenID>a9cc89d942ac4af8a9123fcdbc6fa911</applicationtokenID>\n" +
-                "         <applicationid>9999</applicationid>\n" +
-                "         <applicationname>Whydah-Jenkins</applicationname>\n" +
-                "         <expires>1506107910829</expires>\n" +
-                "     </params> \n" +
-                "     <Url type=\"application/xml\" method=\"POST\"                 template=\"https://whydahdev.cantara.no/tokenservice/user/a9cc89d942ac4af8a9123fcdbc6fa911/get_usertoken_by_usertokenid\"/> \n" +
-                " </applicationtoken>";
+        String payload = """
+                <applicationtoken>
+                     <params>
+                         <applicationtokenID>a9cc89d942ac4af8a9123fcdbc6fa911</applicationtokenID>
+                         <applicationid>9999</applicationid>
+                         <applicationname>Whydah-Jenkins</applicationname>
+                         <expires>1506107910829</expires>
+                     </params>\s
+                     <Url type="application/xml" method="POST"                 template="https://whydahdev.cantara.no/tokenservice/user/a9cc89d942ac4af8a9123fcdbc6fa911/get_usertoken_by_usertokenid"/>\s
+                 </applicationtoken>""";
 
         CryptoUtil.setEncryptionSecretAndIv(config.appCredential.getApplicationSecret(), new IvParameterSpec("01234567890ABCDE".getBytes()));
         String encryptedText = encrypt(payload);
