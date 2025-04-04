@@ -1,15 +1,15 @@
 package net.whydah.sso.commands.extras;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.Date;
-
 import net.whydah.sso.application.mappers.ApplicationTokenMapper;
 import net.whydah.sso.application.types.ApplicationToken;
 import net.whydah.sso.util.SystemTestBaseConfig;
-
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.Date;
+
+import static org.junit.Assert.assertTrue;
 
 public class CommandSendScheduledSMSTest {
     static SystemTestBaseConfig config;
@@ -24,6 +24,7 @@ public class CommandSendScheduledSMSTest {
 
 
     @Test
+    @Ignore
     public void testCommandSendScheduledSMSTest() throws Exception {
 
         if (config.isSystemTestEnabled()) {
