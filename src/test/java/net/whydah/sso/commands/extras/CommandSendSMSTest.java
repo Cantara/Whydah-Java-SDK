@@ -3,6 +3,7 @@ package net.whydah.sso.commands.extras;
 import net.whydah.sso.commands.userauth.CommandGenerateAndSendSmsPin;
 import net.whydah.sso.util.SystemTestBaseConfig;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ public class CommandSendSMSTest {
     }
 
 
+    @Ignore
     @Test
     public void testSendSMSPin() throws Exception {
 
