@@ -21,7 +21,7 @@
     <properties>
         <jdk.version>21</jdk.version>
         <service.name>Whydah-Java-SDK</service.name>
-        <whydah-typelib-version>2.30.5</whydah-typelib-version>
+        <whydah-typelib-version>2.31.3</whydah-typelib-version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.release>21</maven.compiler.release>
