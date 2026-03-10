@@ -1,0 +1,25 @@
+id: Whydah-Java-SDK
+name: Whydah Java SDK
+version: 2.31.6-SNAPSHOT
+description: |
+  Java client SDK for the Whydah IAM platform. Provides a high-level API for
+  application login, user token validation, and role checking against the
+  Whydah Security Token Service.
+units:
+  - id: sso-helper
+    name: SSO Helper
+    type: sdk
+    description: SSOHelper — main entry point for application and user authentication flows.
+    path: src/main/java/net/whydah/sso
+  - id: token-client
+    name: Token Client
+    type: component
+    description: Low-level STS token operations — logon, logoff, and token refresh.
+  - id: role-checker
+    name: Role Checker
+    type: component
+    description: User role and access validation helpers against a validated user token.
+  - id: model
+    name: Model
+    type: component
+    description: Token and user data model classes — UserToken, ApplicationToken, UserIdentity.
