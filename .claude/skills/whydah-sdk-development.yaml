@@ -1,0 +1,268 @@
+name: whydah-sdk-development
+version: 1.0.0
+description: >
+  Whydah Java SDK and TypeLib development guide. Covers client-side integration with
+  Whydah IAM: WhydahApplicationSession, WhydahUserSession, Hystrix command patterns,
+  threat signaling, the shared TypeLib data models, and the OAuth2Service bridge.
+  Complements whydah-sts-development (server) and whydah-uib-development (storage).
+
+  Trigger phrases: "whydah sdk, whydah java sdk, whydah integration, whydah client,
+  application session, user session, whydah command, whydah typelib, whydah oauth2,
+  whydah type library, integrate whydah, add whydah auth, hystrix whydah,
+  threat signal, whydah admin sdk, whydah spa proxy, oauth2 whydah, oidc whydah"
+
+context:
+  org: cantara
+  repos:
+    - Whydah-Java-SDK (core client SDK)
+    - Whydah-Admin-SDK (admin operations SDK)
+    - Whydah-TypeLib (shared data models)
+    - Whydah-OAuth2Service (OAuth2/OIDC bridge)
+    - Whydah-SPAProxyService (SPA authentication proxy)
+
+instructions: |
+  ## Overview
+
+  The Whydah SDK layer provides the client-side integration story for Whydah IAM.
+  Applications use the Java SDK to authenticate with STS, validate user tokens, check
+  roles, and send threat signals. TypeLib contains the shared data models used across
+  all Whydah components. The OAuth2Service bridges Whydah's native token model to
+  standard OAuth2/OIDC flows.
+
+  **SDK package:** `net.whydah.sso`
+  **TypeLib package:** `net.whydah.sso`
+  **SDK version:** 2.31.6-SNAPSHOT
+  **TypeLib version:** 2.30.6-SNAPSHOT
+  **OAuth2Service version:** 2.31.23-SNAPSHOT
+
+  ## Dependency Hierarchy
+
+  ```
+  Whydah-TypeLib (data models, Java 8+)
+       ^
+       |
+  Whydah-Java-SDK (session helpers + Hystrix commands)
+       ^
+       |
+  Whydah-Admin-SDK (admin operations)
+       ^
+       |
+  All Whydah services (STS, UAS, UAW, SSO Login, etc.)
+  ```
+
+  ## WhydahApplicationSession (Application Auth)
+
+  The main entry point for application-level authentication. Singleton pattern.
+
+  ```java
+  // Initialize (once, typically at startup)
+  ApplicationCredential appCred = new ApplicationCredential("myAppId", "myAppName", "mySecret");
+  WhydahApplicationSession was = WhydahApplicationSession.getInstance(
+      "http://sts:9998/tokenservice",       // STS URL
+      "http://uas:9992/useradminservice",    // UAS URL (optional)
+      appCred
+  );
+
+  // Use
+  String appTokenId = was.getActiveApplicationTokenId();
+  String appTokenXml = was.getActiveApplicationTokenXML();
+  DEFCON defcon = was.getDefcon();
+  ```
+
+  **Key methods:**
+  - `getActiveApplicationTokenId()` -- current valid app token ID
+  - `getActiveApplicationTokenXML()` -- full app token XML
+  - `getDefcon()` -- current defense condition level
+  - `expiresBeforeNextScheduledSessionCheck(timestamp)` -- check if token needs renewal
+  - `threatSignalBuilder()` -- create threat signals
+
+  **Lifecycle:** The session automatically renews the application token on a scheduled
+  interval (default: 10 seconds). If STS is unreachable, it retries with exponential backoff.
+
+  ## WhydahUserSession (User Auth)
+
+  Manages a single user's authenticated session within an application session.
+
+  ```java
+  UserCredential userCred = new UserCredential("username", "password");
+  WhydahUserSession wus = new WhydahUserSession(was, userCred);
+
+  String userTokenId = wus.getUserTokenId();
+  String userTokenXml = wus.getActiveUserTokenXML();
+  ```
+
+  **Lifecycle:** Automatically validates the user token every 60 seconds.
+  Creates a scheduled executor for renewal.
+
+  **Static helper:** `calculateTokenRemainingLifetimeInSeconds(userTokenXml)` -- calculates
+  remaining lifetime from token's lifespan and timestamp fields.
+
+  ## Hystrix Command Pattern (SDK Commands)
+
+  All STS/UAS calls are wrapped in Hystrix commands for circuit-breaking resilience.
+
+  ### Base Classes (`net.whydah.sso.commands.baseclasses`)
+  - `BaseHttpGetHystrixCommand` -- GET with String response
+  - `BaseHttpGetHystrixCommandForBooleanType` -- GET with Boolean response
+  - `BaseHttpPostHystrixCommand` -- POST with String response
+  - `BaseHttpPostHystrixCommandForBooleanType` -- POST with Boolean response
+  - `BaseHttpPutHystrixCommand` / `BaseHttpDeleteHystrixCommand` -- PUT/DELETE
+  - `HttpSender` -- low-level HTTP client used by all commands
+
+  ### Application Auth Commands (`commands.appauth`)
+  - `CommandLogonApplication` -- `POST /tokenservice/logon`
+  - `CommandValidateApplicationTokenId` -- `GET /tokenservice/{appTokenId}/validate`
+  - `CommandRenewApplicationSession` -- `POST /tokenservice/{appTokenId}/renew_applicationtoken`
+  - `CommandGetApplicationIdFromApplicationTokenId` -- ID extraction
+  - `CommandGetApplicationKey` -- crypto key retrieval
+  - `CommandVerifyUASAccessByApplicationTokenId` -- UAS access check
+
+  ### User Auth Commands (`commands.userauth`)
+  - `CommandLogonUserByUserCredential` -- `POST /tokenservice/user/{appTokenId}/usertoken`
+  - `CommandGetUserTokenByUserTicket` -- SSO ticket exchange
+  - `CommandGetUserTokenByUserTokenId` -- token lookup
+  - `CommandValidateUserTokenId` -- token validation
+  - `CommandRefreshUserToken` -- token renewal
+  - `CommandReleaseUserToken` -- logout
+  - `CommandCreateTicketForUserTokenID` -- SSO ticket creation
+  - `CommandLogonUserByPhoneNumberPin` -- PIN-based login
+  - `CommandGenerateAndSendSmsPin` / `CommandSendSmsPin` -- SMS PIN operations
+
+  ### Threat Commands (`commands.threat`)
+  - `CommandSendThreatSignal` -- report security threats to STS
+  - `ThreatObserver` -- monitors for threat patterns
+  - `ThreatDefinition` implementations:
+    - `ThreatDefManyLoginAttemptsFromSameIPAddress`
+    - `ThreatDefManyGetPinAttemptsFromSamePhoneNumber`
+    - `ThreatDefTooManyRequestsForOneEndpoint`
+  - `BlackList` -- IP/user blacklisting
+  - `ThreatActivityLog` / `ThreatActivityLogCollector` -- threat audit logging
+
+  ### Extension Commands
+  - `commands.extensions.crmapi` -- CRM customer operations (CRUD, profile images, address verification)
+  - `commands.extensions.statistics` -- usage statistics queries
+  - `commands.extras` -- SMS sending, scheduled mail
+
+  ## TypeLib (Shared Data Models)
+
+  TypeLib contains the core model classes used by ALL Whydah components:
+
+  ### Token Models
+  - `ApplicationToken` -- application authentication token
+  - `UserToken` -- user authentication token with roles
+  - `ApplicationCredential` -- application credentials for logon
+
+  ### Identity Models
+  - `UserIdentity` -- base user identity (uid, username, email, etc.)
+  - `UserApplicationRoleEntry` -- user's role in an application
+
+  ### Serialization
+  - XML marshalling/unmarshalling for token types
+  - JSON serialization for identity types
+  - `ApplicationTokenMapper` -- ApplicationToken <-> XML
+  - `UserTokenMapper` -- UserToken <-> XML
+
+  ### DDD Value Objects (`net.whydah.sso.ddd.model`)
+  - `UID`, `UserName`, `FirstName`, `LastName`, `Email`, `CellPhone`, `PersonRef`
+  - `Password`, `ApplicationTokenID`
+  - Each validates at construction time (null checks, length, format)
+
+  ### Constants & Enums
+  - Platform-wide constants
+  - Shared configuration keys
+  - Token format versions
+
+  ## OAuth2Service (Standards Bridge)
+
+  Translates OAuth2/OIDC protocol flows into native Whydah token operations.
+
+  **Port:** 8086
+  **Endpoints:**
+  - `/authorize` -- OAuth2 authorization endpoint
+  - `/token` -- Token endpoint (access token, refresh token)
+  - `/userinfo` -- OIDC UserInfo endpoint
+  - `/.well-known/openid-configuration` -- OIDC Discovery document
+  - `/jwks` -- JSON Web Key Set
+
+  **Key components:**
+  - Token mapping: Whydah UserToken -> JWT access token / OIDC ID token
+  - Client registry: OAuth2 client registration and credential management
+  - OIDC layer: ID token generation, discovery, JWKS
+
+  **Use when:** Third-party applications need standards-based OAuth2/OIDC integration
+  with Whydah (instead of direct Whydah token API).
+
+  ## How To: Common Tasks
+
+  ### Add Whydah auth to a new Java service
+  1. Add `Whydah-Java-SDK` dependency (brings in TypeLib transitively)
+  2. Initialize `WhydahApplicationSession` at startup with STS URL and app credentials
+  3. For user auth: create `WhydahUserSession` per authenticated user
+  4. For role checking: extract roles from `UserToken` XML
+  5. For threat detection: use `ThreatObserver` with appropriate `ThreatDefinition` impls
+
+  ### Validate a user token in a request handler
+  ```java
+  String userTokenId = request.getHeader("X-Whydah-UserTokenId");
+  boolean valid = new CommandValidateUserTokenId(
+      URI.create(stsUrl),
+      was.getActiveApplicationTokenId(),
+      userTokenId
+  ).execute();
+  ```
+
+  ### Send a threat signal
+  ```java
+  ThreatSignal threat = WhydahApplicationSession.createThreat(
+      clientIpAddress, "LoginResource", "Brute force attempt detected"
+  );
+  new CommandSendThreatSignal(URI.create(stsUrl), was.getActiveApplicationTokenId(), threat).execute();
+  ```
+
+  ### Build
+  ```bash
+  cd /src/cantara/Whydah-TypeLib && mvn clean install
+  cd /src/cantara/Whydah-Java-SDK && mvn clean install
+  ```
+
+  ## Gotchas & Pitfalls
+
+  1. **Singleton session:** `WhydahApplicationSession.getInstance()` returns a JVM-wide
+     singleton. Multiple calls with different credentials are ignored after first init.
+
+  2. **Hystrix dependency:** All SDK commands extend Hystrix commands. Hystrix is in
+     maintenance mode (Netflix). Commands use Hystrix thread pools, timeouts, and
+     circuit-breaker defaults. Check `HystrixCommandProperties` for tuning.
+
+  3. **XML tokens:** TypeLib models tokens as XML, not JSON/JWT. The OAuth2Service does
+     the translation to JWT. Direct SDK usage always deals with XML token strings.
+
+  4. **TypeLib Java version:** TypeLib targets Java 8+ for broad compatibility. Do not
+     use Java 21+ features in TypeLib code. The SDK and services can use later Java.
+
+  5. **Token renewal timing:** `WhydahApplicationSession` renews every 10 seconds by default.
+     If STS is unreachable, the cached token is used until it expires. Check
+     `expiresBeforeNextScheduledSessionCheck()` before relying on a token.
+
+  6. **DDD value objects throw on invalid input:** `new Email(null)` or `new UserName("ab")`
+     (too short) will throw exceptions at construction. Always validate input before
+     constructing DDD value objects.
+
+  7. **Admin SDK vs Java SDK:** The Admin SDK adds admin operations (user CRUD, app management)
+     and depends on Java SDK. Regular applications only need Java SDK. Only admin tools
+     and services (UAS, UAW) need Admin SDK.
+
+  ## Related Skills
+
+  - `whydah-sts-development.yaml` -- STS server-side (token issuance, endpoints)
+  - `whydah-uib-development.yaml` -- UIB server-side (identity storage, Lucene, RDBMS)
+  - `cantara-whydah.yaml` -- Whydah architecture overview (all 15+ repos)
+  - `cantara-stingray.yaml` -- Stingray framework (has Whydah security integration)
+
+  ## Repository Paths
+
+  - Java SDK: `/src/cantara/Whydah-Java-SDK/`
+  - Admin SDK: `/src/cantara/Whydah-Admin-SDK/`
+  - TypeLib: `/src/cantara/Whydah-TypeLib/`
+  - OAuth2Service: `/src/cantara/Whydah-OAuth2Service/`
+  - SPAProxyService: `/src/cantara/Whydah-SPAProxyService/`
