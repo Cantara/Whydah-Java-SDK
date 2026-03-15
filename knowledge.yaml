@@ -1,25 +1,72 @@
-id: Whydah-Java-SDK
-name: Whydah Java SDK
+kcp_version: "0.10"
+project: Whydah-Java-SDK
 version: 2.31.6-SNAPSHOT
-description: |
-  Java client SDK for the Whydah IAM platform. Provides a high-level API for
-  application login, user token validation, and role checking against the
-  Whydah Security Token Service.
+updated: "2026-03-15"
+language: en
+license: "Apache-2.0"
+indexing: open
+
 units:
+
   - id: sso-helper
-    name: SSO Helper
-    type: sdk
-    description: SSOHelper — main entry point for application and user authentication flows.
     path: src/main/java/net/whydah/sso
-  - id: token-client
-    name: Token Client
-    type: component
-    description: Low-level STS token operations — logon, logoff, and token refresh.
-  - id: role-checker
-    name: Role Checker
-    type: component
-    description: User role and access validation helpers against a validated user token.
-  - id: model
-    name: Model
-    type: component
-    description: Token and user data model classes — UserToken, ApplicationToken, UserIdentity.
+    intent: "What is the main entry point for Whydah authentication in Java? SSOHelper — application logon, user token validation, and session management API."
+    scope: global
+    audience: [developer, agent]
+    validated: "2026-03-15"
+    triggers: [SSOHelper, entry point, authentication, logon, session, how to authenticate, integrate Whydah, SDK setup]
+
+  - id: app-auth
+    path: src/main/java/net/whydah/sso/commands/appauth
+    intent: "How does an application authenticate against the Whydah STS? Application logon, application token refresh, and ApplicationCredential handling."
+    scope: module
+    audience: [developer, agent]
+    validated: "2026-03-15"
+    depends_on: [sso-helper]
+    triggers: [application logon, app token, ApplicationCredential, appauth, CommandLogonApplication, STS application authentication]
+
+  - id: user-auth
+    path: src/main/java/net/whydah/sso/commands/userauth
+    intent: "How does a user authenticate and get a UserToken via Whydah? User logon, token validation, logoff, and token refresh commands."
+    scope: module
+    audience: [developer, agent]
+    validated: "2026-03-15"
+    depends_on: [app-auth]
+    triggers: [user logon, UserToken, validate token, userauth, CommandLogonUser, CommandValidateUserToken, user session]
+
+  - id: admin-api
+    path: src/main/java/net/whydah/sso/commands/adminapi
+    intent: "How do you manage users and applications via the Whydah admin API? User CRUD, role assignment, application registration commands."
+    scope: module
+    audience: [developer, agent]
+    validated: "2026-03-15"
+    depends_on: [sso-helper]
+    triggers: [admin, user management, create user, update user, role assignment, add role, application admin, UAS]
+
+  - id: application-commands
+    path: src/main/java/net/whydah/sso/commands/application
+    intent: "How do you look up and manage application registrations via the SDK?"
+    scope: module
+    audience: [developer, agent]
+    validated: "2026-03-15"
+    depends_on: [app-auth]
+    triggers: [application lookup, application management, CommandGetApplicationList, registered applications]
+
+  - id: extensions
+    path: src/main/java/net/whydah/sso/commands/extensions
+    intent: "What SDK extensions exist for CRM API and statistics integration with Whydah?"
+    scope: module
+    audience: [developer, agent]
+    validated: "2026-03-15"
+    triggers: [CRM, statistics, extensions, extra capabilities, Valuereporter]
+
+relationships:
+  - from: app-auth
+    to: sso-helper
+    type: depends_on
+  - from: user-auth
+    to: app-auth
+    type: depends_on
+  - from: admin-api
+    to: sso-helper
+    type: depends_on
