@@ -2,6 +2,10 @@ kcp_version: "0.21"
 project: Whydah-Java-SDK
 version: 2.31.6-SNAPSHOT
 updated: "2026-06-20"
+language: en
+license: "Apache-2.0"
+indexing: open
+not_for: []
 temporal:
   valid_from: "2026-03-19"
 signing:
@@ -9,90 +13,87 @@ signing:
   scope: this-manifest
   public_key: "MCowBQYDK2VwAyEAuipgusnqU9vjf3p2yPVLD/DmERT6tBbLOqEETdxAhMU="
   signature: "https://raw.githubusercontent.com/Cantara/Whydah-Java-SDK/master/knowledge.yaml.sig"
-language: en
-license: "Apache-2.0"
-indexing: open
-not_for: []
-
 units:
-
-  - id: sso-helper
-    path: src/main/java/net/whydah/sso
-    intent: "What is the main entry point for Whydah authentication in Java? SSOHelper — application logon, user token validation, and session management API."
-    scope: global
-    audience: [developer, agent]
-    validated: "2026-03-15"
-    triggers: [SSOHelper, entry point, authentication, logon, session, how to authenticate, integrate Whydah, SDK setup]
-      content_hash:
-        algorithm: sha256
-        value: ""
-
-  - id: app-auth
-    path: src/main/java/net/whydah/sso/commands/appauth
-    intent: "How does an application authenticate against the Whydah STS? Application logon, application token refresh, and ApplicationCredential handling."
-    scope: module
-    audience: [developer, agent]
-    validated: "2026-03-15"
-    depends_on: [sso-helper]
-    triggers: [application logon, app token, ApplicationCredential, appauth, CommandLogonApplication, STS application authentication]
-      content_hash:
-        algorithm: sha256
-        value: ""
-
-  - id: user-auth
-    path: src/main/java/net/whydah/sso/commands/userauth
-    intent: "How does a user authenticate and get a UserToken via Whydah? User logon, token validation, logoff, and token refresh commands."
-    scope: module
-    audience: [developer, agent]
-    validated: "2026-03-15"
-    depends_on: [app-auth]
-    triggers: [user logon, UserToken, validate token, userauth, CommandLogonUser, CommandValidateUserToken, user session]
-      content_hash:
-        algorithm: sha256
-        value: ""
-
-  - id: admin-api
-    path: src/main/java/net/whydah/sso/commands/adminapi
-    intent: "How do you manage users and applications via the Whydah admin API? User CRUD, role assignment, application registration commands."
-    scope: module
-    audience: [developer, agent]
-    validated: "2026-03-15"
-    depends_on: [sso-helper]
-    triggers: [admin, user management, create user, update user, role assignment, add role, application admin, UAS]
-      content_hash:
-        algorithm: sha256
-        value: ""
-
-  - id: application-commands
-    path: src/main/java/net/whydah/sso/commands/application
-    intent: "How do you look up and manage application registrations via the SDK?"
-    scope: module
-    audience: [developer, agent]
-    validated: "2026-03-15"
-    depends_on: [app-auth]
-    triggers: [application lookup, application management, CommandGetApplicationList, registered applications]
-      content_hash:
-        algorithm: sha256
-        value: ""
-
-  - id: extensions
-    path: src/main/java/net/whydah/sso/commands/extensions
-    intent: "What SDK extensions exist for CRM API and statistics integration with Whydah?"
-    scope: module
-    audience: [developer, agent]
-    validated: "2026-03-15"
-    triggers: [CRM, statistics, extensions, extra capabilities, Valuereporter]
-      content_hash:
-        algorithm: sha256
-        value: ""
-
+- id: sso-helper
+  path: src/main/java/net/whydah/sso
+  intent: "What is the main entry point for Whydah authentication in Java? SSOHelper\
+    \ — application logon, user token validation, and session management API."
+  scope: global
+  audience: [developer, agent]
+  validated: "2026-03-15"
+  triggers: [SSOHelper, entry point, authentication, logon, session, how to authenticate,
+    integrate Whydah, SDK setup]
+  content_hash:
+    algorithm: sha256
+    value: ""
+- id: app-auth
+  path: src/main/java/net/whydah/sso/commands/appauth
+  intent: "How does an application authenticate against the Whydah STS? Application\
+    \ logon, application token refresh, and ApplicationCredential handling."
+  scope: module
+  audience: [developer, agent]
+  validated: "2026-03-15"
+  depends_on: [sso-helper]
+  triggers: [application logon, app token, ApplicationCredential, appauth, CommandLogonApplication,
+    STS application authentication]
+  content_hash:
+    algorithm: sha256
+    value: ""
+- id: user-auth
+  path: src/main/java/net/whydah/sso/commands/userauth
+  intent: "How does a user authenticate and get a UserToken via Whydah? User logon,\
+    \ token validation, logoff, and token refresh commands."
+  scope: module
+  audience: [developer, agent]
+  validated: "2026-03-15"
+  depends_on: [app-auth]
+  triggers: [user logon, UserToken, validate token, userauth, CommandLogonUser, CommandValidateUserToken,
+    user session]
+  content_hash:
+    algorithm: sha256
+    value: ""
+- id: admin-api
+  path: src/main/java/net/whydah/sso/commands/adminapi
+  intent: "How do you manage users and applications via the Whydah admin API? User\
+    \ CRUD, role assignment, application registration commands."
+  scope: module
+  audience: [developer, agent]
+  validated: "2026-03-15"
+  depends_on: [sso-helper]
+  triggers: [admin, user management, create user, update user, role assignment, add
+      role, application admin, UAS]
+  content_hash:
+    algorithm: sha256
+    value: ""
+- id: application-commands
+  path: src/main/java/net/whydah/sso/commands/application
+  intent: "How do you look up and manage application registrations via the SDK?"
+  scope: module
+  audience: [developer, agent]
+  validated: "2026-03-15"
+  depends_on: [app-auth]
+  triggers: [application lookup, application management, CommandGetApplicationList,
+    registered applications]
+  content_hash:
+    algorithm: sha256
+    value: ""
+- id: extensions
+  path: src/main/java/net/whydah/sso/commands/extensions
+  intent: "What SDK extensions exist for CRM API and statistics integration with Whydah?"
+  scope: module
+  audience: [developer, agent]
+  validated: "2026-03-15"
+  triggers: [CRM, statistics, extensions, extra capabilities, Valuereporter]
+  content_hash:
+    algorithm: sha256
+    value: ""
 relationships:
-  - from: app-auth
-    to: sso-helper
-    type: depends_on
-  - from: user-auth
-    to: app-auth
-    type: depends_on
-  - from: admin-api
-    to: sso-helper
-    type: depends_on
+- from: app-auth
+  to: sso-helper
+  type: depends_on
+- from: user-auth
+  to: app-auth
+  type: depends_on
+- from: admin-api
+  to: sso-helper
+  type: depends_on
