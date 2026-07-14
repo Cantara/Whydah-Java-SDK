@@ -1,4 +1,4 @@
-kcp_version: "0.21"
+kcp_version: "0.26"
 project: Whydah-Java-SDK
 version: 2.31.6-SNAPSHOT
 updated: "2026-06-20"
@@ -23,9 +23,6 @@ units:
   validated: "2026-03-15"
   triggers: [SSOHelper, entry point, authentication, logon, session, how to authenticate,
     integrate Whydah, SDK setup]
-  content_hash:
-    algorithm: sha256
-    value: ""
 - id: app-auth
   path: src/main/java/net/whydah/sso/commands/appauth
   intent: "How does an application authenticate against the Whydah STS? Application\
@@ -36,9 +33,6 @@ units:
   depends_on: [sso-helper]
   triggers: [application logon, app token, ApplicationCredential, appauth, CommandLogonApplication,
     STS application authentication]
-  content_hash:
-    algorithm: sha256
-    value: ""
 - id: user-auth
   path: src/main/java/net/whydah/sso/commands/userauth
   intent: "How does a user authenticate and get a UserToken via Whydah? User logon,\
@@ -49,9 +43,6 @@ units:
   depends_on: [app-auth]
   triggers: [user logon, UserToken, validate token, userauth, CommandLogonUser, CommandValidateUserToken,
     user session]
-  content_hash:
-    algorithm: sha256
-    value: ""
 - id: admin-api
   path: src/main/java/net/whydah/sso/commands/adminapi
   intent: "How do you manage users and applications via the Whydah admin API? User\
@@ -62,9 +53,6 @@ units:
   depends_on: [sso-helper]
   triggers: [admin, user management, create user, update user, role assignment, add
       role, application admin, UAS]
-  content_hash:
-    algorithm: sha256
-    value: ""
 - id: application-commands
   path: src/main/java/net/whydah/sso/commands/application
   intent: "How do you look up and manage application registrations via the SDK?"
@@ -74,9 +62,6 @@ units:
   depends_on: [app-auth]
   triggers: [application lookup, application management, CommandGetApplicationList,
     registered applications]
-  content_hash:
-    algorithm: sha256
-    value: ""
 - id: extensions
   path: src/main/java/net/whydah/sso/commands/extensions
   intent: "What SDK extensions exist for CRM API and statistics integration with Whydah?"
@@ -84,9 +69,6 @@ units:
   audience: [developer, agent]
   validated: "2026-03-15"
   triggers: [CRM, statistics, extensions, extra capabilities, Valuereporter]
-  content_hash:
-    algorithm: sha256
-    value: ""
 relationships:
 - from: app-auth
   to: sso-helper
@@ -97,3 +79,11 @@ relationships:
 - from: admin-api
   to: sso-helper
   type: depends_on
+
+# Serving Endpoint Binding (KCP SPEC v0.26 §3.12): authoritative manifest URL
+# and authorized MCP representative. Ignored by pre-0.26 verifiers.
+serving:
+  manifest:
+    - https://raw.githubusercontent.com/Cantara/Whydah-Java-SDK/master/knowledge.yaml
+  mcp:
+    - https://mcp.cantara.no/mcp
